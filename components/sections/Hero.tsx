@@ -185,7 +185,7 @@ export default function Hero() {
 
       {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-10 left-0 right-0 flex justify-center items-center z-20"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.6 }}

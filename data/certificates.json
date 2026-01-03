@@ -78,6 +78,16 @@
     "description": "Leading projects from conception to successful completion using agile methodologies.",
     "image": null,
     "link": "https://example.com/certificate/8"
+  },
+  {
+    "id": 9,
+    "title": "Robotics & Automation",
+    "issuer": "Robotics Institute",
+    "date": "2024",
+    "category": "Robotics",
+    "description": "Comprehensive robotics certification covering robot design, programming, automation systems, and AI integration for industrial and research applications.",
+    "image": "/certificates/robotics-certificate.jpg",
+    "link": "https://example.com/certificate/9"
   }
 ]
 

@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
+import Image from 'next/image'
 import GlassCard from '@/components/GlassCard'
 import { fadeUp, stagger, scaleIn } from '@/lib/motion'
 import { Award, ExternalLink, X } from 'lucide-react'
@@ -116,8 +117,27 @@ export default function CertificateMenu() {
                   hover
                   glow
                   onClick={() => setSelectedCertificate(certificate)}
-                  className="h-full flex flex-col cursor-pointer"
+                  className="h-full flex flex-col cursor-pointer overflow-hidden"
                 >
+                  {/* Certificate Image */}
+                  {certificate.image && (
+                    <motion.div
+                      className="relative w-full h-48 mb-4 rounded-lg overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                    >
+                      <Image
+                        src={certificate.image}
+                        alt={certificate.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    </motion.div>
+                  )}
+                  
                   <div className="flex items-start justify-between mb-4">
                     <Award className="w-8 h-8 text-pink-400 flex-shrink-0" />
                     {certificate.link && (
@@ -165,7 +185,7 @@ export default function CertificateMenu() {
               className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none"
             >
               <GlassCard
-                className="max-w-2xl w-full pointer-events-auto max-h-[90vh] overflow-y-auto"
+                className="max-w-4xl w-full pointer-events-auto max-h-[90vh] overflow-y-auto"
                 hover={false}
               >
                 <div className="flex items-start justify-between mb-6">
@@ -189,6 +209,25 @@ export default function CertificateMenu() {
                     <X className="w-5 h-5" />
                   </motion.button>
                 </div>
+
+                {/* Certificate Image in Modal */}
+                {selectedCertificate.image && (
+                  <motion.div
+                    className="relative w-full h-64 md:h-80 mb-6 rounded-lg overflow-hidden"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Image
+                      src={selectedCertificate.image}
+                      alt={selectedCertificate.title}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 800px"
+                    />
+                    <div className="absolute inset-0 border border-white/10 rounded-lg" />
+                  </motion.div>
+                )}
 
                 <div className="space-y-4 mb-6">
                   <div className="flex items-center gap-4 text-sm text-white/60">

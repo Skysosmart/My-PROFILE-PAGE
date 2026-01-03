@@ -8,9 +8,9 @@ import { fadeUp, scaleIn } from '@/lib/motion'
 import { Mail, MapPin, Phone, Send, Github, Linkedin, Twitter } from 'lucide-react'
 
 const contactInfo = [
-  { icon: Mail, text: 'your.email@example.com', link: 'mailto:your.email@example.com' },
-  { icon: Phone, text: '+1 (234) 567-8900', link: 'tel:+12345678900' },
-  { icon: MapPin, text: 'Your City, Country', link: '#' },
+  { icon: Mail, text: 'saechua2551.email@example.com', link: 'mailto:saechua2551.email@example.com' },
+  { icon: Phone, text: '+6661-656-4406', link: 'tel:+66616564406' },
+  { icon: MapPin, text: 'Nonthaburi, Thailand', link: '#' },
 ]
 
 const socialLinks = [
@@ -181,7 +181,7 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 rounded-lg bg-black/40 backdrop-blur-xl border border-white/10 focus:border-pink-500 focus:outline-none text-white placeholder-white/40 transition-colors"
-                    placeholder="your.email@example.com"
+                    placeholder="youremail@example.com"
                   />
                 </div>
 

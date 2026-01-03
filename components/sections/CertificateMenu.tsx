@@ -122,7 +122,7 @@ export default function CertificateMenu() {
                   {/* Certificate Image */}
                   {certificate.image && (
                     <motion.div
-                      className="relative w-full h-48 mb-4 rounded-lg overflow-hidden"
+                      className="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-black/20"
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
@@ -133,6 +133,10 @@ export default function CertificateMenu() {
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        onError={(e) => {
+                          // Hide image on error
+                          e.currentTarget.style.display = 'none'
+                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     </motion.div>
@@ -213,7 +217,7 @@ export default function CertificateMenu() {
                 {/* Certificate Image in Modal */}
                 {selectedCertificate.image && (
                   <motion.div
-                    className="relative w-full h-64 md:h-80 mb-6 rounded-lg overflow-hidden"
+                    className="relative w-full h-64 md:h-80 mb-6 rounded-lg overflow-hidden bg-black/20"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
@@ -224,6 +228,10 @@ export default function CertificateMenu() {
                       fill
                       className="object-contain"
                       sizes="(max-width: 768px) 100vw, 800px"
+                      onError={(e) => {
+                        // Hide image on error
+                        e.currentTarget.style.display = 'none'
+                      }}
                     />
                     <div className="absolute inset-0 border border-white/10 rounded-lg" />
                   </motion.div>

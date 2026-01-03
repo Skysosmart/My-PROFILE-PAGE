@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "title": "Full Stack Web Development",
+    "issuer": "Tech Academy",
+    "date": "2024",
+    "category": "Development",
+    "description": "Comprehensive certification covering frontend and backend technologies including React, Node.js, and database management.",
+    "image": null,
+    "link": "https://example.com/certificate/1"
+  },
+  {
+    "id": 2,
+    "title": "UI/UX Design Mastery",
+    "issuer": "Design Institute",
+    "date": "2023",
+    "category": "Design",
+    "description": "Advanced design principles and user experience optimization techniques for modern web applications.",
+    "image": null,
+    "link": "https://example.com/certificate/2"
+  },
+  {
+    "id": 3,
+    "title": "React Advanced Patterns",
+    "issuer": "React University",
+    "date": "2024",
+    "category": "Development",
+    "description": "Mastering complex React patterns, performance optimization, and modern hooks usage.",
+    "image": null,
+    "link": "https://example.com/certificate/3"
+  },
+  {
+    "id": 4,
+    "title": "TypeScript Professional",
+    "issuer": "TypeScript Academy",
+    "date": "2023",
+    "category": "Development",
+    "description": "Deep dive into TypeScript advanced features, type safety, and best practices for enterprise applications.",
+    "image": null,
+    "link": "https://example.com/certificate/4"
+  },
+  {
+    "id": 5,
+    "title": "Framer Motion Mastery",
+    "issuer": "Animation School",
+    "date": "2024",
+    "category": "Design",
+    "description": "Creating stunning animations and micro-interactions with Framer Motion for enhanced user experiences.",
+    "image": null,
+    "link": "https://example.com/certificate/5"
+  },
+  {
+    "id": 6,
+    "title": "Next.js Production Ready",
+    "issuer": "Next.js Academy",
+    "date": "2024",
+    "category": "Development",
+    "description": "Building scalable applications with Next.js App Router, server components, and optimization techniques.",
+    "image": null,
+    "link": "https://example.com/certificate/6"
+  },
+  {
+    "id": 7,
+    "title": "Digital Art & Illustration",
+    "issuer": "Creative Academy",
+    "date": "2023",
+    "category": "Creative",
+    "description": "Advanced digital art techniques, creative expression, and visual storytelling methods.",
+    "image": null,
+    "link": "https://example.com/certificate/7"
+  },
+  {
+    "id": 8,
+    "title": "Project Management Professional",
+    "issuer": "Business School",
+    "date": "2023",
+    "category": "Business",
+    "description": "Leading projects from conception to successful completion using agile methodologies.",
+    "image": null,
+    "link": "https://example.com/certificate/8"
+  }
+]
+

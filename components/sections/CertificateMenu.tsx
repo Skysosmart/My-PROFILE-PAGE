@@ -21,7 +21,7 @@ interface Certificate {
 
 const certificates: Certificate[] = certificatesData as Certificate[]
 
-const categories = ['All', 'Development', 'Design', 'Creative', 'Business', 'Robotics']
+const categories = ['All', 'Development', 'Design', 'Creative', 'Business', 'Robotics', 'Innovative']
 
 export default function CertificateMenu() {
   const [selectedCategory, setSelectedCategory] = useState('All')

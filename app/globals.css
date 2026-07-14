@@ -2,89 +2,255 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   NONTHANAPHONG.EXE — terminal theme base
+   ========================================================================== */
+
 :root {
-  --pink-glow: #ec4899;
-  --black-base: #0a0a0a;
+  --void: #050505;      /* neutral near-black */
+  --phosphor: #ffffff;  /* monochrome: was green, now white */
+  --cyan: #cfcfcf;
+  --lime: #ffffff;
+  --scanline: rgba(0, 0, 0, 0.28);
 }
 
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
+  /* nav offsets are handled per-section via scroll-margin (scroll-mt-*) */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 
 body {
-  background-color: #000000;
-  color: #ffffff;
-  overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  margin: 0;
+  background-color: var(--void);
+  color: #e6e6e6;
+  font-family: var(--font-mono), ui-monospace, monospace;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
+/* Deep atmospheric backdrop: neutral vignette + faint grid (black & white) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(255, 255, 255, 0.07), transparent 60%),
+    radial-gradient(ellipse 90% 70% at 50% 120%, rgba(255, 255, 255, 0.03), transparent 55%),
+    var(--void);
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 85%);
+  opacity: 0.5;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--black-base);
-}
-
+/* --------------------------------------------------------------------------
+   Scrollbar
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--pink-glow), #be185d);
-  border-radius: 5px;
+  background: linear-gradient(180deg, #ffffff, #888888);
+  border-radius: 0;
+  border: 2px solid #0a0a0a;
+}
+::selection { background: #ffffff; color: #000000; }
+
+/* --------------------------------------------------------------------------
+   Reusable component utilities
+   -------------------------------------------------------------------------- */
+@layer components {
+  /* Glow text presets (monochrome white) */
+  .txt-glow { text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 18px rgba(255, 255, 255, 0.18); }
+  .txt-glow-cyan { text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 18px rgba(255, 255, 255, 0.18); }
+  .txt-glow-lime { text-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.22); }
+
+  /* The terminal "window" chrome shared across sections */
+  .term-window {
+    position: relative;
+    background: linear-gradient(180deg, rgba(13, 21, 25, 0.92), rgba(8, 14, 16, 0.92));
+    border: 1px solid rgba(87, 255, 176, 0.28);
+    box-shadow: inset 0 0 0 1px rgba(87, 255, 176, 0.04),
+                0 0 0 1px rgba(0, 0, 0, 0.6),
+                0 18px 50px -20px rgba(0, 0, 0, 0.9);
+  }
+  .term-window::before {
+    /* corner ticks -> ASCII bracket feel */
+    content: '';
+    position: absolute;
+    inset: 5px;
+    pointer-events: none;
+    background:
+      linear-gradient(var(--phosphor), var(--phosphor)) left top / 12px 1px no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) left top / 1px 12px no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) right top / 12px 1px no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) right top / 1px 12px no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) left bottom / 12px 1px no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) left bottom / 1px 12px no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) right bottom / 12px 1px no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) right bottom / 1px 12px no-repeat;
+    opacity: 0.55;
+  }
+
+  /* Dotted/dashed ASCII divider */
+  .ascii-rule {
+    height: 1px;
+    background-image: repeating-linear-gradient(90deg, rgba(87,255,176,0.5) 0 6px, transparent 6px 12px);
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #f472b6, var(--pink-glow));
+/* Typewriter caret helper */
+.caret::after {
+  content: '▋';
+  margin-left: 2px;
+  color: var(--phosphor);
+  animation: blink 1s step-end infinite;
 }
 
-/* Glassmorphism utility */
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+/* --------------------------------------------------------------------------
+   Liquid glass (header bar)
+   Frosted translucency + an SVG turbulence/displacement filter that refracts
+   the ASCII hand behind it, a glossy top edge, and a slow specular sheen.
+   -------------------------------------------------------------------------- */
+.liquid-glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  /* url(#liquid-glass) = the refraction; degrades to plain blur if unsupported */
+  -webkit-backdrop-filter: blur(11px) saturate(150%);
+  backdrop-filter: blur(11px) saturate(150%) url(#liquid-glass);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.08),
+    inset 0 0 24px rgba(255, 255, 255, 0.05),
+    0 10px 34px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  isolation: isolate;
+}
+/* glossy top sheen */
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 46%);
+  pointer-events: none;
+}
+/* travelling specular highlight */
+.liquid-glass::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 55%;
+  left: -60%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transform: skewX(-18deg);
+  animation: lg-sheen 7s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes lg-sheen {
+  0% { left: -60%; }
+  55%, 100% { left: 135%; }
 }
 
-.glass-strong {
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(236, 72, 153, 0.2);
+/* Content panel — a semi-opaque dark "glass".
+   NOTE: intentionally NO backdrop-filter here. These panels SCROLL over the
+   fixed WebGL background, and backdrop-filter + a fixed canvas makes browsers
+   flicker/blank the panel during scroll. A translucent solid fill avoids that
+   entirely (and is faster). The fixed header keeps real liquid glass. */
+.glass-panel {
+  position: relative;
+  background: rgba(13, 13, 15, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 12px 40px rgba(0, 0, 0, 0.5);
+}
+/* Lighter variant — used on "light" screens (e.g. About). */
+.glass-panel--light {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
-/* Glow effects */
-.glow-pink {
-  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3),
-              0 0 40px rgba(236, 72, 153, 0.2),
-              0 0 60px rgba(236, 72, 153, 0.1);
+/* soft top gloss */
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0) 30%);
+  pointer-events: none;
 }
 
-.glow-pink-strong {
-  box-shadow: 0 0 30px rgba(236, 72, 153, 0.5),
-              0 0 60px rgba(236, 72, 153, 0.3),
-              0 0 90px rgba(236, 72, 153, 0.2);
+/* --------------------------------------------------------------------------
+   Liquid sky orb (interactive circle in the hero)
+   A morphing glass blob that clips the ASCII sky inside. No backdrop-filter
+   (it scrolls over the fixed canvas) — the glass read comes from the gloss.
+   -------------------------------------------------------------------------- */
+.liquid-orb {
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  background: radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02) 55%, rgba(0, 0, 0, 0.22));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 2px 12px rgba(255, 255, 255, 0.22),
+    inset 0 -14px 32px rgba(255, 255, 255, 0.05),
+    0 0 55px rgba(255, 255, 255, 0.08);
+  animation: orb-morph 9s ease-in-out infinite;
 }
-
-.text-glow {
-  text-shadow: 0 0 10px rgba(236, 72, 153, 0.5),
-               0 0 20px rgba(236, 72, 153, 0.3),
-               0 0 30px rgba(236, 72, 153, 0.2);
+@keyframes orb-morph {
+  0%, 100% { border-radius: 50% 50% 50% 50%; }
+  25% { border-radius: 57% 43% 52% 48%; }
+  50% { border-radius: 46% 54% 44% 56%; }
+  75% { border-radius: 53% 47% 56% 44%; }
 }
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #f472b6, #ec4899, #be185d);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.orb-gloss {
+  background:
+    radial-gradient(60% 45% at 32% 22%, rgba(255, 255, 255, 0.38), transparent 60%),
+    radial-gradient(45% 35% at 72% 86%, rgba(255, 255, 255, 0.10), transparent 60%);
+  mix-blend-mode: screen;
 }
+.orb-sky { transition: color 0.4s ease; }
+.liquid-orb:hover .orb-sky { color: rgba(255, 255, 255, 0.8); }
 
+/* Header nav link */
+.nav-link {
+  position: relative;
+  color: rgba(255, 255, 255, 0.62);
+  transition: color 0.2s ease;
+}
+.nav-link:hover { color: #fff; }
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -3px;
+  height: 1px;
+  background: #fff;
+  transition: right 0.25s ease;
+}
+.nav-link:hover::after { right: 0; }

@@ -1,20 +1,9 @@
-import Hero from '@/components/sections/Hero'
-import About from '@/components/sections/About'
-import CertificateMenu from '@/components/sections/CertificateMenu'
-import Inspiration from '@/components/sections/Inspiration'
-import Contact from '@/components/sections/Contact'
-import Navigation from '@/components/Navigation'
+import Portfolio from '@/components/Portfolio'
 
+/**
+ * NONTHANAPHONG.EXE — Academic Quest Portfolio
+ * All content lives in data/portfolio.ts. All UI is composed inside Portfolio.
+ */
 export default function Home() {
-  return (
-    <main className="min-h-screen relative bg-black">
-      <Navigation />
-      <Hero />
-      <About />
-      <CertificateMenu />
-      <Inspiration />
-      <Contact />
-    </main>
-  )
+  return <Portfolio />
 }
-

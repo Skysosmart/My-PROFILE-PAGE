@@ -1,54 +1,61 @@
-# Customization Guide
+# Customization Guide — NONTHANAPHONG.EXE
 
-## Quick Personalization
+This site is an **ASCII / retro-game academic portfolio**. Almost everything you
+need to change lives in **one file**:
 
-### Update Your Name
-1. **Hero Section**: Edit `components/sections/Hero.tsx` line 108
-   - Change `[Your Name]` to your actual name
+## 👉 Edit content in `data/portfolio.ts`
 
-2. **Navigation**: Edit `components/Navigation.tsx` line 15
-   - Change `Portfolio` to your preferred branding
+Open [`data/portfolio.ts`](data/portfolio.ts). Every section reads from it.
+Placeholders to replace are marked with `// TODO`.
 
-### Contact Information
-Edit `components/sections/Contact.tsx`:
-- **Email**: Line 17 - Update email address
-- **Phone**: Line 18 - Update phone number
-- **Location**: Line 19 - Update your location
-- **Social Links**: Lines 24-27 - Update GitHub, LinkedIn, Twitter URLs
+| What you want to change | Edit this export |
+| --- | --- |
+| Your name, boot-up log, tagline | `player` |
+| The checkpoint menu (order / labels) | `checkpoints` |
+| 01 Character Profile card + bio | `profile` |
+| 02 Origin Story (inspiration) | `origin` |
+| 03 Academic Stats (bars + data sheet) | `stats` |
+| 04 Skill Inventory (item cards) | `skills` |
+| 05 Quest Log (projects/activities) | `quests` |
+| 06 Achievements Unlocked | `achievements` |
+| 07 Final Mission (goals) | `mission` |
+| 08 Contact NPC (email/links) | `contact` |
 
-### Certificates
-Edit `components/sections/CertificateMenu.tsx`:
-- Update the `certificates` array (lines 12-67) with your actual certificates
-- Modify categories as needed (line 72)
-- Each certificate can include:
-  - title, issuer, date, category, description, link (optional)
+Notes:
+- **Stat bars** (`stats.bars`) use a `value` from 0–100.
+- **Skills / Achievements** use a `rarity` of `common | rare | epic | legendary`
+  (changes the card color/glow). Achievements with `unlocked: false` render locked.
+- **Quests** use a `status` of `Completed | In Progress | Upcoming` (colors the badge).
+- To **add/remove a section**, update the matching export AND the `checkpoints`
+  array (the `id` must match the section's `id`).
 
-### About Section Stats
-Edit `components/sections/About.tsx`:
-- Update stats in lines 94-98:
-  - Project count, years of experience, etc.
-- Modify skills array (lines 7-12) with your actual skills
+## Colors & theme
 
-### Colors & Theme
-Edit `tailwind.config.ts` to customize the pink/black theme:
-- Pink shades are defined in the `colors.pink` object
-- Modify gradient colors in `app/globals.css`
+Palette and animations live in
+[`tailwind.config.ts`](tailwind.config.ts) (`phosphor`, `cyan`, `lime`, `amber`…)
+and base terminal styles in [`app/globals.css`](app/globals.css)
+(scanlines, glow, grid background).
 
-### Animations
-- Animation speeds: Adjust `duration` values in motion components
-- Glow intensity: Modify `glow-pink` classes in `globals.css`
-- Magnetic effect strength: Edit `strength` in `MagneticButton.tsx` line 27
+## ASCII assets
 
-## Adding New Sections
+The PNG/TXT art lives in `public/ASCII-Art/` and `public/ASCII-Art-text/`
+and is referenced from `assets` in `data/portfolio.ts`:
+- `Fullname-ascii-art.png` → hero name / boot logo
+- `Hand-ascii-art.png` → menu pointer + character avatar + NPC portrait
+- `Sky-ascii-art.png` / `Sky-ASCII.txt` → ambient background atmosphere
 
-1. Create a new component in `components/sections/`
-2. Import and add to `app/page.tsx`
-3. Add navigation item in `components/Navigation.tsx`
+## Structure (for reference)
 
-## Form Handling
+- `app/page.tsx` → renders `components/Portfolio.tsx`
+- `components/Portfolio.tsx` → boot screen → checkpoint HUD + all sections
+- `components/BootScreen.tsx` → boot sequence + PRESS START
+- `components/CheckpointMenu.tsx` → the quest menu (click + ↑/↓ keyboard nav)
+- `components/sections/*` → one file per checkpoint
+- `components/ui/*`, `components/effects/*` → shared building blocks
 
-The contact form currently logs to console. To enable email sending:
-1. Set up an API route in `app/api/contact/route.ts`
-2. Update the `handleSubmit` function in `Contact.tsx`
-3. Consider using services like Resend, SendGrid, or Formspree
+## Run it
 
+```bash
+bun run dev     # or: npm run dev   → http://localhost:3000
+bun run build   # production build
+```

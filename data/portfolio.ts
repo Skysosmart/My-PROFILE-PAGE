@@ -217,15 +217,17 @@ export const certificates: Certificate[] = [
 ]
 
 /* ---------------------------------------------------------------------------
- *  CONTACT — TODO: replace with your real links.
+ *  CONTACT — channels rendered in the footer (id="contact") and listed in the
+ *  About terminal. Every href must resolve; nothing here should be a '#'.
  * ------------------------------------------------------------------------- */
 export const contact = {
   blurb: 'Thanks for visiting. Reach me through any of the channels below.',
   channels: [
-    { key: 'EMAIL', value: 'your-email@example.com', href: 'mailto:your-email@example.com' },
-    { key: 'GITHUB', value: 'github.com/yourname', href: 'https://github.com/' },
-    { key: 'LINE / IG', value: '@yourhandle', href: '#' },
-    { key: 'SCHOOL', value: 'Your School Name', href: '#' },
+    { key: 'EMAIL', value: 'saechua2551@gmail.com', href: 'mailto:saechua2551@gmail.com' },
+    { key: 'GITHUB', value: 'github.com/Skysosmart', href: 'https://github.com/Skysosmart' },
+    { key: 'LINE', value: '@skysoyer', href: 'https://line.me/ti/p/~skysoyer' },
+    { key: 'IG', value: '@yaa.itz_sky', href: 'https://instagram.com/yaa.itz_sky' },
+    { key: 'SCHOOL', value: 'Assumption College Thonburi', href: 'https://www.act.ac.th' },
   ],
 }
 

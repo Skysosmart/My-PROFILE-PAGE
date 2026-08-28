@@ -105,45 +105,63 @@ export const inspiration = [
 ] as const
 
 /* ---------------------------------------------------------------------------
- *  PROJECTS — TODO: replace with your real projects.
+ *  PROJECTS — competition and coursework builds, strongest first.
  *  status: 'Completed' | 'In Progress' | 'Upcoming'
  * ------------------------------------------------------------------------- */
 export const projects = [
   {
-    title: 'Robotics Competition Robot',
-    period: '2024',
-    role: 'Builder / Programmer',
+    title: "PDLite — Parkinson's Risk Screening Device",
+    period: '2026',
+    role: 'Web & Database / Device Design',
     status: 'Completed',
     description:
-      'Designed, built, and programmed a robot for the MakeX robotics tournaments, iterating through qualification rounds to the finals.',
-    tags: ['Robotics', 'Python', 'Teamwork'],
+      'A device that gives a preliminary Parkinson\'s disease risk assessment. Built the Next.js and Supabase web app that records readings and charts them back, and designed the enclosure and its mechanism in Fusion 360 for 3D printing. Awarded gold at the NRCT Thailand New Gen Inventors Award 2026 and gold again at SWU Researcher Day 2026.',
+    tags: ['Next.js', 'Supabase', 'Chart.js', 'Fusion 360', 'Gold Medal'],
   },
   {
-    title: 'Cybersecurity / CTF Boot Camp',
-    period: '2024',
-    role: 'Learner',
+    title: 'T-GODA — Accommodation Booking Platform',
+    period: '2026',
+    role: 'Frontend Developer',
     status: 'Completed',
     description:
-      'Completed the NCSA CTF boot camp and EC-Council essentials, solving security and network-defense challenges.',
-    tags: ['Security', 'CTF', 'Networking'],
+      'An Agoda-style booking platform built for the CODEKIT Web Development Competition at the Thailand Robot & Coding Challenge 2026. Owned the entire frontend — landing page, responsive layout across screen sizes, and the navigation tying every page together. Placed 3rd at national level.',
+    tags: ['Frontend', 'UI Design', 'Responsive', '3rd Place'],
   },
   {
-    title: 'AI & Data Analytics Study',
-    period: '2024',
-    role: 'Researcher',
-    status: 'In Progress',
+    title: 'Nexus — Chat Web Application',
+    period: '2026',
+    role: 'Frontend Developer',
+    status: 'Completed',
     description:
-      'Working through university AI and data-analytics courses (KMITL, KU, CU MOOC) and applying them to small data projects.',
-    tags: ['AI', 'Data', 'Python'],
+      'A Discord-style chat application from the same CODEKIT competition. Built the landing page, the sign-up and login flow, and more than twenty core functions — an exercise in taking apart a large platform and rebuilding it into something that actually works.',
+    tags: ['Frontend', 'Auth Flow', 'UI Design', 'Web App'],
   },
   {
-    title: 'Academic Portfolio Website',
+    title: 'Hackathon Digitize — Asset Declaration Data',
     period: '2025',
+    role: 'Data Engineering',
+    status: 'Completed',
+    description:
+      'An anti-corruption entry run by TIJ and the Anti-Corruption Organization of Thailand. Turned scanned NACC asset-declaration filings into structured, queryable records through a Python extraction pipeline using OCR, vision models, and a trained NER model.',
+    tags: ['Python', 'OCR', 'NER', 'Data Pipeline'],
+  },
+  {
+    title: 'MakeX Challenger Competition Robot',
+    period: '2025',
+    role: 'Structural Designer',
+    status: 'Completed',
+    description:
+      'Designed the full robot structure in Fusion 360 across six months for the MakeX Challenger international tournament, building for disc-shooting and block-gripping missions over five arenas. Placed 3rd and took the Best Favourite Alliance Team Award.',
+    tags: ['Fusion 360', 'Robotics', '3D Design', '3rd Place'],
+  },
+  {
+    title: 'This Portfolio Site',
+    period: '2026',
     role: 'Designer / Developer',
     status: 'Completed',
     description:
-      'This site — a black-and-white, ASCII + liquid-glass portfolio built to present my academic journey.',
-    tags: ['Next.js', 'WebGL', 'Design'],
+      'An ASCII and terminal themed portfolio built in Next.js with WebGL effects, collecting the certificates, projects, and writing on this page.',
+    tags: ['Next.js', 'TypeScript', 'WebGL', 'Design'],
   },
 ]
 

@@ -74,33 +74,34 @@ export const sop = {
 }
 
 /* ---------------------------------------------------------------------------
- *  INSPIRATION — the principles that drive the work.
+ *  INSPIRATION — the principles that drive the work. Printed by the
+ *  `inspiration` command in the About terminal.
  *  icon: 'lightbulb' | 'heart' | 'target' | 'zap'
  * ------------------------------------------------------------------------- */
 export const inspiration = [
   {
-    icon: 'lightbulb',
-    title: 'Innovation First',
+    icon: 'zap',
+    title: 'Persistence Over Talent',
     description:
-      'I believe in pushing boundaries and exploring new possibilities. Every project is an opportunity to innovate and create something unique that stands out.',
-  },
-  {
-    icon: 'heart',
-    title: 'Passion Driven',
-    description:
-      'My work is fueled by genuine passion for creating beautiful, meaningful experiences. When you love what you do, excellence follows naturally.',
+      'I spent most of school at the bottom of my class. Everything I can do now came from staying with problems longer than I wanted to, not from being naturally good at them.',
   },
   {
     icon: 'target',
-    title: 'Purposeful Design',
+    title: 'Build It, Then Break It',
     description:
-      "Every element, every animation, every interaction serves a purpose. Good design is not just beautiful—it's intuitive, accessible, and impactful.",
+      'I write applications and then attack them. Learning to find a vulnerability taught me more about how a system actually works than building it ever did on its own.',
   },
   {
-    icon: 'zap',
-    title: 'Continuous Growth',
+    icon: 'lightbulb',
+    title: "Explain It Or You Don't Know It",
     description:
-      'The tech world evolves rapidly, and so do I. Learning is a lifelong journey, and I embrace every opportunity to expand my skills and knowledge.',
+      'A good engineer is not only technically skilled — they can make someone else understand. Presenting as an ACT Brand Ambassador forced me to turn what I knew into something people could follow.',
+  },
+  {
+    icon: 'heart',
+    title: 'Finish What You Start',
+    description:
+      'PDLite took months of iteration before it won anything, and my MakeX robot took six. The work that counts is what happens after the idea stops being exciting.',
   },
 ] as const
 

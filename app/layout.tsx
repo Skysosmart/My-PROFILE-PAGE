@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, VT323, Press_Start_2P } from 'next/font/google'
+import { JetBrains_Mono, VT323, Press_Start_2P, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import { player } from '@/data/portfolio'
 
@@ -24,6 +24,13 @@ const pixel = Press_Start_2P({
   variable: '--font-pixel',
   display: 'swap',
 })
+// Modern sans for the gallery card system (breaks out of the terminal theme)
+const sans = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sans',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: `${player.handle} — ${player.tagline}`,
@@ -32,7 +39,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${mono.variable} ${crt.variable} ${pixel.variable}`}>
+    <html lang="en" className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable}`}>
       <body>{children}</body>
     </html>
   )

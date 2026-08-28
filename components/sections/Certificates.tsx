@@ -1,63 +1,68 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { AnimatePresence, motion, type PanInfo } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import GlassSection from '@/components/ui/GlassSection'
+import CertWall from '@/components/effects/CertWall'
 import { certificates, assets, type Certificate } from '@/data/portfolio'
 
 const src = (file: string) => assets.certDir + encodeURIComponent(file)
+const thumb = (file: string) => assets.certDir + 'thumbs/' + encodeURIComponent(file)
 
-/** Small card used in the "view all" grid. */
-function GridCard({ c, onOpen }: { c: Certificate; onOpen: (c: Certificate) => void }) {
-  return (
-    <button
-      onClick={() => onOpen(c)}
-      className="group relative overflow-hidden rounded-lg border border-white/12 bg-white/[0.02] text-left transition-colors hover:border-white/40"
-    >
-      <div className="aspect-[4/3] overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={src(c.file)}
-          alt={c.title}
-          loading="lazy"
-          className="h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0"
-        />
-      </div>
-      <div className="border-t border-white/10 px-3 py-2 font-mono">
-        <p className="truncate text-xs font-bold text-white">{c.title}</p>
-        {c.issuer && <p className="truncate text-[10px] uppercase tracking-wider text-white/45">{c.issuer}</p>}
-      </div>
-    </button>
-  )
+/**
+ * CERTIFICATES — a modern gallery card system (deliberately NOT terminal-themed):
+ * colorful category pills, light elevated cards with the full certificate on a
+ * soft surface, Space Grotesk typography, staggered motion, and a clean lightbox.
+ */
+
+/** First matching rule wins; every cert lands in exactly one category. */
+function categorize(c: Certificate): string {
+  const s = `${c.title} ${c.issuer} ${c.file}`
+  if (/makex|robot/i.test(s)) return 'robotics'
+  if (/EC[_-]?Council|NDE|EHE|CTF|cyber|NCSA|RTARF/i.test(s)) return 'security'
+  if (/\bAI\b|BOTNOI|python|\bdata\b|typhoon|CiRA|prompt|digital twin/i.test(s)) return 'ai-data'
+  if (/\bENG\b|english|INTER/i.test(s)) return 'language'
+  return 'misc'
 }
 
-/** CERTIFICATES — draggable featured deck + "view all" grid + lightbox. */
+const CATS: { key: string; label: string; chip: string; dot: string }[] = [
+  { key: 'featured', label: 'Featured', chip: 'bg-amber-100 text-amber-700', dot: 'bg-amber-500' },
+  { key: 'robotics', label: 'Robotics', chip: 'bg-orange-100 text-orange-700', dot: 'bg-orange-500' },
+  { key: 'security', label: 'Security', chip: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-500' },
+  { key: 'ai-data', label: 'AI & Data', chip: 'bg-violet-100 text-violet-700', dot: 'bg-violet-500' },
+  { key: 'language', label: 'Language', chip: 'bg-sky-100 text-sky-700', dot: 'bg-sky-500' },
+  { key: 'misc', label: 'More', chip: 'bg-neutral-200 text-neutral-700', dot: 'bg-neutral-400' },
+]
+
 export default function Certificates() {
-  const [showAll, setShowAll] = useState(false)
+  const [cat, setCat] = useState('featured')
   const [active, setActive] = useState<Certificate | null>(null)
   const [mounted, setMounted] = useState(false)
-  const [index, setIndex] = useState(0)
-
-  const featured = certificates.filter((c) => c.featured)
-  const n = featured.length
 
   useEffect(() => setMounted(true), [])
 
+  // Category → items (featured is a curated extra collection).
+  const byCat = useMemo(() => {
+    const m = new Map<string, Certificate[]>()
+    m.set('featured', certificates.filter((c) => c.featured))
+    certificates.forEach((c) => {
+      const k = categorize(c)
+      m.set(k, [...(m.get(k) ?? []), c])
+    })
+    return m
+  }, [])
+
+  const items = byCat.get(cat) ?? []
+  const catMeta = (k: string) => CATS.find((c) => c.key === k) ?? CATS[CATS.length - 1]
+
+  // Escape closes the lightbox.
   useEffect(() => {
     if (!active) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setActive(null)
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [active])
-
-  const next = () => setIndex((i) => (i + 1) % n)
-  const prev = () => setIndex((i) => (i - 1 + n) % n)
-
-  const onDragEnd = (_: unknown, info: PanInfo) => {
-    if (info.offset.x < -90 || info.velocity.x < -500) next()
-    else if (info.offset.x > 90 || info.velocity.x > 500) prev()
-  }
 
   // Lightbox portaled to <body> so it escapes the section transform.
   const lightbox = (
@@ -68,31 +73,40 @@ export default function Certificates() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={() => setActive(null)}
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
         >
           <motion.div
-            initial={{ scale: 0.94, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.94, opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            initial={{ scale: 0.94, y: 14, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.96, opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="relative max-h-[88vh] max-w-4xl overflow-hidden rounded-xl border border-white/20 bg-black"
+            className="relative w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src(active.file)} alt={active.title} className="max-h-[80vh] w-auto object-contain" />
-            <div className="flex items-center justify-between gap-4 border-t border-white/15 bg-black px-4 py-3 font-mono">
-              <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-white">{active.title}</p>
-                {active.issuer && (
-                  <p className="truncate text-[11px] uppercase tracking-wider text-white/50">{active.issuer}</p>
-                )}
+            <div className="flex max-h-[80vh] items-center justify-center bg-neutral-100 p-3 sm:p-5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src(active.file)}
+                alt={active.title}
+                className="max-h-[72vh] w-auto max-w-full object-contain drop-shadow-xl"
+              />
+            </div>
+            <div className="flex items-center justify-between gap-4 px-5 py-4 sm:px-6">
+              <div className="min-w-0 font-sans">
+                <span
+                  className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${catMeta(categorize(active)).chip}`}
+                >
+                  {catMeta(categorize(active)).label}
+                </span>
+                <p className="mt-1.5 truncate text-lg font-semibold text-neutral-900">{active.title}</p>
+                {active.issuer && <p className="truncate text-sm text-neutral-500">{active.issuer}</p>}
               </div>
               <button
                 onClick={() => setActive(null)}
                 aria-label="Close"
-                className="shrink-0 rounded border border-white/30 px-3 py-1 text-xs text-white hover:bg-white hover:text-black"
+                className="shrink-0 rounded-full bg-neutral-900 px-4 py-2 font-sans text-sm font-medium text-white transition-colors hover:bg-neutral-700"
               >
-                [ X ]
+                Close
               </button>
             </div>
           </motion.div>
@@ -102,103 +116,97 @@ export default function Certificates() {
   )
 
   return (
-    <GlassSection id="certificates" index="02" title="Certificates" variant="flip">
-      <p className="mb-6 font-mono text-xs text-white/50">
-        {certificates.length} certificates · drag the card or use ← → · click to enlarge
+    <GlassSection
+      id="certificates"
+      index="02"
+      title="Certificates"
+      variant="flip"
+      background={<CertWall />}
+      fullScreen
+      panel={false}
+    >
+      <p className="mb-5 max-w-2xl font-sans text-sm text-white/60">
+        {certificates.length} awards and certifications across robotics, cybersecurity, AI &
+        data, and more — tap any card to view it in full.
       </p>
 
-      {/* Draggable deck of featured certs */}
-      <div className="relative mx-auto h-[340px] w-full max-w-sm select-none sm:h-[380px]">
-        {featured.map((c, i) => {
-          const rel = (i - index + n) % n
-          if (rel > 2) return null
-          const top = rel === 0
+      {/* Category pills */}
+      <div className="mb-6 flex flex-wrap gap-2">
+        {CATS.map((c) => {
+          const activePill = c.key === cat
+          const count = (byCat.get(c.key) ?? []).length
           return (
-            <motion.div
-              key={c.file}
-              drag={top ? 'x' : false}
-              dragSnapToOrigin
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.7}
-              onDragEnd={top ? onDragEnd : undefined}
-              onTap={top ? () => setActive(c) : undefined}
-              animate={{ y: rel * 14, scale: 1 - rel * 0.05, opacity: rel === 2 ? 0.5 : 1 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              style={{ zIndex: n - rel, cursor: top ? 'grab' : 'default' }}
-              whileTap={top ? { cursor: 'grabbing' } : undefined}
-              className="absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-white/15 bg-black shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]"
+            <button
+              key={c.key}
+              onClick={() => setCat(c.key)}
+              className={`relative rounded-full px-4 py-2 font-sans text-sm font-medium transition-colors ${
+                activePill ? 'text-neutral-900' : 'text-white/70 hover:text-white'
+              }`}
             >
-              <div className="h-[74%] overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={src(c.file)}
-                  alt={c.title}
-                  draggable={false}
-                  className="pointer-events-none h-full w-full object-cover grayscale"
+              {activePill && (
+                <motion.span
+                  layoutId="cert-pill"
+                  transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                  className="absolute inset-0 rounded-full bg-white shadow-lg"
                 />
-              </div>
-              <div className="flex flex-1 items-center justify-between gap-3 border-t border-white/10 px-4 font-mono">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-white">{c.title}</p>
-                  {c.issuer && (
-                    <p className="truncate text-[10px] uppercase tracking-wider text-white/45">{c.issuer}</p>
-                  )}
-                </div>
-                {top && <span className="shrink-0 text-[10px] uppercase tracking-widest text-white/30">tap ⤢</span>}
-              </div>
-            </motion.div>
+              )}
+              <span className="relative flex items-center gap-2">
+                <span className={`h-1.5 w-1.5 rounded-full ${c.dot}`} />
+                {c.label}
+                <span className={activePill ? 'text-neutral-400' : 'text-white/35'}>{count}</span>
+              </span>
+            </button>
           )
         })}
       </div>
 
-      {/* Deck controls */}
-      <div className="mt-6 flex items-center justify-center gap-5 font-mono text-sm">
-        <button
-          onClick={prev}
-          aria-label="Previous"
-          className="rounded border border-white/25 px-3 py-1 text-white transition-colors hover:bg-white hover:text-black"
-        >
-          ←
-        </button>
-        <span className="tabular-nums text-white/60">
-          {String(index + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}
-        </span>
-        <button
-          onClick={next}
-          aria-label="Next"
-          className="rounded border border-white/25 px-3 py-1 text-white transition-colors hover:bg-white hover:text-black"
-        >
-          →
-        </button>
-      </div>
-
-      {/* View all */}
-      <div className="mt-8 flex justify-center">
-        <button
-          onClick={() => setShowAll((v) => !v)}
-          className="rounded-full border border-white/25 bg-white/5 px-6 py-2.5 font-mono text-xs uppercase tracking-widest text-white transition-colors hover:bg-white hover:text-black"
-        >
-          {showAll ? '▲ Show less' : `▼ View all (${certificates.length})`}
-        </button>
-      </div>
-
-      <AnimatePresence initial={false}>
-        {showAll && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4 }}
-            className="overflow-hidden"
+      {/* Masonry cards — every card takes the image's NATURAL shape, so the
+          whole certificate is always shown edge-to-edge (never framed/cropped) */}
+      <div
+        key={cat}
+        className="max-h-[58vh] columns-1 gap-5 overflow-y-auto pb-2 pr-1 sm:columns-2 lg:columns-3 [scrollbar-width:thin]"
+      >
+        {items.map((c, i) => (
+          <motion.button
+            key={c.file}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: Math.min(i * 0.04, 0.4), ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -6 }}
+            onClick={() => setActive(c)}
+            className="group mb-5 w-full break-inside-avoid overflow-hidden rounded-2xl bg-white text-left shadow-[0_12px_40px_-14px_rgba(0,0,0,0.7)] transition-shadow hover:shadow-[0_28px_70px_-16px_rgba(0,0,0,0.85)]"
           >
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-              {certificates.map((c) => (
-                <GridCard key={c.file} c={c} onOpen={setActive} />
-              ))}
+            <div className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={thumb(c.file)}
+                alt={c.title}
+                loading="lazy"
+                draggable={false}
+                className="block h-auto w-full"
+              />
+              {c.featured && cat !== 'featured' && (
+                <span className="absolute right-3 top-3 rounded-full bg-amber-400 px-2 py-0.5 font-sans text-[10px] font-bold text-amber-950 shadow">
+                  ★ Featured
+                </span>
+              )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <div className="border-t border-neutral-100 p-4">
+              <span
+                className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[11px] font-semibold ${catMeta(categorize(c)).chip}`}
+              >
+                {catMeta(categorize(c)).label}
+              </span>
+              <h3 className="mt-2 line-clamp-2 font-sans text-base font-semibold leading-snug text-neutral-900">
+                {c.title}
+              </h3>
+              {c.issuer && (
+                <p className="mt-1 truncate font-sans text-xs text-neutral-500">{c.issuer}</p>
+              )}
+            </div>
+          </motion.button>
+        ))}
+      </div>
 
       {mounted && createPortal(lightbox, document.body)}
     </GlassSection>

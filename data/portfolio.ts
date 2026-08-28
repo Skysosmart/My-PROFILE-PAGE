@@ -174,6 +174,8 @@ export type Certificate = { title: string; issuer: string; file: string; feature
 
 export const certificates: Certificate[] = [
   // ----- Featured -----
+  { title: 'Gold Medal — Thailand New Gen Inventors Award 2026', issuer: 'National Research Council of Thailand', file: 'IMG_3232.JPG', featured: true },
+  { title: 'Gold Medal — Invention & Innovation (PDLite)', issuer: 'SWU Researcher Day 2026', file: 'IMG_3228.JPG', featured: true },
   { title: 'MakeX — Ultimate Winner', issuer: 'MakeX Robotics', file: 'MakeX Ultimate winner.jpg', featured: true },
   { title: 'CTF Boot Camp', issuer: 'NCSA', file: 'NCSA-CTF boot camp.jpg', featured: true },
   { title: 'Network Defense Essentials (NDE)', issuer: 'EC-Council', file: 'EC_Councils-NDE.jpg', featured: true },
@@ -226,11 +228,9 @@ export const certificates: Certificate[] = [
   { title: 'Inspiration Day — Tae Yang Thai #54', issuer: 'ttb Foundation', file: 'IMG_3225.JPG' },
   { title: 'Thailand Robot & Coding 2026 — Website Competition, 3rd Place', issuer: 'Kasetsart University', file: 'IMG_3226.JPG' },
   { title: 'IT CLASH — Cybersecurity Track, Finals', issuer: 'KMITL, Faculty of Information Technology', file: 'IMG_3227.JPG' },
-  { title: 'Gold Medal — Invention & Innovation (PDLite)', issuer: 'SWU Researcher Day 2026', file: 'IMG_3228.JPG' },
   { title: 'Data Analysis Workshop', issuer: 'Centre of Excellence in Mathematics', file: 'IMG_3229.JPG' },
   { title: 'Pentesting Fundamentals', issuer: 'Crack The Lab', file: 'IMG_3230.JPG' },
   { title: 'English for Semiconductor Industry', issuer: 'Chulalongkorn University', file: 'IMG_3231.JPG' },
-  { title: 'Gold Medal — Thailand New Gen Inventors Award 2026', issuer: 'National Research Council of Thailand', file: 'IMG_3232.JPG' },
   { title: 'Hackathon Digitize — Anti-Corruption Innovation', issuer: 'TIJ & Anti-Corruption Organization of Thailand', file: 'IMG_3233.JPG' },
 ]
 

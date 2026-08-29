@@ -59,6 +59,7 @@ const config: Config = {
         'fade-up': { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'none' } },
         drift: { '0%': { transform: 'translateY(0)' }, '100%': { transform: 'translateY(-40px)' } },
         marquee: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+        foil: { '0%': { transform: 'translateX(-120%) skewX(-18deg)' }, '55%,100%': { transform: 'translateX(320%) skewX(-18deg)' } },
         'pulse-glow': {
           '0%,100%': { textShadow: '0 0 6px rgba(87,255,176,0.5)' },
           '50%': { textShadow: '0 0 14px rgba(87,255,176,0.9), 0 0 26px rgba(87,255,176,0.4)' },
@@ -71,6 +72,7 @@ const config: Config = {
         'fade-up': 'fade-up 0.6s cubic-bezier(0.16,1,0.3,1) both',
         drift: 'drift 20s linear infinite alternate',
         marquee: 'marquee 70s linear infinite',
+        foil: 'foil 5.5s ease-in-out infinite',
         'pulse-glow': 'pulse-glow 2.6s ease-in-out infinite',
       },
     },

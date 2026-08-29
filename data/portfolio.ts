@@ -186,72 +186,365 @@ export const projects: Project[] = [
 ]
 
 /* ---------------------------------------------------------------------------
- *  CERTIFICATES — real images in /public/certificates.
- *  `featured: true` shows the card in the top grid; the rest appear under
- *  "View all". Edit titles freely; `file` is the image name in the folder.
+ *  CERTIFICATES — every field except title/issuer/file is optional and was
+ *  read off the scan itself. `detail` carries the longer write-up from the
+ *  TCAS portfolio where one exists. Titles stay in English: the site's fonts
+ *  (JetBrains Mono / VT323 / Press Start 2P / Space Grotesk) have no Thai
+ *  glyphs, so Thai text would render as tofu.
  * ------------------------------------------------------------------------- */
-export type Certificate = { title: string; issuer: string; file: string; featured?: boolean }
+export type CertLevel = 'International' | 'National' | 'Provincial' | 'Institution' | 'School' | 'Online'
+
+export type Certificate = {
+  title: string
+  issuer: string
+  file: string
+  featured?: boolean
+  level?: CertLevel
+  date?: string
+  result?: string
+  medal?: 'gold' | 'silver' | 'bronze'
+  credential?: string
+  detail?: string
+}
 
 export const certificates: Certificate[] = [
   // ----- Featured -----
-  { title: 'Gold Medal — Thailand New Gen Inventors Award 2026', issuer: 'National Research Council of Thailand', file: 'IMG_3232.JPG', featured: true },
-  { title: 'Gold Medal — Invention & Innovation (PDLite)', issuer: 'SWU Researcher Day 2026', file: 'IMG_3228.JPG', featured: true },
-  { title: 'MakeX — Ultimate Winner', issuer: 'MakeX Robotics', file: 'MakeX Ultimate winner.jpg', featured: true },
-  { title: 'CTF Boot Camp', issuer: 'NCSA', file: 'NCSA-CTF boot camp.jpg', featured: true },
-  { title: 'Network Defense Essentials (NDE)', issuer: 'EC-Council', file: 'EC_Councils-NDE.jpg', featured: true },
-  { title: 'Ethical Hacking Essentials (EHE)', issuer: 'EC-Council', file: 'EC_Councils-EHE.jpg', featured: true },
-  { title: 'AI Powered', issuer: 'KMITL', file: 'KMITL-AI powered.jpg', featured: true },
-  { title: 'AI & Digital Twin', issuer: 'Kasetsart University', file: 'KU-AI and Digital twin.jpg', featured: true },
-  { title: 'STEM & Robotics', issuer: 'MU IGNITE', file: 'MUIGNITE-STEM and robotic.jpg', featured: true },
-  { title: 'Cyber Ant', issuer: 'KMUTT', file: 'KMUTT-Cyber ant.jpg', featured: true },
-  { title: 'Python & Data Analytics', issuer: 'CU MOOC', file: 'CUMOOC-Python and data analytic.jpg', featured: true },
-  { title: 'Python Battle', issuer: 'SWU', file: 'SWU-Python bttle.jpg', featured: true },
+  {
+    title: 'Thailand New Gen Inventors Award 2026',
+    issuer: 'National Research Council of Thailand',
+    file: 'IMG_3232.JPG', featured: true, level: 'National', date: 'Jan 2026',
+    result: 'Gold Medal', medal: 'gold',
+    detail:
+      'Gold at the I-New Gen Award 2026, health & medical category, secondary level, for PDLite — a device giving a preliminary Parkinson’s disease risk assessment. A five-student team with a faculty advisor. I built the Next.js and Supabase web app that records readings and charts them, handled UX/UI and the database, and designed the enclosure and its mechanism in Fusion 360 for 3D printing.',
+  },
+  {
+    title: 'Invention & Innovation — Gold Medal',
+    issuer: 'SWU Researcher Day 2026',
+    file: 'IMG_3228.JPG', featured: true, level: 'National', date: 'Apr 2026',
+    result: 'Gold Medal', medal: 'gold',
+    detail:
+      'The second gold for PDLite, awarded at Srinakharinwirot University’s Researcher Day in the high-school invention and innovation contest. What this project taught me was less technical than procedural: a team needs a clear workflow and divided responsibilities, and the work that matters happens after the idea stops being exciting.',
+  },
+  {
+    title: 'Thailand Robot & Coding 2026 — Website Competition',
+    issuer: 'Kasetsart University',
+    file: 'IMG_3226.JPG', featured: true, level: 'National', date: 'May 2026',
+    result: '3rd Place', medal: 'bronze',
+    detail:
+      'Third nationally in the CODEKIT web development competition, high-school level. Two builds against a brief: T-GODA, an Agoda-style booking platform, and Nexus, a Discord-style chat app. I owned the frontend on both — landing pages, responsive layout, navigation, the sign-up and login flow, and over twenty core functions on Nexus.',
+  },
+  {
+    title: 'IT CLASH — Cybersecurity Track, Finals',
+    issuer: 'KMITL, Faculty of Information Technology',
+    file: 'IMG_3227.JPG', featured: true, level: 'National', date: 'May 2026',
+    result: 'Finalist',
+  },
+  {
+    title: 'Pentesting Fundamentals',
+    issuer: 'Crack The Lab',
+    file: 'IMG_3230.JPG', featured: true, level: 'Online', date: 'Apr 2026',
+    result: 'Completed', credential: 'CR-571C5C8AA4',
+  },
+  {
+    title: 'MakeX Challenge — Best Favourite Alliance Team',
+    issuer: 'MakeX Thailand · Imagineering Education',
+    file: 'MakeX Ultimate winner.jpg', featured: true, level: 'National', date: 'Oct–Nov 2025',
+    result: 'Best Favourite Alliance Team Award',
+    detail:
+      'Team Prometheus, at the 2025 MakeX Thailand National Championships. I designed the entire robot structure in Fusion 360 over six months, building for disc-shooting and block-gripping missions across five arenas. The lesson was composure — a dead control board or a wheel off mid-match, and an opponent who can disrupt you. In the game they are rivals; after it they are friends.',
+  },
+  {
+    title: 'Network Defense Essentials (N|DE)',
+    issuer: 'EC-Council',
+    file: 'EC_Councils-NDE.jpg', featured: true, level: 'International', date: 'Mar 2025',
+    result: 'Completed', credential: '398563',
+  },
+  {
+    title: 'Ethical Hacking Essentials (E|HE)',
+    issuer: 'EC-Council',
+    file: 'EC_Councils-EHE.jpg', featured: true, level: 'International', date: 'Mar 2025',
+    result: 'Completed', credential: '397792',
+  },
+  {
+    title: 'CTF Boot Camp',
+    issuer: 'NCSA · Thailand National Cyber Academy',
+    file: 'NCSA-CTF boot camp.jpg', featured: true, level: 'National', date: 'May 2025',
+    result: 'Completed',
+  },
+  {
+    title: 'RTARF Cyber Bootcamp — N|DE & E|HE',
+    issuer: 'Royal Thai Armed Forces Cyber Command',
+    file: 'RTARF-NDE and EHE.jpg', featured: true, level: 'National', date: 'Apr 2025',
+    result: 'Completed',
+    detail:
+      'Two months of online training run by the Cyber Command of the Royal Thai Armed Forces, ending in the EC-Council Network Defense Essentials and Ethical Hacking Essentials certifications.',
+  },
+  {
+    title: 'Hackathon Digitize — Anti-Corruption Innovation',
+    issuer: 'TIJ & Anti-Corruption Organization of Thailand',
+    file: 'IMG_3233.JPG', featured: true, level: 'National', date: 'Dec 2025',
+    result: 'Participated',
+    detail:
+      'Run by the Thailand Institute of Justice with the Anti-Corruption Organization of Thailand, Security Pitch, WeVis and HAND Social Enterprise. We turned scanned NACC asset-declaration filings into structured, queryable records with a Python pipeline using OCR, vision models and a trained NER model.',
+  },
+  {
+    title: 'English for Semiconductor Industry',
+    issuer: 'Chulalongkorn University, Dept. of Electrical Engineering',
+    file: 'IMG_3231.JPG', featured: true, level: 'Online', date: 'Mar 2026',
+    result: 'Completed',
+  },
 
-  // ----- The rest (shown under "View all") -----
-  { title: 'MakeX — Qualification', issuer: 'MakeX Robotics', file: 'MakeX Qualification.jpg' },
-  { title: 'MakeX — Warmup', issuer: 'MakeX Robotics', file: 'MakeX Warmup.jpg' },
-  { title: 'MakeX — Tournament 1', issuer: 'MakeX Robotics', file: 'MakeX tournament 1.jpg' },
-  { title: 'MakeX — Tournament 2', issuer: 'MakeX Robotics', file: 'MakeX tournament 2.jpg' },
-  { title: 'MakeX — Tournament 3', issuer: 'MakeX Robotics', file: 'MakeX tournament 3.jpg' },
-  { title: 'MakeX — Tournament 4', issuer: 'MakeX Robotics', file: 'MakeX tournament 4.jpg' },
-  { title: 'BOTNOI', issuer: 'KMITL', file: 'KMITL-BOTNOI.jpg' },
-  { title: 'CiRA COM Camp', issuer: 'KMITL', file: 'KMITL-CiRA COM CAMP.jpg' },
-  { title: 'Science & Physics', issuer: 'KMITL', file: 'KMITL-Sci and Physic.jpg' },
-  { title: 'Typhoon', issuer: 'KMITL', file: 'KMITL-typhoon.jpg' },
-  { title: 'AI Driven', issuer: 'KMUTNB', file: 'KMUTNB-AI driven.jpg' },
-  { title: 'Basic Python', issuer: 'KMUTNB', file: 'KMUTNB-Basic python test.jpg' },
-  { title: 'Thailand Robot & Coding 2025 — Python Competition, Top 24', issuer: 'Kasetsart University', file: 'KU-Thailand Robot and Coding.jpg' },
-  { title: 'Basic Big Data', issuer: 'Mahidol University', file: 'MU-Basic big data.jpg' },
-  { title: 'Basic Prompt', issuer: 'Mahidol University', file: 'MU-Basic prompt.jpg' },
-  { title: 'MU — CC', issuer: 'Mahidol University', file: 'MU-CC.jpg' },
-  { title: 'MU — KK', issuer: 'Mahidol University', file: 'MU-KK.jpg' },
-  { title: 'AI in General', issuer: 'Silpakorn University', file: 'SU-AI in general.jpg' },
-  { title: 'Making Data More Valuable', issuer: 'CU MOOC', file: 'CUMOOC-How to make your data more valuable.jpg' },
-  { title: 'English Enhancement', issuer: 'Chulalongkorn University', file: 'CU-English enchanment.jpg' },
-  { title: 'INTER (EN)', issuer: 'SWU', file: 'SWU-INTER(EN).jpg' },
-  { title: 'INTER (TH)', issuer: 'SWU', file: 'SWU-INTER(TH).jpg' },
-  { title: '10-Hour English', issuer: 'Thai MOOC', file: 'THMOOC-10Hr ENG.jpg' },
-  { title: 'Insight Camp', issuer: 'SIIT', file: 'SIIT - insight camp.jpg' },
-  { title: 'NDE & EHE', issuer: 'RTARF', file: 'RTARF-NDE and EHE.jpg' },
-  { title: 'Final Day', issuer: 'RTARF', file: 'RTARF-Final day.jpg' },
-  { title: 'RSMS 1', issuer: 'RMA', file: 'RMA-RSMS 1.jpg' },
-  { title: 'RSMS 2', issuer: 'RMA', file: 'RMA-RSMS 2.jpg' },
-  { title: 'RSMS 2 (cont.)', issuer: 'RMA', file: 'RMA-RSMS 2 (2).jpg' },
-  { title: 'IFMSA-Thailand', issuer: 'IFMSA', file: 'IFMSA-TH.jpg' },
-  { title: 'Heart & Charities', issuer: 'Vichaiyut', file: 'Vichaivhej-Heart and Charities.jpg' },
-  { title: 'FYAA', issuer: 'FYAA', file: 'FYAA.jpg' },
-  { title: 'FYAA — Pladao', issuer: 'FYAA', file: 'FYAA pladao.jpg' },
-  { title: 'ADEQ', issuer: 'ADEQ', file: 'ADEQ.jpg' },
-  { title: 'Apibarn', issuer: 'Apibarn', file: 'Apibarn.jpg' },
-  { title: 'MSB', issuer: 'MSB', file: 'MSB.jpg' },
-  { title: 'Vajira', issuer: 'Vajira', file: 'VAJIRA.jpg' },
-  { title: 'Inspiration Day — Tae Yang Thai #54', issuer: 'ttb Foundation', file: 'IMG_3225.JPG' },
-  { title: 'Thailand Robot & Coding 2026 — Website Competition, 3rd Place', issuer: 'Kasetsart University', file: 'IMG_3226.JPG' },
-  { title: 'IT CLASH — Cybersecurity Track, Finals', issuer: 'KMITL, Faculty of Information Technology', file: 'IMG_3227.JPG' },
-  { title: 'Data Analysis Workshop', issuer: 'Centre of Excellence in Mathematics', file: 'IMG_3229.JPG' },
-  { title: 'Pentesting Fundamentals', issuer: 'Crack The Lab', file: 'IMG_3230.JPG' },
-  { title: 'English for Semiconductor Industry', issuer: 'Chulalongkorn University', file: 'IMG_3231.JPG' },
-  { title: 'Hackathon Digitize — Anti-Corruption Innovation', issuer: 'TIJ & Anti-Corruption Organization of Thailand', file: 'IMG_3233.JPG' },
+  // ----- Competitions & awards -----
+  {
+    title: 'Thailand Robot & Coding 2025 — Python Competition',
+    issuer: 'Kasetsart University',
+    file: 'KU-Thailand Robot and Coding.jpg', level: 'National', date: 'May 2025',
+    result: 'Top 24 teams',
+  },
+  {
+    title: 'Prasarnmit Python Battle 2025',
+    issuer: 'SWU Prasarnmit Demonstration School',
+    file: 'SWU-Python bttle.jpg', level: 'School', date: 'Jan 2025', result: 'Participated',
+  },
+  {
+    title: 'MakeX Challenge — Qualification Round',
+    issuer: 'MakeX Thailand · Imagineering Education',
+    file: 'MakeX Qualification.jpg', level: 'National', date: 'Oct–Nov 2025', result: 'Participated',
+  },
+  {
+    title: 'MakeX Explore Tournament 1',
+    issuer: 'MakeX Thailand · Imagineering Education',
+    file: 'MakeX tournament 1.jpg', level: 'National', date: 'Jun 2025', result: 'Point Race',
+  },
+  {
+    title: 'MakeX Challenge Tournament 2',
+    issuer: 'MakeX Thailand · Imagineering Education',
+    file: 'MakeX tournament 2.jpg', level: 'National', date: 'Jul 2025', result: 'Point Race',
+  },
+  {
+    title: 'MakeX Challenge Tournament 3',
+    issuer: 'MakeX Thailand · Imagineering Education',
+    file: 'MakeX tournament 3.jpg', level: 'National', date: 'Aug 2025', result: 'Point Race',
+  },
+  {
+    title: 'MakeX Challenge Tournament 4',
+    issuer: 'MakeX Thailand · Imagineering Education',
+    file: 'MakeX tournament 4.jpg', level: 'National', date: 'Sep 2025', result: 'Point Race',
+  },
+  {
+    title: 'ACT MakeX Robotics Invitation — Practice Warm Up',
+    issuer: 'Assumption College Thonburi',
+    file: 'MakeX Warmup.jpg', level: 'School', date: 'Jun 2025', result: 'Participated',
+  },
+  {
+    title: 'RSMS — Selection Round 1',
+    issuer: 'Ramathibodi Faculty of Medicine, Mahidol University',
+    file: 'RMA-RSMS 1.jpg', level: 'National', date: 'Apr 2025', result: 'Participated',
+  },
+  {
+    title: 'RSMS — Selection Round 2 (April)',
+    issuer: 'Ramathibodi Faculty of Medicine, Mahidol University',
+    file: 'RMA-RSMS 2 (2).jpg', level: 'National', date: 'Apr 2025', result: '60th percentile',
+  },
+  {
+    title: 'RSMS — Selection Round 2 (June)',
+    issuer: 'Ramathibodi Faculty of Medicine, Mahidol University',
+    file: 'RMA-RSMS 2.jpg', level: 'National', date: 'Jun 2025', result: '60th percentile',
+  },
+  {
+    title: 'T-SCEPT 2025 Policy Thinkathon',
+    issuer: 'IFMSA-Thailand',
+    file: 'IFMSA-TH.jpg', level: 'National', date: 'Aug 2025', result: 'Participated',
+  },
+
+  // ----- Camps -----
+  {
+    title: 'Click Camp #15 — Cyber Security & Web Development',
+    issuer: 'Computer Engineering, Mahidol University',
+    file: 'MU-CC.jpg', level: 'Institution', date: 'Dec 2024', result: 'Completed',
+    detail:
+      'Four days at Mahidol’s Computer Engineering department, split across two tracks. On the security side I learned to use CTF tooling to hunt for flags, which taught me how to look for a weakness methodically. On the web side I built my first profile page end to end — the ancestor of this site.',
+  },
+  {
+    title: 'KhanNot #24 — Mahidol Engineering Camp',
+    issuer: 'Faculty of Engineering, Mahidol University',
+    file: 'MU-KK.jpg', level: 'Institution', date: 'May 2025', result: 'Completed',
+    detail:
+      'Four days rotating through hands-on stations from every engineering department before choosing a field. The track I liked most was cyber-defence engineering, because protecting a system turns out to require thinking like the person attacking it.',
+  },
+  {
+    title: 'SIIT Insight Camp 2025',
+    issuer: 'SIIT, Thammasat University',
+    file: 'SIIT - insight camp.jpg', level: 'Institution', date: 'Apr 2025', result: 'Participated',
+  },
+  {
+    title: 'SWU International Engineering Day Camp 2025',
+    issuer: 'Faculty of Engineering (International), SWU',
+    file: 'SWU-INTER(EN).jpg', level: 'Institution', date: 'Mar 2025', result: 'Participated',
+  },
+  {
+    title: 'SWU International Engineering Day Camp 2025 (TH)',
+    issuer: 'Faculty of Engineering (International), SWU',
+    file: 'SWU-INTER(TH).jpg', level: 'Institution', date: 'Mar 2025', result: 'Participated',
+  },
+  {
+    title: 'STEM & Robotics Camp',
+    issuer: 'MU IGNITE by On Demand',
+    file: 'MUIGNITE-STEM and robotic.jpg', level: 'Institution', date: '2024', result: 'Completed',
+  },
+  {
+    title: 'CiRA CORE Camp — KMITL Innovation Expo 2025',
+    issuer: 'Global Technology, KMITL',
+    file: 'KMITL-CiRA COM CAMP.jpg', level: 'Institution', date: 'Mar 2025',
+    result: 'Attended', credential: 'GTCINOEP250138',
+  },
+
+  // ----- Security & engineering -----
+  {
+    title: 'Cyber Ant',
+    issuer: 'KMUTT',
+    file: 'KMUTT-Cyber ant.jpg', level: 'Institution', date: '2024', result: 'Completed',
+  },
+  {
+    title: 'RTARF Cyber Bootcamp — Final Day',
+    issuer: 'Royal Thai Armed Forces Cyber Command',
+    file: 'RTARF-Final day.jpg', level: 'National', date: 'Apr 2025', result: 'Completed',
+  },
+  {
+    title: 'Coding Thailand 2025 — Hardware to ROS Rescues',
+    issuer: 'depa · KMUTNB iRAP Robot',
+    file: 'KMUTNB-AI driven.jpg', level: 'National', date: 'Oct 2025', result: 'Completed',
+  },
+  {
+    title: 'Basic Python',
+    issuer: 'ONDE · KMUTNB',
+    file: 'KMUTNB-Basic python test.jpg', level: 'National', result: 'Passed — Excellent',
+  },
+
+  // ----- AI & data -----
+  {
+    title: 'AI-Powered Work with Copilot — KMITL Innovation Expo 2025',
+    issuer: 'Global Technology, KMITL',
+    file: 'KMITL-AI powered.jpg', level: 'Institution', date: 'Mar 2025',
+    result: 'Attended', credential: 'GTCINOEP25026',
+  },
+  {
+    title: 'BOTNOI Voice — KMITL Innovation Expo 2025',
+    issuer: 'Global Technology, KMITL',
+    file: 'KMITL-BOTNOI.jpg', level: 'Institution', date: 'Mar 2025',
+    result: 'Attended', credential: 'GTCINOEP250146',
+  },
+  {
+    title: 'Typhoon by SCB10X — KMITL Innovation Expo 2025',
+    issuer: 'Global Technology, KMITL',
+    file: 'KMITL-typhoon.jpg', level: 'Institution', date: 'Mar 2025',
+    result: 'Attended', credential: 'GTCINOEP25046',
+  },
+  {
+    title: 'Introduction to Python for AI and Digital Twin',
+    issuer: 'Kasetsart University',
+    file: 'KU-AI and Digital twin.jpg', level: 'Institution', date: 'Sep 2024',
+    result: 'Completed — 3 hrs',
+  },
+  {
+    title: 'Basic Prompt Engineering',
+    issuer: 'Mahidol University (CBTU)',
+    file: 'MU-Basic prompt.jpg', level: 'Online', date: 'Sep 2025', result: 'Completed',
+  },
+  {
+    title: 'Python for Data Science',
+    issuer: 'CHULA MOOC',
+    file: 'CUMOOC-Python and data analytic.jpg', level: 'Online', date: 'Jun 2024',
+    result: 'Completed', credential: 'CV897450',
+  },
+  {
+    title: 'How to Make Your Data More Valuable',
+    issuer: 'CHULA MOOC',
+    file: 'CUMOOC-How to make your data more valuable.jpg', level: 'Online', date: 'Apr 2024',
+    result: 'Completed',
+  },
+  {
+    title: 'Introduction to Big Data',
+    issuer: 'Centre of Excellence in Mathematics',
+    file: 'MU-Basic big data.jpg', level: 'Institution', date: 'Jun–Jul 2025', result: 'Completed',
+  },
+  {
+    title: 'Data Analysis Workshop',
+    issuer: 'Centre of Excellence in Mathematics',
+    file: 'IMG_3229.JPG', level: 'Institution', date: 'Feb 2026', result: 'Completed',
+  },
+  {
+    title: 'AI in Daily Life',
+    issuer: 'Silpakorn University',
+    file: 'SU-AI in general.jpg', level: 'Online', date: 'Jul 2024',
+    result: 'Completed', credential: 'SHC675100004',
+  },
+  {
+    title: 'Physics Discovery Workshop 2/2567',
+    issuer: 'Dept. of Physics, KMITL · Vernier',
+    file: 'KMITL-Sci and Physic.jpg', level: 'Institution', date: 'Oct 2024',
+    result: 'Completed', credential: 'A-005',
+  },
+
+  // ----- Language -----
+  {
+    title: 'English Writing Enrichment',
+    issuer: 'Faculty of Arts, Chulalongkorn University',
+    file: 'CU-English enchanment.jpg', level: 'Institution', date: 'Jul 2023',
+    result: 'Completed — 30 hrs',
+  },
+  {
+    title: 'English for Communication',
+    issuer: 'Thai MOOC · Chiang Mai University',
+    file: 'THMOOC-10Hr ENG.jpg', level: 'Online', result: 'Completed — 10 hrs',
+  },
+
+  // ----- Service & leadership -----
+  {
+    title: 'Vajira Hospital Volunteer — Outpatient Services',
+    issuer: 'Faculty of Medicine Vajira Hospital, NMU',
+    file: 'VAJIRA.jpg', level: 'Institution', date: 'Oct 2025', result: 'Certified',
+    detail:
+      'Four days assisting in the general medicine outpatient centre — taking blood pressure, weight and height, helping elderly patients use the automated machines safely, managing wheelchairs, directing people and holding the screening queue together. It was the first time I saw what a working hospital actually demands of the people in it.',
+  },
+  {
+    title: 'Heart Charity — First Aid & CPR',
+    issuer: 'Vichaivej International Hospital · Srivichai Foundation',
+    file: 'Vichaivhej-Heart and Charities.jpg', level: 'Provincial', date: 'Jul 2025',
+    result: 'Completed',
+    detail:
+      'First aid and CPR training with emergency-response drills run inside the school alongside a rescue team — evacuation and incident handling. I took part as a student volunteer supporting the training.',
+  },
+  {
+    title: 'Volunteering Leads Life',
+    issuer: 'FYAA Thailand · Pladao Youth Network',
+    file: 'FYAA.jpg', level: 'National', date: 'Apr 2024', result: 'Completed',
+  },
+  {
+    title: 'Creative Leadership in the 21st Century',
+    issuer: 'FYAA Thailand · Pladao Institute',
+    file: 'FYAA pladao.jpg', level: 'National', date: 'Apr 2024', result: 'Completed',
+  },
+  {
+    title: 'Youth for Energy & Environment in Schools',
+    issuer: 'Association for the Development of Environmental Quality',
+    file: 'ADEQ.jpg', level: 'National', date: 'Apr 2024', result: 'Completed',
+  },
+  {
+    title: 'Tobacco & E-Cigarette Awareness',
+    issuer: 'Thai Health Promotion · Smoke-Free Foundation',
+    file: 'MSB.jpg', level: 'School', date: 'Apr 2024', result: 'Completed',
+  },
+  {
+    title: 'Morality & Ethics in Daily Life',
+    issuer: 'Assumption College Thonburi',
+    file: 'Apibarn.jpg', level: 'School', date: 'Apr 2024', result: 'Completed',
+  },
+  {
+    title: 'Inspiration Day — Tae Yang Thai #54',
+    issuer: 'ttb Foundation (Fai-Fah by ttb)',
+    file: 'IMG_3225.JPG', level: 'National', date: '2026', result: 'Participated',
+  },
 ]
 
 /* ---------------------------------------------------------------------------

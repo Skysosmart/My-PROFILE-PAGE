@@ -108,8 +108,20 @@ export const inspiration = [
 /* ---------------------------------------------------------------------------
  *  PROJECTS — competition and coursework builds, strongest first.
  *  status: 'Completed' | 'In Progress' | 'Upcoming'
+ *  demo/repo are optional; the card only renders a link when one is set.
  * ------------------------------------------------------------------------- */
-export const projects = [
+export type Project = {
+  title: string
+  period: string
+  role: string
+  status: 'Completed' | 'In Progress' | 'Upcoming'
+  description: string
+  tags: string[]
+  demo?: string
+  repo?: string
+}
+
+export const projects: Project[] = [
   {
     title: "PDLite — Parkinson's Risk Screening Device",
     period: '2026',
@@ -118,6 +130,8 @@ export const projects = [
     description:
       'A device that gives a preliminary Parkinson\'s disease risk assessment. Built the Next.js and Supabase web app that records readings and charts them back, and designed the enclosure and its mechanism in Fusion 360 for 3D printing. Awarded gold at the NRCT Thailand New Gen Inventors Award 2026 and gold again at SWU Researcher Day 2026.',
     tags: ['Next.js', 'Supabase', 'Chart.js', 'Fusion 360', 'Gold Medal'],
+    demo: 'https://p-dlite.vercel.app',
+    repo: 'https://github.com/Skysosmart/PDlite',
   },
   {
     title: 'T-GODA — Accommodation Booking Platform',
@@ -127,6 +141,8 @@ export const projects = [
     description:
       'An Agoda-style booking platform built for the CODEKIT Web Development Competition at the Thailand Robot & Coding Challenge 2026. Owned the entire frontend — landing page, responsive layout across screen sizes, and the navigation tying every page together. Placed 3rd at national level.',
     tags: ['Frontend', 'UI Design', 'Responsive', '3rd Place'],
+    demo: 'https://codekit2026.vercel.app',
+    repo: 'https://github.com/Skysosmart/codekit2026',
   },
   {
     title: 'Nexus — Chat Web Application',
@@ -136,6 +152,8 @@ export const projects = [
     description:
       'A Discord-style chat application from the same CODEKIT competition. Built the landing page, the sign-up and login flow, and more than twenty core functions — an exercise in taking apart a large platform and rebuilding it into something that actually works.',
     tags: ['Frontend', 'Auth Flow', 'UI Design', 'Web App'],
+    demo: 'https://codekit-finale.vercel.app',
+    repo: 'https://github.com/Skysosmart/codekit-finale',
   },
   {
     title: 'Hackathon Digitize — Asset Declaration Data',
@@ -163,6 +181,7 @@ export const projects = [
     description:
       'An ASCII and terminal themed portfolio built in Next.js with WebGL effects, collecting the certificates, projects, and writing on this page.',
     tags: ['Next.js', 'TypeScript', 'WebGL', 'Design'],
+    repo: 'https://github.com/Skysosmart/My-PROFILE-PAGE',
   },
 ]
 

@@ -129,6 +129,36 @@ export default function Projects() {
                 </span>
               ))}
             </div>
+
+            {(p.demo || p.repo) && (
+              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-3">
+                {p.demo && (
+                  <a
+                    href={p.demo}
+                    target="_blank"
+                    rel="noreferrer"
+                    // the track is drag-to-scroll: swallow the click that ends a drag
+                    onClick={(e) => drag.current.moved && e.preventDefault()}
+                    className="group font-mono text-[11px] uppercase tracking-wider text-white/55 transition-colors hover:text-white"
+                  >
+                    <span aria-hidden>↗</span>{' '}
+                    <span className="underline-offset-2 group-hover:underline">Live demo</span>
+                  </a>
+                )}
+                {p.repo && (
+                  <a
+                    href={p.repo}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => drag.current.moved && e.preventDefault()}
+                    className="group font-mono text-[11px] uppercase tracking-wider text-white/55 transition-colors hover:text-white"
+                  >
+                    <span aria-hidden>↗</span>{' '}
+                    <span className="underline-offset-2 group-hover:underline">Source</span>
+                  </a>
+                )}
+              </div>
+            )}
           </article>
         ))}
       </div>

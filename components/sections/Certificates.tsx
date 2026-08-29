@@ -60,7 +60,10 @@ const LEVEL_TAG: Record<string, string> = {
 
 function Tally({ to, still }: { to: number; still: boolean }) {
   const ref = useRef<HTMLSpanElement>(null)
-  const seen = useInView(ref, { once: true, margin: '-40px' })
+  // vertical margin only: '-40px' on all sides also eats 40px off the left,
+  // and this span is only as wide as its digits — the first tally sat inside
+  // that dead zone and never fired.
+  const seen = useInView(ref, { once: true, margin: '-40px 0px' })
   const [n, setN] = useState(still ? to : 0)
   useEffect(() => {
     if (still || !seen) return
@@ -110,7 +113,8 @@ export default function Certificates() {
   // wall camera
   const [zoom, setZoom] = useState(0.8)
   const [pan, setPan] = useState({ x: 0, y: 0 })
-  const viewportRef = useRef<HTMLDivElement>(null)
+  const viewportRef = useRef<HTMLDivElement | null>(null)
+  const wheelOff = useRef<(() => void) | null>(null)
   const drag = useRef({ on: false, x: 0, y: 0, px: 0, py: 0, moved: false })
 
   useEffect(() => setMounted(true), [])
@@ -152,16 +156,23 @@ export default function Certificates() {
     setPan({ x: 0, y: 0 })
   }, [cat])
 
-  // wheel zoom — non-passive so the page doesn't scroll out from under the wall
-  useEffect(() => {
-    const el = viewportRef.current
+  // Wheel zoom. This has to be a callback ref rather than a mount effect:
+  // GlassSection mounts its children late, so on first render viewportRef was
+  // still null and the listener never attached — the wheel fell through to the
+  // page and scrolled to the next section instead of zooming.
+  // stopPropagation as well as preventDefault, so nothing above us reacts either.
+  const attachViewport = useCallback((el: HTMLDivElement | null) => {
+    wheelOff.current?.()
+    wheelOff.current = null
+    viewportRef.current = el
     if (!el) return
     const onWheel = (e: WheelEvent) => {
       e.preventDefault()
+      e.stopPropagation()
       setZoom((z) => Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z * (e.deltaY > 0 ? 0.9 : 1.1))))
     }
     el.addEventListener('wheel', onWheel, { passive: false })
-    return () => el.removeEventListener('wheel', onWheel)
+    wheelOff.current = () => el.removeEventListener('wheel', onWheel)
   }, [])
 
   useEffect(() => {
@@ -283,7 +294,13 @@ export default function Certificates() {
       index="02"
       title="Certificates"
       variant="flip"
-      background={<CertWall />}
+      background={
+        // the conveyor and the wall are both walls of the same certificates;
+        // hold it back so it reads as texture, not a second gallery
+        <div className="pointer-events-none absolute inset-0 opacity-25">
+          <CertWall />
+        </div>
+      }
       fullScreen
       panel={false}
     >
@@ -370,7 +387,7 @@ export default function Certificates() {
 
       {/* ── the wall ───────────────────────────────────────────────────── */}
       <div
-        ref={viewportRef}
+        ref={attachViewport}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}

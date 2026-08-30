@@ -10,6 +10,16 @@ import { motion, useReducedMotion, type Variants } from 'framer-motion'
  */
 export type RevealVariant = 'flip' | 'blur' | 'slide' | 'zoom' | 'rise'
 
+/**
+ * Reveal variants.
+ *
+ * Careful with sections taller than the viewport: whileInView observes the
+ * element's TRANSFORMED box, so a hidden state that displaces by a share of
+ * the element (flip's rotateX, zoom/blur's scale) can throw a very tall
+ * section clean off screen - the observer then never fires and it stays
+ * hidden forever. 'rise' and 'slide' offset by a fixed amount and are safe at
+ * any height.
+ */
 const VARIANTS: Record<RevealVariant, Variants> = {
   // fold down from the top (transform-based; reliable, unlike clipPath)
   flip: {
@@ -45,6 +55,7 @@ export default function GlassSection({
   variant = 'rise',
   background,
   fullScreen = false,
+  revealAmount = 0.2,
   tone = 'dark',
   panel = true,
   children,
@@ -57,6 +68,13 @@ export default function GlassSection({
   background?: ReactNode
   /** Fill the whole viewport so ONLY this section is on screen when landed on. */
   fullScreen?: boolean
+  /**
+   * How much of the section must be on screen before it reveals. The 0.2
+   * default assumes a roughly screen-sized section; a section taller than the
+   * viewport can never show 20% of itself, and would stay hidden forever.
+   * Pass 'some' for sections that grow with their content.
+   */
+  revealAmount?: number | 'some' | 'all'
   /** 'light' brightens the screen: a white wash + a lighter panel. */
   tone?: 'dark' | 'light'
   /** false = no floating glass card; content lays flat on the screen itself. */
@@ -90,7 +108,7 @@ export default function GlassSection({
       <motion.div
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: revealAmount }}
         variants={variants}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className={
@@ -106,7 +124,7 @@ export default function GlassSection({
           <motion.span
             initial={reduce ? { opacity: 0 } : { opacity: 0, x: -8 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: revealAmount }}
             transition={{ duration: 0.5, delay: 0.15 }}
             className="font-mono text-xs text-white/40"
           >
@@ -115,7 +133,7 @@ export default function GlassSection({
           <motion.h2
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: revealAmount }}
             transition={{ duration: 0.5, delay: 0.22 }}
             className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-white txt-glow sm:text-xl"
           >
@@ -125,7 +143,7 @@ export default function GlassSection({
           <motion.span
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: revealAmount }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="absolute inset-x-0 bottom-0 h-px origin-left bg-white/10"
           />

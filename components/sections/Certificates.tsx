@@ -54,6 +54,7 @@ function categorize(c: Certificate): string {
 }
 
 const CATS: { key: string; label: string; chip: string; dot: string }[] = [
+  { key: 'all', label: 'All', chip: 'bg-neutral-200 text-neutral-700', dot: 'bg-white' },
   { key: 'featured', label: 'Featured', chip: 'bg-amber-100 text-amber-800', dot: 'bg-amber-500' },
   { key: 'robotics', label: 'Robotics', chip: 'bg-orange-100 text-orange-800', dot: 'bg-orange-500' },
   { key: 'security', label: 'Security', chip: 'bg-emerald-100 text-emerald-800', dot: 'bg-emerald-500' },
@@ -130,7 +131,7 @@ function Seal({ medal, still, size = 44 }: { medal: string; still: boolean; size
 }
 
 export default function Certificates() {
-  const [cat, setCat] = useState('featured')
+  const [cat, setCat] = useState('all')
   const [active, setActive] = useState<Certificate | null>(null)
   const [mounted, setMounted] = useState(false)
   const [still, setStill] = useState(false)
@@ -149,6 +150,7 @@ export default function Certificates() {
 
   const byCat = useMemo(() => {
     const m = new Map<string, Certificate[]>()
+    m.set('all', [...certificates])
     m.set('featured', certificates.filter((c) => c.featured))
     certificates.forEach((c) => {
       const k = categorize(c)
@@ -183,6 +185,7 @@ export default function Certificates() {
 
   const items = byCat.get(cat) ?? []
   const catMeta = (k: string) => CATS.find((c) => c.key === k) ?? CATS[CATS.length - 1]
+  // a card always wears its own category chip, never the 'all' tab's
 
   useEffect(() => {
     if (!active) return
@@ -273,14 +276,20 @@ export default function Certificates() {
       id="certificates"
       index="02"
       title="Certificates"
-      variant="flip"
+      // "rise" only offsets y by a fixed 44px. flip/zoom/blur displace by a
+      // share of the element, and this section is ~10,000px tall: its hidden
+      // state threw it thousands of px off screen, so the viewport observer
+      // never saw it and it stayed hidden forever.
+      variant="rise"
       background={
         <div className="pointer-events-none absolute inset-0 opacity-25">
           <CertWall />
         </div>
       }
-      fullScreen
       panel={false}
+      // this section grows with its content and runs far taller than the
+      // viewport, so the default 20%-visible trigger could never fire
+      revealAmount="some"
     >
       {/* stat rail */}
       <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-white/12 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
@@ -430,7 +439,7 @@ export default function Certificates() {
 
       <div
         key={cat}
-        className="grid max-h-[38vh] grid-cols-1 items-stretch gap-5 overflow-y-auto pb-2 pr-1 sm:grid-cols-2 lg:grid-cols-3 [scrollbar-width:thin]"
+        className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3"
       >
         {items.map((c, i) => (
           <motion.button

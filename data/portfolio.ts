@@ -212,7 +212,7 @@ export const certificates: Certificate[] = [
   {
     title: 'Thailand New Gen Inventors Award 2026',
     issuer: 'National Research Council of Thailand',
-    file: 'IMG_3232.JPG', featured: true, level: 'National', date: 'Jan 2026',
+    file: 'NRCT-I-New Gen inventors gold medal.jpg', featured: true, level: 'National', date: 'Jan 2026',
     result: 'Gold Medal', medal: 'gold',
     detail:
       'Gold at the I-New Gen Award 2026, health & medical category, secondary level, for PDLite - a device giving a preliminary Parkinson’s disease risk assessment. A five-student team with a faculty advisor. I built the Next.js and Supabase web app that records readings and charts them, handled UX/UI and the database, and designed the enclosure and its mechanism in Fusion 360 for 3D printing.',
@@ -220,7 +220,7 @@ export const certificates: Certificate[] = [
   {
     title: 'Invention & Innovation - Gold Medal',
     issuer: 'SWU Researcher Day 2026',
-    file: 'IMG_3228.JPG', featured: true, level: 'National', date: 'Apr 2026',
+    file: 'SWU-Researcher day gold medal.jpg', featured: true, level: 'National', date: 'Apr 2026',
     result: 'Gold Medal', medal: 'gold',
     detail:
       'The second gold for PDLite, awarded at Srinakharinwirot University’s Researcher Day in the high-school invention and innovation contest. What this project taught me was less technical than procedural: a team needs a clear workflow and divided responsibilities, and the work that matters happens after the idea stops being exciting.',
@@ -228,7 +228,7 @@ export const certificates: Certificate[] = [
   {
     title: 'Thailand Robot & Coding 2026 - Website Competition',
     issuer: 'Kasetsart University',
-    file: 'IMG_3226.JPG', featured: true, level: 'National', date: 'May 2026',
+    file: 'KU-Website competition 3rd place.jpg', featured: true, level: 'National', date: 'May 2026',
     result: '3rd Place', medal: 'bronze',
     detail:
       'Third nationally in the CODEKIT web development competition, high-school level. Two builds against a brief: T-GODA, an Agoda-style booking platform, and Nexus, a Discord-style chat app. I owned the frontend on both - landing pages, responsive layout, navigation, the sign-up and login flow, and over twenty core functions on Nexus.',
@@ -236,13 +236,13 @@ export const certificates: Certificate[] = [
   {
     title: 'IT CLASH - Cybersecurity Track, Finals',
     issuer: 'KMITL, Faculty of Information Technology',
-    file: 'IMG_3227.JPG', featured: true, level: 'National', date: 'May 2026',
+    file: 'KMITL-IT CLASH cybersecurity final.jpg', featured: true, level: 'National', date: 'May 2026',
     result: 'Finalist',
   },
   {
     title: 'Pentesting Fundamentals',
     issuer: 'Crack The Lab',
-    file: 'IMG_3230.JPG', featured: true, level: 'Online', date: 'Apr 2026',
+    file: 'CrackTheLab-Pentesting fundamentals.jpg', featured: true, level: 'Online', date: 'Apr 2026',
     result: 'Completed', credential: 'CR-571C5C8AA4',
   },
   {
@@ -282,7 +282,7 @@ export const certificates: Certificate[] = [
   {
     title: 'Hackathon Digitize - Anti-Corruption Innovation',
     issuer: 'TIJ & Anti-Corruption Organization of Thailand',
-    file: 'IMG_3233.JPG', featured: true, level: 'National', date: 'Dec 2025',
+    file: 'TIJ-Hackathon digitize.jpg', featured: true, level: 'National', date: 'Dec 2025',
     result: 'Participated',
     detail:
       'Run by the Thailand Institute of Justice with the Anti-Corruption Organization of Thailand, Security Pitch, WeVis and HAND Social Enterprise. We turned scanned NACC asset-declaration filings into structured, queryable records with a Python pipeline using OCR, vision models and a trained NER model.',
@@ -290,7 +290,7 @@ export const certificates: Certificate[] = [
   {
     title: 'English for Semiconductor Industry',
     issuer: 'Chulalongkorn University, Dept. of Electrical Engineering',
-    file: 'IMG_3231.JPG', featured: true, level: 'Online', date: 'Mar 2026',
+    file: 'CU-English for semiconductor industry.jpg', featured: true, level: 'Online', date: 'Mar 2026',
     result: 'Completed',
   },
 
@@ -471,7 +471,7 @@ export const certificates: Certificate[] = [
   {
     title: 'Data Analysis Workshop',
     issuer: 'Centre of Excellence in Mathematics',
-    file: 'IMG_3229.JPG', level: 'Institution', date: 'Feb 2026', result: 'Completed',
+    file: 'CEM-Data analysis workshop.jpg', level: 'Institution', date: 'Feb 2026', result: 'Completed',
   },
   {
     title: 'AI in Daily Life',
@@ -543,7 +543,7 @@ export const certificates: Certificate[] = [
   {
     title: 'Inspiration Day - Tae Yang Thai #54',
     issuer: 'ttb Foundation (Fai-Fah by ttb)',
-    file: 'IMG_3225.JPG', level: 'National', date: '2026', result: 'Participated',
+    file: 'TTB-Inspiration day Tae Yang Thai.jpg', level: 'National', date: '2026', result: 'Participated',
   },
 ]
 

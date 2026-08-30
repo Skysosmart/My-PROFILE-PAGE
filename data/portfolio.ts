@@ -111,8 +111,6 @@ export const inspiration = [
  *  demo/repo are optional; the card only renders a link when one is set.
  * ------------------------------------------------------------------------- */
 export type Project = {
-  /** Directory name in the archive's file list. Short, lowercase, no spaces. */
-  slug: string
   title: string
   period: string
   role: string
@@ -132,7 +130,6 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: 'pdlite',
     title: 'PDLite - Parkinson\u2019s Risk Screening Device',
     period: '2026',
     role: 'Web & Database / Device Design',
@@ -146,7 +143,6 @@ export const projects: Project[] = [
     repo: 'https://github.com/Skysosmart/PDlite',
   },
   {
-    slug: 'seluna',
     title: 'Seluna Cloud - Landing Site',
     period: '2026',
     role: 'Frontend Developer',
@@ -159,7 +155,6 @@ export const projects: Project[] = [
     demo: 'https://seluna.cloud',
   },
   {
-    slug: 'nebula',
     title: 'Nebula - Deep-Space Observatory Site',
     period: '2026',
     role: 'Contributor \u00b7 3D',
@@ -172,7 +167,6 @@ export const projects: Project[] = [
     demo: 'https://nebula.pranakorn.co.th',
   },
   {
-    slug: 'codekit',
     title: 'CODEKIT 2026 - T-GODA & Nexus',
     period: '2026',
     role: 'Frontend Developer',
@@ -186,7 +180,6 @@ export const projects: Project[] = [
     repo: 'https://github.com/Skysosmart/codekit-finale',
   },
   {
-    slug: 'tcasfolio',
     title: 'TCASFolio Extension - Doodee Future',
     period: '2025-2026',
     role: 'Extension Author \u00b7 Platform Contributor',
@@ -200,7 +193,6 @@ export const projects: Project[] = [
     repo: 'https://github.com/Skysosmart/doodee-future-tcasfolie-extension',
   },
   {
-    slug: 'pranakorn',
     title: 'Pranakorn.dev - Studio Site',
     period: '2026',
     role: 'Frontend Developer',
@@ -213,7 +205,6 @@ export const projects: Project[] = [
     demo: 'https://pranakorn.dev',
   },
   {
-    slug: 'makex',
     title: 'MakeX Challenger Competition Robot',
     period: '2025',
     role: 'Structural Designer',
@@ -225,7 +216,6 @@ export const projects: Project[] = [
     contribution: '3rd place \u00b7 Best Favourite Alliance Team Award',
   },
   {
-    slug: 'digitize',
     title: 'Hackathon Digitize - Asset Declaration Data',
     period: '2025',
     role: 'Data Engineering',
@@ -235,7 +225,6 @@ export const projects: Project[] = [
     tags: ['Python', 'OCR', 'NER', 'Data Pipeline'],
   },
   {
-    slug: 'portfolio',
     title: 'This Portfolio Site',
     period: '2026',
     role: 'Designer / Developer',

@@ -44,13 +44,13 @@ const ROUTE_LABEL: Record<string, { when: string; what: string }> = {
 
 const MEDAL_FACE: Record<string, { ring: string; text: string; fill: string }> = {
   gold: {
-    ring: 'border-amber-200/40',
-    text: 'text-amber-200',
+    ring: 'border-white/45',
+    text: 'text-white',
     fill: 'radial-gradient(circle at 32% 28%, #F7E7A6 0%, #D9B441 38%, #A9821A 72%, #7A5D11 100%)',
   },
   bronze: {
-    ring: 'border-orange-300/35',
-    text: 'text-orange-200',
+    ring: 'border-white/20',
+    text: 'text-white/65',
     fill: 'radial-gradient(circle at 32% 28%, #F0C9A0 0%, #C98A4F 38%, #9A5F2C 72%, #6E4220 100%)',
   },
 }
@@ -166,7 +166,7 @@ export default function Certificates() {
         <span>
           <Tally to={certStats.total} still={still} /> records
         </span>
-        <span className="text-amber-300/70">
+        <span className="text-white/70">
           <Tally to={certStats.gold} still={still} /> gold
         </span>
         <span>
@@ -257,12 +257,12 @@ export default function Certificates() {
                       {meta.when}
                     </span>
                     <span
-                      className={`mt-0.5 block font-sans text-[11px] font-medium leading-tight transition-colors group-hover:text-white ${last ? 'text-orange-200' : 'text-white/70'}`}
+                      className={`mt-0.5 block font-sans text-[11px] font-medium leading-tight transition-colors group-hover:text-white ${last ? 'text-white' : 'text-white/70'}`}
                     >
                       {meta.what}
                     </span>
                     {last && (
-                      <span className="mt-0.5 block font-mono text-[8px] uppercase leading-tight tracking-wider text-orange-200/70">
+                      <span className="mt-0.5 block font-mono text-[8px] uppercase leading-tight tracking-wider text-white/50">
                         3rd + Best Alliance
                       </span>
                     )}

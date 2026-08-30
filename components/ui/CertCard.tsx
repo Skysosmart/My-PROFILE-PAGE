@@ -44,7 +44,7 @@ export default function CertCard({
         />
         {c.medal && (
           <span
-            className={`absolute right-3 top-3 rounded-full px-2 py-0.5 font-sans text-[10px] font-bold shadow ${c.medal === 'gold' ? 'bg-amber-400 text-amber-950' : 'bg-orange-300 text-orange-950'}`}
+            className={`absolute right-3 top-3 rounded-full px-2 py-0.5 font-sans text-[10px] font-bold shadow ${c.medal === 'gold' ? 'bg-white text-neutral-900' : 'border border-white/60 bg-neutral-900/85 text-white'}`}
           >
             {c.medal === 'gold' ? 'GOLD' : '3RD'}
           </span>

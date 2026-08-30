@@ -17,7 +17,7 @@ export function categorize(c: Certificate): string {
 
 export const CATS: { key: string; label: string; chip: string; dot: string }[] = [
   { key: 'all', label: 'All', chip: 'bg-neutral-200 text-neutral-700', dot: 'bg-white' },
-  { key: 'featured', label: 'Featured', chip: 'bg-amber-100 text-amber-800', dot: 'bg-amber-500' },
+  { key: 'featured', label: 'Featured', chip: 'bg-neutral-100 text-neutral-900', dot: 'bg-white' },
   { key: 'robotics', label: 'Robotics', chip: 'bg-orange-100 text-orange-800', dot: 'bg-orange-500' },
   { key: 'security', label: 'Security', chip: 'bg-emerald-100 text-emerald-800', dot: 'bg-emerald-500' },
   { key: 'ai-data', label: 'AI & Data', chip: 'bg-violet-100 text-violet-800', dot: 'bg-violet-500' },

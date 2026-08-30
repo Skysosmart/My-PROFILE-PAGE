@@ -192,8 +192,9 @@ export const projects: Project[] = [
     role: 'Contributor · 3D',
     status: 'Live',
     description:
-      'An Astro site on Cloudflare with a Neon database, themed as an observatory dome looking at a live emission nebula. Colour comes from real nebula emission lines in OKLCH rather than the usual purple space gradient, and the submit flow ends in a cinematic 3D black-hole intake built with react-three-fiber. I have the most commits on it of anyone.',
-    tags: ['Astro', 'React Three Fiber', 'Cloudflare', 'OKLCH'],
+      'A curated directory of websites, built as an observatory dome looking out at a live emission nebula. Astro on Cloudflare with a Neon database; colour comes from real nebula emission lines in OKLCH rather than the usual purple space gradient, and submitting a site ends in a cinematic 3D black-hole intake built with react-three-fiber. I have the most commits on it of anyone.',
+    tags: ['Astro', 'React Three Fiber', 'Cloudflare', 'Neon', 'OKLCH'],
+    demo: 'https://nebula.pranakorn.co.th',
   },
   {
     title: 'POS + ERP System',

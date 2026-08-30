@@ -1,28 +1,27 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { AnimatePresence, motion, useInView } from 'framer-motion'
+import Link from 'next/link'
+import { motion, useInView } from 'framer-motion'
 import GlassSection from '@/components/ui/GlassSection'
 import CertWall from '@/components/effects/CertWall'
-import { certificates, assets, type Certificate } from '@/data/portfolio'
-
-const src = (file: string) => assets.certDir + encodeURIComponent(file)
-const thumb = (file: string) => assets.certDir + 'thumbs/' + encodeURIComponent(file)
+import CertCard from '@/components/ui/CertCard'
+import CertLightbox from '@/components/ui/CertLightbox'
+import { certThumb, CATS, groupByCategory, certStats } from '@/lib/certs'
+import { certificates, type Certificate } from '@/data/portfolio'
 
 /**
  * CERTIFICATES - three tiers, because 56 documents are not 56 equal things.
  *
  *   1. PODIUM   the four results that carry a rank
- *   2. ROUTE    MakeX was one six-month campaign, not seven loose certificates,
- *               so it reads as the sequence it actually was
- *   3. ARCHIVE  everything else, as the masonry of big white cards
- *
- * Sequencing the route is honest here: the order IS the content - warm-up, four
- * point-race tournaments, a qualifier, then the national final.
+ *   2. ROUTE    MakeX was one six-month campaign, not seven loose certificates
+ *   3. PREVIEW  three rows of the archive, with the rest on /certificates
  */
 
-/** The MakeX campaign, in the order it happened. */
+const PREVIEW_ROWS = 3
+const COLS_AT_WIDEST = 4
+const PREVIEW_COUNT = PREVIEW_ROWS * COLS_AT_WIDEST
+
 const MAKEX_ROUTE = [
   'MakeX Warmup.jpg',
   'MakeX tournament 1.jpg',
@@ -43,35 +42,6 @@ const ROUTE_LABEL: Record<string, { when: string; what: string }> = {
   'MakeX Ultimate winner.jpg': { when: 'Nov', what: 'Nationals' },
 }
 
-function categorize(c: Certificate): string {
-  const s = `${c.title} ${c.issuer} ${c.file}`
-  if (/makex|robot/i.test(s)) return 'robotics'
-  if (/EC[_-]?Council|NDE|EHE|CTF|cyber|NCSA|RTARF|pentest|IT CLASH/i.test(s)) return 'security'
-  if (/\bAI\b|BOTNOI|python|\bdata\b|typhoon|CiRA|prompt|digital twin|semiconductor/i.test(s))
-    return 'ai-data'
-  if (/\bENG\b|english|INTER/i.test(s)) return 'language'
-  return 'misc'
-}
-
-const CATS: { key: string; label: string; chip: string; dot: string }[] = [
-  { key: 'all', label: 'All', chip: 'bg-neutral-200 text-neutral-700', dot: 'bg-white' },
-  { key: 'featured', label: 'Featured', chip: 'bg-amber-100 text-amber-800', dot: 'bg-amber-500' },
-  { key: 'robotics', label: 'Robotics', chip: 'bg-orange-100 text-orange-800', dot: 'bg-orange-500' },
-  { key: 'security', label: 'Security', chip: 'bg-emerald-100 text-emerald-800', dot: 'bg-emerald-500' },
-  { key: 'ai-data', label: 'AI & Data', chip: 'bg-violet-100 text-violet-800', dot: 'bg-violet-500' },
-  { key: 'language', label: 'Language', chip: 'bg-sky-100 text-sky-800', dot: 'bg-sky-500' },
-  { key: 'misc', label: 'More', chip: 'bg-neutral-200 text-neutral-700', dot: 'bg-neutral-400' },
-]
-
-const LEVEL_TAG: Record<string, string> = {
-  International: 'INTL',
-  National: 'NATL',
-  Provincial: 'PROV',
-  Institution: 'INST',
-  School: 'SCH',
-  Online: 'ONL',
-}
-
 const MEDAL_FACE: Record<string, { ring: string; text: string; fill: string }> = {
   gold: {
     ring: 'border-amber-200/40',
@@ -87,9 +57,8 @@ const MEDAL_FACE: Record<string, { ring: string; text: string; fill: string }> =
 
 function Tally({ to, still }: { to: number; still: boolean }) {
   const ref = useRef<HTMLSpanElement>(null)
-  // Vertical margin only. '-40px' on every side also eats 40px off the left,
-  // and this span is only as wide as its digits, so the first tally sat inside
-  // the dead zone and never fired.
+  // Vertical margin only: '-40px' on every side also eats 40px off the left,
+  // and this span is only as wide as its digits.
   const seen = useInView(ref, { once: true, margin: '-40px 0px' })
   const [n, setN] = useState(still ? to : 0)
   useEffect(() => {
@@ -133,10 +102,7 @@ function Seal({ medal, still, size = 44 }: { medal: string; still: boolean; size
 export default function Certificates() {
   const [cat, setCat] = useState('all')
   const [active, setActive] = useState<Certificate | null>(null)
-  const [mounted, setMounted] = useState(false)
   const [still, setStill] = useState(false)
-
-  useEffect(() => setMounted(true), [])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -147,19 +113,8 @@ export default function Certificates() {
   }, [])
 
   const byFile = useMemo(() => new Map(certificates.map((c) => [c.file, c])), [])
+  const byCat = useMemo(groupByCategory, [])
 
-  const byCat = useMemo(() => {
-    const m = new Map<string, Certificate[]>()
-    m.set('all', [...certificates])
-    m.set('featured', certificates.filter((c) => c.featured))
-    certificates.forEach((c) => {
-      const k = categorize(c)
-      m.set(k, [...(m.get(k) ?? []), c])
-    })
-    return m
-  }, [])
-
-  // gold ahead of the thirds - rank order, not file order
   const podium = useMemo(
     () =>
       certificates
@@ -167,109 +122,14 @@ export default function Certificates() {
         .sort((a, b) => (b.medal === 'gold' ? 1 : 0) - (a.medal === 'gold' ? 1 : 0)),
     [],
   )
-
   const route = useMemo(
     () => MAKEX_ROUTE.map((f) => byFile.get(f)).filter(Boolean) as Certificate[],
     [byFile],
   )
 
-  const stats = useMemo(
-    () => ({
-      total: certificates.length,
-      gold: certificates.filter((c) => c.medal === 'gold').length,
-      national: certificates.filter((c) => c.level === 'National').length,
-      intl: certificates.filter((c) => c.level === 'International').length,
-    }),
-    [],
-  )
-
-  const items = byCat.get(cat) ?? []
-  const catMeta = (k: string) => CATS.find((c) => c.key === k) ?? CATS[CATS.length - 1]
-  // a card always wears its own category chip, never the 'all' tab's
-
-  useEffect(() => {
-    if (!active) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setActive(null)
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [active])
-
-  const record = (c: Certificate) => {
-    const rows: [string, string][] = []
-    if (c.issuer) rows.push(['ISSUER', c.issuer])
-    if (c.level) rows.push(['LEVEL', c.level])
-    if (c.date) rows.push(['DATE', c.date])
-    if (c.result) rows.push(['RESULT', c.result])
-    if (c.credential) rows.push(['CREDENTIAL', c.credential])
-    return rows
-  }
-
-  const lightbox = (
-    <AnimatePresence>
-      {active && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setActive(null)}
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
-        >
-          <motion.div
-            initial={{ scale: 0.95, y: 12, opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.97, opacity: 0 }}
-            transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={active.title}
-            className="relative grid w-full max-w-6xl overflow-hidden rounded-3xl bg-neutral-950 shadow-2xl lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]"
-          >
-            <div className="flex max-h-[52vh] items-center justify-center bg-neutral-100 p-3 sm:p-5 lg:max-h-[82vh]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={src(active.file)}
-                alt={active.title}
-                className="max-h-[46vh] w-auto max-w-full object-contain drop-shadow-xl lg:max-h-[74vh]"
-              />
-            </div>
-            <div className="flex max-h-[38vh] flex-col overflow-y-auto p-5 sm:p-6 lg:max-h-[82vh]">
-              <div className="flex items-start justify-between gap-3">
-                <span
-                  className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[11px] font-semibold ${catMeta(categorize(active)).chip}`}
-                >
-                  {catMeta(categorize(active)).label}
-                </span>
-                {active.medal && <Seal medal={active.medal} still={still} />}
-              </div>
-              <h3 className="mt-3 font-sans text-xl font-semibold leading-snug text-white">
-                {active.title}
-              </h3>
-              <dl className="mt-4 space-y-1.5 border-t border-white/10 pt-4 font-mono text-[12px]">
-                {record(active).map(([k, v]) => (
-                  <div key={k} className="flex gap-3">
-                    <dt className="w-24 shrink-0 uppercase tracking-wider text-white/35">{k}</dt>
-                    <dd className="min-w-0 text-white/80">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-              {active.detail && (
-                <p className="mt-4 border-t border-white/10 pt-4 font-sans text-sm leading-relaxed text-white/65">
-                  {active.detail}
-                </p>
-              )}
-              <button
-                onClick={() => setActive(null)}
-                className="mt-auto self-start rounded-full bg-white px-4 py-2 font-sans text-sm font-medium text-neutral-900 transition-colors hover:bg-white/85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                Close
-              </button>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
+  const all = byCat.get(cat) ?? []
+  const shown = all.slice(0, PREVIEW_COUNT)
+  const remaining = all.length - shown.length
 
   return (
     <GlassSection
@@ -277,9 +137,8 @@ export default function Certificates() {
       index="02"
       title="Certificates"
       // "rise" only offsets y by a fixed 44px. flip/zoom/blur displace by a
-      // share of the element, and this section is ~10,000px tall: its hidden
-      // state threw it thousands of px off screen, so the viewport observer
-      // never saw it and it stayed hidden forever.
+      // share of the element, which throws a tall section off its own
+      // viewport observer and leaves it hidden forever.
       variant="rise"
       background={
         <div className="pointer-events-none absolute inset-0 opacity-25">
@@ -287,27 +146,25 @@ export default function Certificates() {
         </div>
       }
       panel={false}
-      // this section grows with its content and runs far taller than the
-      // viewport, so the default 20%-visible trigger could never fire
       revealAmount="some"
     >
       {/* stat rail */}
       <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-white/12 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
         <span>
-          <Tally to={stats.total} still={still} /> records
+          <Tally to={certStats.total} still={still} /> records
         </span>
         <span className="text-amber-300/70">
-          <Tally to={stats.gold} still={still} /> gold
+          <Tally to={certStats.gold} still={still} /> gold
         </span>
         <span>
-          <Tally to={stats.national} still={still} /> national
+          <Tally to={certStats.national} still={still} /> national
         </span>
         <span>
-          <Tally to={stats.intl} still={still} /> international
+          <Tally to={certStats.intl} still={still} /> international
         </span>
       </div>
 
-      {/* ── 1. PODIUM ──────────────────────────────────────────────────── */}
+      {/* 1. PODIUM */}
       <div className="mb-5 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
         {podium.map((c) => {
           const face = MEDAL_FACE[c.medal ?? 'gold']
@@ -319,7 +176,7 @@ export default function Certificates() {
             >
               <div className="w-16 shrink-0 overflow-hidden rounded-md bg-white shadow-[0_8px_22px_-10px_rgba(0,0,0,0.9)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={thumb(c.file)} alt="" loading="lazy" className="block h-auto w-full" />
+                <img src={certThumb(c.file)} alt="" loading="lazy" className="block h-auto w-full" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
@@ -340,7 +197,7 @@ export default function Certificates() {
         })}
       </div>
 
-      {/* ── 2. THE MAKEX ROUTE ─────────────────────────────────────────── */}
+      {/* 2. THE MAKEX ROUTE */}
       {route.length > 0 && (
         <div className="mb-5 rounded-2xl border border-white/10 bg-black/25 p-3 sm:p-4">
           <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -351,7 +208,6 @@ export default function Certificates() {
               Team Prometheus · Jun to Nov 2025
             </span>
           </div>
-
           <ol className="flex gap-0 overflow-x-auto pb-1 [scrollbar-width:thin]">
             {route.map((c, i) => {
               const meta = ROUTE_LABEL[c.file] ?? { when: '', what: c.title }
@@ -380,7 +236,6 @@ export default function Certificates() {
                       )}
                     </button>
                   </div>
-
                   <button
                     onClick={() => setActive(c)}
                     className="group mt-1.5 w-full px-1 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
@@ -406,7 +261,7 @@ export default function Certificates() {
         </div>
       )}
 
-      {/* ── 3. THE ARCHIVE ─────────────────────────────────────────────── */}
+      {/* 3. PREVIEW - three rows, the rest on its own page */}
       <div className="mb-4 flex flex-wrap gap-2">
         {CATS.map((c) => {
           const on = c.key === cat
@@ -441,63 +296,29 @@ export default function Certificates() {
         key={cat}
         className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
-        {items.map((c, i) => (
-          <motion.button
-            key={c.file}
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: Math.min(i * 0.035, 0.35), ease: [0.16, 1, 0.3, 1] }}
-            whileHover={still ? undefined : { y: -6 }}
-            onClick={() => setActive(c)}
-            className="group flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white text-left shadow-[0_12px_40px_-14px_rgba(0,0,0,0.7)] transition-shadow hover:shadow-[0_28px_70px_-16px_rgba(0,0,0,0.85)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            {/* fixed 4:3 well, image contained: every cell is the same size and
-                no certificate gets cropped - portrait scans letterbox instead */}
-            <div className="relative aspect-[4/3] w-full shrink-0 bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={thumb(c.file)}
-                alt={c.title}
-                loading="lazy"
-                draggable={false}
-                className="absolute inset-0 h-full w-full object-contain p-1.5"
-              />
-              {c.medal && (
-                <span
-                  className={`absolute right-3 top-3 rounded-full px-2 py-0.5 font-sans text-[10px] font-bold shadow ${c.medal === 'gold' ? 'bg-amber-400 text-amber-950' : 'bg-orange-300 text-orange-950'}`}
-                >
-                  {c.medal === 'gold' ? 'GOLD' : '3RD'}
-                </span>
-              )}
-              {c.level && !c.medal && (c.level === 'National' || c.level === 'International') && (
-                <span className="absolute right-3 top-3 rounded bg-neutral-900/85 px-1.5 py-0.5 font-mono text-[9px] font-semibold tracking-wider text-white">
-                  {LEVEL_TAG[c.level]}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-1 flex-col border-t border-neutral-100 p-4">
-              <span
-                className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[11px] font-semibold ${catMeta(categorize(c)).chip}`}
-              >
-                {catMeta(categorize(c)).label}
-              </span>
-              <h3 className="mt-2 line-clamp-2 font-sans text-base font-semibold leading-snug text-neutral-900">
-                {c.title}
-              </h3>
-              {c.issuer && (
-                <p className="mt-1 truncate font-sans text-xs text-neutral-500">{c.issuer}</p>
-              )}
-              {(c.result || c.date) && (
-                <p className="mt-auto pt-2 truncate font-mono text-[10px] uppercase tracking-wider text-neutral-400">
-                  {[c.result, c.date].filter(Boolean).join(' · ')}
-                </p>
-              )}
-            </div>
-          </motion.button>
+        {shown.map((c, i) => (
+          <CertCard key={c.file} cert={c} index={i} still={still} onOpen={setActive} />
         ))}
       </div>
 
-      {mounted && createPortal(lightbox, document.body)}
+      {remaining > 0 && (
+        <div className="mt-6 flex justify-center">
+          <Link
+            href="/certificates"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 font-sans text-sm font-medium text-white/80 transition-colors hover:border-white/60 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            Explore all {certStats.total} certificates
+            <span className="font-mono text-white/45 transition-colors group-hover:text-white/80">
+              +{remaining} more
+            </span>
+            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+              →
+            </span>
+          </Link>
+        </div>
+      )}
+
+      <CertLightbox cert={active} onClose={() => setActive(null)} />
     </GlassSection>
   )
 }

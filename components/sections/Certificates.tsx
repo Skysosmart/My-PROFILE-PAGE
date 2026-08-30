@@ -101,8 +101,21 @@ function Seal({ medal, still, size = 44 }: { medal: string; still: boolean; size
 
 export default function Certificates() {
   const [cat, setCat] = useState('all')
+  // the grid is 1/2/3/4 columns by breakpoint, so a row index computed from a
+  // fixed 4 would fade the wrong cards on anything narrower
+  const [cols, setCols] = useState(4)
   const [active, setActive] = useState<Certificate | null>(null)
   const [still, setStill] = useState(false)
+
+  useEffect(() => {
+    const measure = () => {
+      const w = window.innerWidth
+      setCols(w >= 1280 ? 4 : w >= 1024 ? 3 : w >= 640 ? 2 : 1)
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -296,9 +309,23 @@ export default function Certificates() {
         key={cat}
         className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
-        {shown.map((c, i) => (
-          <CertCard key={c.file} cert={c} index={i} still={still} onOpen={setActive} />
-        ))}
+        {shown.map((c, i) => {
+          // 100% / 50% / 25% down the rows: the grid recedes rather than
+          // stopping dead, which points at the Explore link below it.
+          // Hovering lifts a card back to full so nothing is unreadable.
+          const row = Math.floor(i / cols)
+          const fade = [1, 0.5, 0.25][row] ?? 0.25
+          const soften = [0, 1.5, 3][row] ?? 3
+          return (
+            <div
+              key={c.file}
+              style={{ opacity: fade, filter: soften ? `blur(${soften}px)` : undefined }}
+              className="group/fade transition-[opacity,filter] duration-300 hover:!opacity-100 hover:!blur-none focus-within:!opacity-100 focus-within:!blur-none"
+            >
+              <CertCard cert={c} index={i} still={still} onOpen={setActive} />
+            </div>
+          )
+        })}
       </div>
 
       {remaining > 0 && (

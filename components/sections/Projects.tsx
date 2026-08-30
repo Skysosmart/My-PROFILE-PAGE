@@ -5,6 +5,9 @@ import GlassSection from '@/components/ui/GlassSection'
 import { projects } from '@/data/portfolio'
 
 const statusStyle: Record<string, string> = {
+  // Live reads brightest: a product anyone can open right now outranks one
+  // that is merely finished
+  Live: 'border-emerald-300/70 text-emerald-200',
   Completed: 'border-white/50 text-white',
   'In Progress': 'border-white/30 text-white/70',
   Upcoming: 'border-white/20 text-white/50',

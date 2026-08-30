@@ -107,14 +107,14 @@ export const inspiration = [
 
 /* ---------------------------------------------------------------------------
  *  PROJECTS - competition and coursework builds, strongest first.
- *  status: 'Completed' | 'In Progress' | 'Upcoming'
+ *  status: 'Live' | 'Completed' | 'In Progress' | 'Upcoming'
  *  demo/repo are optional; the card only renders a link when one is set.
  * ------------------------------------------------------------------------- */
 export type Project = {
   title: string
   period: string
   role: string
-  status: 'Completed' | 'In Progress' | 'Upcoming'
+  status: 'Live' | 'Completed' | 'In Progress' | 'Upcoming'
   description: string
   tags: string[]
   demo?: string
@@ -159,7 +159,7 @@ export const projects: Project[] = [
     title: 'Doodee Future - University Admission Platform',
     period: '2025-2026',
     role: 'Contributor · Extension Author',
-    status: 'Completed',
+    status: 'Live',
     description:
       'A platform that helps Thai students plan for university admission in one place instead of hunting across a dozen sites. Built with the Pranakorn Group team. The TCASFolio browser extension is mine end to end - a Chrome MV3 add-on that keeps a local portfolio vault and autofills the TCASFolio forms, with the data never leaving the machine.',
     tags: ['Next.js', 'Chrome MV3', 'Team Project'],
@@ -170,7 +170,7 @@ export const projects: Project[] = [
     title: 'Pranakorn.dev - Studio Site',
     period: '2026',
     role: 'Frontend Developer',
-    status: 'Completed',
+    status: 'Live',
     description:
       'The public site for Pranakorn Group, the web development studio I build with. My largest share of any team repo here: 23 of its 143 commits, across the landing page and its responsive layout.',
     tags: ['Frontend', 'Responsive', 'Team Project'],
@@ -180,7 +180,7 @@ export const projects: Project[] = [
     title: 'Seluna Cloud - Landing Site',
     period: '2026',
     role: 'Frontend Developer',
-    status: 'Completed',
+    status: 'Live',
     description:
       'The public site for Seluna Cloud, a commerce platform in production. I am its largest contributor, with 43 of the repo\'s commits: the 3D moon hero and its iris transition, the site-wide motion pass, the grouped navbar, and a startup rework that gates the splash per session and paints the hero before hydration. Next.js on Cloudflare with GSAP and Framer Motion.',
     tags: ['Next.js', 'Cloudflare', 'GSAP', '3D Hero'],
@@ -190,7 +190,7 @@ export const projects: Project[] = [
     title: 'Nebula - Deep-Space Observatory Site',
     period: '2026',
     role: 'Contributor · 3D',
-    status: 'In Progress',
+    status: 'Live',
     description:
       'An Astro site on Cloudflare with a Neon database, themed as an observatory dome looking at a live emission nebula. Colour comes from real nebula emission lines in OKLCH rather than the usual purple space gradient, and the submit flow ends in a cinematic 3D black-hole intake built with react-three-fiber. I have the most commits on it of anyone.',
     tags: ['Astro', 'React Three Fiber', 'Cloudflare', 'OKLCH'],
@@ -199,7 +199,7 @@ export const projects: Project[] = [
     title: 'POS + ERP System',
     period: '2026',
     role: 'Team Member · Pranakorn Group',
-    status: 'In Progress',
+    status: 'Live',
     description:
       'A Pranakorn Group product I am part of: a point-of-sale terminal and a back-office ERP merged into one Next.js 16 and React 19 app, serving two independent product planes from a single origin. The build is the team\'s work rather than mine.',
     tags: ['Next.js 16', 'React 19', 'Team Project'],

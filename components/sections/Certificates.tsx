@@ -430,7 +430,7 @@ export default function Certificates() {
 
       <div
         key={cat}
-        className="max-h-[38vh] columns-1 gap-5 overflow-y-auto pb-2 pr-1 sm:columns-2 lg:columns-3 [scrollbar-width:thin]"
+        className="grid max-h-[38vh] grid-cols-1 items-stretch gap-5 overflow-y-auto pb-2 pr-1 sm:grid-cols-2 lg:grid-cols-3 [scrollbar-width:thin]"
       >
         {items.map((c, i) => (
           <motion.button
@@ -440,16 +440,18 @@ export default function Certificates() {
             transition={{ duration: 0.35, delay: Math.min(i * 0.035, 0.35), ease: [0.16, 1, 0.3, 1] }}
             whileHover={still ? undefined : { y: -6 }}
             onClick={() => setActive(c)}
-            className="group mb-5 w-full break-inside-avoid overflow-hidden rounded-2xl bg-white text-left shadow-[0_12px_40px_-14px_rgba(0,0,0,0.7)] transition-shadow hover:shadow-[0_28px_70px_-16px_rgba(0,0,0,0.85)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="group flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white text-left shadow-[0_12px_40px_-14px_rgba(0,0,0,0.7)] transition-shadow hover:shadow-[0_28px_70px_-16px_rgba(0,0,0,0.85)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
-            <div className="relative">
+            {/* fixed 4:3 well, image contained: every cell is the same size and
+                no certificate gets cropped - portrait scans letterbox instead */}
+            <div className="relative aspect-[4/3] w-full shrink-0 bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={thumb(c.file)}
                 alt={c.title}
                 loading="lazy"
                 draggable={false}
-                className="block h-auto w-full"
+                className="absolute inset-0 h-full w-full object-contain p-1.5"
               />
               {c.medal && (
                 <span
@@ -464,7 +466,7 @@ export default function Certificates() {
                 </span>
               )}
             </div>
-            <div className="border-t border-neutral-100 p-4">
+            <div className="flex flex-1 flex-col border-t border-neutral-100 p-4">
               <span
                 className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[11px] font-semibold ${catMeta(categorize(c)).chip}`}
               >
@@ -477,7 +479,7 @@ export default function Certificates() {
                 <p className="mt-1 truncate font-sans text-xs text-neutral-500">{c.issuer}</p>
               )}
               {(c.result || c.date) && (
-                <p className="mt-2 truncate font-mono text-[10px] uppercase tracking-wider text-neutral-400">
+                <p className="mt-auto pt-2 truncate font-mono text-[10px] uppercase tracking-wider text-neutral-400">
                   {[c.result, c.date].filter(Boolean).join(' · ')}
                 </p>
               )}

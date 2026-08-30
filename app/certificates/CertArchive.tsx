@@ -25,9 +25,17 @@ import type { Certificate } from '@/data/portfolio'
  *             friction, so panning feels weighted instead of jumping
  */
 
-const CELL_W = 268
-const CELL_H = 250
-const CARD_W = 244
+// Every card is exactly CARD_W x CARD_H - a title that wraps to two lines must
+// not make its card taller, or neighbours collide. The cell is then sized to
+// hold a card at full lens magnification with room to spare, so nothing ever
+// overlaps however the fisheye swells it.
+const CARD_W = 236
+// 177 for the 4:3 image well + 99 for the caption: a chip, two lines of title
+// and the issuer all have to fit, or a fixed height just clips them
+const CARD_H = 276
+const MAX_SCALE = 1.08
+const CELL_W = 300 // 236 * 1.08 = 255, leaves 45px of air
+const CELL_H = 340 // 276 * 1.08 = 298, leaves 42px of air
 // how far the lens reaches, in px
 const LENS_R = 560
 
@@ -206,7 +214,7 @@ export default function CertArchive() {
           const fy = focus?.y ?? size.h / 2
           const d = Math.hypot(sx - fx, sy - fy) / LENS_R
           const near = still ? 0.5 : Math.max(0, 1 - d)
-          const scale = 0.74 + 0.44 * Math.pow(near, 1.5)
+          const scale = 0.74 + (MAX_SCALE - 0.74) * Math.pow(near, 1.5)
           const dim = 0.34 + 0.66 * Math.pow(near, 0.7)
           const soft = (1 - near) * 1.6
           return (
@@ -218,13 +226,14 @@ export default function CertArchive() {
               style={{
                 transform: `translate3d(${x + offset.x}px, ${y + offset.y}px, 0) scale(${scale})`,
                 width: CARD_W,
+                height: CARD_H,
                 opacity: dim,
                 filter: soft > 0.12 ? `blur(${soft.toFixed(2)}px)` : undefined,
                 zIndex: Math.round(near * 100),
               }}
               className="absolute left-0 top-0 flex origin-center flex-col overflow-hidden rounded-xl border border-black/10 bg-white text-left shadow-[0_6px_18px_-8px_rgba(0,0,0,0.35)] transition-shadow hover:shadow-[0_16px_40px_-12px_rgba(0,0,0,0.5)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
             >
-            <div className="relative aspect-[4/3] w-full bg-white">
+              <div className="relative aspect-[4/3] w-full shrink-0 bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={certThumb(cert.file)}
@@ -246,7 +255,7 @@ export default function CertArchive() {
                 </span>
               )}
             </div>
-            <div className="border-t border-neutral-100 px-3 py-2">
+              <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-t border-neutral-100 px-3 py-2">
               <span
                 className={`inline-block rounded-full px-2 py-0.5 font-sans text-[10px] font-semibold ${catMeta(categorize(cert)).chip}`}
               >

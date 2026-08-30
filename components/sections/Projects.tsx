@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import GlassSection from '@/components/ui/GlassSection'
+import ProjectWall from '@/components/effects/ProjectWall'
 import { projects, type Project } from '@/data/portfolio'
 
 /**
@@ -31,13 +32,32 @@ export default function Projects() {
   const [still, setStill] = useState(false)
   useEffect(() => setStill(!!reduce), [reduce])
 
-  return (
-    <GlassSection id="projects" index="03" title="Projects" variant="slide" wide revealAmount="some">
-      <p className="mb-5 font-mono text-xs text-white/45">
-        {projects.length} projects · {projects.filter((p) => p.demo).length} you can open right now
-      </p>
+  // counted off the list, so the rail can never drift from the cards
+  const live = projects.filter((p) => p.status === 'Live').length
+  const openable = projects.filter((p) => p.demo).length
+  const sourced = projects.filter((p) => p.repo).length
 
-      <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  return (
+    <GlassSection
+      id="projects"
+      index="03"
+      title="Projects"
+      variant="slide"
+      background={<ProjectWall />}
+      // its own band of the page, like About and Certificates - not a card
+      // floating on top of one
+      panel={false}
+      revealAmount="some"
+    >
+      {/* the same stat rail Certificates opens with, so the two read as siblings */}
+      <div className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-white/12 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
+        <span>{projects.length} projects</span>
+        <span className="text-white/70">{live} live</span>
+        <span>{openable} you can open</span>
+        <span>{sourced} open source</span>
+      </div>
+
+      <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {projects.map((p, i) => (
           <Card key={p.title} p={p} index={i} still={still} />
         ))}

@@ -249,7 +249,7 @@ export const certificates: Certificate[] = [
     title: 'MakeX Challenge — Best Favourite Alliance Team',
     issuer: 'MakeX Thailand · Imagineering Education',
     file: 'MakeX Ultimate winner.jpg', featured: true, level: 'National', date: 'Oct–Nov 2025',
-    result: 'Best Favourite Alliance Team Award',
+    result: '3rd Place · Best Favourite Alliance Team', medal: 'bronze',
     detail:
       'Team Prometheus, at the 2025 MakeX Thailand National Championships. I designed the entire robot structure in Fusion 360 over six months, building for disc-shooting and block-gripping missions across five arenas. The lesson was composure — a dead control board or a wheel off mid-match, and an opponent who can disrupt you. In the game they are rivals; after it they are friends.',
   },

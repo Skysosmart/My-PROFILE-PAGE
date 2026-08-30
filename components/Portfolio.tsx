@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import BootScreen from '@/components/BootScreen'
@@ -22,13 +22,17 @@ import Footer from '@/components/Footer'
  */
 export default function Portfolio() {
   const [started, setStarted] = useState(false)
+  // stable identity so BootScreen's timers are never reset by a new prop
+  const start = useCallback(() => setStarted(true), [])
 
   return (
     <>
-      {/* Loading screen (terminal text only) */}
-      <AnimatePresence>
-        {!started && <BootScreen key="boot" onStart={() => setStarted(true)} />}
-      </AnimatePresence>
+      {/* Loading screen (terminal text only).
+          Deliberately NOT inside AnimatePresence: it held the overlay mounted
+          at full opacity over an already-rendered site, so the only way past
+          the boot screen was to click it. BootScreen fades itself out and then
+          calls onStart, so a plain conditional is both simpler and reliable. */}
+      {!started && <BootScreen onStart={start} />}
 
       {/* Site */}
       {started && (

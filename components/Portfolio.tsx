@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 import BootScreen from '@/components/BootScreen'
 import Header from '@/components/Header'
-import RoleTicker from '@/components/RoleTicker'
 import NameTag from '@/components/NameTag'
 
 import IntroHero from '@/components/sections/IntroHero'
@@ -39,7 +38,6 @@ export default function Portfolio() {
         <>
           <Header />
           <NameTag />
-          <RoleTicker />
           <motion.main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -1,5 +1,6 @@
 'use client'
 
+import RoleTicker from '@/components/RoleTicker'
 import { motion } from 'framer-motion'
 import SkyOrb from '@/components/SkyOrb'
 import HandBackground from '@/components/effects/HandBackground'
@@ -13,6 +14,8 @@ import HandBackground from '@/components/effects/HandBackground'
 export default function IntroHero() {
   return (
     <header className="relative isolate flex min-h-screen flex-col items-center justify-center px-4 py-20 text-center">
+      {/* lives here, not in the page shell, so it scrolls away with the hero */}
+      <RoleTicker />
       {/* ASCII hand - scoped to this section only */}
       <HandBackground />
       <motion.p

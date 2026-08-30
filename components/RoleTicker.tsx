@@ -5,8 +5,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { player } from '@/data/portfolio'
 
 /**
- * Fixed bottom-left terminal ticker that cycles through the roles in
- * player.roles, swapping every 5 seconds with a vertical slide.
+ * Terminal ticker that cycles through player.roles, swapping every 5 seconds
+ * with a vertical slide.
+ *
+ * Positioned absolute, not fixed: it belongs to the hero and should scroll away
+ * with it. Fixed meant it sat over every section all the way down the page.
  */
 export default function RoleTicker() {
   const [i, setI] = useState(0)
@@ -18,7 +21,7 @@ export default function RoleTicker() {
   }, [roles.length])
 
   return (
-    <div className="pointer-events-none fixed bottom-4 left-4 z-[60] font-mono sm:bottom-6 sm:left-6">
+    <div className="pointer-events-none absolute bottom-4 left-4 z-[60] font-mono sm:bottom-6 sm:left-6">
       <div className="flex items-baseline gap-2">
         <span className="text-[10px] uppercase tracking-[0.35em] text-white/35">role</span>
         <span className="text-white/20">//</span>

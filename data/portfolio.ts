@@ -350,10 +350,12 @@ export const certificates: Certificate[] = [
       'Third nationally in the CODEKIT web development competition, high-school level. Two builds against a brief: T-GODA, an Agoda-style booking platform, and Nexus, a Discord-style chat app. I owned the frontend on both - landing pages, responsive layout, navigation, the sign-up and login flow, and over twenty core functions on Nexus.',
   },
   {
-    title: 'IT CLASH - Cybersecurity Track, Finals',
-    issuer: 'KMITL, Faculty of Information Technology',
-    file: 'KMITL-IT CLASH cybersecurity final.jpg', featured: true, level: 'National', date: 'May 2026',
-    result: 'Finalist',
+    title: 'MakeX Challenge - Best Favourite Alliance Team',
+    issuer: 'MakeX Thailand · Imagineering Education',
+    file: 'MakeX Ultimate winner.jpg', moment: 'makex', featured: true, level: 'National', date: 'Oct-Nov 2025',
+    result: '3rd Place · Best Favourite Alliance Team', medal: 'bronze',
+    detail:
+      'Team Prometheus, at the 2025 MakeX Thailand National Championships. I designed the entire robot structure in Fusion 360 over six months, building for disc-shooting and block-gripping missions across five arenas. The lesson was composure - a dead control board or a wheel off mid-match, and an opponent who can disrupt you. In the game they are rivals; after it they are friends.',
   },
   {
     title: 'Pentesting Fundamentals',
@@ -362,12 +364,10 @@ export const certificates: Certificate[] = [
     result: 'Completed', credential: 'CR-571C5C8AA4',
   },
   {
-    title: 'MakeX Challenge - Best Favourite Alliance Team',
-    issuer: 'MakeX Thailand · Imagineering Education',
-    file: 'MakeX Ultimate winner.jpg', moment: 'makex', featured: true, level: 'National', date: 'Oct-Nov 2025',
-    result: '3rd Place · Best Favourite Alliance Team', medal: 'bronze',
-    detail:
-      'Team Prometheus, at the 2025 MakeX Thailand National Championships. I designed the entire robot structure in Fusion 360 over six months, building for disc-shooting and block-gripping missions across five arenas. The lesson was composure - a dead control board or a wheel off mid-match, and an opponent who can disrupt you. In the game they are rivals; after it they are friends.',
+    title: 'IT CLASH - Cybersecurity Track, Finals',
+    issuer: 'KMITL, Faculty of Information Technology',
+    file: 'KMITL-IT CLASH cybersecurity final.jpg', featured: true, level: 'National', date: 'May 2026',
+    result: 'Finalist',
   },
   {
     title: 'Network Defense Essentials (N|DE)',

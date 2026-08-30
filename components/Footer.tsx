@@ -3,7 +3,7 @@
 import { contact } from '@/data/portfolio'
 
 /**
- * Site footer — the contact section, compacted, at the end of the page.
+ * Site footer - the contact section, compacted, at the end of the page.
  * Carries id="contact" so the header nav's CONTACT link scrolls here.
  */
 export default function Footer() {

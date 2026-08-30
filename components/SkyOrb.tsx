@@ -8,7 +8,7 @@ import { assets } from '@/data/portfolio'
  * Interactive WATER orb for the hero.
  * A custom WebGL water-surface shader lives inside the morphing glass circle:
  * moving the cursor over it drops ripples that expand, REFRACT the ASCII sky
- * beneath the surface, and catch specular glints + a Fresnel rim — so it reads
+ * beneath the surface, and catch specular glints + a Fresnel rim - so it reads
  * as real water, not paint. The orb also drifts toward the cursor.
  * Honors prefers-reduced-motion (renders a still, no ripples).
  */

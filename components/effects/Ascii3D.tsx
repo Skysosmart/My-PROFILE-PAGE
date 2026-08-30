@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * ASCII 3D — a real Three.js torus knot rendered AS ASCII CHARACTERS
+ * ASCII 3D - a real Three.js torus knot rendered AS ASCII CHARACTERS
  * (three's AsciiEffect addon), floating behind the About content.
  * Auto-rotates and eases toward the cursor. Section-scoped background layer
  * (absolute, not fixed) so it scrolls with its section.

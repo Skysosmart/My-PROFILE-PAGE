@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   NONTHANAPHONG.EXE — terminal theme base
+   NONTHANAPHONG.EXE - terminal theme base
    ========================================================================== */
 
 :root {
@@ -175,7 +175,7 @@ body::after {
   55%, 100% { left: 135%; }
 }
 
-/* Content panel — a semi-opaque dark "glass".
+/* Content panel - a semi-opaque dark "glass".
    NOTE: intentionally NO backdrop-filter here. These panels SCROLL over the
    fixed WebGL background, and backdrop-filter + a fixed canvas makes browsers
    flicker/blank the panel during scroll. A translucent solid fill avoids that
@@ -188,7 +188,7 @@ body::after {
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 12px 40px rgba(0, 0, 0, 0.5);
 }
-/* Lighter variant — used on "light" screens (e.g. About). */
+/* Lighter variant - used on "light" screens (e.g. About). */
 .glass-panel--light {
   background: rgba(255, 255, 255, 0.09);
   border-color: rgba(255, 255, 255, 0.22);
@@ -207,7 +207,7 @@ body::after {
 /* --------------------------------------------------------------------------
    Liquid sky orb (interactive circle in the hero)
    A morphing glass blob that clips the ASCII sky inside. No backdrop-filter
-   (it scrolls over the fixed canvas) — the glass read comes from the gloss.
+   (it scrolls over the fixed canvas) - the glass read comes from the gloss.
    -------------------------------------------------------------------------- */
 .liquid-orb {
   border-radius: 50%;

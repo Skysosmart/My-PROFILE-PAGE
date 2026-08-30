@@ -7,11 +7,11 @@ import Ascii3D from '@/components/effects/Ascii3D'
 import { about, assets, player, sop, inspiration, contact } from '@/data/portfolio'
 
 /**
- * ABOUT ME — an INTERACTIVE hacker-terminal (cowsay bubble, rainbow eyes,
+ * ABOUT ME - an INTERACTIVE hacker-terminal (cowsay bubble, rainbow eyes,
  * "sky" figlet, [SYSTEM] boot lines) on the left, portrait window on the
  * right, with an ASCII-rendered 3D torus knot behind the screen.
  *
- * After the boot sequence, the terminal takes commands — type them or tap the
+ * After the boot sequence, the terminal takes commands - type them or tap the
  * chips: `sop` prints the Statement of Purpose, `inspiration` the principles,
  * plus `help`, `whoami`, `clear`.
  */
@@ -99,7 +99,7 @@ export default function AboutMe() {
     },
     {
       prefix: { text: '[SYSTEM]', className: 'text-red-500' },
-      text: ` You are viewing ${player.handle} — the portfolio of ${player.name}.`,
+      text: ` You are viewing ${player.handle} - the portfolio of ${player.name}.`,
       className: 'text-green-400',
     },
     { text: '' },
@@ -122,14 +122,14 @@ export default function AboutMe() {
     const echo: Out = { prefix: { text: '→ ~ ', className: 'text-green-400' }, text: cmd, className: 'text-white' }
 
     if (cmd === 'clear') {
-      // wipe the whole screen, banner included — like a real terminal
+      // wipe the whole screen, banner included - like a real terminal
       setShowBoot(false)
       setLog([])
       return
     }
     const out: Out[] = [echo]
     if (cmd === 'sop') {
-      out.push({ prefix: { text: '[SOP]', className: 'text-sky-400' }, text: ' Statement of Purpose — my story:', className: 'text-white/80' })
+      out.push({ prefix: { text: '[SOP]', className: 'text-sky-400' }, text: ' Statement of Purpose - my story:', className: 'text-white/80' })
       sop.paragraphs.forEach((p) => out.push({ text: p, className: 'text-white/85' }))
     } else if (cmd === 'inspiration') {
       out.push({ prefix: { text: '[INSPIRATION]', className: 'text-fuchsia-400' }, text: ' What drives me:', className: 'text-white/80' })
@@ -147,7 +147,7 @@ export default function AboutMe() {
     } else if (cmd === 'ls') {
       out.push({ text: 'sop.md  inspiration.md  contact.txt  portrait.jpg  certificates/', className: 'text-sky-300/90' })
     } else if (cmd === 'whoami') {
-      out.push({ text: `${player.name} — ${player.role}`, className: 'text-green-400' })
+      out.push({ text: `${player.name} - ${player.role}`, className: 'text-green-400' })
     } else if (cmd === 'banner') {
       setShowBoot(true)
     } else if (cmd === 'sudo' || cmd.startsWith('sudo ')) {
@@ -161,7 +161,7 @@ export default function AboutMe() {
         { text: '  whoami · ls · banner · clear', className: 'text-sky-300/90' },
       )
     } else {
-      out.push({ text: `command not found: ${cmd} — try 'help'`, className: 'text-red-400' })
+      out.push({ text: `command not found: ${cmd} - try 'help'`, className: 'text-red-400' })
     }
     setLog((l) => [...l, ...out])
   }
@@ -214,10 +214,10 @@ export default function AboutMe() {
             <span className="h-2.5 w-2.5 rounded-full border border-white/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-white/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-white/60" />
-            <span className="ml-2 font-mono text-[11px] text-white/40">~/about — interactive</span>
+            <span className="ml-2 font-mono text-[11px] text-white/40">~/about - interactive</span>
           </div>
 
-          {/* FIXED-SIZE terminal screen — output scrolls inside, the window
+          {/* FIXED-SIZE terminal screen - output scrolls inside, the window
               never stretches the section as lines print */}
           <div ref={bodyRef} className="h-[48vh] overflow-y-auto p-4 sm:h-[54vh] sm:p-6">
             {/* banner + boot (hidden by `clear`, restored by `banner`) */}
@@ -302,13 +302,13 @@ export default function AboutMe() {
           )}
         </div>
 
-        {/* portrait (right) — same window chrome as the terminal */}
+        {/* portrait (right) - same window chrome as the terminal */}
         <figure className="group flex flex-col overflow-hidden rounded-xl border border-white/12 bg-black/40 md:w-[320px] lg:w-[360px]">
           <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.03] px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-white/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-white/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-white/60" />
-            <span className="ml-2 font-mono text-[11px] text-white/40">~/portrait — me.jpg</span>
+            <span className="ml-2 font-mono text-[11px] text-white/40">~/portrait - me.jpg</span>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

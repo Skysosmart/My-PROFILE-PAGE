@@ -1,13 +1,13 @@
 /**
  * ============================================================================
- *  NONTHANAPHONG.EXE — content
+ *  NONTHANAPHONG.EXE - content
  *  Single source of content for the whole site. Edit the text/values below and
  *  the site updates. Placeholders you should replace are marked  // TODO.
  * ============================================================================
  */
 
 /* ---------------------------------------------------------------------------
- *  PLAYER — top-level identity (boot log, header brand, browser tab)
+ *  PLAYER - top-level identity (boot log, header brand, browser tab)
  * ------------------------------------------------------------------------- */
 export const player = {
   name: 'Nonthanaphong Saechua',
@@ -30,7 +30,7 @@ export const player = {
 }
 
 /* ---------------------------------------------------------------------------
- *  NAV — header links (id must match each <section id>)
+ *  NAV - header links (id must match each <section id>)
  * ------------------------------------------------------------------------- */
 export const nav = [
   { label: 'ABOUT', id: 'about' },
@@ -44,7 +44,7 @@ export const nav = [
  * ------------------------------------------------------------------------- */
 export const about = {
   paragraphs: [
-    "I'm Nonthanaphong Saechua — a full-stack developer and penetration tester who also works in 3D and graphic design. I build things end to end: shipping web apps, breaking them to make them safer, and designing how they look and feel.",
+    "I'm Nonthanaphong Saechua - a full-stack developer and penetration tester who also works in 3D and graphic design. I build things end to end: shipping web apps, breaking them to make them safer, and designing how they look and feel.",
     'From robotics competitions to CTF boot camps and AI courses, I learn by building and testing. This portfolio brings together who I am, the certificates I have earned, the projects I have worked on, and how to reach me.',
   ],
   // TODO: tweak these details.
@@ -58,13 +58,13 @@ export const about = {
 }
 
 /* ---------------------------------------------------------------------------
- *  SOP — Statement of Purpose. `shortCount` paragraphs show before "Read more".
+ *  SOP - Statement of Purpose. `shortCount` paragraphs show before "Read more".
  * ------------------------------------------------------------------------- */
 export const sop = {
   shortCount: 2,
   paragraphs: [
     `Since childhood, I wasn't a top student or particularly outstanding. My grades were consistently at the bottom of the class almost every year. That changed when I first touched a computer, and the game that sparked my interest in technology was Roblox. That was the turning point that transformed me from an insecure child into someone genuinely passionate about the digital world. Roblox made me feel like I could "create something" for the first time in my life.`,
-    `From there, I began experimenting with coding, playing with plugins, and gradually exploring backend systems. I started to see how vast the world of technology is and how much more there is to learn. I've tried many fields—Game Development, Robotics, and even Electronics—but ultimately felt they weren't my true passion. That is, until I discovered the world of Cyber Security and CTF.`,
+    `From there, I began experimenting with coding, playing with plugins, and gradually exploring backend systems. I started to see how vast the world of technology is and how much more there is to learn. I've tried many fields-Game Development, Robotics, and even Electronics-but ultimately felt they weren't my true passion. That is, until I discovered the world of Cyber Security and CTF.`,
     `That was the pivotal moment for me. It was the first time I felt "This is what I want to wake up and do every day." Solving challenges, analyzing systems, thinking systematically, and the feeling of successfully exploiting vulnerabilities was something I'd never experienced in other fields. It made me realize I wanted to pursue this seriously, not just as a hobby.`,
     `During high school, I had opportunities to compete in various competitions and was honored to become an ACT Brand Ambassador as a Content Creator. This role helped me develop my communication and presentation skills significantly. I believe a good engineer isn't just "technically skilled" but must also "be able to explain things so others can understand." This role boosted my confidence in leadership, communication, and teamwork.`,
     `I've also worked on many projects, from Web Development, Full Stack, APIs, and Automation, including experimenting with simple tools for system penetration and vulnerability testing in a student-appropriate way. I love the feeling of solving difficult problems and I'm passionate about endless self-learning, especially in Cybersecurity where everything is constantly evolving.`,
@@ -74,7 +74,7 @@ export const sop = {
 }
 
 /* ---------------------------------------------------------------------------
- *  INSPIRATION — the principles that drive the work. Printed by the
+ *  INSPIRATION - the principles that drive the work. Printed by the
  *  `inspiration` command in the About terminal.
  *  icon: 'lightbulb' | 'heart' | 'target' | 'zap'
  * ------------------------------------------------------------------------- */
@@ -95,7 +95,7 @@ export const inspiration = [
     icon: 'lightbulb',
     title: "Explain It Or You Don't Know It",
     description:
-      'A good engineer is not only technically skilled — they can make someone else understand. Presenting as an ACT Brand Ambassador forced me to turn what I knew into something people could follow.',
+      'A good engineer is not only technically skilled - they can make someone else understand. Presenting as an ACT Brand Ambassador forced me to turn what I knew into something people could follow.',
   },
   {
     icon: 'heart',
@@ -106,7 +106,7 @@ export const inspiration = [
 ] as const
 
 /* ---------------------------------------------------------------------------
- *  PROJECTS — competition and coursework builds, strongest first.
+ *  PROJECTS - competition and coursework builds, strongest first.
  *  status: 'Completed' | 'In Progress' | 'Upcoming'
  *  demo/repo are optional; the card only renders a link when one is set.
  * ------------------------------------------------------------------------- */
@@ -123,7 +123,7 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    title: "PDLite — Parkinson's Risk Screening Device",
+    title: "PDLite - Parkinson's Risk Screening Device",
     period: '2026',
     role: 'Web & Database / Device Design',
     status: 'Completed',
@@ -134,29 +134,29 @@ export const projects: Project[] = [
     repo: 'https://github.com/Skysosmart/PDlite',
   },
   {
-    title: 'T-GODA — Accommodation Booking Platform',
+    title: 'T-GODA - Accommodation Booking Platform',
     period: '2026',
     role: 'Frontend Developer',
     status: 'Completed',
     description:
-      'An Agoda-style booking platform built for the CODEKIT Web Development Competition at the Thailand Robot & Coding Challenge 2026. Owned the entire frontend — landing page, responsive layout across screen sizes, and the navigation tying every page together. Placed 3rd at national level.',
+      'An Agoda-style booking platform built for the CODEKIT Web Development Competition at the Thailand Robot & Coding Challenge 2026. Owned the entire frontend - landing page, responsive layout across screen sizes, and the navigation tying every page together. Placed 3rd at national level.',
     tags: ['Frontend', 'UI Design', 'Responsive', '3rd Place'],
     demo: 'https://codekit2026.vercel.app',
     repo: 'https://github.com/Skysosmart/codekit2026',
   },
   {
-    title: 'Nexus — Chat Web Application',
+    title: 'Nexus - Chat Web Application',
     period: '2026',
     role: 'Frontend Developer',
     status: 'Completed',
     description:
-      'A Discord-style chat application from the same CODEKIT competition. Built the landing page, the sign-up and login flow, and more than twenty core functions — an exercise in taking apart a large platform and rebuilding it into something that actually works.',
+      'A Discord-style chat application from the same CODEKIT competition. Built the landing page, the sign-up and login flow, and more than twenty core functions - an exercise in taking apart a large platform and rebuilding it into something that actually works.',
     tags: ['Frontend', 'Auth Flow', 'UI Design', 'Web App'],
     demo: 'https://codekit-finale.vercel.app',
     repo: 'https://github.com/Skysosmart/codekit-finale',
   },
   {
-    title: 'Hackathon Digitize — Asset Declaration Data',
+    title: 'Hackathon Digitize - Asset Declaration Data',
     period: '2025',
     role: 'Data Engineering',
     status: 'Completed',
@@ -186,7 +186,7 @@ export const projects: Project[] = [
 ]
 
 /* ---------------------------------------------------------------------------
- *  CERTIFICATES — every field except title/issuer/file is optional and was
+ *  CERTIFICATES - every field except title/issuer/file is optional and was
  *  read off the scan itself. `detail` carries the longer write-up from the
  *  TCAS portfolio where one exists. Titles stay in English: the site's fonts
  *  (JetBrains Mono / VT323 / Press Start 2P / Space Grotesk) have no Thai
@@ -215,10 +215,10 @@ export const certificates: Certificate[] = [
     file: 'IMG_3232.JPG', featured: true, level: 'National', date: 'Jan 2026',
     result: 'Gold Medal', medal: 'gold',
     detail:
-      'Gold at the I-New Gen Award 2026, health & medical category, secondary level, for PDLite — a device giving a preliminary Parkinson’s disease risk assessment. A five-student team with a faculty advisor. I built the Next.js and Supabase web app that records readings and charts them, handled UX/UI and the database, and designed the enclosure and its mechanism in Fusion 360 for 3D printing.',
+      'Gold at the I-New Gen Award 2026, health & medical category, secondary level, for PDLite - a device giving a preliminary Parkinson’s disease risk assessment. A five-student team with a faculty advisor. I built the Next.js and Supabase web app that records readings and charts them, handled UX/UI and the database, and designed the enclosure and its mechanism in Fusion 360 for 3D printing.',
   },
   {
-    title: 'Invention & Innovation — Gold Medal',
+    title: 'Invention & Innovation - Gold Medal',
     issuer: 'SWU Researcher Day 2026',
     file: 'IMG_3228.JPG', featured: true, level: 'National', date: 'Apr 2026',
     result: 'Gold Medal', medal: 'gold',
@@ -226,15 +226,15 @@ export const certificates: Certificate[] = [
       'The second gold for PDLite, awarded at Srinakharinwirot University’s Researcher Day in the high-school invention and innovation contest. What this project taught me was less technical than procedural: a team needs a clear workflow and divided responsibilities, and the work that matters happens after the idea stops being exciting.',
   },
   {
-    title: 'Thailand Robot & Coding 2026 — Website Competition',
+    title: 'Thailand Robot & Coding 2026 - Website Competition',
     issuer: 'Kasetsart University',
     file: 'IMG_3226.JPG', featured: true, level: 'National', date: 'May 2026',
     result: '3rd Place', medal: 'bronze',
     detail:
-      'Third nationally in the CODEKIT web development competition, high-school level. Two builds against a brief: T-GODA, an Agoda-style booking platform, and Nexus, a Discord-style chat app. I owned the frontend on both — landing pages, responsive layout, navigation, the sign-up and login flow, and over twenty core functions on Nexus.',
+      'Third nationally in the CODEKIT web development competition, high-school level. Two builds against a brief: T-GODA, an Agoda-style booking platform, and Nexus, a Discord-style chat app. I owned the frontend on both - landing pages, responsive layout, navigation, the sign-up and login flow, and over twenty core functions on Nexus.',
   },
   {
-    title: 'IT CLASH — Cybersecurity Track, Finals',
+    title: 'IT CLASH - Cybersecurity Track, Finals',
     issuer: 'KMITL, Faculty of Information Technology',
     file: 'IMG_3227.JPG', featured: true, level: 'National', date: 'May 2026',
     result: 'Finalist',
@@ -246,12 +246,12 @@ export const certificates: Certificate[] = [
     result: 'Completed', credential: 'CR-571C5C8AA4',
   },
   {
-    title: 'MakeX Challenge — Best Favourite Alliance Team',
+    title: 'MakeX Challenge - Best Favourite Alliance Team',
     issuer: 'MakeX Thailand · Imagineering Education',
-    file: 'MakeX Ultimate winner.jpg', featured: true, level: 'National', date: 'Oct–Nov 2025',
+    file: 'MakeX Ultimate winner.jpg', featured: true, level: 'National', date: 'Oct-Nov 2025',
     result: '3rd Place · Best Favourite Alliance Team', medal: 'bronze',
     detail:
-      'Team Prometheus, at the 2025 MakeX Thailand National Championships. I designed the entire robot structure in Fusion 360 over six months, building for disc-shooting and block-gripping missions across five arenas. The lesson was composure — a dead control board or a wheel off mid-match, and an opponent who can disrupt you. In the game they are rivals; after it they are friends.',
+      'Team Prometheus, at the 2025 MakeX Thailand National Championships. I designed the entire robot structure in Fusion 360 over six months, building for disc-shooting and block-gripping missions across five arenas. The lesson was composure - a dead control board or a wheel off mid-match, and an opponent who can disrupt you. In the game they are rivals; after it they are friends.',
   },
   {
     title: 'Network Defense Essentials (N|DE)',
@@ -272,7 +272,7 @@ export const certificates: Certificate[] = [
     result: 'Completed',
   },
   {
-    title: 'RTARF Cyber Bootcamp — N|DE & E|HE',
+    title: 'RTARF Cyber Bootcamp - N|DE & E|HE',
     issuer: 'Royal Thai Armed Forces Cyber Command',
     file: 'RTARF-NDE and EHE.jpg', featured: true, level: 'National', date: 'Apr 2025',
     result: 'Completed',
@@ -280,7 +280,7 @@ export const certificates: Certificate[] = [
       'Two months of online training run by the Cyber Command of the Royal Thai Armed Forces, ending in the EC-Council Network Defense Essentials and Ethical Hacking Essentials certifications.',
   },
   {
-    title: 'Hackathon Digitize — Anti-Corruption Innovation',
+    title: 'Hackathon Digitize - Anti-Corruption Innovation',
     issuer: 'TIJ & Anti-Corruption Organization of Thailand',
     file: 'IMG_3233.JPG', featured: true, level: 'National', date: 'Dec 2025',
     result: 'Participated',
@@ -296,7 +296,7 @@ export const certificates: Certificate[] = [
 
   // ----- Competitions & awards -----
   {
-    title: 'Thailand Robot & Coding 2025 — Python Competition',
+    title: 'Thailand Robot & Coding 2025 - Python Competition',
     issuer: 'Kasetsart University',
     file: 'KU-Thailand Robot and Coding.jpg', level: 'National', date: 'May 2025',
     result: 'Top 24 teams',
@@ -307,9 +307,9 @@ export const certificates: Certificate[] = [
     file: 'SWU-Python bttle.jpg', level: 'School', date: 'Jan 2025', result: 'Participated',
   },
   {
-    title: 'MakeX Challenge — Qualification Round',
+    title: 'MakeX Challenge - Qualification Round',
     issuer: 'MakeX Thailand · Imagineering Education',
-    file: 'MakeX Qualification.jpg', level: 'National', date: 'Oct–Nov 2025', result: 'Participated',
+    file: 'MakeX Qualification.jpg', level: 'National', date: 'Oct-Nov 2025', result: 'Participated',
   },
   {
     title: 'MakeX Explore Tournament 1',
@@ -332,22 +332,22 @@ export const certificates: Certificate[] = [
     file: 'MakeX tournament 4.jpg', level: 'National', date: 'Sep 2025', result: 'Point Race',
   },
   {
-    title: 'ACT MakeX Robotics Invitation — Practice Warm Up',
+    title: 'ACT MakeX Robotics Invitation - Practice Warm Up',
     issuer: 'Assumption College Thonburi',
     file: 'MakeX Warmup.jpg', level: 'School', date: 'Jun 2025', result: 'Participated',
   },
   {
-    title: 'RSMS — Selection Round 1',
+    title: 'RSMS - Selection Round 1',
     issuer: 'Ramathibodi Faculty of Medicine, Mahidol University',
     file: 'RMA-RSMS 1.jpg', level: 'National', date: 'Apr 2025', result: 'Participated',
   },
   {
-    title: 'RSMS — Selection Round 2 (April)',
+    title: 'RSMS - Selection Round 2 (April)',
     issuer: 'Ramathibodi Faculty of Medicine, Mahidol University',
     file: 'RMA-RSMS 2 (2).jpg', level: 'National', date: 'Apr 2025', result: '60th percentile',
   },
   {
-    title: 'RSMS — Selection Round 2 (June)',
+    title: 'RSMS - Selection Round 2 (June)',
     issuer: 'Ramathibodi Faculty of Medicine, Mahidol University',
     file: 'RMA-RSMS 2.jpg', level: 'National', date: 'Jun 2025', result: '60th percentile',
   },
@@ -359,14 +359,14 @@ export const certificates: Certificate[] = [
 
   // ----- Camps -----
   {
-    title: 'Click Camp #15 — Cyber Security & Web Development',
+    title: 'Click Camp #15 - Cyber Security & Web Development',
     issuer: 'Computer Engineering, Mahidol University',
     file: 'MU-CC.jpg', level: 'Institution', date: 'Dec 2024', result: 'Completed',
     detail:
-      'Four days at Mahidol’s Computer Engineering department, split across two tracks. On the security side I learned to use CTF tooling to hunt for flags, which taught me how to look for a weakness methodically. On the web side I built my first profile page end to end — the ancestor of this site.',
+      'Four days at Mahidol’s Computer Engineering department, split across two tracks. On the security side I learned to use CTF tooling to hunt for flags, which taught me how to look for a weakness methodically. On the web side I built my first profile page end to end - the ancestor of this site.',
   },
   {
-    title: 'KhanNot #24 — Mahidol Engineering Camp',
+    title: 'KhanNot #24 - Mahidol Engineering Camp',
     issuer: 'Faculty of Engineering, Mahidol University',
     file: 'MU-KK.jpg', level: 'Institution', date: 'May 2025', result: 'Completed',
     detail:
@@ -393,7 +393,7 @@ export const certificates: Certificate[] = [
     file: 'MUIGNITE-STEM and robotic.jpg', level: 'Institution', date: '2024', result: 'Completed',
   },
   {
-    title: 'CiRA CORE Camp — KMITL Innovation Expo 2025',
+    title: 'CiRA CORE Camp - KMITL Innovation Expo 2025',
     issuer: 'Global Technology, KMITL',
     file: 'KMITL-CiRA COM CAMP.jpg', level: 'Institution', date: 'Mar 2025',
     result: 'Attended', credential: 'GTCINOEP250138',
@@ -406,36 +406,36 @@ export const certificates: Certificate[] = [
     file: 'KMUTT-Cyber ant.jpg', level: 'Institution', date: '2024', result: 'Completed',
   },
   {
-    title: 'RTARF Cyber Bootcamp — Final Day',
+    title: 'RTARF Cyber Bootcamp - Final Day',
     issuer: 'Royal Thai Armed Forces Cyber Command',
     file: 'RTARF-Final day.jpg', level: 'National', date: 'Apr 2025', result: 'Completed',
   },
   {
-    title: 'Coding Thailand 2025 — Hardware to ROS Rescues',
+    title: 'Coding Thailand 2025 - Hardware to ROS Rescues',
     issuer: 'depa · KMUTNB iRAP Robot',
     file: 'KMUTNB-AI driven.jpg', level: 'National', date: 'Oct 2025', result: 'Completed',
   },
   {
     title: 'Basic Python',
     issuer: 'ONDE · KMUTNB',
-    file: 'KMUTNB-Basic python test.jpg', level: 'National', result: 'Passed — Excellent',
+    file: 'KMUTNB-Basic python test.jpg', level: 'National', result: 'Passed - Excellent',
   },
 
   // ----- AI & data -----
   {
-    title: 'AI-Powered Work with Copilot — KMITL Innovation Expo 2025',
+    title: 'AI-Powered Work with Copilot - KMITL Innovation Expo 2025',
     issuer: 'Global Technology, KMITL',
     file: 'KMITL-AI powered.jpg', level: 'Institution', date: 'Mar 2025',
     result: 'Attended', credential: 'GTCINOEP25026',
   },
   {
-    title: 'BOTNOI Voice — KMITL Innovation Expo 2025',
+    title: 'BOTNOI Voice - KMITL Innovation Expo 2025',
     issuer: 'Global Technology, KMITL',
     file: 'KMITL-BOTNOI.jpg', level: 'Institution', date: 'Mar 2025',
     result: 'Attended', credential: 'GTCINOEP250146',
   },
   {
-    title: 'Typhoon by SCB10X — KMITL Innovation Expo 2025',
+    title: 'Typhoon by SCB10X - KMITL Innovation Expo 2025',
     issuer: 'Global Technology, KMITL',
     file: 'KMITL-typhoon.jpg', level: 'Institution', date: 'Mar 2025',
     result: 'Attended', credential: 'GTCINOEP25046',
@@ -444,7 +444,7 @@ export const certificates: Certificate[] = [
     title: 'Introduction to Python for AI and Digital Twin',
     issuer: 'Kasetsart University',
     file: 'KU-AI and Digital twin.jpg', level: 'Institution', date: 'Sep 2024',
-    result: 'Completed — 3 hrs',
+    result: 'Completed - 3 hrs',
   },
   {
     title: 'Basic Prompt Engineering',
@@ -466,7 +466,7 @@ export const certificates: Certificate[] = [
   {
     title: 'Introduction to Big Data',
     issuer: 'Centre of Excellence in Mathematics',
-    file: 'MU-Basic big data.jpg', level: 'Institution', date: 'Jun–Jul 2025', result: 'Completed',
+    file: 'MU-Basic big data.jpg', level: 'Institution', date: 'Jun-Jul 2025', result: 'Completed',
   },
   {
     title: 'Data Analysis Workshop',
@@ -491,29 +491,29 @@ export const certificates: Certificate[] = [
     title: 'English Writing Enrichment',
     issuer: 'Faculty of Arts, Chulalongkorn University',
     file: 'CU-English enchanment.jpg', level: 'Institution', date: 'Jul 2023',
-    result: 'Completed — 30 hrs',
+    result: 'Completed - 30 hrs',
   },
   {
     title: 'English for Communication',
     issuer: 'Thai MOOC · Chiang Mai University',
-    file: 'THMOOC-10Hr ENG.jpg', level: 'Online', result: 'Completed — 10 hrs',
+    file: 'THMOOC-10Hr ENG.jpg', level: 'Online', result: 'Completed - 10 hrs',
   },
 
   // ----- Service & leadership -----
   {
-    title: 'Vajira Hospital Volunteer — Outpatient Services',
+    title: 'Vajira Hospital Volunteer - Outpatient Services',
     issuer: 'Faculty of Medicine Vajira Hospital, NMU',
     file: 'VAJIRA.jpg', level: 'Institution', date: 'Oct 2025', result: 'Certified',
     detail:
-      'Four days assisting in the general medicine outpatient centre — taking blood pressure, weight and height, helping elderly patients use the automated machines safely, managing wheelchairs, directing people and holding the screening queue together. It was the first time I saw what a working hospital actually demands of the people in it.',
+      'Four days assisting in the general medicine outpatient centre - taking blood pressure, weight and height, helping elderly patients use the automated machines safely, managing wheelchairs, directing people and holding the screening queue together. It was the first time I saw what a working hospital actually demands of the people in it.',
   },
   {
-    title: 'Heart Charity — First Aid & CPR',
+    title: 'Heart Charity - First Aid & CPR',
     issuer: 'Vichaivej International Hospital · Srivichai Foundation',
     file: 'Vichaivhej-Heart and Charities.jpg', level: 'Provincial', date: 'Jul 2025',
     result: 'Completed',
     detail:
-      'First aid and CPR training with emergency-response drills run inside the school alongside a rescue team — evacuation and incident handling. I took part as a student volunteer supporting the training.',
+      'First aid and CPR training with emergency-response drills run inside the school alongside a rescue team - evacuation and incident handling. I took part as a student volunteer supporting the training.',
   },
   {
     title: 'Volunteering Leads Life',
@@ -541,14 +541,14 @@ export const certificates: Certificate[] = [
     file: 'Apibarn.jpg', level: 'School', date: 'Apr 2024', result: 'Completed',
   },
   {
-    title: 'Inspiration Day — Tae Yang Thai #54',
+    title: 'Inspiration Day - Tae Yang Thai #54',
     issuer: 'ttb Foundation (Fai-Fah by ttb)',
     file: 'IMG_3225.JPG', level: 'National', date: '2026', result: 'Participated',
   },
 ]
 
 /* ---------------------------------------------------------------------------
- *  CONTACT — channels rendered in the footer (id="contact") and listed in the
+ *  CONTACT - channels rendered in the footer (id="contact") and listed in the
  *  About terminal. Every href must resolve; nothing here should be a '#'.
  * ------------------------------------------------------------------------- */
 export const contact = {
@@ -563,7 +563,7 @@ export const contact = {
 }
 
 /* ---------------------------------------------------------------------------
- *  ASSET PATHS — files live in /public.
+ *  ASSET PATHS - files live in /public.
  * ------------------------------------------------------------------------- */
 export const assets = {
   handArt: '/ASCII-Art/Hand-ascii-art.png',

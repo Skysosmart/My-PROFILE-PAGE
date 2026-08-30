@@ -11,14 +11,14 @@ const src = (file: string) => assets.certDir + encodeURIComponent(file)
 const thumb = (file: string) => assets.certDir + 'thumbs/' + encodeURIComponent(file)
 
 /**
- * CERTIFICATES — three tiers, because 56 documents are not 56 equal things.
+ * CERTIFICATES - three tiers, because 56 documents are not 56 equal things.
  *
  *   1. PODIUM   the four results that carry a rank
  *   2. ROUTE    MakeX was one six-month campaign, not seven loose certificates,
  *               so it reads as the sequence it actually was
  *   3. ARCHIVE  everything else, as the masonry of big white cards
  *
- * Sequencing the route is honest here: the order IS the content — warm-up, four
+ * Sequencing the route is honest here: the order IS the content - warm-up, four
  * point-race tournaments, a qualifier, then the national final.
  */
 
@@ -157,7 +157,7 @@ export default function Certificates() {
     return m
   }, [])
 
-  // gold ahead of the thirds — rank order, not file order
+  // gold ahead of the thirds - rank order, not file order
   const podium = useMemo(
     () =>
       certificates
@@ -336,7 +336,7 @@ export default function Certificates() {
         <div className="mb-5 rounded-2xl border border-white/10 bg-black/25 p-3 sm:p-4">
           <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h3 className="font-sans text-sm font-semibold text-white">
-              MakeX Challenge — six months, one robot
+              MakeX Challenge - six months, one robot
             </h3>
             <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
               Team Prometheus · Jun to Nov 2025
@@ -361,7 +361,7 @@ export default function Certificates() {
                     />
                     <button
                       onClick={() => setActive(c)}
-                      aria-label={`${meta.what} — ${c.title}`}
+                      aria-label={`${meta.what} - ${c.title}`}
                       className="relative mx-auto rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
                     >
                       {last ? (

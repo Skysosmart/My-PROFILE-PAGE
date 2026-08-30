@@ -56,7 +56,7 @@ export default function HandBackground() {
 
         // The art holds TWO hands: the upper one (top rows) and the lower one
         // (bottom rows). They generate at the SAME time but in OPPOSITE
-        // directions — the top hand sweeps left→right, the bottom hand sweeps
+        // directions - the top hand sweeps left→right, the bottom hand sweeps
         // right→left. Per-cell reveal threshold encodes that.
         const half = H / 2
         const maxX = Math.max(1, width - 1)

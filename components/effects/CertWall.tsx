@@ -7,12 +7,12 @@ const thumb = (file: string) => assets.certDir + 'thumbs/' + encodeURIComponent(
 /**
  * Animated background unique to the Certificates section:
  * three CONVEYOR ROWS of the real certificates, endlessly gliding in
- * alternating directions at different speeds, slightly tilted and edge-faded —
+ * alternating directions at different speeds, slightly tilted and edge-faded -
  * a living award wall behind the gallery.
  *
  * Each row's content is duplicated once and translated -50% in a loop, so the
  * marquee is seamless. Pure CSS transform animation (GPU-cheap); the global
- * prefers-reduced-motion rule freezes it. Absolute (not fixed) — scrolls away
+ * prefers-reduced-motion rule freezes it. Absolute (not fixed) - scrolls away
  * with the section.
  */
 const ROWS = 3

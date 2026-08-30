@@ -5,7 +5,7 @@ import SkyOrb from '@/components/SkyOrb'
 import HandBackground from '@/components/effects/HandBackground'
 
 /**
- * Full-height intro shown first — an interactive liquid sky orb in the middle,
+ * Full-height intro shown first - an interactive liquid sky orb in the middle,
  * over the ASCII hand, with a scroll cue. The hand is a layer INSIDE this
  * section, so it scrolls up and away with the hero as the next sections slide
  * up. Name lives in the top-right tag; roles in the bottom-left ticker.
@@ -13,7 +13,7 @@ import HandBackground from '@/components/effects/HandBackground'
 export default function IntroHero() {
   return (
     <header className="relative isolate flex min-h-screen flex-col items-center justify-center px-4 py-20 text-center">
-      {/* ASCII hand — scoped to this section only */}
+      {/* ASCII hand - scoped to this section only */}
       <HandBackground />
       <motion.p
         initial={{ opacity: 0, y: -8 }}

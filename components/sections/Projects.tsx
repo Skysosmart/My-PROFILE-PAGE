@@ -10,7 +10,7 @@ const statusStyle: Record<string, string> = {
   Upcoming: 'border-white/20 text-white/50',
 }
 
-/** PROJECTS — horizontal drag/scroll carousel. */
+/** PROJECTS - horizontal drag/scroll carousel. */
 export default function Projects() {
   const trackRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)

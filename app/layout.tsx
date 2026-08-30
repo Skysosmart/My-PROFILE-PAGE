@@ -33,7 +33,7 @@ const sans = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  title: `${player.handle} — ${player.tagline}`,
+  title: `${player.handle} - ${player.tagline}`,
   description: `${player.name} · a retro-terminal academic quest portfolio.`,
 }
 

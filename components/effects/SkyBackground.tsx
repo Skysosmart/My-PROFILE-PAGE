@@ -6,7 +6,7 @@ import { assets } from '@/data/portfolio'
 /**
  * Section-scoped background of the "Sky" ASCII logo (Sky-ASCII.txt), scaled to
  * COVER its parent section as a faint watermark. Rendered absolute (not fixed),
- * so it scrolls up and away together with its section — same pattern as the
+ * so it scrolls up and away together with its section - same pattern as the
  * hand in the hero.
  */
 export default function SkyBackground() {

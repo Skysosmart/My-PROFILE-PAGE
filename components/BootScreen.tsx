@@ -5,9 +5,9 @@ import { motion } from 'framer-motion'
 import { player } from '@/data/portfolio'
 
 /**
- * Loading screen — shows ONLY the terminal boot text.
+ * Loading screen - shows ONLY the terminal boot text.
  * Types out player.bootLog line by line, then auto-advances into the site
- * (the ASCII hand). No start button, no logo — just the terminal.
+ * (the ASCII hand). No start button, no logo - just the terminal.
  */
 export default function BootScreen({ onStart }: { onStart: () => void }) {
   const [lineCount, setLineCount] = useState(0)

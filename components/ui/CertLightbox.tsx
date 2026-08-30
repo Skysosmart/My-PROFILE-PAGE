@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { certSrc, categorize, catMeta } from '@/lib/certs'
-import type { Certificate } from '@/data/portfolio'
+import { moments, type Certificate } from '@/data/portfolio'
+
+const momentSrc = (key: string, file: string) => `/moments/${key}/${file}`
+const momentThumb = (key: string, file: string) => `/moments/${key}/thumbs/${file}`
 
 const MEDAL_FILL: Record<string, string> = {
   gold: 'radial-gradient(circle at 32% 28%, #F7E7A6 0%, #D9B441 38%, #A9821A 72%, #7A5D11 100%)',
@@ -20,7 +23,13 @@ export default function CertLightbox({
   onClose: () => void
 }) {
   const [mounted, setMounted] = useState(false)
+  // null shows the document; a filename shows that photo from the event
+  const [photo, setPhoto] = useState<string | null>(null)
   useEffect(() => setMounted(true), [])
+  // a different certificate always opens on its document, never on a stale photo
+  useEffect(() => setPhoto(null), [cert?.file])
+
+  const album = cert?.moment ? moments[cert.moment] : undefined
 
   useEffect(() => {
     if (!cert) return
@@ -60,11 +69,13 @@ export default function CertLightbox({
             aria-label={cert.title}
             className="relative grid w-full max-w-6xl overflow-hidden rounded-3xl bg-neutral-950 shadow-2xl lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]"
           >
-            <div className="flex max-h-[52vh] items-center justify-center bg-neutral-100 p-3 sm:p-5 lg:max-h-[82vh]">
+            <div
+              className={`flex max-h-[52vh] items-center justify-center p-3 sm:p-5 lg:max-h-[82vh] ${photo ? 'bg-neutral-950' : 'bg-neutral-100'}`}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={certSrc(cert.file)}
-                alt={cert.title}
+                src={photo && cert.moment ? momentSrc(cert.moment, photo) : certSrc(cert.file)}
+                alt={photo ? `${album?.label ?? cert.title} - photograph` : cert.title}
                 className="max-h-[46vh] w-auto max-w-full object-contain drop-shadow-xl lg:max-h-[74vh]"
               />
             </div>
@@ -103,6 +114,47 @@ export default function CertLightbox({
                   {cert.detail}
                 </p>
               )}
+              {album && album.photos.length > 0 && (
+                <div className="mt-4 border-t border-white/10 pt-4">
+                  <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                    {album.photos.length} photo{album.photos.length > 1 ? 's' : ''} from {album.label}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {/* first chip returns to the document */}
+                    <button
+                      onClick={() => setPhoto(null)}
+                      aria-pressed={!photo}
+                      className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border bg-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${!photo ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      title="Back to the certificate"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={certSrc(cert.file)}
+                        alt=""
+                        loading="lazy"
+                        className="h-full w-full object-contain p-0.5"
+                      />
+                    </button>
+                    {album.photos.map((f) => (
+                      <button
+                        key={f}
+                        onClick={() => setPhoto(f)}
+                        aria-pressed={photo === f}
+                        className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${photo === f ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={momentThumb(cert.moment!, f)}
+                          alt=""
+                          loading="lazy"
+                          className="h-full w-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <button
                 onClick={onClose}
                 className="mt-auto self-start rounded-full bg-white px-4 py-2 font-sans text-sm font-medium text-neutral-900 transition-colors hover:bg-white/85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"

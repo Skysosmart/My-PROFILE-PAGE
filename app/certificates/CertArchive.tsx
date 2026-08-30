@@ -100,7 +100,10 @@ export default function CertArchive() {
       </div>
 
       {/* ---------- search + categories, and that is the whole control set ------ */}
-      <div className="sticky top-0 z-30 mt-5 border-y border-white/10 bg-black/85 backdrop-blur-xl">
+      {/* Sticky only once the pills fit on one line. Wrapped to three rows on a
+          phone this bar held 20% of the viewport hostage; there it scrolls away
+          and you get the screen back. */}
+      <div className="z-30 mt-5 border-y border-white/10 bg-black/85 backdrop-blur-xl lg:sticky lg:top-0">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <div className="flex flex-wrap items-center gap-3">
             <label className="flex min-w-0 flex-1 basis-56 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 transition-colors focus-within:border-white/45 sm:max-w-xs">

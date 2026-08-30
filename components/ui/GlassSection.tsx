@@ -58,6 +58,7 @@ export default function GlassSection({
   revealAmount = 0.2,
   tone = 'dark',
   panel = true,
+  wide = false,
   children,
 }: {
   id: string
@@ -79,6 +80,8 @@ export default function GlassSection({
   tone?: 'dark' | 'light'
   /** false = no floating glass card; content lays flat on the screen itself. */
   panel?: boolean
+  /** Roomier panel, for sections whose content is images rather than prose. */
+  wide?: boolean
   children: ReactNode
 }) {
   const reduce = useReducedMotion()
@@ -113,9 +116,9 @@ export default function GlassSection({
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className={
           panel
-            ? `glass-panel mx-auto w-full max-w-5xl rounded-2xl p-6 sm:p-9 ${
-                tone === 'light' ? 'glass-panel--light' : ''
-              }`
+            ? `glass-panel mx-auto w-full rounded-2xl p-6 sm:p-9 ${
+                wide ? 'max-w-6xl' : 'max-w-5xl'
+              } ${tone === 'light' ? 'glass-panel--light' : ''}`
             : 'flex w-full flex-1 flex-col' // flat: content IS the screen
         }
       >

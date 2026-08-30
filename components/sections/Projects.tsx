@@ -1,184 +1,151 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import GlassSection from '@/components/ui/GlassSection'
-import { projects } from '@/data/portfolio'
+import { projects, type Project } from '@/data/portfolio'
+
+/**
+ * PROJECTS - a grid, with a shot of the thing itself on every card.
+ *
+ * It used to be a carousel: eleven cards, two and a half of them on screen, and
+ * you had to drag five times to reach the end. Nothing here is behind an
+ * interaction now; the whole list is on the page.
+ *
+ * Every project with a live site carries a real screenshot of it, captured from
+ * the running site rather than mocked up. The three without one - a robot, a
+ * data pipeline - say so instead of faking a frame.
+ */
 
 const statusStyle: Record<string, string> = {
   // Live reads brightest: a product anyone can open right now outranks one
   // that is merely finished
-  Live: 'border-emerald-300/70 text-emerald-200',
-  Completed: 'border-white/50 text-white',
-  'In Progress': 'border-white/30 text-white/70',
-  Upcoming: 'border-white/20 text-white/50',
+  Live: 'border-emerald-300/70 bg-emerald-950/60 text-emerald-200',
+  Completed: 'border-white/40 bg-black/60 text-white',
+  'In Progress': 'border-white/25 bg-black/60 text-white/70',
+  Upcoming: 'border-white/15 bg-black/60 text-white/50',
 }
 
-/** PROJECTS - horizontal drag/scroll carousel. */
 export default function Projects() {
-  const trackRef = useRef<HTMLDivElement>(null)
-  const [active, setActive] = useState(0)
-  const drag = useRef({ down: false, startX: 0, startLeft: 0, moved: false })
-
-  // card pitch (width + gap) for arrow stepping + active-dot math
-  const cardPitch = useCallback(() => {
-    const track = trackRef.current
-    const first = track?.firstElementChild as HTMLElement | null
-    if (!track || !first) return 1
-    return first.offsetWidth + 16 // gap-4
-  }, [])
-
-  const onScroll = useCallback(() => {
-    const track = trackRef.current
-    if (!track) return
-    setActive(Math.round(track.scrollLeft / cardPitch()))
-  }, [cardPitch])
-
-  const step = (dir: number) =>
-    trackRef.current?.scrollBy({ left: dir * cardPitch(), behavior: 'smooth' })
-
-  const goTo = (i: number) =>
-    trackRef.current?.scrollTo({ left: i * cardPitch(), behavior: 'smooth' })
-
-  // Mouse drag-to-scroll (native touch/trackpad scroll already works).
-  useEffect(() => {
-    const track = trackRef.current
-    if (!track) return
-    const down = (e: PointerEvent) => {
-      if (e.pointerType !== 'mouse') return
-      drag.current = { down: true, startX: e.clientX, startLeft: track.scrollLeft, moved: false }
-    }
-    const move = (e: PointerEvent) => {
-      if (!drag.current.down) return
-      const dx = e.clientX - drag.current.startX
-      if (Math.abs(dx) > 4) drag.current.moved = true
-      track.scrollLeft = drag.current.startLeft - dx
-    }
-    const up = () => (drag.current.down = false)
-    track.addEventListener('pointerdown', down)
-    window.addEventListener('pointermove', move)
-    window.addEventListener('pointerup', up)
-    return () => {
-      track.removeEventListener('pointerdown', down)
-      window.removeEventListener('pointermove', move)
-      window.removeEventListener('pointerup', up)
-    }
-  }, [])
+  const reduce = useReducedMotion()
+  const [still, setStill] = useState(false)
+  useEffect(() => setStill(!!reduce), [reduce])
 
   return (
-    <GlassSection id="projects" index="03" title="Projects" variant="slide">
-      <div className="mb-5 flex items-center justify-between">
-        <p className="font-mono text-xs text-white/50">
-          {projects.length} projects · drag or scroll →
-        </p>
-        <div className="flex gap-2">
-          <button
-            onClick={() => step(-1)}
-            aria-label="Previous project"
-            className="rounded border border-white/25 px-3 py-1 font-mono text-sm text-white transition-colors hover:bg-white hover:text-black"
-          >
-            ←
-          </button>
-          <button
-            onClick={() => step(1)}
-            aria-label="Next project"
-            className="rounded border border-white/25 px-3 py-1 font-mono text-sm text-white transition-colors hover:bg-white hover:text-black"
-          >
-            →
-          </button>
-        </div>
-      </div>
+    <GlassSection id="projects" index="03" title="Projects" variant="slide" wide revealAmount="some">
+      <p className="mb-5 font-mono text-xs text-white/45">
+        {projects.length} projects · {projects.filter((p) => p.demo).length} you can open right now
+      </p>
 
-      {/* Carousel track */}
-      <div
-        ref={trackRef}
-        onScroll={onScroll}
-        className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        style={{ cursor: 'grab' }}
-      >
+      <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((p, i) => (
-          <article
-            key={p.title}
-            className="flex min-h-[300px] w-[86%] shrink-0 snap-center flex-col rounded-2xl border border-white/12 bg-white/[0.02] p-6 sm:w-[440px]"
-          >
-            <div className="mb-4 flex items-start justify-between gap-3">
-              <span className="font-mono text-3xl font-bold text-white/15">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span
-                className={`shrink-0 rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${
-                  statusStyle[p.status] ?? statusStyle.Upcoming
-                }`}
-              >
-                {p.status}
-              </span>
-            </div>
-
-            <h3 className="font-mono text-xl font-bold text-white">{p.title}</h3>
-            <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-white/45">
-              {p.role} · {p.period}
-            </p>
-
-            <p className="mt-4 flex-1 font-mono text-sm leading-relaxed text-white/75">
-              {p.description}
-            </p>
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              {p.tags.map((t) => (
-                <span
-                  key={t}
-                  className="rounded border border-white/15 px-2 py-0.5 font-mono text-[10px] text-white/60"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-
-            {(p.demo || p.repo) && (
-              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-3">
-                {p.demo && (
-                  <a
-                    href={p.demo}
-                    target="_blank"
-                    rel="noreferrer"
-                    // the track is drag-to-scroll: swallow the click that ends a drag
-                    onClick={(e) => drag.current.moved && e.preventDefault()}
-                    className="group font-mono text-[11px] uppercase tracking-wider text-white/55 transition-colors hover:text-white"
-                  >
-                    <span aria-hidden>↗</span>{' '}
-                    <span className="underline-offset-2 group-hover:underline">Live demo</span>
-                  </a>
-                )}
-                {p.repo && (
-                  <a
-                    href={p.repo}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => drag.current.moved && e.preventDefault()}
-                    className="group font-mono text-[11px] uppercase tracking-wider text-white/55 transition-colors hover:text-white"
-                  >
-                    <span aria-hidden>↗</span>{' '}
-                    <span className="underline-offset-2 group-hover:underline">Source</span>
-                  </a>
-                )}
-              </div>
-            )}
-          </article>
-        ))}
-      </div>
-
-      {/* Progress dots */}
-      <div className="mt-5 flex justify-center gap-2">
-        {projects.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            aria-label={`Go to project ${i + 1}`}
-            className={`h-1.5 rounded-full transition-all ${
-              i === active ? 'w-6 bg-white' : 'w-1.5 bg-white/30 hover:bg-white/60'
-            }`}
-          />
+          <Card key={p.title} p={p} index={i} still={still} />
         ))}
       </div>
     </GlassSection>
+  )
+}
+
+function Card({ p, index, still }: { p: Project; index: number; still: boolean }) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.5, delay: Math.min(index * 0.06, 0.4), ease: [0.16, 1, 0.3, 1] }}
+      whileHover={still ? undefined : { y: -4 }}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-white/12 bg-white/[0.02] transition-colors hover:border-white/30"
+    >
+      {/* the thing itself */}
+      <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden border-b border-white/10 bg-black">
+        {p.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={p.image}
+            alt={`${p.title} screenshot`}
+            loading="lazy"
+            className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          // no live site to shoot: say so rather than fake a browser frame
+          <div
+            className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center"
+            style={{
+              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.10) 1px, transparent 1px)',
+              backgroundSize: '14px 14px',
+            }}
+          >
+            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/45">
+              {p.tags.slice(0, 3).join(' / ')}
+            </span>
+            <span className="font-mono text-[10px] text-white/25">no public site</span>
+          </div>
+        )}
+        <span
+          className={`absolute right-3 top-3 rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider backdrop-blur-sm ${
+            statusStyle[p.status] ?? statusStyle.Upcoming
+          }`}
+        >
+          {p.status}
+        </span>
+      </div>
+
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="font-sans text-[17px] font-semibold leading-snug text-white">{p.title}</h3>
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-white/40">
+          {p.role} · {p.period}
+        </p>
+
+        {/* sans, not mono: these are paragraphs, and the meta around them
+            already carries the terminal voice */}
+        <p className="mt-3 font-sans text-[13px] leading-relaxed text-white/70">{p.description}</p>
+
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {p.tags.map((t) => (
+            <span
+              key={t}
+              className="rounded border border-white/12 px-1.5 py-0.5 font-mono text-[10px] text-white/50"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+
+        {/* counted off GitHub, not asserted - it sits with the links because it
+            is the same kind of claim: checkable */}
+        {p.contribution && (
+          <p className="mt-3 font-mono text-[10px] leading-relaxed text-white/35">
+            {p.contribution}
+          </p>
+        )}
+
+        {(p.demo || p.repo) && (
+          <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pt-3 [&:not(:first-child)]:mt-4">
+            {p.demo && (
+              <a
+                href={p.demo}
+                target="_blank"
+                rel="noreferrer"
+                className="group/l font-mono text-[10px] uppercase tracking-wider text-white/60 transition-colors hover:text-white"
+              >
+                <span aria-hidden>↗</span>{' '}
+                <span className="underline-offset-2 group-hover/l:underline">Live demo</span>
+              </a>
+            )}
+            {p.repo && (
+              <a
+                href={p.repo}
+                target="_blank"
+                rel="noreferrer"
+                className="group/l font-mono text-[10px] uppercase tracking-wider text-white/60 transition-colors hover:text-white"
+              >
+                <span aria-hidden>↗</span>{' '}
+                <span className="underline-offset-2 group-hover/l:underline">Source</span>
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </motion.article>
   )
 }

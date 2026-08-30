@@ -117,52 +117,78 @@ export type Project = {
   status: 'Live' | 'Completed' | 'In Progress' | 'Upcoming'
   description: string
   tags: string[]
+  /** Card thumbnail under /public. A screenshot of the live site where there is one. */
+  image?: string
+  /**
+   * The share of the work that is mine, counted off GitHub rather than
+   * asserted. Team repos get one; solo repos do not need one.
+   */
+  contribution?: string
   demo?: string
   repo?: string
 }
 
 export const projects: Project[] = [
   {
-    title: "PDLite - Parkinson's Risk Screening Device",
+    title: 'PDLite - Parkinson\u2019s Risk Screening Device',
     period: '2026',
     role: 'Web & Database / Device Design',
     status: 'Completed',
     description:
-      'A device that gives a preliminary Parkinson\'s disease risk assessment. Built the Next.js and Supabase web app that records readings and charts them back, and designed the enclosure and its mechanism in Fusion 360 for 3D printing. Awarded gold at the NRCT Thailand New Gen Inventors Award 2026 and gold again at SWU Researcher Day 2026.',
-    tags: ['Next.js', 'Supabase', 'Chart.js', 'Fusion 360', 'Gold Medal'],
+      'A handheld device that gives a preliminary Parkinson\u2019s risk assessment. I built the Next.js and Supabase app that records the readings and charts them back, and designed the enclosure and its mechanism in Fusion 360 for 3D printing.',
+    tags: ['Next.js', 'Supabase', 'Chart.js', 'Fusion 360'],
+    image: '/projects/pdlite.jpg',
+    contribution: 'Sole author \u00b7 30 commits \u00b7 gold at NRCT I-New Gen 2026 and SWU Researcher Day 2026',
     demo: 'https://p-dlite.vercel.app',
     repo: 'https://github.com/Skysosmart/PDlite',
   },
   {
-    title: 'T-GODA - Accommodation Booking Platform',
+    title: 'Seluna Cloud - Landing Site',
     period: '2026',
     role: 'Frontend Developer',
-    status: 'Completed',
+    status: 'Live',
     description:
-      'An Agoda-style booking platform built for the CODEKIT Web Development Competition at the Thailand Robot & Coding Challenge 2026. Owned the entire frontend - landing page, responsive layout across screen sizes, and the navigation tying every page together. Placed 3rd at national level.',
-    tags: ['Frontend', 'UI Design', 'Responsive', '3rd Place'],
-    demo: 'https://codekit2026.vercel.app',
-    repo: 'https://github.com/Skysosmart/codekit2026',
+      'The public site for Seluna Cloud, a commerce platform in production. Mine are the 3D moon hero and its iris transition, the site-wide motion pass, the grouped navbar, and a startup rework that gates the splash per session and paints the hero before hydration.',
+    tags: ['Next.js', 'Cloudflare', 'GSAP', '3D Hero'],
+    image: '/projects/seluna.jpg',
+    contribution: 'Largest contributor \u00b7 43 of 122 commits',
+    demo: 'https://seluna.cloud',
   },
   {
-    title: 'Nexus - Chat Web Application',
+    title: 'Nebula - Deep-Space Observatory Site',
+    period: '2026',
+    role: 'Contributor \u00b7 3D',
+    status: 'Live',
+    description:
+      'A curated directory of websites, built as an observatory dome looking out at a live emission nebula. Its colour comes from real nebula emission lines in OKLCH rather than the usual purple space gradient, and submitting a site ends in a cinematic 3D black-hole intake.',
+    tags: ['Astro', 'React Three Fiber', 'Cloudflare', 'Neon'],
+    image: '/projects/nebula.jpg',
+    contribution: '7 of 23 commits across 5 contributors',
+    demo: 'https://nebula.pranakorn.co.th',
+  },
+  {
+    title: 'CODEKIT 2026 - T-GODA & Nexus',
     period: '2026',
     role: 'Frontend Developer',
     status: 'Completed',
     description:
-      'A Discord-style chat application from the same CODEKIT competition. Built the landing page, the sign-up and login flow, and more than twenty core functions - an exercise in taking apart a large platform and rebuilding it into something that actually works.',
-    tags: ['Frontend', 'Auth Flow', 'UI Design', 'Web App'],
+      'Two builds against one brief at the Thailand Robot & Coding Challenge: T-GODA, an Agoda-style booking platform, and Nexus, a Discord-style chat app. I owned the frontend on both - landing pages, responsive layout, the sign-up and login flow, and over twenty core functions on Nexus. 3rd nationally.',
+    tags: ['Frontend', 'UI Design', 'Auth Flow', '3rd Place'],
+    image: '/projects/codekit.jpg',
+    contribution: 'Nexus: most commits of the three, 38 of 97 \u00b7 T-GODA: 15 of 53',
     demo: 'https://codekit-finale.vercel.app',
     repo: 'https://github.com/Skysosmart/codekit-finale',
   },
   {
-    title: 'Doodee Future - University Admission Platform',
+    title: 'TCASFolio Extension - Doodee Future',
     period: '2025-2026',
-    role: 'Contributor · Extension Author',
+    role: 'Extension Author \u00b7 Platform Contributor',
     status: 'Live',
     description:
-      'A platform that helps Thai students plan for university admission in one place instead of hunting across a dozen sites. Built with the Pranakorn Group team. The TCASFolio browser extension is mine end to end - a Chrome MV3 add-on that keeps a local portfolio vault and autofills the TCASFolio forms, with the data never leaving the machine.',
-    tags: ['Next.js', 'Chrome MV3', 'Team Project'],
+      'Doodee Future puts Thai university admission planning in one place instead of a dozen sites. The TCASFolio browser extension is mine end to end: a Chrome MV3 add-on that keeps a local portfolio vault and autofills the TCASFolio forms, with the data never leaving the machine.',
+    tags: ['Chrome MV3', 'Next.js', 'Team Project'],
+    image: '/projects/doodee.jpg',
+    contribution: 'Extension: 58 of 61 commits \u00b7 platform: 4 of 534 across 7 contributors',
     demo: 'https://doodee-future.com',
     repo: 'https://github.com/Skysosmart/doodee-future-tcasfolie-extension',
   },
@@ -172,47 +198,11 @@ export const projects: Project[] = [
     role: 'Frontend Developer',
     status: 'Live',
     description:
-      'The public site for Pranakorn Group, the web development studio I build with. My largest share of any team repo here: 23 of its 143 commits, across the landing page and its responsive layout.',
+      'The public site for Pranakorn Group, the web development studio I build with. I worked on the landing page and its responsive layout.',
     tags: ['Frontend', 'Responsive', 'Team Project'],
+    image: '/projects/pranakorn.jpg',
+    contribution: '23 of 102 commits across 8 contributors',
     demo: 'https://pranakorn.dev',
-  },
-  {
-    title: 'Seluna Cloud - Landing Site',
-    period: '2026',
-    role: 'Frontend Developer',
-    status: 'Live',
-    description:
-      'The public site for Seluna Cloud, a commerce platform in production. I am its largest contributor, with 43 of the repo\'s commits: the 3D moon hero and its iris transition, the site-wide motion pass, the grouped navbar, and a startup rework that gates the splash per session and paints the hero before hydration. Next.js on Cloudflare with GSAP and Framer Motion.',
-    tags: ['Next.js', 'Cloudflare', 'GSAP', '3D Hero'],
-    demo: 'https://seluna.cloud',
-  },
-  {
-    title: 'Nebula - Deep-Space Observatory Site',
-    period: '2026',
-    role: 'Contributor · 3D',
-    status: 'Live',
-    description:
-      'A curated directory of websites, built as an observatory dome looking out at a live emission nebula. Astro on Cloudflare with a Neon database; colour comes from real nebula emission lines in OKLCH rather than the usual purple space gradient, and submitting a site ends in a cinematic 3D black-hole intake built with react-three-fiber. I have the most commits on it of anyone.',
-    tags: ['Astro', 'React Three Fiber', 'Cloudflare', 'Neon', 'OKLCH'],
-    demo: 'https://nebula.pranakorn.co.th',
-  },
-  {
-    title: 'POS + ERP System',
-    period: '2026',
-    role: 'Team Member · Pranakorn Group',
-    status: 'Live',
-    description:
-      'A Pranakorn Group product I am part of: a point-of-sale terminal and a back-office ERP merged into one Next.js 16 and React 19 app, serving two independent product planes from a single origin. The build is the team\'s work rather than mine.',
-    tags: ['Next.js 16', 'React 19', 'Team Project'],
-  },
-  {
-    title: 'Hackathon Digitize - Asset Declaration Data',
-    period: '2025',
-    role: 'Data Engineering',
-    status: 'Completed',
-    description:
-      'An anti-corruption entry run by TIJ and the Anti-Corruption Organization of Thailand. Turned scanned NACC asset-declaration filings into structured, queryable records through a Python extraction pipeline using OCR, vision models, and a trained NER model.',
-    tags: ['Python', 'OCR', 'NER', 'Data Pipeline'],
   },
   {
     title: 'MakeX Challenger Competition Robot',
@@ -220,17 +210,31 @@ export const projects: Project[] = [
     role: 'Structural Designer',
     status: 'Completed',
     description:
-      'Designed the full robot structure in Fusion 360 across six months for the MakeX Challenger international tournament, building for disc-shooting and block-gripping missions over five arenas. Placed 3rd and took the Best Favourite Alliance Team Award.',
-    tags: ['Fusion 360', 'Robotics', '3D Design', '3rd Place'],
+      'Six months designing the full robot structure in Fusion 360 for the MakeX Challenger international tournament, building for disc-shooting and block-gripping missions across five arenas.',
+    tags: ['Fusion 360', 'Robotics', '3D Design'],
+    image: '/projects/makex.jpg',
+    contribution: '3rd place \u00b7 Best Favourite Alliance Team Award',
+  },
+  {
+    title: 'Hackathon Digitize - Asset Declaration Data',
+    period: '2025',
+    role: 'Data Engineering',
+    status: 'Completed',
+    description:
+      'Turned scanned NACC asset-declaration filings into structured, queryable records through a Python extraction pipeline using OCR, vision models and a trained NER model. An anti-corruption entry run by TIJ and the Anti-Corruption Organization of Thailand.',
+    tags: ['Python', 'OCR', 'NER', 'Data Pipeline'],
   },
   {
     title: 'This Portfolio Site',
     period: '2026',
     role: 'Designer / Developer',
-    status: 'Completed',
+    status: 'Live',
     description:
-      'An ASCII and terminal themed portfolio built in Next.js with WebGL effects, collecting the certificates, projects, and writing on this page.',
+      'The site you are reading. A terminal-themed one-pager in Next.js with WebGL, holding the certificates, the projects and the writing.',
     tags: ['Next.js', 'TypeScript', 'WebGL', 'Design'],
+    image: '/projects/portfolio.jpg',
+    contribution: 'Sole author \u00b7 51 commits',
+    demo: 'https://nonthanaphong.vercel.app',
     repo: 'https://github.com/Skysosmart/My-PROFILE-PAGE',
   },
 ]

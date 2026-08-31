@@ -287,3 +287,21 @@ body::after {
   transition: right 0.25s ease;
 }
 .nav-link:hover::after { right: 0; }
+
+/* --------------------------------------------------------------------------
+   Phones. Everything below is compositor cost, not main-thread cost: it never
+   shows in a CPU profile and it is exactly what an iPhone stutters on in the
+   hero. Same picture, cheaper to draw.
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  /* a border-radius that animates re-clips the WebGL canvas inside it every
+     frame; a static circle is the same orb at rest */
+  .liquid-orb { animation: none; border-radius: 50%; }
+  /* blending the gloss over a canvas forces a blend group per frame */
+  .orb-gloss { mix-blend-mode: normal; opacity: 0.55; }
+  /* fixed, masked layers are repainted on every scroll on iOS; scrolling
+     with the page and dropping the mask keeps them as plain textures */
+  body::before, body::after { position: absolute; }
+  body::after { mask-image: none; -webkit-mask-image: none; opacity: 0.28; }
+  body { position: relative; }
+}

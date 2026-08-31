@@ -129,7 +129,7 @@ export default function Header() {
             setOpen(true)
             inputRef.current?.focus()
           }}
-          className={`flex cursor-text items-center gap-2 border bg-bg/85 px-3 py-2 font-mono text-[12px] backdrop-blur-xl transition-colors sm:px-4 ${
+          className={`flex cursor-text items-center gap-2 border bg-bg/95 px-3 py-2 font-mono text-[12px] md:bg-bg/85 md:backdrop-blur-xl transition-colors sm:px-4 ${
             open ? 'border-fg/40' : 'border-fg/15 hover:border-fg/25'
           } ${open ? 'rounded-t-lg' : 'rounded-lg'}`}
         >
@@ -169,7 +169,7 @@ export default function Header() {
           <ul
             id="nav-listbox"
             role="listbox"
-            className="overflow-hidden rounded-b-lg border border-t-0 border-fg/40 bg-bg/90 font-mono text-[12px] backdrop-blur-xl"
+            className="overflow-hidden rounded-b-lg border border-t-0 border-fg/40 bg-bg/95 font-mono text-[12px] md:bg-bg/90 md:backdrop-blur-xl"
           >
             {matches.length === 0 && (
               <li className="px-3 py-2 text-fg-dim sm:px-4">

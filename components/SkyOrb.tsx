@@ -206,9 +206,14 @@ export default function SkyOrb() {
       const io = new IntersectionObserver(([e]) => (onScreen = e.isIntersecting), { threshold: 0 })
       io.observe(canvas)
 
+      // a phone draws the water at 30fps: half the GPU and compositor work,
+      // and the ripples read the same
+      const phone = window.innerWidth < 768
+      let tick = 0
       const frame = () => {
         raf = requestAnimationFrame(frame)
         if (document.hidden || !onScreen) return
+        if (phone && (tick++ & 1)) return
         const now = performance.now() / 1000 - t0
         let n = 0
         for (let i = ripples.length - 1; i >= 0 && n < 24; i--) {

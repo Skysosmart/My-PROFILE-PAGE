@@ -44,14 +44,14 @@ const statusStyle: Record<string, string> = {
   // Live reads brightest: a product anyone can open right now outranks one
   // that is merely finished
   Live: 'border-emerald-300/70 text-emerald-200',
-  Completed: 'border-white/40 text-white/80',
-  'In Progress': 'border-white/25 text-white/60',
-  Upcoming: 'border-white/15 text-white/45',
+  Completed: 'border-fg/40 text-fg/80',
+  'In Progress': 'border-fg/25 text-fg-muted',
+  Upcoming: 'border-fg/15 text-fg-dim',
 }
 
 // the "nothing to render" panel for projects without a screenshot
 const DOTS = {
-  backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.10) 1px, transparent 1px)',
+  backgroundImage: 'radial-gradient(circle, rgb(var(--fg) / 0.10) 1px, transparent 1px)',
   backgroundSize: '14px 14px',
 }
 
@@ -171,7 +171,7 @@ export default function Projects() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="font-mono text-xs text-white/40"
+            className="font-mono text-xs text-fg-dim"
           >
             03
           </motion.span>
@@ -180,7 +180,7 @@ export default function Projects() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, delay: 0.22 }}
-            className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-white txt-glow sm:text-xl"
+            className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-fg txt-glow sm:text-xl"
           >
             Projects
           </motion.h2>
@@ -190,7 +190,7 @@ export default function Projects() {
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-x-0 bottom-0 h-px origin-left bg-white/10"
+            className="absolute inset-x-0 bottom-0 h-px origin-left bg-fg/10"
           />
         </div>
 
@@ -202,7 +202,7 @@ export default function Projects() {
           initial={animate ? { opacity: 0 } : false}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, ease: EASE_OUT }}
-          className="pointer-events-none absolute bottom-[6vh] left-[-1vw] -z-10 select-none font-mono text-[38vh] font-bold leading-none text-white/[0.05]"
+          className="pointer-events-none absolute bottom-[6vh] left-[-1vw] -z-10 select-none font-mono text-[38vh] font-bold leading-none text-fg/[0.05]"
         >
           {pad(index + 1)}
         </motion.span>
@@ -229,18 +229,18 @@ export default function Projects() {
                 {...wipe}
                 style={{
                   ...(figletPx ? { fontSize: figletPx } : null),
-                  textShadow: '0 0 14px rgba(255,255,255,0.3), 0 0 34px rgba(255,255,255,0.12)',
+                  textShadow: '0 0 14px rgb(var(--fg) / 0.3), 0 0 34px rgb(var(--fg) / 0.12)',
                 }}
-                className="m-0 whitespace-pre font-mono text-[13px] leading-[1.1] text-white lg:text-[18px]"
+                className="m-0 whitespace-pre font-mono text-[13px] leading-[1.1] text-fg lg:text-[18px]"
               >
                 {figletFor(p.title)}
               </motion.pre>
 
-              <h3 className="mt-3 font-sans text-[15px] font-semibold leading-snug text-white lg:mt-4 lg:text-xl">
+              <h3 className="mt-3 font-sans text-[15px] font-semibold leading-snug text-fg lg:mt-4 lg:text-xl">
                 {p.title}
               </h3>
               <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-white/40 lg:text-[11px]">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-fg-dim lg:text-[11px]">
                   {p.role} · {p.period}
                 </p>
                 <span
@@ -261,7 +261,7 @@ export default function Projects() {
               {/* sans, not mono: a paragraph, and the meta around it already
                   carries the terminal voice. Clamped on a phone, where the
                   stage has 700px to spend on everything */}
-              <p className="mt-2 line-clamp-3 font-sans text-[13px] leading-normal text-white/70 lg:mt-3 lg:line-clamp-none lg:text-[14px] lg:leading-relaxed">
+              <p className="mt-2 line-clamp-3 font-sans text-[13px] leading-normal text-fg/70 lg:mt-3 lg:line-clamp-none lg:text-[14px] lg:leading-relaxed">
                 {p.description}
               </p>
 
@@ -269,7 +269,7 @@ export default function Projects() {
                 {p.tags.map((t, i) => (
                   <span
                     key={t}
-                    className={`rounded border border-white/[0.12] px-1.5 py-0.5 font-mono text-[10px] text-white/50 ${
+                    className={`rounded border border-fg/[0.12] px-1.5 py-0.5 font-mono text-[10px] text-fg-muted ${
                       i >= MOBILE_TAGS ? 'hidden lg:inline-block' : ''
                     }`}
                   >
@@ -282,7 +282,7 @@ export default function Projects() {
                   link because it is the same kind of claim: checkable.
                   Desktop only; the phone stage has no room for it */}
               {p.contribution && (
-                <p className="mt-3 hidden font-mono text-[10px] leading-relaxed text-white/50 lg:block">
+                <p className="mt-3 hidden font-mono text-[10px] leading-relaxed text-fg-muted lg:block">
                   {p.contribution}
                 </p>
               )}
@@ -305,8 +305,8 @@ export default function Projects() {
 
         {/* the rail: where you are, and the whole film at a glance. On a phone
             the filmstrip wraps onto its own line under the counter */}
-        <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pb-3 pt-2 lg:pb-6 lg:pt-4">
-          <span className="font-mono text-[11px] tabular-nums text-white/60">
+        <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-fg/10 pb-3 pt-2 lg:pb-6 lg:pt-4">
+          <span className="font-mono text-[11px] tabular-nums text-fg-muted">
             {pad(index + 1)}/{pad(total)}
           </span>
 
@@ -314,7 +314,7 @@ export default function Projects() {
             {projects.map((_, i) => (
               <span
                 key={i}
-                className={`h-[3px] flex-1 rounded-sm transition-colors ${i <= index ? 'bg-white/80' : 'bg-white/15'}`}
+                className={`h-[3px] flex-1 rounded-sm transition-colors ${i <= index ? 'bg-fg/80' : 'bg-fg/15'}`}
               />
             ))}
           </div>
@@ -323,7 +323,7 @@ export default function Projects() {
               does not reflow when the hint goes */}
           <span
             aria-hidden
-            className={`font-mono text-[10px] uppercase tracking-wider text-white/30 lg:order-last ${
+            className={`font-mono text-[10px] uppercase tracking-wider text-fg-dim lg:order-last ${
               index === total - 1 ? 'invisible' : ''
             }`}
           >
@@ -344,8 +344,8 @@ export default function Projects() {
                   onClick={() => goTo(i)}
                   aria-label={`${pad(i + 1)} ${q.title}`}
                   aria-current={on ? 'true' : undefined}
-                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[3px] border border-white/10 bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:aspect-[16/10] lg:h-auto lg:w-[72px] lg:flex-none ${
-                    on ? 'ring-1 ring-white' : ''
+                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[3px] border border-fg/10 bg-bg/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:aspect-[16/10] lg:h-auto lg:w-[72px] lg:flex-none ${
+                    on ? 'ring-1 ring-fg' : ''
                   }`}
                 >
                   {/* the dimming lives on the picture, not the button: an
@@ -381,14 +381,14 @@ export default function Projects() {
 /** The screenshot, developing out of ASCII on arrival - or the dotted panel. */
 function Screen({ p }: { p: Project }) {
   const frame =
-    'aspect-[16/10] w-full overflow-hidden rounded-xl border border-white/[0.12] bg-black/60 shadow-[0_50px_140px_-50px_rgba(0,0,0,0.95),0_0_60px_-20px_rgba(255,255,255,0.07)]'
+    'aspect-[16/10] w-full overflow-hidden rounded-xl border border-fg/[0.12] bg-bg/60 shadow-[0_50px_140px_-50px_rgba(0,0,0,0.95),0_0_60px_-20px_rgb(var(--fg)_/_0.07)]'
   if (!p.image) {
     return (
       <div className={`flex flex-col items-center justify-center gap-2 px-4 text-center ${frame}`} style={DOTS}>
-        <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/45">
+        <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-fg-dim">
           {p.tags.slice(0, 3).join(' / ')}
         </span>
-        <span className="font-mono text-[10px] text-white/25">nothing to render</span>
+        <span className="font-mono text-[10px] text-fg/25">nothing to render</span>
       </div>
     )
   }
@@ -403,7 +403,7 @@ function Link({ href, label }: { href: string; label: string }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="group/l inline-flex min-h-[32px] items-center font-mono text-[10px] uppercase tracking-wider text-white/55 transition-colors hover:text-white lg:text-[11px]"
+      className="group/l inline-flex min-h-[32px] items-center font-mono text-[10px] uppercase tracking-wider text-fg-muted transition-colors hover:text-fg lg:text-[11px]"
     >
       <span aria-hidden>&#8599;</span>{' '}
       <span className="underline-offset-2 group-hover/l:underline">{label}</span>

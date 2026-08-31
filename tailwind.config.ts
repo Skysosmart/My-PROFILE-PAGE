@@ -16,12 +16,20 @@ const config: Config = {
     extend: {
       colors: {
         // Backgrounds (neutral near-black)
-        void: '#050505',   // deepest background
-        panel: '#101010',  // panel / window fill
-        ink: '#151515',    // raised surface
-        // Monochrome family (was phosphor green, now white/grey)
+        void: 'rgb(var(--bg) / <alpha-value>)',    // deepest background = the page
+        ink: 'rgb(var(--panel) / <alpha-value>)',  // raised surface = the panel
+        // Theme tokens. fg is the ink, bg the page, panel the glass fill; all
+        // three carry <alpha-value> so text-fg/40 keeps meaning "ink at 40%"
+        // whichever theme is on. fg-dim / fg-muted are the two label greys,
+        // tuned per theme in globals.css so they pass AA on paper as well.
+        fg: 'rgb(var(--fg) / <alpha-value>)',
+        bg: 'rgb(var(--bg) / <alpha-value>)',
+        panel: 'rgb(var(--panel) / <alpha-value>)',
+        'fg-dim': 'var(--fg-dim)',
+        'fg-muted': 'var(--fg-muted)',
+        // Monochrome family (was phosphor green, now the theme ink)
         phosphor: {
-          DEFAULT: '#ffffff',
+          DEFAULT: 'rgb(var(--fg) / <alpha-value>)',
           dim: '#bdbdbd',
           deep: '#4d4d4d',
         },

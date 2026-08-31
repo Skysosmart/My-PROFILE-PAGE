@@ -73,27 +73,27 @@ export default function CertArchive() {
       <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6">
         <div className="flex items-center gap-2 font-mono text-[12px]">
           <span className="shrink-0 select-none">
-            <span className="text-white/70">{handle}</span>
-            <span className="text-white/25">@exe</span>
-            <span className="text-white/40">:~$</span>
+            <span className="text-fg/70">{handle}</span>
+            <span className="text-fg/25">@exe</span>
+            <span className="text-fg-dim">:~$</span>
           </span>
-          <span className="select-none text-white/55">cd</span>
-          <span className="caret text-white">certificates/</span>
+          <span className="select-none text-fg-muted">cd</span>
+          <span className="caret text-fg">certificates/</span>
           <Link
             href="/#certificates"
-            className="ml-auto inline-flex min-h-[32px] shrink-0 items-center text-white/40 transition-colors hover:text-white"
+            className="ml-auto inline-flex min-h-[32px] shrink-0 items-center text-fg-dim transition-colors hover:text-fg"
           >
             &#8592; back
           </Link>
-          <span className="hidden shrink-0 select-none tabular-nums tracking-widest text-white/25 sm:inline">
+          <span className="hidden shrink-0 select-none tabular-nums tracking-widest text-fg/25 sm:inline">
             {time || '--:--:--'}
           </span>
         </div>
 
-        <h1 className="mt-3 font-crt text-6xl leading-[0.85] tracking-[0.06em] text-white txt-glow sm:text-7xl lg:text-8xl">
+        <h1 className="mt-3 font-crt text-6xl leading-[0.85] tracking-[0.06em] text-fg txt-glow sm:text-7xl lg:text-8xl">
           CERTIFICATES
         </h1>
-        <p className="mt-2 font-mono text-[11px] text-white/40 sm:text-xs">
+        <p className="mt-2 font-mono text-[11px] text-fg-dim sm:text-xs">
           {certStats.total} records · {certStats.gold} gold · {certStats.national} national ·{' '}
           {certStats.intl} international · {certSpan}
         </p>
@@ -103,11 +103,11 @@ export default function CertArchive() {
       {/* Sticky only once the pills fit on one line. Wrapped to three rows on a
           phone this bar held 20% of the viewport hostage; there it scrolls away
           and you get the screen back. */}
-      <div className="z-30 mt-5 border-y border-white/10 bg-black/85 backdrop-blur-xl lg:sticky lg:top-0">
+      <div className="z-30 mt-5 border-y border-fg/10 bg-bg/85 backdrop-blur-xl lg:sticky lg:top-0">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="flex min-w-0 flex-1 basis-56 items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 transition-colors focus-within:border-white/45 sm:max-w-xs">
-              <span aria-hidden className="shrink-0 text-white/35">
+            <label className="flex min-w-0 flex-1 basis-56 items-center gap-2 rounded-full border border-fg/15 bg-fg/[0.04] px-4 py-2 transition-colors focus-within:border-fg/45 sm:max-w-xs">
+              <span aria-hidden className="shrink-0 text-fg-dim">
                 &#9906;
               </span>
               <input
@@ -116,7 +116,7 @@ export default function CertArchive() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search certificates"
                 aria-label="Search certificates"
-                className="min-w-0 flex-1 bg-transparent font-sans text-sm text-white caret-white outline-none placeholder:text-white/35"
+                className="min-w-0 flex-1 bg-transparent font-sans text-sm text-fg caret-fg outline-none placeholder:text-fg-dim"
               />
               {query && (
                 <button
@@ -125,14 +125,14 @@ export default function CertArchive() {
                     searchRef.current?.focus()
                   }}
                   aria-label="Clear search"
-                  className="shrink-0 text-white/35 transition-colors hover:text-white"
+                  className="shrink-0 text-fg-dim transition-colors hover:text-fg"
                 >
                   &#10005;
                 </button>
               )}
             </label>
 
-            <span className="shrink-0 font-mono text-[11px] text-white/35">
+            <span className="shrink-0 font-mono text-[11px] text-fg-dim">
               {list.length === certStats.total
                 ? `${certStats.total} certificates`
                 : `${list.length} of ${certStats.total}`}
@@ -148,21 +148,21 @@ export default function CertArchive() {
                   key={c.key}
                   onClick={() => setCat(c.key)}
                   aria-pressed={on}
-                  className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 ${
-                    on ? 'text-neutral-900' : 'text-white/70 hover:text-white'
+                  className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
+                    on ? 'text-bg' : 'text-fg/70 hover:text-fg'
                   }`}
                 >
                   {on && (
                     <motion.span
                       layoutId="cert-pill-archive"
                       transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                      className="absolute inset-0 rounded-full bg-white shadow-lg"
+                      className="absolute inset-0 rounded-full bg-fg shadow-lg"
                     />
                   )}
                   <span className="relative flex items-center gap-2">
                     <span className={`h-1.5 w-1.5 rounded-full ${c.dot}`} />
                     {c.label}
-                    <span className={on ? 'text-neutral-400' : 'text-white/35'}>
+                    <span className={on ? 'text-bg/60' : 'text-fg-dim'}>
                       {(byCat.get(c.key) ?? []).length}
                     </span>
                   </span>
@@ -177,13 +177,13 @@ export default function CertArchive() {
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
         {list.length === 0 ? (
           <div className="glass-panel rounded-2xl px-6 py-20 text-center">
-            <p className="font-sans text-white/70">No certificates match &ldquo;{query}&rdquo;</p>
+            <p className="font-sans text-fg/70">No certificates match &ldquo;{query}&rdquo;</p>
             <button
               onClick={() => {
                 setQuery('')
                 setCat('all')
               }}
-              className="mt-4 rounded-full border border-white/25 px-4 py-1.5 font-sans text-sm text-white/80 transition-colors hover:border-white/60 hover:text-white"
+              className="mt-4 rounded-full border border-fg/25 px-4 py-1.5 font-sans text-sm text-fg/80 transition-colors hover:border-fg/60 hover:text-fg"
             >
               Show all {certStats.total}
             </button>
@@ -208,7 +208,7 @@ export default function CertArchive() {
 
         <div className="mx-auto mt-8 max-w-md">
           <div className="ascii-rule opacity-40" />
-          <p className="mt-3 text-center font-mono text-[11px] text-white/30">
+          <p className="mt-3 text-center font-mono text-[11px] text-fg-dim">
             {list.length} of {certStats.total} records listed
           </p>
         </div>

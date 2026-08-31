@@ -126,7 +126,7 @@ export default function GlassSection({
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: revealAmount }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="font-mono text-xs text-white/40"
+            className="font-mono text-xs text-fg-dim"
           >
             {index}
           </motion.span>
@@ -135,7 +135,7 @@ export default function GlassSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: revealAmount }}
             transition={{ duration: 0.5, delay: 0.22 }}
-            className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-white txt-glow sm:text-xl"
+            className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-fg txt-glow sm:text-xl"
           >
             {title}
           </motion.h2>
@@ -145,7 +145,7 @@ export default function GlassSection({
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true, amount: revealAmount }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-x-0 bottom-0 h-px origin-left bg-white/10"
+            className="absolute inset-x-0 bottom-0 h-px origin-left bg-fg/10"
           />
         </div>
 

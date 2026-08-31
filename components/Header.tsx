@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { player, nav } from '@/data/portfolio'
+import ThemeToggle from '@/components/ThemeToggle'
+import { applyPref, currentTheme } from '@/lib/theme'
 
 /**
  * The navigation IS a command line.
@@ -93,6 +95,16 @@ export default function Header() {
       setCursor((c) => (c - 1 + matches.length) % Math.max(matches.length, 1))
     } else if (e.key === 'Enter') {
       e.preventDefault()
+      // the prompt is a command line, so `theme light|dark|system` is a real
+      // command; bare `theme` flips whatever is on
+      const [cmd, arg] = query.trim().toLowerCase().split(/\s+/)
+      if (cmd === 'theme') {
+        applyPref(arg === 'light' || arg === 'dark' || arg === 'system' ? arg : currentTheme() === 'dark' ? 'light' : 'dark')
+        setOpen(false)
+        setQuery('')
+        inputRef.current?.blur()
+        return
+      }
       const pick = matches[cursor]
       if (pick) go(pick.id)
     } else if (e.key === 'Escape') {
@@ -117,16 +129,16 @@ export default function Header() {
             setOpen(true)
             inputRef.current?.focus()
           }}
-          className={`flex cursor-text items-center gap-2 border bg-black/85 px-3 py-2 font-mono text-[12px] backdrop-blur-xl transition-colors sm:px-4 ${
-            open ? 'border-white/40' : 'border-white/15 hover:border-white/25'
+          className={`flex cursor-text items-center gap-2 border bg-bg/85 px-3 py-2 font-mono text-[12px] backdrop-blur-xl transition-colors sm:px-4 ${
+            open ? 'border-fg/40' : 'border-fg/15 hover:border-fg/25'
           } ${open ? 'rounded-t-lg' : 'rounded-lg'}`}
         >
-          <span className="shrink-0 select-none text-white/40">
-            <span className="text-white/70">{player.handle.toLowerCase().replace('.exe', '')}</span>
-            <span className="text-white/25">@exe</span>
-            <span className="text-white/40">:~$</span>
+          <span className="shrink-0 select-none text-fg-dim">
+            <span className="text-fg/70">{player.handle.toLowerCase().replace('.exe', '')}</span>
+            <span className="text-fg/25">@exe</span>
+            <span className="text-fg-dim">:~$</span>
           </span>
-          <span className="shrink-0 select-none text-white/55">cd</span>
+          <span className="shrink-0 select-none text-fg-muted">cd</span>
 
           <input
             ref={inputRef}
@@ -140,12 +152,13 @@ export default function Header() {
             aria-autocomplete="list"
             aria-label="Jump to a section"
             placeholder={open ? '' : 'type or ⌘K'}
-            className="min-w-0 flex-1 bg-transparent text-white caret-white outline-none placeholder:text-white/25"
+            className="min-w-0 flex-1 bg-transparent text-fg caret-fg outline-none placeholder:text-fg/25"
           />
 
-          <span className="hidden shrink-0 select-none tabular-nums tracking-widest text-white/35 sm:inline">
+          <span className="hidden shrink-0 select-none tabular-nums tracking-widest text-fg-dim sm:inline">
             {time || '--:--:--'}
           </span>
+          <ThemeToggle />
         </div>
 
         {/* the sections, as paths */}
@@ -156,13 +169,15 @@ export default function Header() {
           <ul
             id="nav-listbox"
             role="listbox"
-            className="overflow-hidden rounded-b-lg border border-t-0 border-white/40 bg-black/90 font-mono text-[12px] backdrop-blur-xl"
+            className="overflow-hidden rounded-b-lg border border-t-0 border-fg/40 bg-bg/90 font-mono text-[12px] backdrop-blur-xl"
           >
             {matches.length === 0 && (
-            <li className="px-3 py-2 text-white/35 sm:px-4">
-                  no such section: {query}
-                </li>
-              )}
+              <li className="px-3 py-2 text-fg-dim sm:px-4">
+                {query.trim().toLowerCase().startsWith('theme')
+                  ? 'theme light | dark | system'
+                  : `no such section: ${query}`}
+              </li>
+            )}
             {matches.map((n, i) => {
                 const on = i === cursor
                 return (
@@ -171,21 +186,21 @@ export default function Header() {
                       onMouseEnter={() => setCursor(i)}
                       onClick={() => go(n.id)}
                       className={`flex w-full items-center gap-2 px-3 py-1.5 text-left transition-colors sm:px-4 ${
-                        on ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white'
+                        on ? 'bg-fg/10 text-fg' : 'text-fg-muted hover:text-fg'
                       }`}
                     >
-                      <span className={`w-3 shrink-0 ${on ? 'text-white' : 'text-transparent'}`}>
+                      <span className={`w-3 shrink-0 ${on ? 'text-fg' : 'text-transparent'}`}>
                         &#9656;
                       </span>
                       <span className="flex-1 lowercase">{n.label}/</span>
-                      <span className="shrink-0 tabular-nums text-white/30">
+                      <span className="shrink-0 tabular-nums text-fg-dim">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                     </button>
                   </li>
                 )
               })}
-            <li className="flex items-center gap-3 border-t border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-wider text-white/25 sm:px-4">
+            <li className="flex items-center gap-3 border-t border-fg/10 px-3 py-1.5 text-[10px] uppercase tracking-wider text-fg/25 sm:px-4">
                 <span>&#8593;&#8595; move</span>
                 <span>&#8629; open</span>
                 <span>esc close</span>

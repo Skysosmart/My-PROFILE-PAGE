@@ -56,22 +56,22 @@ export default function ProjectWall() {
                 <div
                   key={i}
                   style={{ width: w, height: h }}
-                  className="shrink-0 overflow-hidden rounded-lg border border-white/[0.16] bg-white/[0.015]"
+                  className="shrink-0 overflow-hidden rounded-lg border border-fg/[0.16] bg-fg/[0.015]"
                 >
                   {/* chrome: traffic lights + an address bar */}
-                  <div className="flex items-center gap-1 border-b border-white/[0.12] px-2.5 py-2">
-                    <span className="h-1 w-1 rounded-full bg-white/25" />
-                    <span className="h-1 w-1 rounded-full bg-white/25" />
-                    <span className="h-1 w-1 rounded-full bg-white/25" />
-                    <span className="ml-2 h-1.5 flex-1 rounded-full bg-white/[0.07]" />
+                  <div className="flex items-center gap-1 border-b border-fg/[0.12] px-2.5 py-2">
+                    <span className="h-1 w-1 rounded-full bg-fg/25" />
+                    <span className="h-1 w-1 rounded-full bg-fg/25" />
+                    <span className="h-1 w-1 rounded-full bg-fg/25" />
+                    <span className="ml-2 h-1.5 flex-1 rounded-full bg-fg/[0.07]" />
                   </div>
                   {/* a hero block, then a few lines of copy */}
                   <div className="space-y-2 p-3">
-                    <div className="h-1/4 min-h-[16px] w-full rounded bg-white/[0.06]" />
+                    <div className="h-1/4 min-h-[16px] w-full rounded bg-fg/[0.06]" />
                     {Array.from({ length: bars }, (_, b) => (
                       <div
                         key={b}
-                        className="h-1 rounded bg-white/[0.08]"
+                        className="h-1 rounded bg-fg/[0.08]"
                         style={{ width: `${88 - b * 17}%` }}
                       />
                     ))}

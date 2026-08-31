@@ -104,16 +104,16 @@ export default function TerminalLog({
         const text = full ? line.text : line.text.slice(0, chars)
         const isActive = i === count && !done
         const isLast = i === lines.length - 1
-        const bodyClass = line.className ?? (line.muted ? 'text-white/60' : 'text-white/90')
+        const bodyClass = line.className ?? (line.muted ? 'text-fg-muted' : 'text-fg/90')
         return (
           <div key={i} className="whitespace-pre-wrap leading-relaxed">
-            {line.prompt && <span className="mr-2 text-white/40">{line.prompt}</span>}
+            {line.prompt && <span className="mr-2 text-fg-dim">{line.prompt}</span>}
             {line.prefix && (
-              <span className={line.prefix.className ?? 'text-white/40'}>{line.prefix.text}</span>
+              <span className={line.prefix.className ?? 'text-fg-dim'}>{line.prefix.text}</span>
             )}
             <span className={bodyClass}>{text}</span>
-            {isActive && <span className="animate-blink text-white">▋</span>}
-            {isLast && done && endCaret && <span className="animate-blink text-white"> ▋</span>}
+            {isActive && <span className="animate-blink text-fg">▋</span>}
+            {isLast && done && endCaret && <span className="animate-blink text-fg"> ▋</span>}
           </div>
         )
       })}

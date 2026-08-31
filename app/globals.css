@@ -6,12 +6,45 @@
    NONTHANAPHONG.EXE - terminal theme base
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   Theme tokens. Dark is the site as designed; light is the same terminal
+   printed on warm paper. RGB triplets so Tailwind can add its own alpha.
+   -------------------------------------------------------------------------- */
 :root {
-  --void: #050505;      /* neutral near-black */
-  --phosphor: #ffffff;  /* monochrome: was green, now white */
+  color-scheme: dark;
+  --bg: 5 5 5;            /* the page */
+  --fg: 255 255 255;      /* the ink */
+  --panel: 13 13 15;      /* glass fill */
+  --fg-dim: rgb(var(--fg) / 0.4);    /* labels, eyebrows, counts */
+  --fg-muted: rgb(var(--fg) / 0.58); /* secondary copy */
+  --glow: rgb(var(--fg) / 0.5);      /* txt-glow: phosphor bleed */
+  --glow-far: rgb(var(--fg) / 0.18);
+  --grid: rgb(var(--fg) / 0.05);
+  --vignette: rgb(var(--fg) / 0.07);
+  --thumb-a: #ffffff;     /* scrollbar */
+  --thumb-b: #888888;
+  --void: rgb(var(--bg));
+  --phosphor: rgb(var(--fg));
   --cyan: #cfcfcf;
-  --lime: #ffffff;
+  --lime: rgb(var(--fg));
   --scanline: rgba(0, 0, 0, 0.28);
+}
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: 243 240 232;      /* warm paper */
+  --fg: 17 17 17;         /* ink */
+  --panel: 255 255 255;
+  /* the same ramp reads lighter on paper, so the two label greys are darker
+     than a raw 40% / 58% would be: both clear 4.5:1 on the paper */
+  --fg-dim: rgba(17, 17, 17, 0.6);
+  --fg-muted: rgba(17, 17, 17, 0.72);
+  --glow: rgba(17, 17, 17, 0.22);        /* ink bleed, not light */
+  --glow-far: rgba(17, 17, 17, 0.08);
+  --grid: rgba(0, 0, 0, 0.06);
+  --vignette: rgba(0, 0, 0, 0.05);
+  --thumb-a: #111111;
+  --thumb-b: #777777;
+  --cyan: #444444;
 }
 
 * {
@@ -35,7 +68,7 @@ html {
 body {
   margin: 0;
   background-color: var(--void);
-  color: #e6e6e6;
+  color: rgb(var(--fg) / 0.9);
   font-family: var(--font-mono), ui-monospace, monospace;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -48,8 +81,8 @@ body::before {
   inset: 0;
   z-index: -2;
   background:
-    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(255, 255, 255, 0.07), transparent 60%),
-    radial-gradient(ellipse 90% 70% at 50% 120%, rgba(255, 255, 255, 0.03), transparent 55%),
+    radial-gradient(ellipse 120% 80% at 50% -10%, var(--vignette), transparent 60%),
+    radial-gradient(ellipse 90% 70% at 50% 120%, var(--grid), transparent 55%),
     var(--void);
 }
 body::after {
@@ -58,8 +91,8 @@ body::after {
   inset: 0;
   z-index: -1;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
   background-size: 44px 44px;
   mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 85%);
   opacity: 0.5;
@@ -69,29 +102,29 @@ body::after {
    Scrollbar
    -------------------------------------------------------------------------- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-track { background: rgb(var(--bg)); }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ffffff, #888888);
+  background: linear-gradient(180deg, var(--thumb-a), var(--thumb-b));
   border-radius: 0;
-  border: 2px solid #0a0a0a;
+  border: 2px solid rgb(var(--bg));
 }
-::selection { background: #ffffff; color: #000000; }
+::selection { background: rgb(var(--fg)); color: rgb(var(--bg)); }
 
 /* --------------------------------------------------------------------------
    Reusable component utilities
    -------------------------------------------------------------------------- */
 @layer components {
   /* Glow text presets (monochrome white) */
-  .txt-glow { text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 18px rgba(255, 255, 255, 0.18); }
-  .txt-glow-cyan { text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 18px rgba(255, 255, 255, 0.18); }
-  .txt-glow-lime { text-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.22); }
+  .txt-glow { text-shadow: 0 0 6px var(--glow), 0 0 18px var(--glow-far); }
+  .txt-glow-cyan { text-shadow: 0 0 6px var(--glow), 0 0 18px var(--glow-far); }
+  .txt-glow-lime { text-shadow: 0 0 8px var(--glow), 0 0 20px var(--glow-far); }
 
   /* The terminal "window" chrome shared across sections */
   .term-window {
     position: relative;
-    background: linear-gradient(180deg, rgba(13, 21, 25, 0.92), rgba(8, 14, 16, 0.92));
-    border: 1px solid rgba(87, 255, 176, 0.28);
-    box-shadow: inset 0 0 0 1px rgba(87, 255, 176, 0.04),
+    background: rgb(var(--panel) / 0.92);
+    border: 1px solid rgb(var(--fg) / 0.28);
+    box-shadow: inset 0 0 0 1px rgb(var(--fg) / 0.04),
                 0 0 0 1px rgba(0, 0, 0, 0.6),
                 0 18px 50px -20px rgba(0, 0, 0, 0.9);
   }
@@ -116,7 +149,7 @@ body::after {
   /* Dotted/dashed ASCII divider */
   .ascii-rule {
     height: 1px;
-    background-image: repeating-linear-gradient(90deg, rgba(87,255,176,0.5) 0 6px, transparent 6px 12px);
+    background-image: repeating-linear-gradient(90deg, rgb(var(--fg) / 0.5) 0 6px, transparent 6px 12px);
   }
 }
 
@@ -135,15 +168,15 @@ body::after {
    -------------------------------------------------------------------------- */
 .liquid-glass {
   position: relative;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgb(var(--fg) / 0.06);
+  border: 1px solid rgb(var(--fg) / 0.16);
   /* url(#liquid-glass) = the refraction; degrades to plain blur if unsupported */
   -webkit-backdrop-filter: blur(11px) saturate(150%);
   backdrop-filter: blur(11px) saturate(150%) url(#liquid-glass);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 -1px 2px rgba(255, 255, 255, 0.08),
-    inset 0 0 24px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgb(var(--fg) / 0.55),
+    inset 0 -1px 2px rgb(var(--fg) / 0.08),
+    inset 0 0 24px rgb(var(--fg) / 0.05),
     0 10px 34px rgba(0, 0, 0, 0.55);
   overflow: hidden;
   isolation: isolate;
@@ -154,7 +187,7 @@ body::after {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 46%);
+  background: linear-gradient(180deg, rgb(var(--fg) / 0.22), rgb(var(--fg) / 0) 46%);
   pointer-events: none;
 }
 /* travelling specular highlight */
@@ -165,7 +198,7 @@ body::after {
   bottom: 0;
   width: 55%;
   left: -60%;
-  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  background: linear-gradient(100deg, transparent, rgb(var(--fg) / 0.28), transparent);
   transform: skewX(-18deg);
   animation: lg-sheen 7s ease-in-out infinite;
   pointer-events: none;
@@ -182,16 +215,16 @@ body::after {
    entirely (and is faster). The fixed header keeps real liquid glass. */
 .glass-panel {
   position: relative;
-  background: rgba(13, 13, 15, 0.66);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgb(var(--panel) / 0.66);
+  border: 1px solid rgb(var(--fg) / 0.12);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 1px 0 rgb(var(--fg) / 0.16),
     0 12px 40px rgba(0, 0, 0, 0.5);
 }
 /* Lighter variant - used on "light" screens (e.g. About). */
 .glass-panel--light {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: rgb(var(--fg) / 0.09);
+  border-color: rgb(var(--fg) / 0.22);
 }
 
 /* soft top gloss */
@@ -200,7 +233,7 @@ body::after {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0) 30%);
+  background: linear-gradient(180deg, rgb(var(--fg) / 0.10), rgb(var(--fg) / 0) 30%);
   pointer-events: none;
 }
 
@@ -213,12 +246,12 @@ body::after {
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
-  background: radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02) 55%, rgba(0, 0, 0, 0.22));
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: radial-gradient(circle at 30% 24%, rgb(var(--fg) / 0.10), rgb(var(--fg) / 0.02) 55%, rgba(0, 0, 0, 0.22));
+  border: 1px solid rgb(var(--fg) / 0.22);
   box-shadow:
-    inset 0 2px 12px rgba(255, 255, 255, 0.22),
-    inset 0 -14px 32px rgba(255, 255, 255, 0.05),
-    0 0 55px rgba(255, 255, 255, 0.08);
+    inset 0 2px 12px rgb(var(--fg) / 0.22),
+    inset 0 -14px 32px rgb(var(--fg) / 0.05),
+    0 0 55px rgb(var(--fg) / 0.08);
   animation: orb-morph 9s ease-in-out infinite;
 }
 @keyframes orb-morph {
@@ -229,20 +262,20 @@ body::after {
 }
 .orb-gloss {
   background:
-    radial-gradient(60% 45% at 32% 22%, rgba(255, 255, 255, 0.38), transparent 60%),
-    radial-gradient(45% 35% at 72% 86%, rgba(255, 255, 255, 0.10), transparent 60%);
+    radial-gradient(60% 45% at 32% 22%, rgb(var(--fg) / 0.38), transparent 60%),
+    radial-gradient(45% 35% at 72% 86%, rgb(var(--fg) / 0.10), transparent 60%);
   mix-blend-mode: screen;
 }
 .orb-sky { transition: color 0.4s ease; }
-.liquid-orb:hover .orb-sky { color: rgba(255, 255, 255, 0.8); }
+.liquid-orb:hover .orb-sky { color: rgb(var(--fg) / 0.8); }
 
 /* Header nav link */
 .nav-link {
   position: relative;
-  color: rgba(255, 255, 255, 0.62);
+  color: rgb(var(--fg) / 0.62);
   transition: color 0.2s ease;
 }
-.nav-link:hover { color: #fff; }
+.nav-link:hover { color: rgb(var(--fg)); }
 .nav-link::after {
   content: '';
   position: absolute;
@@ -250,7 +283,7 @@ body::after {
   right: 100%;
   bottom: -3px;
   height: 1px;
-  background: #fff;
+  background: rgb(var(--fg));
   transition: right 0.25s ease;
 }
 .nav-link:hover::after { right: 0; }

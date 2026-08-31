@@ -119,7 +119,7 @@ export default function AboutMe() {
     if (!cmd) return
     history.current.push(cmd)
     histIdx.current = -1
-    const echo: Out = { prefix: { text: '→ ~ ', className: 'text-green-400' }, text: cmd, className: 'text-white' }
+    const echo: Out = { prefix: { text: '→ ~ ', className: 'text-green-400' }, text: cmd, className: 'text-fg' }
 
     if (cmd === 'clear') {
       // wipe the whole screen, banner included - like a real terminal
@@ -129,18 +129,18 @@ export default function AboutMe() {
     }
     const out: Out[] = [echo]
     if (cmd === 'sop') {
-      out.push({ prefix: { text: '[SOP]', className: 'text-sky-400' }, text: ' Statement of Purpose - my story:', className: 'text-white/80' })
-      sop.paragraphs.forEach((p) => out.push({ text: p, className: 'text-white/85' }))
+      out.push({ prefix: { text: '[SOP]', className: 'text-sky-400' }, text: ' Statement of Purpose - my story:', className: 'text-fg/80' })
+      sop.paragraphs.forEach((p) => out.push({ text: p, className: 'text-fg/85' }))
     } else if (cmd === 'inspiration') {
-      out.push({ prefix: { text: '[INSPIRATION]', className: 'text-fuchsia-400' }, text: ' What drives me:', className: 'text-white/80' })
+      out.push({ prefix: { text: '[INSPIRATION]', className: 'text-fuchsia-400' }, text: ' What drives me:', className: 'text-fg/80' })
       inspiration.forEach((i) =>
         out.push(
           { text: `◆ ${i.title}`, className: 'text-yellow-300' },
-          { text: `  ${i.description}`, className: 'text-white/75' },
+          { text: `  ${i.description}`, className: 'text-fg/75' },
         ),
       )
     } else if (cmd === 'contact') {
-      out.push({ prefix: { text: '[CONTACT]', className: 'text-orange-400' }, text: ' reach me at:', className: 'text-white/80' })
+      out.push({ prefix: { text: '[CONTACT]', className: 'text-orange-400' }, text: ' reach me at:', className: 'text-fg/80' })
       contact.channels.forEach((c) =>
         out.push({ text: `  ${c.key.padEnd(9)} : ${c.value}`, className: 'text-sky-300/90' }),
       )
@@ -154,7 +154,7 @@ export default function AboutMe() {
       out.push({ text: `${player.firstName.toLowerCase()} is not in the sudoers file. This incident will be reported.`, className: 'text-red-400' })
     } else if (cmd === 'help') {
       out.push(
-        { text: 'available commands:', className: 'text-white/60' },
+        { text: 'available commands:', className: 'text-fg-muted' },
         { text: '  sop          read my Statement of Purpose', className: 'text-sky-300/90' },
         { text: '  inspiration  what drives me', className: 'text-sky-300/90' },
         { text: '  contact      how to reach me', className: 'text-sky-300/90' },
@@ -206,15 +206,15 @@ export default function AboutMe() {
       <div className="flex flex-1 flex-col gap-4 md:flex-row">
         {/* interactive terminal (left) */}
         <div
-          className="flex flex-1 flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/35"
+          className="flex flex-1 flex-col overflow-hidden rounded-xl border border-fg/[0.12] bg-bg/35"
           onClick={() => ready && inputRef.current?.focus()}
         >
           {/* terminal title bar */}
-          <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.03] px-4 py-2.5">
-            <span className="h-2.5 w-2.5 rounded-full border border-white/25" />
-            <span className="h-2.5 w-2.5 rounded-full border border-white/25" />
-            <span className="h-2.5 w-2.5 rounded-full bg-white/60" />
-            <span className="ml-2 font-mono text-[11px] text-white/40">~/about - interactive</span>
+          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/[0.03] px-4 py-2.5">
+            <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
+            <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
+            <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
+            <span className="ml-2 font-mono text-[11px] text-fg-dim">~/about - interactive</span>
           </div>
 
           {/* FIXED-SIZE terminal screen - output scrolls inside, the window
@@ -258,7 +258,7 @@ export default function AboutMe() {
               {log.map((o, i) => (
                 <div key={i} className="whitespace-pre-wrap leading-relaxed">
                   {o.prefix && <span className={o.prefix.className}>{o.prefix.text}</span>}
-                  <span className={o.className ?? 'text-white/85'}>{o.text}</span>
+                  <span className={o.className ?? 'text-fg/85'}>{o.text}</span>
                 </div>
               ))}
             </div>
@@ -277,7 +277,7 @@ export default function AboutMe() {
                   autoComplete="off"
                   aria-label="Terminal command input"
                   placeholder="type a command… (help)"
-                  className="min-w-0 flex-1 border-none bg-transparent font-mono text-white caret-white outline-none placeholder:text-white/25"
+                  className="min-w-0 flex-1 border-none bg-transparent font-mono text-fg caret-fg outline-none placeholder:text-fg/25"
                 />
               </div>
             )}
@@ -285,7 +285,7 @@ export default function AboutMe() {
 
           {/* selectable command chips */}
           {ready && (
-            <div className="flex flex-wrap gap-2 border-t border-white/10 bg-white/[0.02] px-4 py-3">
+            <div className="flex flex-wrap gap-2 border-t border-fg/10 bg-fg/[0.02] px-4 py-3">
               {COMMANDS.map((c) => (
                 <button
                   key={c}
@@ -293,7 +293,7 @@ export default function AboutMe() {
                     e.stopPropagation()
                     run(c)
                   }}
-                  className="rounded border border-white/20 bg-black/40 px-3 py-1 font-mono text-xs text-green-400 transition-colors hover:border-green-400/60 hover:bg-green-400/10"
+                  className="rounded border border-fg/20 bg-bg/40 px-3 py-1 font-mono text-xs text-green-400 transition-colors hover:border-green-400/60 hover:bg-green-400/10"
                 >
                   {c}
                 </button>
@@ -303,12 +303,12 @@ export default function AboutMe() {
         </div>
 
         {/* portrait (right) - same window chrome as the terminal */}
-        <figure className="group flex flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/40 md:w-[320px] lg:w-[360px]">
-          <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.03] px-4 py-2.5">
-            <span className="h-2.5 w-2.5 rounded-full border border-white/25" />
-            <span className="h-2.5 w-2.5 rounded-full border border-white/25" />
-            <span className="h-2.5 w-2.5 rounded-full bg-white/60" />
-            <span className="ml-2 font-mono text-[11px] text-white/40">~/portrait - me.jpg</span>
+        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/[0.12] bg-bg/40 md:w-[320px] lg:w-[360px]">
+          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/[0.03] px-4 py-2.5">
+            <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
+            <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
+            <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
+            <span className="ml-2 font-mono text-[11px] text-fg-dim">~/portrait - me.jpg</span>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -316,7 +316,7 @@ export default function AboutMe() {
             alt={player.name}
             className="h-64 w-full flex-1 object-cover object-top grayscale transition-all duration-500 group-hover:grayscale-0 md:h-auto"
           />
-          <figcaption className="border-t border-white/10 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-white/45">
+          <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-fg-dim">
             {player.name} · {player.role}
           </figcaption>
         </figure>

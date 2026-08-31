@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { inkColors, onThemeChange } from '@/lib/theme'
 import { assets } from '@/data/portfolio'
 
 /**
@@ -113,16 +114,22 @@ export default function SkyOrb() {
       skyCanvas.width = 480
       skyCanvas.height = 480
       const c2 = skyCanvas.getContext('2d')!
-      c2.fillStyle = '#0b0b0d'
-      c2.fillRect(0, 0, 480, 480)
-      if (skyText) {
-        const lines = skyText.replace(/\r/g, '').split('\n')
-        const lh = 480 / Math.max(1, lines.length)
-        c2.fillStyle = 'rgba(255,255,255,0.85)'
-        c2.textBaseline = 'top'
-        c2.font = `${Math.max(3, lh * 1.2)}px monospace`
-        lines.forEach((ln, i) => c2.fillText(ln, 0, i * lh))
+      // page and ink come from the theme tokens, so the sky inside the orb is
+      // glyphs of ink on the page colour in both themes; repainted on a flip
+      const paintSky = () => {
+        const ink = inkColors()
+        c2.fillStyle = ink.bg()
+        c2.fillRect(0, 0, 480, 480)
+        if (skyText) {
+          const lines = skyText.replace(/\r/g, '').split('\n')
+          const lh = 480 / Math.max(1, lines.length)
+          c2.fillStyle = ink.fg(0.85)
+          c2.textBaseline = 'top'
+          c2.font = `${Math.max(3, lh * 1.2)}px monospace`
+          lines.forEach((ln, i) => c2.fillText(ln, 0, i * lh))
+        }
       }
+      paintSky()
 
       let renderer
       try {
@@ -137,6 +144,10 @@ export default function SkyOrb() {
         image: skyCanvas,
         wrapS: gl.CLAMP_TO_EDGE,
         wrapT: gl.CLAMP_TO_EDGE,
+      })
+      const offTheme = onThemeChange(() => {
+        paintSky()
+        texture.needsUpdate = true
       })
 
       const rbuf = new Float32Array(24 * 4)
@@ -205,6 +216,7 @@ export default function SkyOrb() {
       raf = requestAnimationFrame(frame)
 
       cleanup = () => {
+        offTheme()
         cancelAnimationFrame(raf)
         window.removeEventListener('resize', resize)
         canvas.removeEventListener('pointermove', onMove)
@@ -232,7 +244,7 @@ export default function SkyOrb() {
         {/* glass highlight over the water */}
         <div className="orb-gloss pointer-events-none absolute inset-0" />
 
-        <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[8px] uppercase tracking-[0.4em] text-white/60">
+        <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[8px] uppercase tracking-[0.4em] text-fg-muted">
           ◇ sky
         </span>
       </motion.div>

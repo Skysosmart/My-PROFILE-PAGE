@@ -51,7 +51,7 @@ export default function SkyBackground() {
     >
       <pre
         ref={preRef}
-        className="m-0 origin-center whitespace-pre font-mono text-[10px] leading-none text-white/[0.14] [text-shadow:0_0_10px_rgba(255,255,255,0.2)]"
+        className="m-0 origin-center whitespace-pre font-mono text-[10px] leading-none text-fg/[0.14] [text-shadow:0_0_10px_rgb(var(--fg)_/_0.2)]"
       />
     </div>
   )

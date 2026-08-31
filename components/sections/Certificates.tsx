@@ -42,13 +42,13 @@ const ROUTE_LABEL: Record<string, { when: string; what: string }> = {
 
 const MEDAL_FACE: Record<string, { ring: string; text: string; fill: string }> = {
   gold: {
-    ring: 'border-white/45',
-    text: 'text-white',
+    ring: 'border-fg/45',
+    text: 'text-fg',
     fill: 'radial-gradient(circle at 32% 28%, #F7E7A6 0%, #D9B441 38%, #A9821A 72%, #7A5D11 100%)',
   },
   bronze: {
-    ring: 'border-white/20',
-    text: 'text-white/65',
+    ring: 'border-fg/20',
+    text: 'text-fg-muted',
     fill: 'radial-gradient(circle at 32% 28%, #F0C9A0 0%, #C98A4F 38%, #9A5F2C 72%, #6E4220 100%)',
   },
 }
@@ -72,7 +72,7 @@ function Tally({ to, still }: { to: number; still: boolean }) {
     return () => cancelAnimationFrame(raf)
   }, [seen, to, still])
   return (
-    <span ref={ref} className="tabular-nums text-white">
+    <span ref={ref} className="tabular-nums text-fg">
       {n}
     </span>
   )
@@ -85,13 +85,13 @@ function Seal({ medal, still, size = 44 }: { medal: string; still: boolean; size
     <span
       aria-hidden
       style={{ width: size, height: size, background: face.fill }}
-      className="relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.5)]"
+      className="relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)_/_0.5)]"
     >
       <span className="font-pixel text-[6px] leading-none text-black/55">
         {medal === 'gold' ? 'GOLD' : '3RD'}
       </span>
       {!still && (
-        <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-foil bg-white/45 blur-[2px]" />
+        <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-foil bg-fg/45 blur-[2px]" />
       )}
     </span>
   )
@@ -162,11 +162,11 @@ export default function Certificates() {
       revealAmount="some"
     >
       {/* stat rail */}
-      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-white/12 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
+      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-fg/12 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-fg-dim">
         <span>
           <Tally to={certStats.total} still={still} /> records
         </span>
-        <span className="text-white/70">
+        <span className="text-fg/70">
           <Tally to={certStats.gold} still={still} /> gold
         </span>
         <span>
@@ -185,7 +185,7 @@ export default function Certificates() {
             <button
               key={c.file}
               onClick={() => setActive(c)}
-              className={`group flex items-start gap-3 rounded-2xl border ${face.ring} bg-gradient-to-b from-white/[0.06] to-transparent p-2.5 text-left transition-colors hover:from-white/[0.11] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70`}
+              className={`group flex items-start gap-3 rounded-2xl border ${face.ring} bg-gradient-to-b from-fg/[0.06] to-transparent p-2.5 text-left transition-colors hover:from-fg/[0.11] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70`}
             >
               <div className="w-16 shrink-0 overflow-hidden rounded-md bg-white shadow-[0_8px_22px_-10px_rgba(0,0,0,0.9)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -198,10 +198,10 @@ export default function Certificates() {
                   </span>
                   <Seal medal={c.medal ?? 'gold'} still={still} size={34} />
                 </div>
-                <h3 className="mt-1.5 line-clamp-2 font-sans text-[13px] font-semibold leading-snug text-white">
+                <h3 className="mt-1.5 line-clamp-2 font-sans text-[13px] font-semibold leading-snug text-fg">
                   {c.title}
                 </h3>
-                <p className="mt-1 truncate font-mono text-[9px] uppercase tracking-wider text-white/45">
+                <p className="mt-1 truncate font-mono text-[9px] uppercase tracking-wider text-fg-dim">
                   {c.issuer}
                 </p>
               </div>
@@ -212,12 +212,12 @@ export default function Certificates() {
 
       {/* 2. THE MAKEX ROUTE */}
       {route.length > 0 && (
-        <div className="mb-5 rounded-2xl border border-white/10 bg-black/25 p-3 sm:p-4">
+        <div className="mb-5 rounded-2xl border border-fg/10 bg-bg/25 p-3 sm:p-4">
           <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h3 className="font-sans text-sm font-semibold text-white">
+            <h3 className="font-sans text-sm font-semibold text-fg">
               MakeX Challenge - six months, one robot
             </h3>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-fg-dim">
               Team Prometheus · Jun to Nov 2025
             </span>
           </div>
@@ -232,37 +232,37 @@ export default function Certificates() {
                 >
                   <div className="relative flex h-7 w-full items-center">
                     <span
-                      className={`absolute left-0 h-px w-1/2 ${i === 0 ? 'bg-transparent' : 'bg-white/20'}`}
+                      className={`absolute left-0 h-px w-1/2 ${i === 0 ? 'bg-transparent' : 'bg-fg/20'}`}
                     />
                     <span
-                      className={`absolute right-0 h-px w-1/2 ${last ? 'bg-transparent' : 'bg-white/20'}`}
+                      className={`absolute right-0 h-px w-1/2 ${last ? 'bg-transparent' : 'bg-fg/20'}`}
                     />
                     <button
                       onClick={() => setActive(c)}
                       aria-label={`${meta.what} - ${c.title}`}
-                      className="relative mx-auto -my-3 rounded-full p-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
+                      className="relative mx-auto -my-3 rounded-full p-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
                     >
                       {last ? (
                         <Seal medal="bronze" still={still} size={26} />
                       ) : (
-                        <span className="block h-2.5 w-2.5 rounded-full border border-white/40 bg-neutral-900 transition-colors hover:border-white hover:bg-white" />
+                        <span className="block h-2.5 w-2.5 rounded-full border border-fg/40 bg-bg transition-colors hover:border-fg hover:bg-fg" />
                       )}
                     </button>
                   </div>
                   <button
                     onClick={() => setActive(c)}
-                    className="group mt-1.5 w-full px-1 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
+                    className="group mt-1.5 w-full px-1 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
                   >
-                    <span className="block font-mono text-[9px] uppercase tracking-wider text-white/35">
+                    <span className="block font-mono text-[9px] uppercase tracking-wider text-fg-dim">
                       {meta.when}
                     </span>
                     <span
-                      className={`mt-0.5 block font-sans text-[11px] font-medium leading-tight transition-colors group-hover:text-white ${last ? 'text-white' : 'text-white/70'}`}
+                      className={`mt-0.5 block font-sans text-[11px] font-medium leading-tight transition-colors group-hover:text-fg ${last ? 'text-fg' : 'text-fg/70'}`}
                     >
                       {meta.what}
                     </span>
                     {last && (
-                      <span className="mt-0.5 block font-mono text-[8px] uppercase leading-tight tracking-wider text-white/50">
+                      <span className="mt-0.5 block font-mono text-[8px] uppercase leading-tight tracking-wider text-fg-muted">
                         3rd + Best Alliance
                       </span>
                     )}
@@ -284,21 +284,21 @@ export default function Certificates() {
               key={c.key}
               onClick={() => setCat(c.key)}
               aria-pressed={on}
-              className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 ${
-                on ? 'text-neutral-900' : 'text-white/70 hover:text-white'
+              className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
+                on ? 'text-bg' : 'text-fg/70 hover:text-fg'
               }`}
             >
               {on && (
                 <motion.span
                   layoutId="cert-pill"
                   transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                  className="absolute inset-0 rounded-full bg-white shadow-lg"
+                  className="absolute inset-0 rounded-full bg-fg shadow-lg"
                 />
               )}
               <span className="relative flex items-center gap-2">
                 <span className={`h-1.5 w-1.5 rounded-full ${c.dot}`} />
                 {c.label}
-                <span className={on ? 'text-neutral-400' : 'text-white/35'}>{count}</span>
+                <span className={on ? 'text-bg/60' : 'text-fg-dim'}>{count}</span>
               </span>
             </button>
           )
@@ -332,10 +332,10 @@ export default function Certificates() {
         <div className="mt-6 flex justify-center">
           <Link
             href="/certificates"
-            className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 font-sans text-sm font-medium text-white/80 transition-colors hover:border-white/60 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="group inline-flex items-center gap-2 rounded-full border border-fg/25 px-5 py-2.5 font-sans text-sm font-medium text-fg/80 transition-colors hover:border-fg/60 hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
           >
             Explore all {certStats.total} certificates
-            <span className="font-mono text-white/45 transition-colors group-hover:text-white/80">
+            <span className="font-mono text-fg-dim transition-colors group-hover:text-fg/80">
               +{remaining} more
             </span>
             <span aria-hidden className="transition-transform group-hover:translate-x-0.5">

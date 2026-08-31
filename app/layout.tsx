@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { JetBrains_Mono, VT323, Press_Start_2P, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import { player } from '@/data/portfolio'
+import { THEME_BOOT } from '@/lib/theme'
 
 // Body / UI monospace
 const mono = JetBrains_Mono({
@@ -39,8 +40,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable}`}>
-      <body>{children}</body>
+    // suppressHydrationWarning: the boot script below stamps data-theme on the
+    // server-rendered <html> before React hydrates it, on purpose
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable}`}
+    >
+      <body>
+        {/* runs before first paint, so a returning light-theme visitor never
+            sees a dark flash; reads the saved choice, else the OS setting */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+        {children}
+      </body>
     </html>
   )
 }

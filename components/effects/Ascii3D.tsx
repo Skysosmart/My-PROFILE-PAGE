@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { currentTheme, inkColors, onThemeChange } from '@/lib/theme'
 
 /**
  * ASCII 3D - a real Three.js torus knot rendered AS ASCII CHARACTERS
@@ -18,7 +19,8 @@ import { useEffect, useRef } from 'react'
 // ---- dials -----------------------------------------------------------------
 const CHARSET = ' .:-+*=%@#' // dark → bright
 const RESOLUTION = 0.2 // AsciiEffect char density (higher = finer)
-const OPACITY = 0.55 // layer opacity (white text)
+const OPACITY = 0.55 // layer opacity on the dark theme
+const OPACITY_LIGHT = 0.16 // dark ink in every cell reads as hatching; keep it faint
 const SPIN_X = 0.004 // auto-rotation per frame
 const SPIN_Y = 0.006
 const FOLLOW = 0.6 // how far the knot tilts toward the cursor (radians-ish)
@@ -76,7 +78,12 @@ export default function Ascii3D() {
       const effect = new AsciiEffect(renderer, CHARSET, { invert: true, resolution: RESOLUTION })
       effect.setSize(Math.max(1, host.clientWidth), Math.max(1, host.clientHeight))
       const dom = effect.domElement
-      dom.style.color = `rgba(255,255,255,${OPACITY})`
+      // the ink is a theme token, so read it rather than assume white, and
+      // repaint when the theme flips
+      const paint = () =>
+        (dom.style.color = inkColors().fg(currentTheme() === 'light' ? OPACITY_LIGHT : OPACITY))
+      paint()
+      const offTheme = onThemeChange(paint)
       dom.style.backgroundColor = 'transparent'
       host.appendChild(dom)
 
@@ -133,6 +140,7 @@ export default function Ascii3D() {
         io.disconnect()
         window.removeEventListener('resize', resize)
         window.removeEventListener('pointermove', onMove)
+        offTheme()
         dom.remove()
         geometry.dispose()
         material.dispose()

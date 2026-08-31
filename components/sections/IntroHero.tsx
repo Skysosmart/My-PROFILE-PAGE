@@ -22,7 +22,7 @@ export default function IntroHero() {
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="font-mono text-[11px] uppercase tracking-[0.45em] text-white/50"
+        className="font-mono text-[11px] uppercase tracking-[0.45em] text-fg-muted"
       >
         ◇ Player Loaded
       </motion.p>
@@ -34,10 +34,10 @@ export default function IntroHero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="flex flex-col items-center gap-2 font-mono text-[11px] text-white/40"
+        className="flex flex-col items-center gap-2 font-mono text-[11px] text-fg-dim"
       >
         <span>SCROLL TO EXPLORE</span>
-        <span className="animate-blink text-white">▼</span>
+        <span className="animate-blink text-fg">▼</span>
       </motion.div>
     </header>
   )

@@ -9,7 +9,7 @@ import { contact } from '@/data/portfolio'
 export default function Footer() {
   return (
     <footer id="contact" className="scroll-mt-28 px-4 pb-6 pt-10 sm:px-6">
-      <div className="mx-auto w-full max-w-5xl border-t border-white/10 pt-4">
+      <div className="mx-auto w-full max-w-5xl border-t border-fg/10 pt-4">
         {/* contact channels */}
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 font-mono text-xs">
           {contact.channels.map((c) => (
@@ -18,15 +18,15 @@ export default function Footer() {
               href={c.href}
               target={c.href.startsWith('http') ? '_blank' : undefined}
               rel="noreferrer"
-              className="group inline-flex min-h-[32px] items-center text-white/60 transition-colors hover:text-white"
+              className="group inline-flex min-h-[32px] items-center text-fg-muted transition-colors hover:text-fg"
             >
-              <span className="mr-2 uppercase tracking-wider text-white/35">{c.key}</span>
+              <span className="mr-2 uppercase tracking-wider text-fg-dim">{c.key}</span>
               <span className="underline-offset-2 group-hover:underline">{c.value}</span>
             </a>
           ))}
         </div>
 
-        <p className="mt-2.5 text-center font-mono text-[10px] text-white/30">
+        <p className="mt-2.5 text-center font-mono text-[10px] text-fg-dim">
           NONTHANAPHONG.EXE · rendered in ASCII · © 2025
         </p>
       </div>

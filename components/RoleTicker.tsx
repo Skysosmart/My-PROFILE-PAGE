@@ -23,8 +23,8 @@ export default function RoleTicker() {
   return (
     <div className="pointer-events-none absolute bottom-4 left-4 z-[60] font-mono sm:bottom-6 sm:left-6">
       <div className="flex items-baseline gap-2">
-        <span className="text-[10px] uppercase tracking-[0.35em] text-white/35">role</span>
-        <span className="text-white/20">//</span>
+        <span className="text-[10px] uppercase tracking-[0.35em] text-fg-dim">role</span>
+        <span className="text-fg/20">//</span>
 
         {/* rotating word */}
         <span className="relative inline-block h-5 overflow-hidden">
@@ -35,14 +35,14 @@ export default function RoleTicker() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -16, opacity: 0 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="block whitespace-nowrap text-sm font-bold uppercase tracking-wider text-white txt-glow"
+              className="block whitespace-nowrap text-sm font-bold uppercase tracking-wider text-fg txt-glow"
             >
               {roles[i]}
             </motion.span>
           </AnimatePresence>
         </span>
 
-        <span className="animate-blink text-white">▋</span>
+        <span className="animate-blink text-fg">▋</span>
       </div>
     </div>
   )

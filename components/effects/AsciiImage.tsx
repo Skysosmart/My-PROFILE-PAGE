@@ -144,7 +144,7 @@ export default function AsciiImage({
       />
       <pre
         aria-hidden
-        className={`pointer-events-none absolute inset-0 m-0 select-none overflow-hidden whitespace-pre font-mono leading-none text-white/90 transition-opacity motion-reduce:hidden ${revealed ? 'opacity-0' : 'opacity-100'}`}
+        className={`pointer-events-none absolute inset-0 m-0 select-none overflow-hidden whitespace-pre font-mono leading-none text-fg/90 transition-opacity motion-reduce:hidden ${revealed ? 'opacity-0' : 'opacity-100'}`}
         style={{
           ...fade,
           fontSize: box.w ? `${box.w / cols / GLYPH_W}px` : undefined,

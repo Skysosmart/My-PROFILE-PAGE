@@ -13,7 +13,7 @@ import HandBackground from '@/components/effects/HandBackground'
  */
 export default function IntroHero() {
   return (
-    <header className="relative isolate flex min-h-screen flex-col items-center justify-center px-4 py-20 text-center">
+    <header className="relative isolate flex min-h-[100svh] flex-col items-center justify-center px-4 py-20 text-center">
       {/* lives here, not in the page shell, so it scrolls away with the hero */}
       <RoleTicker />
       {/* ASCII hand - scoped to this section only */}

@@ -25,6 +25,13 @@ export default function HandBackground() {
   const hostRef = useRef<HTMLDivElement>(null)
 
   // Scale the <pre> so the hand covers the host section; recompute on resize.
+  //
+  // The art is two hands side by side, about 3:1. Covering a portrait phone
+  // with a 3:1 piece means scaling to the height, which makes it four screens
+  // wide and leaves only the empty middle in view - fingertips at the edges
+  // and nothing else. So when the host is narrower than the art, turn the art
+  // 90 degrees first: the two hands become a tall pair reaching toward each
+  // other, and cover-scaling the rotated box fits the phone almost exactly.
   const fit = () => {
     const pre = preRef.current
     const host = hostRef.current
@@ -33,8 +40,15 @@ export default function HandBackground() {
     const natW = pre.scrollWidth
     const natH = pre.scrollHeight
     if (!natW || !natH) return
-    const k = Math.max(host.clientWidth / natW, host.clientHeight / natH)
-    pre.style.transform = `scale(${k})`
+    const hostW = host.clientWidth
+    const hostH = host.clientHeight
+    // the share of the art left on screen after cover-scaling, each way up;
+    // take whichever orientation wastes less of the drawing
+    const cover = (w: number, h: number) => Math.max(hostW / w, hostH / h)
+    const share = (w: number, h: number) => (hostW * hostH) / (w * h * cover(w, h) ** 2)
+    const turn = share(natH, natW) > share(natW, natH)
+    const k = turn ? cover(natH, natW) : cover(natW, natH)
+    pre.style.transform = `${turn ? 'rotate(90deg) ' : ''}scale(${k})`
   }
 
   useEffect(() => {
@@ -126,7 +140,7 @@ export default function HandBackground() {
     >
       <pre
         ref={preRef}
-        className="m-0 origin-center whitespace-pre font-mono text-[10px] leading-none text-white/[0.5] [text-shadow:0_0_8px_rgba(255,255,255,0.3)]"
+        className="m-0 origin-center whitespace-pre font-mono text-[10px] leading-none text-white/[0.5] [text-shadow:0_0_8px_rgba(255,255,255,0.3)] max-md:text-white/[0.32]"
       />
     </div>
   )

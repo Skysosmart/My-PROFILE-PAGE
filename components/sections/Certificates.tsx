@@ -19,8 +19,6 @@ import { certificates, type Certificate } from '@/data/portfolio'
  */
 
 const PREVIEW_ROWS = 3
-const COLS_AT_WIDEST = 4
-const PREVIEW_COUNT = PREVIEW_ROWS * COLS_AT_WIDEST
 
 const MAKEX_ROUTE = [
   'MakeX Warmup.jpg',
@@ -141,7 +139,9 @@ export default function Certificates() {
   )
 
   const all = byCat.get(cat) ?? []
-  const shown = all.slice(0, PREVIEW_COUNT)
+  // three rows of however many columns the grid actually has: at one column
+  // a fixed twelve meant three readable cards and nine blurred ghosts
+  const shown = all.slice(0, PREVIEW_ROWS * cols)
   const remaining = all.length - shown.length
 
   return (
@@ -240,7 +240,7 @@ export default function Certificates() {
                     <button
                       onClick={() => setActive(c)}
                       aria-label={`${meta.what} - ${c.title}`}
-                      className="relative mx-auto rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
+                      className="relative mx-auto -my-3 rounded-full p-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70"
                     >
                       {last ? (
                         <Seal medal="bronze" still={still} size={26} />

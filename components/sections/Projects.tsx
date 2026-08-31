@@ -261,7 +261,7 @@ export default function Projects() {
               {/* sans, not mono: a paragraph, and the meta around it already
                   carries the terminal voice. Clamped on a phone, where the
                   stage has 700px to spend on everything */}
-              <p className="mt-2 line-clamp-4 font-sans text-[13px] leading-normal text-white/70 lg:mt-3 lg:line-clamp-none lg:text-[14px] lg:leading-relaxed">
+              <p className="mt-2 line-clamp-3 font-sans text-[13px] leading-normal text-white/70 lg:mt-3 lg:line-clamp-none lg:text-[14px] lg:leading-relaxed">
                 {p.description}
               </p>
 
@@ -344,7 +344,7 @@ export default function Projects() {
                   onClick={() => goTo(i)}
                   aria-label={`${pad(i + 1)} ${q.title}`}
                   aria-current={on ? 'true' : undefined}
-                  className={`group/t relative aspect-[16/10] min-w-0 flex-1 overflow-hidden rounded-[3px] border border-white/10 bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:w-[72px] lg:flex-none ${
+                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[3px] border border-white/10 bg-black/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:aspect-[16/10] lg:h-auto lg:w-[72px] lg:flex-none ${
                     on ? 'ring-1 ring-white' : ''
                   }`}
                 >
@@ -403,7 +403,7 @@ function Link({ href, label }: { href: string; label: string }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="group/l font-mono text-[10px] uppercase tracking-wider text-white/55 transition-colors hover:text-white lg:text-[11px]"
+      className="group/l inline-flex min-h-[32px] items-center font-mono text-[10px] uppercase tracking-wider text-white/55 transition-colors hover:text-white lg:text-[11px]"
     >
       <span aria-hidden>&#8599;</span>{' '}
       <span className="underline-offset-2 group-hover/l:underline">{label}</span>

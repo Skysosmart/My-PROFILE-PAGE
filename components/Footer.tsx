@@ -18,7 +18,7 @@ export default function Footer() {
               href={c.href}
               target={c.href.startsWith('http') ? '_blank' : undefined}
               rel="noreferrer"
-              className="group text-white/60 transition-colors hover:text-white"
+              className="group inline-flex min-h-[32px] items-center text-white/60 transition-colors hover:text-white"
             >
               <span className="mr-2 uppercase tracking-wider text-white/35">{c.key}</span>
               <span className="underline-offset-2 group-hover:underline">{c.value}</span>

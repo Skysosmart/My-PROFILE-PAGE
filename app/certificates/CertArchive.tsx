@@ -81,7 +81,7 @@ export default function CertArchive() {
           <span className="caret text-white">certificates/</span>
           <Link
             href="/#certificates"
-            className="ml-auto shrink-0 text-white/40 transition-colors hover:text-white"
+            className="ml-auto inline-flex min-h-[32px] shrink-0 items-center text-white/40 transition-colors hover:text-white"
           >
             &#8592; back
           </Link>

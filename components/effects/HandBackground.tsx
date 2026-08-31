@@ -55,6 +55,12 @@ export default function HandBackground() {
     let raf = 0
     let cancelled = false
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    // The materialize rewrites ~9k glyphs every frame for four seconds, with
+    // Math.random per cell. On a desktop that is the effect; on a phone it is
+    // the stutter right after boot, so touch and narrow screens get the
+    // finished hand on a plain fade instead.
+    const phone =
+      window.matchMedia?.('(pointer: coarse)').matches || window.innerWidth < 768
 
     fetch(assets.handText)
       .then((r) => (r.ok ? r.text() : ''))
@@ -88,6 +94,15 @@ export default function HandBackground() {
         window.addEventListener('resize', fit)
 
         if (reduce) return
+        if (phone) {
+          const pre = preRef.current
+          pre.style.opacity = '0'
+          requestAnimationFrame(() => {
+            pre.style.transition = 'opacity 1.4s ease'
+            pre.style.opacity = ''
+          })
+          return
+        }
 
         const t0 = performance.now()
         let frame = 0
@@ -140,7 +155,7 @@ export default function HandBackground() {
     >
       <pre
         ref={preRef}
-        className="m-0 origin-center whitespace-pre font-mono text-[10px] leading-none text-fg/[0.5] [text-shadow:0_0_8px_rgb(var(--fg)_/_0.3)] max-md:text-fg/[0.32]"
+        className="m-0 origin-center whitespace-pre font-mono text-[10px] leading-none text-fg/[0.5] max-md:text-fg/[0.32] md:[text-shadow:0_0_8px_rgb(var(--fg)_/_0.3)]"
       />
     </div>
   )

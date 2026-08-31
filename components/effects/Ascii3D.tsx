@@ -38,6 +38,25 @@ export default function Ascii3D() {
     let cleanup = () => {}
 
     ;(async () => {
+      // Nothing - not even the three.js download - until the section is
+      // actually on screen. About sits right at the fold on a phone, so it
+      // mounts the moment the boot ends; without this gate the hero paid for
+      // a WebGL context and a 600KB library it could not see yet.
+      await new Promise<void>((resolve) => {
+        const gate = new IntersectionObserver(
+          ([e]) => {
+            if (e.isIntersecting) {
+              gate.disconnect()
+              resolve()
+            }
+          },
+          { threshold: 0.05 },
+        )
+        gate.observe(host)
+        cleanup = () => gate.disconnect()
+      })
+      if (cancelled) return
+
       const [THREE, { AsciiEffect }] = await Promise.all([
         import('three'),
         import('three/examples/jsm/effects/AsciiEffect.js'),

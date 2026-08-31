@@ -133,7 +133,12 @@ export default function SkyOrb() {
 
       let renderer
       try {
-        renderer = new Renderer({ canvas, alpha: true, dpr: Math.min(2, window.devicePixelRatio || 1) })
+        // a 150px orb does not need four pixels per point on a phone
+        renderer = new Renderer({
+          canvas,
+          alpha: true,
+          dpr: Math.min(window.innerWidth < 768 ? 1 : 2, window.devicePixelRatio || 1),
+        })
       } catch {
         return
       }
@@ -195,9 +200,15 @@ export default function SkyOrb() {
       canvas.addEventListener('pointerdown', onMove)
 
       let raf = 0
+      // the loop only draws while the orb is actually on screen: it lives in
+      // the hero, and the rest of the page should not pay for it
+      let onScreen = true
+      const io = new IntersectionObserver(([e]) => (onScreen = e.isIntersecting), { threshold: 0 })
+      io.observe(canvas)
+
       const frame = () => {
         raf = requestAnimationFrame(frame)
-        if (document.hidden) return
+        if (document.hidden || !onScreen) return
         const now = performance.now() / 1000 - t0
         let n = 0
         for (let i = ripples.length - 1; i >= 0 && n < 24; i--) {
@@ -216,6 +227,7 @@ export default function SkyOrb() {
       raf = requestAnimationFrame(frame)
 
       cleanup = () => {
+        io.disconnect()
         offTheme()
         cancelAnimationFrame(raf)
         window.removeEventListener('resize', resize)

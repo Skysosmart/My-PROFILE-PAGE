@@ -14,6 +14,8 @@ export type Line = {
   text: string
   className?: string
   muted?: boolean
+  /** Print the whole line at once. Command OUTPUT is dumped, not typed. */
+  instant?: boolean
 }
 
 export default function TerminalLog({
@@ -63,6 +65,15 @@ export default function TerminalLog({
         }
         setChars(0)
         const text = lines[li].text
+        // output arrives in one go, then the next line follows quickly: a
+        // 237-character paragraph typed at 8ms a character was two seconds
+        // of watching a cursor crawl
+        if (lines[li].instant) {
+          setChars(text.length)
+          setCount(li + 1)
+          timers.current.push(window.setTimeout(() => typeLine(li + 1), Math.round(linePause / 2)))
+          return
+        }
         let c = 0
         const tick = () => {
           c += 1

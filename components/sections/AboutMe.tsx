@@ -104,7 +104,8 @@ export default function AboutMe() {
     },
     { text: '' },
     { prompt: '$', text: 'whoami' },
-    ...about.paragraphs.map((p) => ({ text: p })),
+    // the command is typed; what it prints is not
+    ...about.paragraphs.map((p) => ({ text: p, instant: true })),
     { text: '' },
     {
       prefix: { text: '[SYSTEM]', className: 'text-red-500' },

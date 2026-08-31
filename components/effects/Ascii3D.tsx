@@ -19,6 +19,13 @@ import { currentTheme, inkColors, onThemeChange } from '@/lib/theme'
 // ---- dials -----------------------------------------------------------------
 const CHARSET = ' .:-+*=%@#' // dark → bright
 const RESOLUTION = 0.2 // AsciiEffect char density (higher = finer)
+const RESOLUTION_PHONE = 0.15
+// Every frame the effect renders, reads the pixels back, builds a string of
+// tens of thousands of characters and rewrites a table. At 60fps that is the
+// main thread, and everything beside it - the terminal typing - stalls.
+// A torus turning at 30fps looks the same; a phone gets 15.
+const FPS = 30
+const FPS_PHONE = 15
 const OPACITY = 0.55 // layer opacity on the dark theme
 const OPACITY_LIGHT = 0.16 // dark ink in every cell reads as hatching; keep it faint
 const SPIN_X = 0.004 // auto-rotation per frame
@@ -64,6 +71,7 @@ export default function Ascii3D() {
       if (cancelled || !host) return
 
       const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+      const phone = window.innerWidth < 768
 
       // --- scene -------------------------------------------------------------
       const scene = new THREE.Scene()
@@ -94,7 +102,10 @@ export default function Ascii3D() {
       } catch {
         return // no WebGL → no layer; content is unaffected
       }
-      const effect = new AsciiEffect(renderer, CHARSET, { invert: true, resolution: RESOLUTION })
+      const effect = new AsciiEffect(renderer, CHARSET, {
+        invert: true,
+        resolution: phone ? RESOLUTION_PHONE : RESOLUTION,
+      })
       effect.setSize(Math.max(1, host.clientWidth), Math.max(1, host.clientHeight))
       const dom = effect.domElement
       // the ink is a theme token, so read it rather than assume white, and
@@ -133,9 +144,13 @@ export default function Ascii3D() {
       io.observe(host)
 
       const tilt = { x: 0, y: 0 } // eased cursor-follow offset
-      const frame = () => {
+      const interval = 1000 / (phone ? FPS_PHONE : FPS)
+      let last = 0
+      const frame = (now: number) => {
         raf = requestAnimationFrame(frame)
         if (!onScreen || document.hidden) return
+        if (now - last < interval) return
+        last = now
         mesh.rotation.x += SPIN_X
         mesh.rotation.y += SPIN_Y
         tilt.x += (target.x - tilt.x) * EASE

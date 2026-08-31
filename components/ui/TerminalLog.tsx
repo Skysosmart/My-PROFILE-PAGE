@@ -74,9 +74,14 @@ export default function TerminalLog({
           timers.current.push(window.setTimeout(() => typeLine(li + 1), Math.round(linePause / 2)))
           return
         }
-        let c = 0
+        // Reveal by elapsed time, not one character per timer: a timer only
+        // fires when the main thread is free, and with a WebGL effect drawing
+        // beside this a 8ms timer was landing every 45ms - 120 characters took
+        // six seconds. Now a late tick reveals however many characters are
+        // due, and a line always finishes in speed x length.
+        const start = performance.now()
         const tick = () => {
-          c += 1
+          const c = Math.min(text.length, Math.floor((performance.now() - start) / speed) + 1)
           setChars(c)
           if (c < text.length) {
             timers.current.push(window.setTimeout(tick, speed))

@@ -206,7 +206,7 @@ export default function AboutMe() {
       <div className="flex flex-1 flex-col gap-4 md:flex-row">
         {/* interactive terminal (left) */}
         <div
-          className="flex flex-1 flex-col overflow-hidden rounded-xl border border-white/12 bg-black/35"
+          className="flex flex-1 flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/35"
           onClick={() => ready && inputRef.current?.focus()}
         >
           {/* terminal title bar */}
@@ -303,7 +303,7 @@ export default function AboutMe() {
         </div>
 
         {/* portrait (right) - same window chrome as the terminal */}
-        <figure className="group flex flex-col overflow-hidden rounded-xl border border-white/12 bg-black/40 md:w-[320px] lg:w-[360px]">
+        <figure className="group flex flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/40 md:w-[320px] lg:w-[360px]">
           <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.03] px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-white/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-white/25" />

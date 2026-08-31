@@ -35,6 +35,9 @@ const MIN_FONT_PHONE = 10 // ~9k cells
 const GLYPH_W = 0.6 // JetBrains Mono advance width as a share of font-size
 const OPACITY = 0.55 // ink alpha on the dark theme
 const OPACITY_LIGHT = 0.4 // no hatching now, so the light theme can afford more
+const OPACITY_PHONE = 0.32 // it sits behind the text there, not beside it
+const CAMERA_Z = 4
+const CAMERA_Z_PHONE = 5.6 // a smaller knot on a screen it would otherwise fill
 const SPIN_X = 0.004 // auto-rotation per frame
 const SPIN_Y = 0.006
 const FOLLOW = 0.6 // how far the knot tilts toward the cursor (radians-ish)
@@ -76,7 +79,7 @@ export default function Ascii3D() {
       // --- scene -------------------------------------------------------------
       const scene = new THREE.Scene()
       const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100)
-      camera.position.z = 4
+      camera.position.z = window.innerWidth < 768 ? CAMERA_Z_PHONE : CAMERA_Z
       const geometry = new THREE.TorusKnotGeometry(1, 0.32, 160, 24)
       const material = new THREE.MeshPhongMaterial({ flatShading: true })
       const mesh = new THREE.Mesh(geometry, material)
@@ -126,7 +129,9 @@ export default function Ascii3D() {
       window.addEventListener('resize', size)
 
       const paint = () =>
-        (pre.style.color = inkColors().fg(currentTheme() === 'light' ? OPACITY_LIGHT : OPACITY))
+        (pre.style.color = inkColors().fg(
+          window.innerWidth < 768 ? OPACITY_PHONE : currentTheme() === 'light' ? OPACITY_LIGHT : OPACITY,
+        ))
       paint()
       const offTheme = onThemeChange(paint)
 

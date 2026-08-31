@@ -33,9 +33,29 @@ const sans = Space_Grotesk({
   display: 'swap',
 })
 
+const SITE = 'https://nonthanaphong.vercel.app'
+const DESCRIPTION = `${player.name} - ${player.role}. Academic portfolio: 56 certificates including two gold medals and 25 national-level awards, and nine projects from a Parkinson's screening device to production web platforms.`
+
+// Everything past the boot screen renders on the client, so a link preview
+// or a crawler sees none of it: this block is the whole first impression.
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE),
   title: `${player.handle} - ${player.tagline}`,
-  description: `${player.name} · a retro-terminal academic quest portfolio.`,
+  description: DESCRIPTION,
+  openGraph: {
+    type: 'website',
+    url: SITE,
+    siteName: player.handle,
+    title: `${player.name} - ${player.tagline}`,
+    description: DESCRIPTION,
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: `${player.name} - ${player.tagline}` }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${player.name} - ${player.tagline}`,
+    description: DESCRIPTION,
+    images: ['/og.png'],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

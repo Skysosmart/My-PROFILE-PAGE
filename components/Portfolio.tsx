@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import BootScreen from '@/components/BootScreen'
@@ -38,28 +38,10 @@ const Projects = split(() => import('@/components/sections/Projects'))
  * code-split and mount one by one as the reader approaches them, so a phone
  * is never asked to build the whole page in the frame after boot.
  */
-const BOOTED = 'booted'
-
 export default function Portfolio() {
   const [started, setStarted] = useState(false)
   // stable identity so BootScreen's timers are never reset by a new prop
-  const start = useCallback(() => {
-    setStarted(true)
-    try {
-      sessionStorage.setItem(BOOTED, '1')
-    } catch {}
-  }, [])
-
-  // The boot plays once per tab. A reload, or coming back from the archive,
-  // goes straight in: the sequence is a greeting, not a toll. A new tab still
-  // gets the full thing. Read in an effect rather than the initial state so
-  // the server and client render the same first frame; the boot screen's own
-  // first frame is an empty page-coloured overlay, so nothing flashes.
-  useEffect(() => {
-    try {
-      if (sessionStorage.getItem(BOOTED) === '1') setStarted(true)
-    } catch {}
-  }, [])
+  const start = useCallback(() => setStarted(true), [])
 
   return (
     <>

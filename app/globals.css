@@ -260,6 +260,12 @@ body::after {
   50% { border-radius: 46% 54% 44% 56%; }
   75% { border-radius: 53% 47% 56% 44%; }
 }
+/* the canvas clips itself to the same shape as its parent: an ancestor's
+   rounded overflow is not reliably applied to a composited canvas layer */
+.orb-canvas {
+  border-radius: 50%;
+  animation: orb-morph 9s ease-in-out infinite;
+}
 .orb-gloss {
   background:
     radial-gradient(60% 45% at 32% 22%, rgb(var(--fg) / 0.38), transparent 60%),
@@ -296,7 +302,7 @@ body::after {
 @media (max-width: 767px) {
   /* a border-radius that animates re-clips the WebGL canvas inside it every
      frame; a static circle is the same orb at rest */
-  .liquid-orb { animation: none; border-radius: 50%; }
+  .liquid-orb, .orb-canvas { animation: none; border-radius: 50%; }
   /* blending the gloss over a canvas forces a blend group per frame */
   .orb-gloss { mix-blend-mode: normal; opacity: 0.55; }
   /* fixed, masked layers are repainted on every scroll on iOS; scrolling

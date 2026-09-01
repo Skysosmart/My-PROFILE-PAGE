@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { inkColors, onThemeChange } from '@/lib/theme'
 import { assets } from '@/data/portfolio'
@@ -71,12 +71,26 @@ const fragment = /* glsl */ `
     float fres = pow(1.0 - n.z, 4.0);
 
     vec3 col = sky * 0.85 + vec3(spec) * 0.5 + vec3(fres) * 0.10;
-    gl_FragColor = vec4(col, 1.0);
+
+    // The disc is cut HERE, not by CSS alone. This canvas is a square, and it
+    // used to be rounded off only by the ancestor's overflow:hidden - whose
+    // border-radius is animated, over a child the compositor keeps on its own
+    // GPU layer. Whenever the two disagreed for a frame the square flashed
+    // into view. Now there is no square to show: outside the disc the
+    // fragment is transparent. Premultiplied, which is what the compositor
+    // expects of a canvas.
+    float d = distance(vUv, vec2(0.5));
+    float a = 1.0 - smoothstep(0.5 - 1.5 / uRes.y, 0.5, d);
+    gl_FragColor = vec4(col * a, a);
   }
 `
 
 export default function SkyOrb() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  // bumped when a lost WebGL context is restored, to rebuild the scene
+  const [epoch, setEpoch] = useState(0)
+  // true while that rebuild is the reason the effect is tearing down
+  const rebuilding = useRef(false)
 
   const mx = useMotionValue(0)
   const my = useMotionValue(0)
@@ -235,6 +249,21 @@ export default function SkyOrb() {
       canvas.addEventListener('pointermove', onMove)
       canvas.addEventListener('pointerdown', onMove)
 
+      // A driver can take the context away at any time - a GPU switch, a
+      // suspend, another tab's context budget - and this machine drives two
+      // of them. Unhandled, the canvas stays blank for good; the default
+      // action must be prevented for the browser to offer it back at all.
+      const onLost = (e: Event) => {
+        e.preventDefault()
+        cancelAnimationFrame(raf)
+      }
+      const onRestored = () => {
+        rebuilding.current = true // see the teardown below
+        setEpoch((n) => n + 1) // rebuild everything against the new context
+      }
+      canvas.addEventListener('webglcontextlost', onLost)
+      canvas.addEventListener('webglcontextrestored', onRestored)
+
       let raf = 0
       // the loop only draws while the orb is actually on screen: it lives in
       // the hero, and the rest of the page should not pay for it
@@ -274,7 +303,16 @@ export default function SkyOrb() {
         window.removeEventListener('resize', resize)
         canvas.removeEventListener('pointermove', onMove)
         canvas.removeEventListener('pointerdown', onMove)
-        gl.getExtension('WEBGL_lose_context')?.loseContext()
+        // before loseContext below, or our own teardown would look like a
+        // driver taking the context away and rebuild the orb forever
+        canvas.removeEventListener('webglcontextlost', onLost)
+        canvas.removeEventListener('webglcontextrestored', onRestored)
+        // Dropping the context is for leaving the page. After a restore it
+        // would throw away the context we were just handed - a canvas only
+        // ever has the one - and the rebuilt orb would draw into a dead
+        // context and never show anything again.
+        if (rebuilding.current) rebuilding.current = false
+        else gl.getExtension('WEBGL_lose_context')?.loseContext()
       }
     })()
 
@@ -282,7 +320,7 @@ export default function SkyOrb() {
       cancelled = true
       cleanup()
     }
-  }, [])
+  }, [epoch])
 
   return (
     <motion.div style={{ x: ox, y: oy }} className="my-10">
@@ -292,7 +330,9 @@ export default function SkyOrb() {
         className="liquid-orb group relative flex h-[clamp(150px,22vw,240px)] w-[clamp(150px,22vw,240px)] items-center justify-center"
       >
         {/* water surface */}
-        <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+        {/* orb-canvas carries the same morph: an element's own border-radius
+            clips its own layer, which an ancestor's cannot be relied on to */}
+        <canvas ref={canvasRef} className="orb-canvas absolute inset-0 h-full w-full" />
 
         {/* glass highlight over the water */}
         <div className="orb-gloss pointer-events-none absolute inset-0" />

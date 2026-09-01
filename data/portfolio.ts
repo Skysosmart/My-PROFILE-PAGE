@@ -207,6 +207,18 @@ export const projects: Project[] = [
     repo: 'https://github.com/Skysosmart/doodee-future-tcasfolie-extension',
   },
   {
+    title: 'Doodee Future - University Admission Platform',
+    period: '2025-2026',
+    role: 'Contributor \u00b7 Pranakorn Group',
+    status: 'Live',
+    description:
+      'The platform that puts Thai university admission planning in one place: TCAS countdowns, faculty matching, portfolio analysis from an uploaded PDF, mock exams and a student community. Built by the Pranakorn Group team. My commits are the extension\u2019s API endpoint on the platform side and a Thai-text repair layer for the PDF analyser, with its tests.',
+    tags: ['Next.js', 'Prisma', 'PDF', 'Team Project'],
+    image: '/projects/doodee.jpg',
+    contribution: '4 of 534 commits across 7 contributors \u00b7 extension endpoint, Thai PDF text repair',
+    demo: 'https://doodee-future.com',
+  },
+  {
     title: 'Pranakorn.dev - Studio Site',
     period: '2026',
     role: 'Frontend Developer',

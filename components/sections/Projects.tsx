@@ -39,6 +39,10 @@ const CLIP_HIDDEN = 'inset(0 100% 0 0)' // figlet wipe: covered from the right..
 const CLIP_SHOWN = 'inset(0 0% 0 0)' // ...to fully uncovered
 const SNAP_IDLE_MS = 140 // scroll silence that counts as "came to rest"
 const SNAP_NUDGE_MIN_PX = 24 // under this is jitter, not a deliberate hop
+const STEP_COOLDOWN_MS = 450 // paced stepping while one gesture keeps feeding
+const WHEEL_WINDOW_MS = 160 // wheel silence longer than this = a new gesture
+const TOUCH_STEP_PX = 50 // drag distance that commits a swipe's step
+const TOUCH_EXTRA_PX = 700 // each further step on one long continuous drag
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1]
 // -----------------------------------------------------------------------------
 
@@ -93,11 +97,14 @@ export default function Projects() {
   // 0 when the section's top meets the viewport's top, 1 when its bottom
   // meets the viewport's bottom: the (n - 1) viewports of travel during which
   // the stage is pinned. Project i owns the slot centred on i / (n - 1).
+  const indexRef = useRef(0) // the live index, for handlers outside React
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    const i = Math.min(total - 1, Math.max(0, Math.round(v * (total - 1))))
+    indexRef.current = i
     // setState with an unchanged value bails out before rendering, so this
     // re-renders once per project, not once per pixel
-    setIndex(Math.min(total - 1, Math.max(0, Math.round(v * (total - 1)))))
+    setIndex(i)
   })
 
   // Snap: when a scroll comes to rest inside the film, ease it onto a slot,
@@ -175,6 +182,122 @@ export default function Projects() {
     },
     [still],
   )
+
+  // No momentum inside the film: while the stage is pinned, a wheel push or a
+  // swipe is ONE project, not however far inertia happens to carry. Wheel and
+  // touch are intercepted and turned into goTo steps; the inertia tail of a
+  // gesture is swallowed. Telling a push from its own tail: a wheel event
+  // after WHEEL_WINDOW_MS of silence is a new gesture (a mouse notch always
+  // is), and within a stream, deltas that stopped growing are coasting, not
+  // pushing. Both edges of the film stay open - a deliberate push past the
+  // first or last project is left to scroll natively, only coasting is
+  // stopped - because the earlier CSS-snap attempt proved how easily this
+  // kind of interception becomes a trap. Keyboard and scrollbar scrolls are
+  // untouched; the idle-snap above catches those.
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const pinned = () => {
+      const r = el.getBoundingClientRect()
+      const vh = document.documentElement.clientHeight
+      // the short-landscape layout scrolls INSIDE the stage; stepping there
+      // would fight its overflow container, so it keeps native scrolling
+      return vh > 520 && r.top <= 1 && r.bottom >= vh - 1
+    }
+    let lastStep = 0
+    let target = 0
+    // mid-animation the live index lags the slot we are easing toward, so a
+    // quick second push counts from the target, not from behind it
+    const base = () => (performance.now() - lastStep < 800 ? target : indexRef.current)
+    const commit = (next: number, at: number) => {
+      target = Math.min(total - 1, Math.max(0, next))
+      lastStep = at
+      goTo(target)
+    }
+
+    // Gesture times are event.timeStamp - when the INPUT happened - never
+    // performance.now() in the handler: a step's arrival animation janks the
+    // main thread, delayed events then arrive in bunches, and wall-clock gaps
+    // between bunches read as fresh gestures. That misread turned one fling
+    // into five steps under test.
+    let buf: { t: number; d: number }[] = []
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || !pinned()) return // ctrl+wheel is zoom
+      const ad = Math.abs(e.deltaY) * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1)
+      if (ad <= Math.abs(e.deltaX)) return // a horizontal drift is not ours
+      const now = e.timeStamp
+      buf = buf.filter((x) => now - x.t < WHEEL_WINDOW_MS)
+      const distinct = buf.length === 0
+      const pushing = !distinct && ad >= Math.max(...buf.map((x) => x.d)) * 0.95
+      buf.push({ t: now, d: ad })
+      const dir = e.deltaY > 0 ? 1 : -1
+      const next = base() + dir
+      if (next < 0 || next >= total) {
+        // at the film's edge: only the coasting tail is stopped
+        if (!distinct && !pushing) e.preventDefault()
+        return
+      }
+      e.preventDefault()
+      if (ad < 4) return
+      if (!distinct && !pushing) return // coasting is swallowed, never a step
+      if (now - lastStep > (distinct ? 90 : STEP_COOLDOWN_MS)) commit(next, now)
+    }
+
+    // Touch queues its step and commits on release: stepping mid-drag starts
+    // a smooth scroll that the still-moving finger immediately cancels (a
+    // touch is user input even with its default prevented), which under test
+    // reduced a whole swipe to nothing.
+    let y0 = 0
+    let x0 = 0
+    let queued = 0
+    let tracking = false
+    const onTouchStart = (e: TouchEvent) => {
+      tracking = e.touches.length === 1
+      if (!tracking) return
+      y0 = e.touches[0].clientY
+      x0 = e.touches[0].clientX
+      queued = 0
+    }
+    const onTouchMove = (e: TouchEvent) => {
+      if (!tracking || e.touches.length !== 1 || !pinned()) return
+      const dy = y0 - e.touches[0].clientY // >0 = pushing the film forward
+      if (Math.abs(dy) <= Math.abs(x0 - e.touches[0].clientX)) return
+      const dir: 1 | -1 = dy > 0 ? 1 : -1
+      if (base() + dir < 0 || base() + dir >= total) {
+        queued = 0
+        return // swiping out: native, the film is over
+      }
+      e.preventDefault() // the finger paces the film; momentum never starts
+      queued =
+        Math.abs(dy) < TOUCH_STEP_PX
+          ? 0
+          : dir * (1 + Math.floor((Math.abs(dy) - TOUCH_STEP_PX) / TOUCH_EXTRA_PX))
+    }
+    const onTouchEnd = (e: TouchEvent) => {
+      tracking = false
+      if (!queued) return
+      const steps = queued
+      queued = 0
+      commit(base() + steps, e.timeStamp)
+    }
+    const onTouchCancel = () => {
+      tracking = false
+      queued = 0
+    }
+
+    el.addEventListener('wheel', onWheel, { passive: false })
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove', onTouchMove, { passive: false })
+    el.addEventListener('touchend', onTouchEnd, { passive: true })
+    el.addEventListener('touchcancel', onTouchCancel, { passive: true })
+    return () => {
+      el.removeEventListener('wheel', onWheel)
+      el.removeEventListener('touchstart', onTouchStart)
+      el.removeEventListener('touchmove', onTouchMove)
+      el.removeEventListener('touchend', onTouchEnd)
+      el.removeEventListener('touchcancel', onTouchCancel)
+    }
+  }, [goTo])
 
   // the figlet is FIGLET_COLS glyphs wide; size it so those columns fit the
   // text column, whatever the viewport. Observed on the stable wrapper, not

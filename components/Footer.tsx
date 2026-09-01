@@ -16,7 +16,7 @@ export default function Footer() {
             <a
               key={c.key}
               href={c.href}
-              target={c.href.startsWith('http') ? '_blank' : undefined}
+              target={c.href.startsWith('mailto:') ? undefined : '_blank'}
               rel="noreferrer"
               className="group inline-flex min-h-[32px] items-center text-fg-muted transition-colors hover:text-fg"
             >

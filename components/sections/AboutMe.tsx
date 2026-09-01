@@ -47,9 +47,15 @@ const EYES_COLORS = [
   'text-emerald-300',
 ]
 
-const COMMANDS = ['sop', 'inspiration', 'contact', 'help', 'clear'] as const
+const COMMANDS = ['sop', 'inspiration', 'contact', 'resume', 'help', 'clear'] as const
 
-type Out = { prefix?: { text: string; className?: string }; text: string; className?: string }
+type Out = {
+  prefix?: { text: string; className?: string }
+  text: string
+  className?: string
+  /** the line is a link (opens in a new tab) */
+  href?: string
+}
 
 export default function AboutMe() {
   const [figlet, setFiglet] = useState('')
@@ -145,8 +151,13 @@ export default function AboutMe() {
       contact.channels.forEach((c) =>
         out.push({ text: `  ${c.key.padEnd(9)} : ${c.value}`, className: 'text-sky-300/90' }),
       )
+    } else if (cmd === 'resume') {
+      out.push(
+        { prefix: { text: '[RESUME]', className: 'text-yellow-300' }, text: ' one page, built from the same data as this site:', className: 'text-fg/80' },
+        { text: '  ↗ /resume.pdf', className: 'text-sky-300/90', href: '/resume.pdf' },
+      )
     } else if (cmd === 'ls') {
-      out.push({ text: 'sop.md  inspiration.md  contact.txt  portrait.jpg  certificates/', className: 'text-sky-300/90' })
+      out.push({ text: 'sop.md  inspiration.md  contact.txt  resume.pdf  portrait.jpg  certificates/', className: 'text-sky-300/90' })
     } else if (cmd === 'whoami') {
       out.push({ text: `${player.name} - ${player.role}`, className: 'text-green-400' })
     } else if (cmd === 'banner') {
@@ -159,6 +170,7 @@ export default function AboutMe() {
         { text: '  sop          read my Statement of Purpose', className: 'text-sky-300/90' },
         { text: '  inspiration  what drives me', className: 'text-sky-300/90' },
         { text: '  contact      how to reach me', className: 'text-sky-300/90' },
+        { text: '  resume       one-page CV as a PDF', className: 'text-sky-300/90' },
         { text: '  whoami · ls · banner · clear', className: 'text-sky-300/90' },
       )
     } else {
@@ -259,7 +271,19 @@ export default function AboutMe() {
               {log.map((o, i) => (
                 <div key={i} className="whitespace-pre-wrap leading-relaxed">
                   {o.prefix && <span className={o.prefix.className}>{o.prefix.text}</span>}
-                  <span className={o.className ?? 'text-fg/85'}>{o.text}</span>
+                  {o.href ? (
+                    <a
+                      href={o.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className={`underline decoration-dotted underline-offset-4 hover:decoration-solid ${o.className ?? 'text-fg/85'}`}
+                    >
+                      {o.text}
+                    </a>
+                  ) : (
+                    <span className={o.className ?? 'text-fg/85'}>{o.text}</span>
+                  )}
                 </div>
               ))}
             </div>

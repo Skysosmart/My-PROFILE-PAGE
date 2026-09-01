@@ -705,6 +705,8 @@ export const contact = {
     { key: 'LINE', value: '@skysoyer', href: 'https://line.me/ti/p/~skysoyer' },
     { key: 'IG', value: '@yaa.itz_sky', href: 'https://instagram.com/yaa.itz_sky' },
     { key: 'SCHOOL', value: 'Assumption College Thonburi', href: 'https://www.act.ac.th' },
+    // one page, generated from this file at build time: see lib/resume.ts
+    { key: 'RESUME', value: 'resume.pdf', href: '/resume.pdf' },
   ],
 }
 

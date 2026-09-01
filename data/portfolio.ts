@@ -195,15 +195,15 @@ export const projects: Project[] = [
   {
     title: 'Doodee Future Extension - TCASFolio Vault & Autofill',
     period: '2025-2026',
-    role: 'Extension Author \u00b7 Platform Contributor',
+    role: 'Extension Author',
     status: 'Completed',
     description:
-      'Doodee Future puts Thai university admission planning in one place instead of a dozen sites. The TCASFolio browser extension is mine end to end: a Chrome MV3 add-on that keeps a local portfolio vault and autofills the TCASFolio forms, with the data never leaving the machine.',
+      'A Chrome MV3 extension for Thailand\u2019s TCAS portfolio system, built as a companion to the Doodee Future platform. It keeps a local vault of achievements and certificate photos, autofills the TCASFolio forms block by block, and can send the vault to the platform for a portfolio analysis. The data never leaves the machine unless you ask it to.',
     tags: ['Chrome MV3', 'Next.js', 'Team Project'],
     // the extension itself - its popup, with the vault holding real entries -
     // rather than the platform's landing page
     image: '/projects/tcasfolio.jpg',
-    contribution: 'Extension: 58 of 61 commits \u00b7 platform: 4 of 534 across 7 contributors',
+    contribution: 'Its own repo \u00b7 58 of 61 commits',
     repo: 'https://github.com/Skysosmart/doodee-future-tcasfolie-extension',
   },
   {

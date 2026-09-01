@@ -1,7 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import ThemeToggle from '@/components/ThemeToggle'
 import { player } from '@/data/portfolio'
 
@@ -20,7 +20,13 @@ const FIGLET = ` _ _   __  _ _
   |_| \\__/  |_|`
 
 export default function NotFound() {
-  const pathname = usePathname() || '/'
+  // Read on mount, not with usePathname: this page is prerendered at build
+  // time, when no path exists, so rendering one during hydration made the
+  // server and client markup disagree - React threw #418/#423/#425 and
+  // re-rendered the whole page on the client. Empty on the first paint,
+  // filled a frame later.
+  const [path, setPath] = useState('')
+  useEffect(() => setPath(window.location.pathname), [])
   const handle = player.handle.toLowerCase().replace('.exe', '')
 
   return (
@@ -32,14 +38,15 @@ export default function NotFound() {
           <span className="text-fg-dim">:~$</span>
         </span>
         <span className="select-none text-fg-muted">cd</span>
-        <span className="min-w-0 truncate text-fg">{pathname}</span>
+        <span className="min-w-0 truncate text-fg">{path}</span>
         <span className="ml-auto shrink-0">
           <ThemeToggle />
         </span>
       </div>
 
       <p className="mt-2 font-mono text-[12px] text-red-400">
-        zsh: no such file or directory: <span className="break-all">{pathname}</span>
+        zsh: no such file or directory{path ? ': ' : ''}
+        <span className="break-all">{path}</span>
       </p>
 
       <pre
@@ -59,21 +66,36 @@ export default function NotFound() {
         {[
           { cmd: 'cd ~', note: 'home', href: '/' },
           { cmd: 'ls certificates/', note: 'every certificate', href: '/certificates' },
-          { cmd: 'open resume.pdf', note: 'one-page CV', href: '/resume.pdf' },
-        ].map((l) => (
-          <li key={l.href}>
-            <Link
-              href={l.href}
-              className="group inline-flex min-h-[32px] items-center gap-3 text-fg/85 transition-colors hover:text-fg"
-            >
+          // a plain anchor, not Link: next/link prefetches its target as an
+          // RSC payload, and asking a route handler that returns a PDF for
+          // one answered 500 on every hover
+          { cmd: 'open resume.pdf', note: 'one-page CV', href: '/resume.pdf', file: true },
+        ].map((l) => {
+          const inner = (
+            <>
               <span aria-hidden className="text-green-400">
                 &#8594;
               </span>
               <span className="underline-offset-4 group-hover:underline">{l.cmd}</span>
               <span className="text-fg-dim"># {l.note}</span>
-            </Link>
-          </li>
-        ))}
+            </>
+          )
+          const cls =
+            'group inline-flex min-h-[32px] items-center gap-3 text-fg/85 transition-colors hover:text-fg'
+          return (
+            <li key={l.href}>
+              {l.file ? (
+                <a href={l.href} target="_blank" rel="noreferrer" className={cls}>
+                  {inner}
+                </a>
+              ) : (
+                <Link href={l.href} className={cls}>
+                  {inner}
+                </Link>
+              )}
+            </li>
+          )
+        })}
       </ul>
 
       <div className="mt-auto pt-16">

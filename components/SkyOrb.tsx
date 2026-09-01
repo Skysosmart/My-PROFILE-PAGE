@@ -43,7 +43,7 @@ const fragment = /* glsl */ `
       float ring = dist - front;
       // localized wavefront that decays with age + distance from the ring
       float env = exp(-age * 2.0) * exp(-ring * ring * 130.0) * r.w;
-      h += sin(ring * 68.0 - age * 8.0) * env;
+      h += sin(ring * 44.0 - age * 7.0) * env;
     }
     return h;
   }
@@ -54,10 +54,15 @@ const fragment = /* glsl */ `
     float h = waves(uv);
     float hx = waves(uv + vec2(e, 0.0)) - h;
     float hy = waves(uv + vec2(0.0, e)) - h;
-    vec3 n = normalize(vec3(-hx * 42.0, -hy * 42.0, 1.0)); // surface normal
+    // 6, not the 42 this was written with. These ripples had never once
+    // rendered - the uniform below them was silently dropped - so the
+    // numbers were never seen against the portrait they distort. At the
+    // written strength the face disappears into corduroy; this reads as
+    // water moving over a picture you can still make out.
+    vec3 n = normalize(vec3(-hx * 6.0, -hy * 6.0, 1.0)); // surface normal
 
     // refract the sky beneath the surface
-    vec2 ruv = clamp(uv + n.xy * 0.06, 0.0, 1.0);
+    vec2 ruv = clamp(uv + n.xy * 0.014, 0.0, 1.0);
     vec3 sky = texture2D(uSky, ruv).rgb;
 
     // specular glint + fresnel rim where the surface tilts
@@ -65,7 +70,7 @@ const fragment = /* glsl */ `
     float spec = pow(max(dot(n, L), 0.0), 60.0);
     float fres = pow(1.0 - n.z, 4.0);
 
-    vec3 col = sky * 0.85 + vec3(spec) * 1.5 + vec3(fres) * 0.28;
+    vec3 col = sky * 0.85 + vec3(spec) * 0.5 + vec3(fres) * 0.10;
     gl_FragColor = vec4(col, 1.0);
   }
 `
@@ -176,7 +181,11 @@ export default function SkyOrb() {
         texture.needsUpdate = true
       })
 
-      const rbuf = new Float32Array(24 * 4)
+      // a plain array, not a Float32Array: ogl decides an array uniform is
+      // supplied with Array.isArray(value), so a typed array made it warn
+      // "Active uniform uRipples[0] has not been supplied" every frame -
+      // hundreds of console warnings a second, and the ripples never drew
+      const rbuf: number[] = new Array(24 * 4).fill(0)
       const program = new Program(gl, {
         vertex,
         fragment,
@@ -215,12 +224,12 @@ export default function SkyOrb() {
         const uy = 1 - (e.clientY - rect.top) / rect.height
         const t = performance.now()
         const dist = Math.hypot(ux - lastX, uy - lastY)
-        if (dist < 0.028) return
+        if (dist < 0.045) return
         const speed = dist / Math.max(16, t - lastT)
         lastX = ux
         lastY = uy
         lastT = t
-        ripples.push({ x: ux, y: uy, st: t / 1000 - t0, w: Math.min(1.3, 0.55 + speed * 45) })
+        ripples.push({ x: ux, y: uy, st: t / 1000 - t0, w: Math.min(0.5, 0.22 + speed * 20) })
         if (ripples.length > 24) ripples.shift()
       }
       canvas.addEventListener('pointermove', onMove)

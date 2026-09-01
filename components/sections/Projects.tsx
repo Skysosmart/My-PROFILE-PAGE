@@ -37,6 +37,8 @@ const FIGLET_MAX_PX = 18 // so the block letters never dwarf the title on a wide
 const MOBILE_TAGS = 4 // tags shown below lg
 const CLIP_HIDDEN = 'inset(0 100% 0 0)' // figlet wipe: covered from the right...
 const CLIP_SHOWN = 'inset(0 0% 0 0)' // ...to fully uncovered
+const SNAP_IDLE_MS = 140 // scroll silence that counts as "came to rest"
+const SNAP_NUDGE_MIN_PX = 24 // under this is jitter, not a deliberate hop
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1]
 // -----------------------------------------------------------------------------
 
@@ -97,6 +99,63 @@ export default function Projects() {
     // re-renders once per project, not once per pixel
     setIndex(Math.min(total - 1, Math.max(0, Math.round(v * (total - 1)))))
   })
+
+  // Snap: when a scroll comes to rest inside the film, ease it onto a slot,
+  // so the reader always parks on a project - never straddling the boundary
+  // where the index flips. A short hop (a wheel notch, an arrow key) advances
+  // one whole slot in its direction; anything longer parks on the nearest.
+  //
+  // Deliberately JS-on-idle, not CSS scroll-snap-type. `mandatory` on the
+  // root scroller snaps to the NEAREST slot at every gesture end, so a wheel
+  // notch (120px against a viewport-tall slot) rubber-bands straight back and
+  // the film cannot be wheeled out of upward; it also grabbed the header's
+  // smooth flight to #contact and parked it on the last slot, footer half a
+  // pixel off screen. `proximity` has a dead band exactly where the index
+  // flips. This version interferes with nothing: a smooth scrollIntoView
+  // passing through emits scroll events continuously - so it is never idle -
+  // and ends outside the film, where the pinned check stands down; and a
+  // gesture during our own ease cancels it, because user input always cancels
+  // a programmatic smooth scroll.
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    let timer = 0
+    let anchor = window.scrollY // where the previous scroll came to rest
+    const settle = () => {
+      const r = el.getBoundingClientRect()
+      const vh = document.documentElement.clientHeight
+      if (r.top > 1 || r.bottom < vh - 1) {
+        anchor = window.scrollY
+        return // the stage is not pinned: the film does not own this scroll
+      }
+      const top = r.top + window.scrollY
+      const slotPx = (el.offsetHeight - vh) / (total - 1) // travel per project
+      const frac = (window.scrollY - top) / slotPx
+      const d = window.scrollY - anchor
+      // deliberate but under half a slot -> next slot that way (the 0.04
+      // forgives our own ease landing a hair off); jitter or a long scroll
+      // -> nearest
+      const target =
+        Math.abs(d) >= SNAP_NUDGE_MIN_PX && Math.abs(d) < slotPx / 2
+          ? d > 0
+            ? Math.ceil(frac - 0.04)
+            : Math.floor(frac + 0.04)
+          : Math.round(frac)
+      const dest = top + Math.min(total - 1, Math.max(0, target)) * slotPx
+      anchor = dest
+      if (Math.abs(dest - window.scrollY) < 2) return
+      window.scrollTo({ top: dest, behavior: still ? 'auto' : 'smooth' })
+    }
+    const onScroll = () => {
+      window.clearTimeout(timer)
+      timer = window.setTimeout(settle, SNAP_IDLE_MS)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.clearTimeout(timer)
+    }
+  }, [still])
 
   // a thumb click is a scroll to that project's slot. The slot is derived the
   // same way useScroll derives progress - travel is section height minus the

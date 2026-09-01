@@ -8,6 +8,10 @@
  *   pyfiglet -f small PDLITE
  */
 export const FIGLETS: Record<string, string> = {
+  "T-GODA - Accommodation Booking Platform":
+    " _____     ___  ___  ___   _\n|_   _|__ / __|/ _ \\|   \\ /_\\\n  | ||___| (_ | (_) | |) / _ \\\n  |_|     \\___|\\___/|___/_/ \\_\\",
+  "Nexus - Chat Web Application":
+    " _  _ _____  ___   _ ___\n| \\| | __\\ \\/ / | | / __|\n| .` | _| >  <| |_| \\__ \\\n|_|\\_|___/_/\\_\\\\___/|___/",
   "PDLite - Parkinson’s Risk Screening Device":
     " ___ ___  _    ___ _____ ___\n| _ \\   \\| |  |_ _|_   _| __|\n|  _/ |) | |__ | |  | | | _|\n|_| |___/|____|___| |_| |___|",
   "Seluna Cloud - Landing Site":

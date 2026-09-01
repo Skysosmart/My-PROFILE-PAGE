@@ -1,5 +1,5 @@
 import { about, certificates, contact, player, projects, type Certificate } from '@/data/portfolio'
-import { byNewest, categorize, certStats } from '@/lib/certs'
+import { categorize, certStats } from '@/lib/certs'
 
 /**
  * What the one-page CV says, chosen from the same data the site renders.
@@ -9,11 +9,15 @@ import { byNewest, categorize, certStats } from '@/lib/certs'
  * One page is the whole constraint. The site can show 56 certificates and
  * 11 projects at full length; the CV shows the strongest of each and points
  * at the site for the rest.
+ *
+ * Everything is ordered by weight, never by date: a CV is read top-down
+ * and often not to the bottom, so the gold medal goes above the third
+ * place whatever year each was won.
  */
 
-// The projects the page has room for, strongest first (the site's order).
-// Matched on a leading word so a title can be reworded without touching this.
-const PROJECT_PICKS = ['PDLite', 'Seluna', 'Nexus', 'Doodee Future Extension', 'MakeX', 'Hackathon Digitize']
+// Awarded work first, then the largest production contribution, then the
+// rest. Matched on a leading word so a title can be reworded freely.
+const PROJECT_PICKS = ['PDLite', 'Nexus', 'MakeX', 'Seluna', 'Doodee Future Extension', 'Hackathon Digitize']
 
 export const cvProjects = PROJECT_PICKS.flatMap((k) => {
   const p = projects.find((q) => q.title.startsWith(k))
@@ -29,21 +33,52 @@ export const firstSentence = (s: string) => s.match(/^.*?[.!?](?=\s|$)/)?.[0] ??
 // A placing or a medal is an award; everything else is training.
 const isAward = (c: Certificate) => !!c.medal || /\bplace\b|finalist|top \d+/i.test(c.result ?? '')
 
-export const cvAwards = byNewest(certificates.filter(isAward))
+// A certificate's weight: a medal outranks a placing outranks a finalist
+// outranks a top-N; featured before not; a higher level before a lower.
+// Ties keep the data file's order, which is the site's own curated one.
+const MEDAL: Record<string, number> = { gold: 30, silver: 20, bronze: 10 }
+const LEVEL: Record<string, number> = {
+  International: 4,
+  National: 3,
+  Provincial: 2,
+  Institution: 2,
+  School: 1,
+  Online: 1,
+}
+const weight = (c: Certificate) => {
+  const r = c.result ?? ''
+  const award = c.medal
+    ? MEDAL[c.medal]
+    : /\bplace\b/i.test(r)
+      ? 8
+      : /finalist/i.test(r)
+        ? 5
+        : /top \d+/i.test(r)
+          ? 3
+          : 0
+  return award * 100 + (c.featured ? 50 : 0) + (LEVEL[c.level ?? ''] ?? 0) * 10
+}
+const byWeight = (list: Certificate[]) =>
+  list
+    .map((c, i) => ({ c, i }))
+    .sort((a, b) => weight(b.c) - weight(a.c) || a.i - b.i)
+    .map((x) => x.c)
+
+export const cvAwards = byWeight(certificates.filter(isAward))
 
 // Security training, one entry per programme (the RTARF bootcamp has two
-// certificates for one course), newest first, as many as the column holds.
+// certificates for one course), as many as the column holds.
 const TRAINING_MAX = 6
 export const cvTraining = (() => {
   const seen = new Set<string>()
-  return byNewest(certificates.filter((c) => !isAward(c) && categorize(c) === 'security')).filter(
-    (c) => {
+  return byWeight(certificates.filter((c) => !isAward(c) && categorize(c) === 'security'))
+    .filter((c) => {
       const key = c.title.split(' - ')[0]
       if (seen.has(key)) return false
       seen.add(key)
       return true
-    },
-  ).slice(0, TRAINING_MAX)
+    })
+    .slice(0, TRAINING_MAX)
 })()
 
 // Grouped by hand because tags are per project, not per person - but every

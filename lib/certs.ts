@@ -8,7 +8,10 @@ export const certThumb = (file: string) =>
 export function categorize(c: Certificate): string {
   const s = `${c.title} ${c.issuer} ${c.file}`
   if (/makex|robot/i.test(s)) return 'robotics'
-  if (/EC[_-]?Council|NDE|EHE|CTF|cyber|NCSA|RTARF|pentest|IT CLASH/i.test(s)) return 'security'
+  // \b around N|DE and E|HE: unanchored, 'NDE' matched inside 'ONDE'
+  // (the Basic Python issuer) and filed a Python course under security
+  if (/EC[_-]?Council|\bN\|?DE\b|\bE\|?HE\b|CTF|cyber|NCSA|RTARF|pentest|IT CLASH/i.test(s))
+    return 'security'
   if (/\bAI\b|BOTNOI|python|\bdata\b|typhoon|CiRA|prompt|digital twin|semiconductor/i.test(s))
     return 'ai-data'
   if (/\bENG\b|english|INTER/i.test(s)) return 'language'

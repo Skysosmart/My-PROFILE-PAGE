@@ -169,8 +169,14 @@ export default function SkyOrb() {
       })
       const mesh = new Mesh(gl, { geometry: new Triangle(gl), program })
 
+      // Measure the ORB, not the canvas. ogl's Renderer sizes the canvas to
+      // its 300x150 default through inline styles in its constructor, so
+      // canvas.clientWidth read that back and the sky was drawn as a
+      // 300x150 strip across the middle of the bubble - since the day it
+      // was built.
+      const box = canvas.parentElement as HTMLElement
       const resize = () => {
-        renderer.setSize(canvas.clientWidth, canvas.clientHeight)
+        renderer.setSize(box.clientWidth, box.clientHeight)
         program.uniforms.uRes.value = [gl.canvas.width, gl.canvas.height]
       }
       resize()

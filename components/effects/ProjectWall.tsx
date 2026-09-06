@@ -42,7 +42,7 @@ export default function ProjectWall() {
         WebkitMaskImage: 'radial-gradient(ellipse 100% 90% at 50% 45%, black 25%, transparent 82%)',
       }}
     >
-      <div className="absolute -left-[10%] top-1/2 flex w-[120%] -translate-y-1/2 -rotate-3 flex-col gap-10 opacity-[0.5]">
+      <div className="absolute left-[-10%] top-1/2 flex w-[120%] -translate-y-1/2 -rotate-3 flex-col gap-10 opacity-[0.5]">
         {rows.map((row, r) => (
           <div key={r} className="flex overflow-hidden">
             <div
@@ -56,10 +56,10 @@ export default function ProjectWall() {
                 <div
                   key={i}
                   style={{ width: w, height: h }}
-                  className="shrink-0 overflow-hidden rounded-lg border border-fg/[0.16] bg-fg/[0.015]"
+                  className="shrink-0 overflow-hidden rounded-lg border border-fg/16 bg-fg/1.5"
                 >
                   {/* chrome: traffic lights + an address bar */}
-                  <div className="flex items-center gap-1 border-b border-fg/[0.12] px-2.5 py-2">
+                  <div className="flex items-center gap-1 border-b border-fg/12 px-2.5 py-2">
                     <span className="h-1 w-1 rounded-full bg-fg/25" />
                     <span className="h-1 w-1 rounded-full bg-fg/25" />
                     <span className="h-1 w-1 rounded-full bg-fg/25" />
@@ -67,11 +67,11 @@ export default function ProjectWall() {
                   </div>
                   {/* a hero block, then a few lines of copy */}
                   <div className="space-y-2 p-3">
-                    <div className="h-1/4 min-h-[16px] w-full rounded bg-fg/[0.06]" />
+                    <div className="h-1/4 min-h-[1rem] w-full rounded-sm bg-fg/6" />
                     {Array.from({ length: bars }, (_, b) => (
                       <div
                         key={b}
-                        className="h-1 rounded bg-fg/[0.08]"
+                        className="h-1 rounded-sm bg-fg/8"
                         style={{ width: `${88 - b * 17}%` }}
                       />
                     ))}

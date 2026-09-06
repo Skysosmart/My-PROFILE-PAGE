@@ -1,11 +1,13 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from 'framer-motion'
+import { motion, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react'
 import AsciiImage from '@/components/effects/AsciiImage'
 import ProjectWall from '@/components/effects/ProjectWall'
 import { figletFor } from '@/data/figlets'
 import { projects, type Project } from '@/data/portfolio'
+import { useContent } from '@/lib/use-content'
+import Duck from '@/components/duck/Duck'
 
 /**
  * PROJECTS - a film of nine screens, and scroll is the only control.
@@ -314,7 +316,8 @@ export default function Projects() {
     return () => ro.disconnect()
   }, [])
 
-  const p = projects[index]
+  // role and description follow the language; everything else is shared
+  const p = useContent().projects[index]
 
   // initial={false} before arming and under reduced motion: framer renders
   // the animate state outright, so the screen is complete on its first frame
@@ -342,11 +345,14 @@ export default function Projects() {
     >
       {/* the stage: pinned for the whole section. pt clears the fixed header;
           isolate keeps the wall's -z-10 inside the stage */}
-      <div className="sticky top-0 isolate flex h-[100svh] flex-col overflow-hidden px-4 pt-20 sm:px-6 lg:pt-24">
+      <div className="sticky top-0 isolate flex h-svh flex-col overflow-hidden px-4 pt-20 sm:px-6 lg:pt-24">
         <ProjectWall />
 
         {/* header: the GlassSection markup verbatim, so this matches every
             other section even though it cannot be one */}
+        <span className="mb-2 block font-mono text-[0.6875rem] uppercase tracking-[0.35em] text-fg-dim">
+          [ 05 · PROJECTS ]
+        </span>
         <div className="relative mb-7 flex items-baseline gap-3 pb-4">
           <motion.span
             initial={reduce ? { opacity: 0 } : { opacity: 0, x: -8 }}
@@ -355,7 +361,7 @@ export default function Projects() {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="font-mono text-xs text-fg-dim"
           >
-            03
+            05
           </motion.span>
           <motion.h2
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
@@ -384,7 +390,7 @@ export default function Projects() {
           initial={animate ? { opacity: 0 } : false}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, ease: EASE_OUT }}
-          className="pointer-events-none absolute bottom-[6vh] left-[-1vw] -z-10 select-none font-mono text-[38vh] font-bold leading-none text-fg/[0.05]"
+          className="pointer-events-none absolute bottom-[6vh] left-[-1vw] -z-10 select-none font-mono text-[38vh] font-bold leading-none text-fg/5"
         >
           {pad(index + 1)}
         </motion.span>
@@ -393,11 +399,11 @@ export default function Projects() {
             min-h-0 + overflow-hidden so a tall screen can never push the rail
             off the stage; "safe center" keeps a too-tall column top-aligned
             instead of clipping its head under the header */}
-        <div className="grid min-h-0 flex-1 grid-cols-1 content-start gap-3 overflow-hidden [@media(max-height:520px)]:grid-cols-2 [@media(max-height:520px)]:items-start [@media(max-height:520px)]:gap-5 [@media(max-height:520px)]:overflow-y-auto lg:grid-cols-2 lg:content-stretch lg:gap-10 lg:[align-items:safe_center]">
+        <div className="grid min-h-0 flex-1 grid-cols-1 content-start gap-3 overflow-hidden [@media(max-height:520px)]:grid-cols-2 [@media(max-height:520px)]:items-start [@media(max-height:520px)]:gap-5 [@media(max-height:520px)]:overflow-y-auto lg:grid-cols-2 lg:content-stretch lg:gap-10 lg:items-center-safe">
           {/* text LEFT, screenshot RIGHT from lg; the image leads on a phone
               held upright. A rotated phone is short but WIDE, so it gets the
               two-column layout too - stacked, nothing fit above the fold */}
-          <div className="order-first mx-auto w-full max-w-[calc(28svh*1.6)] [@media(max-height:520px)]:order-last [@media(max-height:520px)]:max-w-[calc(52svh*1.6)] lg:order-last lg:ml-0 lg:max-w-[calc(56svh*1.6)]">
+          <div className="order-first mx-auto w-full max-w-[44.800000000000004svh] [@media(max-height:520px)]:order-last [@media(max-height:520px)]:max-w-[83.2svh] lg:order-last lg:ml-0 lg:max-w-[89.60000000000001svh]">
             <Screen key={arrivalKey} p={p} />
           </div>
 
@@ -413,20 +419,20 @@ export default function Projects() {
                   ...(figletPx ? { fontSize: figletPx } : null),
                   textShadow: '0 0 14px rgb(var(--fg) / 0.3), 0 0 34px rgb(var(--fg) / 0.12)',
                 }}
-                className="m-0 whitespace-pre font-mono text-[13px] leading-[1.1] text-fg lg:text-[18px]"
+                className="m-0 whitespace-pre font-mono text-[0.8125rem] leading-[1.1] text-fg lg:text-[1.125rem]"
               >
                 {figletFor(p.title)}
               </motion.pre>
 
-              <h3 className="mt-3 font-sans text-[15px] font-semibold leading-snug text-fg lg:mt-4 lg:text-xl">
+              <h3 className="mt-3 font-sans text-[0.9375rem] font-semibold leading-snug text-fg lg:mt-4 lg:text-xl">
                 {p.title}
               </h3>
               <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-fg-dim lg:text-[11px]">
+                <p className="font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim lg:text-[0.6875rem]">
                   {p.role} · {p.period}
                 </p>
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider ${
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[0.5625rem] uppercase tracking-wider ${
                     statusStyle[p.status] ?? statusStyle.Upcoming
                   }`}
                 >
@@ -443,7 +449,7 @@ export default function Projects() {
               {/* sans, not mono: a paragraph, and the meta around it already
                   carries the terminal voice. Clamped on a phone, where the
                   stage has 700px to spend on everything */}
-              <p className="mt-2 line-clamp-3 font-sans text-[13px] leading-normal text-fg/70 lg:mt-3 lg:line-clamp-none lg:text-[14px] lg:leading-relaxed">
+              <p className="mt-2 line-clamp-3 font-sans text-[0.8125rem] leading-normal text-fg/70 lg:mt-3 lg:line-clamp-none lg:text-[0.875rem] lg:leading-relaxed">
                 {p.description}
               </p>
 
@@ -451,7 +457,7 @@ export default function Projects() {
                 {p.tags.map((t, i) => (
                   <span
                     key={t}
-                    className={`rounded border border-fg/[0.12] px-1.5 py-0.5 font-mono text-[10px] text-fg-muted ${
+                    className={`rounded border border-fg/12 px-1.5 py-0.5 font-mono text-[0.625rem] text-fg-muted ${
                       i >= MOBILE_TAGS ? 'hidden lg:inline-block' : ''
                     }`}
                   >
@@ -464,7 +470,7 @@ export default function Projects() {
                   link because it is the same kind of claim: checkable.
                   Desktop only; the phone stage has no room for it */}
               {p.contribution && (
-                <p className="mt-3 hidden font-mono text-[10px] leading-relaxed text-fg-muted lg:block">
+                <p className="mt-3 hidden font-mono text-[0.625rem] leading-relaxed text-fg-muted lg:block">
                   {p.contribution}
                 </p>
               )}
@@ -488,7 +494,7 @@ export default function Projects() {
         {/* the rail: where you are, and the whole film at a glance. On a phone
             the filmstrip wraps onto its own line under the counter */}
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-fg/10 pb-3 pt-2 lg:pb-6 lg:pt-4">
-          <span className="font-mono text-[11px] tabular-nums text-fg-muted">
+          <span className="font-mono text-[0.6875rem] tabular-nums text-fg-muted">
             {pad(index + 1)}/{pad(total)}
           </span>
 
@@ -496,7 +502,7 @@ export default function Projects() {
             {projects.map((_, i) => (
               <span
                 key={i}
-                className={`h-[3px] flex-1 rounded-sm transition-colors ${i <= index ? 'bg-fg/80' : 'bg-fg/15'}`}
+                className={`h-[0.1875rem] flex-1 rounded-xs transition-colors ${i <= index ? 'bg-fg/80' : 'bg-fg/15'}`}
               />
             ))}
           </div>
@@ -505,7 +511,7 @@ export default function Projects() {
               does not reflow when the hint goes */}
           <span
             aria-hidden
-            className={`font-mono text-[10px] uppercase tracking-wider text-fg-dim lg:order-last ${
+            className={`font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim lg:order-last ${
               index === total - 1 ? 'invisible' : ''
             }`}
           >
@@ -517,6 +523,10 @@ export default function Projects() {
             aria-label="Project filmstrip"
             className="flex basis-full gap-1 lg:basis-auto lg:flex-1 lg:justify-center lg:gap-1.5"
           >
+            {/* the duck at its laptop, at the head of the strip (desktop) */}
+            <div aria-hidden className="mr-3 hidden shrink-0 self-end lg:block">
+              <Duck pose="laptop" width={64} parallax={3} />
+            </div>
             {projects.map((q, i) => {
               const on = i === index
               return (
@@ -526,7 +536,7 @@ export default function Projects() {
                   onClick={() => goTo(i)}
                   aria-label={`${pad(i + 1)} ${q.title}`}
                   aria-current={on ? 'true' : undefined}
-                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[3px] border border-fg/10 bg-bg/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:aspect-[16/10] lg:h-auto lg:w-[72px] lg:flex-none ${
+                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[0.1875rem] border border-fg/10 bg-bg/60 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:aspect-16/10 lg:h-auto lg:w-[4.5rem] lg:flex-none ${
                     on ? 'ring-1 ring-fg' : ''
                   }`}
                 >
@@ -563,14 +573,14 @@ export default function Projects() {
 /** The screenshot, developing out of ASCII on arrival - or the dotted panel. */
 function Screen({ p }: { p: Project }) {
   const frame =
-    'aspect-[16/10] w-full overflow-hidden rounded-xl border border-fg/[0.12] bg-bg/60 shadow-[0_50px_140px_-50px_rgba(0,0,0,0.95),0_0_60px_-20px_rgb(var(--fg)_/_0.07)]'
+    'aspect-16/10 w-full overflow-hidden rounded-xl border border-fg/12 bg-bg/60 shadow-[0_50px_140px_-50px_rgba(0,0,0,0.95),0_0_60px_-20px_rgb(var(--fg)/0.07)]'
   if (!p.image) {
     return (
       <div className={`flex flex-col items-center justify-center gap-2 px-4 text-center ${frame}`} style={DOTS}>
-        <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-fg-dim">
+        <span className="font-mono text-[0.6875rem] uppercase tracking-[0.25em] text-fg-dim">
           {p.tags.slice(0, 3).join(' / ')}
         </span>
-        <span className="font-mono text-[10px] text-fg/25">nothing to render</span>
+        <span className="font-mono text-[0.625rem] text-fg/25">nothing to render</span>
       </div>
     )
   }
@@ -585,7 +595,7 @@ function Link({ href, label }: { href: string; label: string }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="group/l inline-flex min-h-[32px] items-center font-mono text-[10px] uppercase tracking-wider text-fg-muted transition-colors hover:text-fg lg:text-[11px]"
+      className="group/l inline-flex min-h-[2rem] items-center font-mono text-[0.625rem] uppercase tracking-wider text-fg-muted transition-colors hover:text-fg lg:text-[0.6875rem]"
     >
       <span aria-hidden>&#8599;</span>{' '}
       <span className="underline-offset-2 group-hover/l:underline">{label}</span>

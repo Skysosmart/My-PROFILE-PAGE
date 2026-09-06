@@ -2,10 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { player, nav } from '@/data/portfolio'
 import ThemeToggle from '@/components/ThemeToggle'
+import LangToggle from '@/components/LangToggle'
 import { applyPref, currentTheme } from '@/lib/theme'
+import { applyLang, currentLang, isLang } from '@/lib/lang'
+import { ui } from '@/data/ui'
+import { useLang } from '@/lib/use-lang'
 
 /**
  * The navigation IS a command line.
@@ -24,6 +28,7 @@ export default function Header() {
   const [query, setQuery] = useState('')
   const [cursor, setCursor] = useState(0)
   const [time, setTime] = useState('')
+  const lang = useLang()
 
   const inputRef = useRef<HTMLInputElement>(null)
   const boxRef = useRef<HTMLDivElement>(null)
@@ -50,6 +55,12 @@ export default function Header() {
       setOpen(false)
       setQuery('')
       inputRef.current?.blur()
+      // some entries are their own route (the writeups), not an anchor
+      const item = nav.find((n) => n.id === id)
+      if (item && 'href' in item) {
+        router.push(item.href)
+        return
+      }
       // the archive lives on its own route, so from there we have to travel
       // back to the one-pager before the anchor means anything
       if (pathname !== '/') {
@@ -105,6 +116,14 @@ export default function Header() {
         inputRef.current?.blur()
         return
       }
+      // `lang th|en`, bare `lang` flips
+      if (cmd === 'lang') {
+        applyLang(isLang(arg) ? arg : currentLang() === 'th' ? 'en' : 'th')
+        setOpen(false)
+        setQuery('')
+        inputRef.current?.blur()
+        return
+      }
       const pick = matches[cursor]
       if (pick) go(pick.id)
     } else if (e.key === 'Escape') {
@@ -120,7 +139,7 @@ export default function Header() {
       initial={{ opacity: 0, y: -18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-      className="pointer-events-none fixed inset-x-0 top-0 z-[70] flex justify-center px-3 pt-3 sm:px-4 sm:pt-4"
+      className="pointer-events-none fixed inset-x-0 top-0 z-70 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4"
     >
       <div ref={boxRef} className="pointer-events-auto w-full max-w-2xl">
         {/* the prompt */}
@@ -129,7 +148,7 @@ export default function Header() {
             setOpen(true)
             inputRef.current?.focus()
           }}
-          className={`flex cursor-text items-center gap-2 border bg-bg/95 px-3 py-2 font-mono text-[12px] md:bg-bg/85 md:backdrop-blur-xl transition-colors sm:px-4 ${
+          className={`flex cursor-text items-center gap-2 border bg-bg/95 px-3 py-2 font-mono text-[0.75rem] md:bg-bg/85 md:backdrop-blur-xl transition-colors sm:px-4 ${
             open ? 'border-fg/40' : 'border-fg/15 hover:border-fg/25'
           } ${open ? 'rounded-t-lg' : 'rounded-lg'}`}
         >
@@ -152,12 +171,13 @@ export default function Header() {
             aria-autocomplete="list"
             aria-label="Jump to a section"
             placeholder={open ? '' : 'type or ⌘K'}
-            className="min-w-0 flex-1 bg-transparent text-fg caret-fg outline-none placeholder:text-fg/25"
+            className="min-w-0 flex-1 bg-transparent text-fg caret-fg outline-hidden placeholder:text-fg/25"
           />
 
           <span className="hidden shrink-0 select-none tabular-nums tracking-widest text-fg-dim sm:inline">
             {time || '--:--:--'}
           </span>
+          <LangToggle />
           <ThemeToggle />
         </div>
 
@@ -169,13 +189,13 @@ export default function Header() {
           <ul
             id="nav-listbox"
             role="listbox"
-            className="overflow-hidden rounded-b-lg border border-t-0 border-fg/40 bg-bg/95 font-mono text-[12px] md:bg-bg/90 md:backdrop-blur-xl"
+            className="overflow-hidden rounded-b-lg border border-t-0 border-fg/40 bg-bg/95 font-mono text-[0.75rem] md:bg-bg/90 md:backdrop-blur-xl"
           >
             {matches.length === 0 && (
               <li className="px-3 py-2 text-fg-dim sm:px-4">
-                {query.trim().toLowerCase().startsWith('theme')
-                  ? 'theme light | dark | system'
-                  : `no such section: ${query}`}
+                {/^(theme|lang)/.test(query.trim().toLowerCase())
+                  ? ui[lang].nav.hint
+                  : `${ui[lang].nav.noSuch}: ${query}`}
               </li>
             )}
             {matches.map((n, i) => {
@@ -200,7 +220,7 @@ export default function Header() {
                   </li>
                 )
               })}
-            <li className="flex items-center gap-3 border-t border-fg/10 px-3 py-1.5 text-[10px] uppercase tracking-wider text-fg/25 sm:px-4">
+            <li className="flex items-center gap-3 border-t border-fg/10 px-3 py-1.5 text-[0.625rem] uppercase tracking-wider text-fg/25 sm:px-4">
                 <span>&#8593;&#8595; move</span>
                 <span>&#8629; open</span>
                 <span>esc close</span>

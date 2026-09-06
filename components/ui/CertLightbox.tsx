@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 import { certSrc, categorize, catMeta } from '@/lib/certs'
 import { moments, type Certificate } from '@/data/portfolio'
 
@@ -17,9 +17,12 @@ const MEDAL_FILL: Record<string, string> = {
 /** The record view: the document beside its metadata and, where there is one, its story. */
 export default function CertLightbox({
   cert,
+  initialPhoto,
   onClose,
 }: {
   cert: Certificate | null
+  /** open on this photo of the certificate's album rather than the document */
+  initialPhoto?: string
   onClose: () => void
 }) {
   const [mounted, setMounted] = useState(false)
@@ -27,7 +30,7 @@ export default function CertLightbox({
   const [photo, setPhoto] = useState<string | null>(null)
   useEffect(() => setMounted(true), [])
   // a different certificate always opens on its document, never on a stale photo
-  useEffect(() => setPhoto(null), [cert?.file])
+  useEffect(() => setPhoto(initialPhoto ?? null), [cert?.file, initialPhoto])
 
   const album = cert?.moment ? moments[cert.moment] : undefined
 
@@ -56,7 +59,7 @@ export default function CertLightbox({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-bg/85 p-4 backdrop-blur-md"
+          className="fixed inset-0 z-95 flex items-center justify-center bg-bg/85 p-3 backdrop-blur-md sm:p-4"
         >
           <motion.div
             initial={{ scale: 0.95, y: 12, opacity: 0 }}
@@ -67,22 +70,34 @@ export default function CertLightbox({
             role="dialog"
             aria-modal="true"
             aria-label={cert.title}
-            className="relative grid w-full max-w-6xl overflow-hidden rounded-3xl bg-bg shadow-2xl lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]"
+            // dvh, not vh: on a phone vh is the tall viewport behind the browser
+            // bars, and a card sized to it ran off both edges of the screen with
+            // its Close button below the fold and no backdrop left to tap
+            className="relative grid max-h-[calc(100dvh-1.5rem)] w-full max-w-6xl grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-3xl bg-bg shadow-2xl lg:max-h-[calc(100dvh-2rem)] lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:grid-rows-1"
           >
+            {/* always on screen, whatever the card does below */}
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="absolute right-3 top-3 z-10 grid h-11 w-11 place-items-center rounded-full border border-fg/15 bg-bg/85 font-mono text-xl leading-none text-fg shadow-lg backdrop-blur transition-colors hover:bg-fg hover:text-bg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+            >
+              ×
+            </button>
             <div
-              className={`flex max-h-[52vh] items-center justify-center p-3 sm:p-5 lg:max-h-[82vh] ${photo ? 'bg-bg' : 'bg-neutral-100'}`}
+              className={`flex max-h-[48dvh] items-center justify-center p-3 sm:p-5 lg:max-h-[calc(100dvh-2rem)] ${photo ? 'bg-bg' : 'bg-neutral-100'}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={photo && cert.moment ? momentSrc(cert.moment, photo) : certSrc(cert.file)}
                 alt={photo ? `${album?.label ?? cert.title} - photograph` : cert.title}
-                className="max-h-[46vh] w-auto max-w-full object-contain drop-shadow-xl lg:max-h-[74vh]"
+                className="max-h-[42dvh] w-auto max-w-full object-contain drop-shadow-xl lg:max-h-[calc(100dvh-4.5rem)]"
               />
             </div>
-            <div className="flex max-h-[38vh] flex-col overflow-y-auto p-5 sm:p-6 lg:max-h-[82vh]">
+            <div className="flex min-h-0 flex-col overflow-y-auto overscroll-contain p-5 sm:p-6">
               <div className="flex items-start justify-between gap-3">
                 <span
-                  className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[11px] font-semibold ${catMeta(categorize(cert)).chip}`}
+                  className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[0.6875rem] font-semibold ${catMeta(categorize(cert)).chip}`}
                 >
                   {catMeta(categorize(cert)).label}
                 </span>
@@ -90,9 +105,9 @@ export default function CertLightbox({
                   <span
                     aria-hidden
                     style={{ background: MEDAL_FILL[cert.medal] }}
-                    className="grid h-11 w-11 shrink-0 place-items-center rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)_/_0.5)]"
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)/0.5)]"
                   >
-                    <span className="font-pixel text-[6px] leading-none text-black/55">
+                    <span className="font-pixel text-[0.375rem] leading-none text-black/55">
                       {cert.medal === 'gold' ? 'GOLD' : '3RD'}
                     </span>
                   </span>
@@ -101,7 +116,7 @@ export default function CertLightbox({
               <h3 className="mt-3 font-sans text-xl font-semibold leading-snug text-fg">
                 {cert.title}
               </h3>
-              <dl className="mt-4 space-y-1.5 border-t border-fg/10 pt-4 font-mono text-[12px]">
+              <dl className="mt-4 space-y-1.5 border-t border-fg/10 pt-4 font-mono text-[0.75rem]">
                 {rows(cert).map(([k, v]) => (
                   <div key={k} className="flex gap-3">
                     <dt className="w-24 shrink-0 uppercase tracking-wider text-fg-dim">{k}</dt>
@@ -116,7 +131,7 @@ export default function CertLightbox({
               )}
               {album && album.photos.length > 0 && (
                 <div className="mt-4 border-t border-fg/10 pt-4">
-                  <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-fg-dim">
+                  <p className="mb-2 font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim">
                     {album.photos.length} photo{album.photos.length > 1 ? 's' : ''} from {album.label}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -124,7 +139,7 @@ export default function CertLightbox({
                     <button
                       onClick={() => setPhoto(null)}
                       aria-pressed={!photo}
-                      className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border bg-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${!photo ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border bg-white transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${!photo ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
                       title="Back to the certificate"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -140,7 +155,7 @@ export default function CertLightbox({
                         key={f}
                         onClick={() => setPhoto(f)}
                         aria-pressed={photo === f}
-                        className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${photo === f ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                        className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${photo === f ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
@@ -156,8 +171,9 @@ export default function CertLightbox({
               )}
 
               <button
+                type="button"
                 onClick={onClose}
-                className="mt-auto self-start rounded-full bg-fg px-4 py-2 font-sans text-sm font-medium text-bg transition-colors hover:bg-fg/85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+                className="mt-6 self-start rounded-full bg-fg px-4 py-2 font-sans text-sm font-medium text-bg transition-colors hover:bg-fg/85 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:mt-auto"
               >
                 Close
               </button>

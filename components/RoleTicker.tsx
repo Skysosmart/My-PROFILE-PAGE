@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { player } from '@/data/portfolio'
+import { AnimatePresence, motion } from 'motion/react'
+import { useContent } from '@/lib/use-content'
 
 /**
  * Terminal ticker that cycles through player.roles, swapping every 5 seconds
@@ -10,9 +10,11 @@ import { player } from '@/data/portfolio'
  *
  * Positioned absolute, not fixed: it belongs to the hero and should scroll away
  * with it. Fixed meant it sat over every section all the way down the page.
+ * Top-left, opposite the name tag.
  */
 export default function RoleTicker() {
   const [i, setI] = useState(0)
+  const { player } = useContent()
   const roles = player.roles
 
   useEffect(() => {
@@ -21,10 +23,13 @@ export default function RoleTicker() {
   }, [roles.length])
 
   return (
-    <div className="pointer-events-none absolute bottom-4 left-4 z-[60] font-mono sm:bottom-6 sm:left-6">
+    // top-left, the mirror of the name tag at top-right; on a phone both sit
+    // under the header pill (the ticker one row lower than the tag on a narrow
+    // phone, where the two would meet); from xl the pill leaves the corners free
+    <div className="pointer-events-none absolute left-4 top-[7.25rem] z-60 font-mono sm:left-6 sm:top-[4.625rem] xl:top-6">
       <div className="flex items-baseline gap-2">
-        <span className="text-[10px] uppercase tracking-[0.35em] text-fg-dim">role</span>
-        <span className="text-fg/20">//</span>
+        <span className="text-[0.625rem] uppercase tracking-[0.35em] text-fg-dim">role</span>
+        <span className="text-fg/20">{'//'}</span>
 
         {/* rotating word */}
         <span className="relative inline-block h-5 overflow-hidden">

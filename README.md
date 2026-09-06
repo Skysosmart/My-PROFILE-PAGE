@@ -1,74 +1,70 @@
-# Premium Personal Portfolio Website
+# NONTHANAPHONG.EXE
 
-A stunning, premium personal profile portfolio website built with Next.js App Router, TypeScript, Tailwind CSS, and Framer Motion.
+The portfolio of Nonthanaphong "Sky" Saechua: full-stack developer, penetration
+tester, 3D and graphic designer. Live at [nonthanaphong.vercel.app](https://nonthanaphong.vercel.app).
 
-## Features
+A terminal-themed one-pager with the ZaruTech duck as its mascot: a boot
+screen, a command-line header (`Ctrl/Cmd+K`, `theme light|dark|system`,
+`lang th|en`), an ASCII hand and a liquid sky orb in the hero, a system-profile
+card grid, an interactive About terminal in front of a 3D torus, fifty-six
+certificates on a wall, a scroll-driven film of projects, CTF writeups, a
+photo stack, and an ending that says so. English and Thai, dark and paper.
 
-- ✨ **Premium Design**: Pink and black luxury aesthetic with glassmorphism effects
-- 🎬 **Cinematic Animations**: Advanced Framer Motion animations with stagger effects
-- 🎯 **Fully Componentized**: Clean, scalable component architecture
-- 📱 **Responsive**: Beautiful on all devices
-- ⚡ **Performance**: Optimized for speed and smooth interactions
+## Stack
 
-## Sections
+- Next.js 16 (App Router, Turbopack), React 19, TypeScript 5
+- Tailwind CSS 4 (CSS-first config in `app/globals.css`)
+- Motion 13 for the reveals, `three` for the About torus, `ogl` for the orb
+- `@react-pdf/renderer` builds the one-page CV at `/resume.pdf` at deploy time
+- `next-mdx-remote` + `rehype-pretty-code` for the writeups
+- Resend for the contact form, Vercel Analytics and Speed Insights
 
-1. **Hero**: Eye-catching introduction with magnetic buttons and particle effects
-2. **About**: Personal story and skills showcase
-3. **Certificate Menu**: Filterable certificate gallery with smooth transitions
-4. **Inspiration**: Artistic storytelling and values
-5. **Contact**: Interactive contact form with social links
-
-## Technologies
-
-- **Next.js 14** (App Router)
-- **TypeScript**
-- **Tailwind CSS**
-- **Framer Motion**
-- **Lucide React** (Icons)
-
-## Getting Started
-
-### Installation
+## Run it
 
 ```bash
-npm install
+npm ci
+npm run dev        # http://localhost:3000
+npm run build && npm start
+npm run lint && npm run typecheck
 ```
 
-### Development
+Node 20.9 or newer. The GitHub Actions workflow runs lint, typecheck and build
+on every push and pull request.
 
-```bash
-npm run dev
-```
+## Environment
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Copy `.env.example` to `.env.local`. Only the contact form needs anything:
 
-### Build
+| Variable         | What it does                                                                 |
+| ---------------- | ---------------------------------------------------------------------------- |
+| `RESEND_API_KEY` | Enables the contact form. Without it the ending shows a mailto button.       |
+| `CONTACT_FROM`   | The From address Resend sends as; must be on a domain verified in Resend.    |
 
-```bash
-npm run build
-npm start
-```
+Set the same two on Vercel (Production and Preview).
 
-## Customization
-
-- Update personal information in each section component
-- Modify colors in `tailwind.config.ts`
-- Add/remove certificates in `components/sections/CertificateMenu.tsx`
-- Customize animations in individual component files
-
-## Project Structure
+## Where things live
 
 ```
-├── app/
-│   ├── globals.css       # Global styles and utilities
-│   ├── layout.tsx        # Root layout
-│   └── page.tsx          # Main page
-├── components/
-│   ├── Navigation.tsx    # Navigation bar
-│   ├── sections/         # Page sections
-│   └── ui/               # Reusable UI components
-└── public/               # Static assets
+app/                  routes: /, /certificates, /writeups, /writeups/[slug], /resume.pdf, 404
+  actions/contact.ts  the contact form's server action
+  globals.css         theme tokens, Tailwind theme, writeup prose, cursor, dither
+components/
+  sections/           one file per section, in page order (see Portfolio.tsx)
+  duck/Duck.tsx       the mascot and its poses
+  effects/            hand, orb sky, torus, cursor, walls
+  ui/                 GlassSection, cards, lightbox, terminal, Mark
+  writeups/           chrome and list for the MDX pages
+content/writeups/     the writeups, one .mdx each (see _template.mdx)
+data/portfolio.ts     every word of content, in English
+data/portfolio.th.ts  the same prose in Thai
+data/ui.ts            interface strings, both languages
+data/glossary.ts      the marked terms and their tooltips
+lib/                  certs, resume, theme, lang, content, writeups
+public/duck/          the duck, split into theme-aware layers
+assets/               fonts for the PDF, the duck's source drawing
 ```
+
+See [CUSTOMIZATION.md](CUSTOMIZATION.md) for how to change the content.
 
 ## License
 

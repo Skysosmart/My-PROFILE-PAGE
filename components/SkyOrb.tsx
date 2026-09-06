@@ -1,16 +1,17 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
 import { inkColors, onThemeChange } from '@/lib/theme'
 import { assets } from '@/data/portfolio'
 
 /**
  * Interactive WATER orb for the hero.
  * A custom WebGL water-surface shader lives inside the morphing glass circle:
- * moving the cursor over it drops ripples that expand, REFRACT the ASCII sky
- * beneath the surface, and catch specular glints + a Fresnel rim - so it reads
- * as real water, not paint. The orb also drifts toward the cursor.
+ * moving the cursor over it drops ripples that expand, REFRACT the portrait
+ * beneath the surface (Sky's face, in the site's grey, with a faint scanline),
+ * and catch specular glints + a Fresnel rim - so it reads as real water, not
+ * paint. The orb also drifts toward the cursor.
  * Honors prefers-reduced-motion (renders a still, no ripples).
  */
 
@@ -120,54 +121,50 @@ export default function SkyOrb() {
     let cleanup = () => {}
 
     ;(async () => {
-      const [{ Renderer, Program, Mesh, Triangle, Texture }, skyText] = await Promise.all([
+      const loadPortrait = () =>
+        new Promise<HTMLImageElement | null>((resolve) => {
+          const img = new Image()
+          img.onload = () => resolve(img)
+          img.onerror = () => resolve(null)
+          img.src = assets.portrait
+        })
+      const [{ Renderer, Program, Mesh, Triangle, Texture }, portrait] = await Promise.all([
         import('ogl'),
-        fetch(assets.skyArtText)
-          .then((r) => (r.ok ? r.text() : ''))
-          .catch(() => ''),
+        loadPortrait(),
       ])
       if (cancelled || !canvas) return
 
-      // Rasterize the ASCII sky to a texture for the water to refract.
+      // Rasterize the portrait to a texture for the water to refract.
       const SKY_PX = 480
       const skyCanvas = document.createElement('canvas')
       skyCanvas.width = SKY_PX
       skyCanvas.height = SKY_PX
       const c2 = skyCanvas.getContext('2d')!
-      // page and ink come from the theme tokens, so the sky inside the orb is
-      // glyphs of ink on the page colour in both themes; repainted on a flip
+      // the face in the site's grey, on the page colour, with a faint
+      // scanline so it belongs to the terminal; repainted on a theme flip
+      // because the page colour under it changes
       const paintSky = () => {
         const ink = inkColors()
         c2.fillStyle = ink.bg()
         c2.fillRect(0, 0, SKY_PX, SKY_PX)
-        if (!skyText) return
-        const lines = skyText.replace(/\r/g, '').split('\n')
-        // a trailing newline would otherwise reserve a blank row of texture
-        while (lines.length && !lines[lines.length - 1].trim()) lines.pop()
-        const rows = lines.length
-        const cols = lines.reduce((m, l) => Math.max(m, l.length), 0)
-        if (!rows || !cols) return
-
-        // measure the advance instead of assuming one: 'monospace' is
-        // whatever the platform picked, and its cell is not 0.6em everywhere
-        c2.font = '100px monospace'
-        const adv = c2.measureText('M').width / 100 // cell width per px of font size
-        const CELL_H = 1 / 1.2 // cell height per px of font size
-
-        // COVER the square, and centre what spills. Sized by height alone,
-        // this art - 197 glyphs across, 152 down - painted 93% of the
-        // texture's width, and the last 7% stayed flat background: a straight
-        // cut down the right side of the bubble with a dead crescent behind
-        // it. Covering costs ~3% off the top and bottom instead.
-        const fs = Math.max(SKY_PX / (cols * adv), SKY_PX / (rows * CELL_H))
-        const lh = CELL_H * fs
-        const x0 = (SKY_PX - cols * adv * fs) / 2
-        const y0 = (SKY_PX - rows * lh) / 2
-
-        c2.font = `${fs}px monospace`
-        c2.fillStyle = ink.fg(0.85)
-        c2.textBaseline = 'top'
-        lines.forEach((ln, i) => c2.fillText(ln, x0, y0 + i * lh))
+        if (!portrait) return
+        // cover the square, framed on the face (the upper part of the shot)
+        const k = Math.max(SKY_PX / portrait.width, SKY_PX / portrait.height)
+        const w = portrait.width * k
+        const h = portrait.height * k
+        c2.drawImage(portrait, (SKY_PX - w) / 2, -(h - SKY_PX) * 0.12, w, h)
+        const px = c2.getImageData(0, 0, SKY_PX, SKY_PX)
+        const d = px.data
+        const light = document.documentElement.dataset.theme === 'light'
+        for (let i = 0; i < d.length; i += 4) {
+          let g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]
+          // a touch more contrast, and a scanline every third row
+          g = 128 + (g - 128) * 1.15
+          if (((i >> 2) / SKY_PX) % 3 < 1) g *= light ? 1.06 : 0.86
+          const v = Math.max(0, Math.min(255, g))
+          d[i] = d[i + 1] = d[i + 2] = v
+        }
+        c2.putImageData(px, 0, 0)
       }
       paintSky()
 
@@ -327,7 +324,7 @@ export default function SkyOrb() {
       <motion.div
         whileHover={{ scale: 1.06 }}
         transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-        className="liquid-orb group relative flex h-[clamp(150px,22vw,240px)] w-[clamp(150px,22vw,240px)] items-center justify-center"
+        className="liquid-orb group relative flex h-[clamp(9.375rem,22vw,15rem)] w-[clamp(9.375rem,22vw,15rem)] items-center justify-center"
       >
         {/* water surface */}
         {/* orb-canvas carries the same morph: an element's own border-radius
@@ -337,7 +334,7 @@ export default function SkyOrb() {
         {/* glass highlight over the water */}
         <div className="orb-gloss pointer-events-none absolute inset-0" />
 
-        <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[8px] uppercase tracking-[0.4em] text-fg-muted">
+        <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[0.5rem] uppercase tracking-[0.4em] text-fg-muted">
           ◇ sky
         </span>
       </motion.div>

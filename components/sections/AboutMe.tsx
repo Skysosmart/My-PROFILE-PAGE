@@ -4,7 +4,10 @@ import { useEffect, useRef, useState } from 'react'
 import GlassSection from '@/components/ui/GlassSection'
 import TerminalLog, { type Line } from '@/components/ui/TerminalLog'
 import Ascii3D from '@/components/effects/Ascii3D'
-import { about, assets, player, sop, inspiration, contact } from '@/data/portfolio'
+import Image from 'next/image'
+import { assets } from '@/data/portfolio'
+import { DUCK_ASCII } from '@/data/duck-ascii'
+import { useContent } from '@/lib/use-content'
 
 /**
  * ABOUT ME - an INTERACTIVE hacker-terminal (cowsay bubble, rainbow eyes,
@@ -23,18 +26,9 @@ const COWSAY = ` _____
     \\
      \\`
 
-// the classic \`cowsay -f eyes\` art, rainbow-colored per line (lolcat style)
-const EYES: string[] = [
-  '                                   .::!!!!!!!:.',
-  '  .!!!!!:.                        .:!!!!!!!!!!!!',
-  '  ~~~~!!!!!!.                 .:!!!!!!!!!UWWW$$$',
-  '      :$$NWX!!:           .:!!!!!!XUWW$$$$$$$$$P',
-  '      $$$$$##WX!:      .<!!!!UW$$$$"  $$$$$$$$#',
-  '      $$$$$  $$$UX   :!!UW$$$$$$$$$   4$$$$$*',
-  '      ^$$$B  $$$$\\     $$$$$$$$$$$$   d$$R"',
-  '        "*$bd$$$$      \'*$$$$$$$$$$$o+#"',
-  '             """"          """""""',
-]
+// ducksay: the ZaruTech duck where cowsay's cow would stand, rainbow-colored
+// per line (lolcat style)
+const EYES: string[] = DUCK_ASCII.split('\n')
 const EYES_COLORS = [
   'text-sky-400',
   'text-pink-500',
@@ -58,6 +52,9 @@ type Out = {
 }
 
 export default function AboutMe() {
+  // the prose in the language that is on; the scrollback keeps whatever
+  // language it was typed in, like a real terminal would
+  const { about, sop, inspiration, contact, player } = useContent()
   const [figlet, setFiglet] = useState('')
   const [ready, setReady] = useState(false) // boot sequence finished
   const [showBoot, setShowBoot] = useState(true) // banner+boot visible (cleared by `clear`)
@@ -219,29 +216,29 @@ export default function AboutMe() {
       <div className="flex flex-1 flex-col gap-4 md:flex-row">
         {/* interactive terminal (left) */}
         <div
-          className="flex flex-1 flex-col overflow-hidden rounded-xl border border-fg/[0.12] bg-bg/80 md:bg-bg/35"
+          className="flex flex-1 flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:bg-bg/35"
           onClick={() => ready && inputRef.current?.focus()}
         >
           {/* terminal title bar */}
-          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/[0.03] px-4 py-2.5">
+          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/3 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
-            <span className="ml-2 font-mono text-[11px] text-fg-dim">~/about - interactive</span>
+            <span className="ml-2 font-mono text-[0.6875rem] text-fg-dim">~/about - interactive</span>
           </div>
 
           {/* FIXED-SIZE terminal screen - output scrolls inside, the window
               never stretches the section as lines print */}
-          <div ref={bodyRef} className="h-[48vh] overflow-y-auto p-4 sm:h-[54vh] sm:p-6">
+          <div ref={bodyRef} className="h-[48svh] overflow-y-auto p-4 sm:h-[54svh] sm:p-6">
             {/* banner + boot (hidden by `clear`, restored by `banner`) */}
             <div className={showBoot ? '' : 'hidden'}>
               {/* cowsay bubble */}
-              <pre className="m-0 font-mono text-sm leading-snug text-orange-400 sm:text-[15px]">
+              <pre className="m-0 font-mono text-sm leading-snug text-orange-400 sm:text-[0.9375rem]">
                 {COWSAY}
               </pre>
 
               {/* the eyes (cowsay -f eyes), rainbow like lolcat */}
-              <pre className="m-0 font-mono text-[10px] leading-snug sm:text-xs">
+              <pre className="m-0 font-mono text-[0.625rem] leading-snug sm:text-xs">
                 {EYES.map((line, i) => (
                   <div key={i} className={EYES_COLORS[i % EYES_COLORS.length]}>
                     {line}
@@ -262,12 +259,12 @@ export default function AboutMe() {
                 linePause={130}
                 endCaret={false}
                 onDone={() => setReady(true)}
-                className="mt-3 text-sm sm:text-[15px]"
+                className="mt-3 text-sm sm:text-[0.9375rem]"
               />
             </div>
 
             {/* command output log */}
-            <div className="font-mono text-sm sm:text-[15px]">
+            <div className="font-mono text-sm sm:text-[0.9375rem]">
               {log.map((o, i) => (
                 <div key={i} className="whitespace-pre-wrap leading-relaxed">
                   {o.prefix && <span className={o.prefix.className}>{o.prefix.text}</span>}
@@ -290,7 +287,7 @@ export default function AboutMe() {
 
             {/* prompt + input (appears when boot completes) */}
             {ready && (
-              <div className="mt-1 flex items-center gap-2 font-mono text-sm sm:text-[15px]">
+              <div className="mt-1 flex items-center gap-2 font-mono text-sm sm:text-[0.9375rem]">
                 <span className="text-green-400">→</span>
                 <span className="text-teal-300">~</span>
                 <input
@@ -302,7 +299,7 @@ export default function AboutMe() {
                   autoComplete="off"
                   aria-label="Terminal command input"
                   placeholder="type a command… (help)"
-                  className="min-w-0 flex-1 border-none bg-transparent font-mono text-fg caret-fg outline-none placeholder:text-fg/25"
+                  className="min-w-0 flex-1 border-none bg-transparent font-mono text-fg caret-fg outline-hidden placeholder:text-fg/25"
                 />
               </div>
             )}
@@ -310,7 +307,7 @@ export default function AboutMe() {
 
           {/* selectable command chips */}
           {ready && (
-            <div className="flex flex-wrap gap-2 border-t border-fg/10 bg-fg/[0.02] px-4 py-3">
+            <div className="flex flex-wrap gap-2 border-t border-fg/10 bg-fg/2 px-4 py-3">
               {COMMANDS.map((c) => (
                 <button
                   key={c}
@@ -318,7 +315,7 @@ export default function AboutMe() {
                     e.stopPropagation()
                     run(c)
                   }}
-                  className="rounded border border-fg/20 bg-bg/40 px-3 py-1 font-mono text-xs text-green-400 transition-colors hover:border-green-400/60 hover:bg-green-400/10"
+                  className="rounded-sm border border-fg/20 bg-bg/40 px-3 py-1 font-mono text-xs text-green-400 transition-colors hover:border-green-400/60 hover:bg-green-400/10"
                 >
                   {c}
                 </button>
@@ -328,20 +325,22 @@ export default function AboutMe() {
         </div>
 
         {/* portrait (right) - same window chrome as the terminal */}
-        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/[0.12] bg-bg/80 md:bg-bg/40 md:w-[320px] lg:w-[360px]">
-          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/[0.03] px-4 py-2.5">
+        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:bg-bg/40 md:w-[20rem] lg:w-[22.5rem]">
+          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/3 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
-            <span className="ml-2 font-mono text-[11px] text-fg-dim">~/portrait - me.jpg</span>
+            <span className="ml-2 font-mono text-[0.6875rem] text-fg-dim">~/portrait - me.jpg</span>
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={assets.portrait}
             alt={player.name}
+            width={900}
+            height={1398}
+            sizes="(min-width: 1024px) 360px, (min-width: 768px) 320px, 100vw"
             className="h-64 w-full flex-1 object-cover object-top grayscale transition-all duration-500 group-hover:grayscale-0 md:h-auto"
           />
-          <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-fg-dim">
+          <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[0.625rem] uppercase tracking-widest text-fg-dim">
             {player.name} · {player.role}
           </figcaption>
         </figure>

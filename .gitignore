@@ -37,3 +37,16 @@ next-env.d.ts
 
 # local backups of pre-recompression certificate scans
 data/certificates-originals/
+
+# originals that the site never serves (kept locally, not in the repo)
+public/portrait/MeNameSky.jpg
+data/Certificates/
+
+# only npm is used (Vercel runs npm ci)
+bun.lock*
+
+# env
+.env
+.env.*
+!.env.example
+.eslintcache

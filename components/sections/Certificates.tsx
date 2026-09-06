@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView } from 'motion/react'
 import GlassSection from '@/components/ui/GlassSection'
+import Duck from '@/components/duck/Duck'
 import CertWall from '@/components/effects/CertWall'
 import CertCard from '@/components/ui/CertCard'
 import CertLightbox from '@/components/ui/CertLightbox'
@@ -85,13 +86,13 @@ function Seal({ medal, still, size = 44 }: { medal: string; still: boolean; size
     <span
       aria-hidden
       style={{ width: size, height: size, background: face.fill }}
-      className="relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)_/_0.5)]"
+      className="relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)/0.5)]"
     >
-      <span className="font-pixel text-[6px] leading-none text-black/55">
+      <span className="font-pixel text-[0.375rem] leading-none text-black/55">
         {medal === 'gold' ? 'GOLD' : '3RD'}
       </span>
       {!still && (
-        <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-foil bg-fg/45 blur-[2px]" />
+        <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-foil bg-fg/45 blur-[0.125rem]" />
       )}
     </span>
   )
@@ -124,7 +125,7 @@ export default function Certificates() {
   }, [])
 
   const byFile = useMemo(() => new Map(certificates.map((c) => [c.file, c])), [])
-  const byCat = useMemo(groupByCategory, [])
+  const byCat = useMemo(() => groupByCategory(), [])
 
   const podium = useMemo(
     () =>
@@ -147,22 +148,30 @@ export default function Certificates() {
   return (
     <GlassSection
       id="certificates"
-      index="02"
+      index="04"
       title="Certificates"
+      label="04 · CERTIFICATES"
+      watermark="CERTS"
       // "rise" only offsets y by a fixed 44px. flip/zoom/blur displace by a
       // share of the element, which throws a tall section off its own
       // viewport observer and leaves it hidden forever.
       variant="rise"
       background={
-        <div className="pointer-events-none absolute inset-0 opacity-25">
-          <CertWall />
-        </div>
+        <>
+          <div className="pointer-events-none absolute inset-0 opacity-25">
+            <CertWall />
+          </div>
+          {/* the duck with the trophy, by the podium tier, desktop only */}
+          <div className="pointer-events-none absolute right-8 top-4 hidden xl:block">
+            <Duck pose="podium" width={150} parallax={6} />
+          </div>
+        </>
       }
       panel={false}
       revealAmount="some"
     >
       {/* stat rail */}
-      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-fg/12 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-fg-dim">
+      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-fg/12 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-fg-dim">
         <span>
           <Tally to={certStats.total} still={still} /> records
         </span>
@@ -185,7 +194,7 @@ export default function Certificates() {
             <button
               key={c.file}
               onClick={() => setActive(c)}
-              className={`group flex items-start gap-3 rounded-2xl border ${face.ring} bg-gradient-to-b from-fg/[0.06] to-transparent p-2.5 text-left transition-colors hover:from-fg/[0.11] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70`}
+              className={`group flex items-start gap-3 rounded-2xl border ${face.ring} bg-linear-to-b from-fg/6 to-transparent p-2.5 text-left transition-colors hover:from-fg/11 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70`}
             >
               <div className="w-16 shrink-0 overflow-hidden rounded-md bg-white shadow-[0_8px_22px_-10px_rgba(0,0,0,0.9)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -193,15 +202,15 @@ export default function Certificates() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
-                  <span className={`font-pixel text-[7px] leading-none ${face.text}`}>
+                  <span className={`font-pixel text-[0.5rem] leading-none ${face.text}`}>
                     {c.medal === 'gold' ? 'GOLD MEDAL' : '3RD PLACE'}
                   </span>
                   <Seal medal={c.medal ?? 'gold'} still={still} size={34} />
                 </div>
-                <h3 className="mt-1.5 line-clamp-2 font-sans text-[13px] font-semibold leading-snug text-fg">
+                <h3 className="mt-1.5 line-clamp-2 font-sans text-[0.8125rem] font-semibold leading-snug text-fg">
                   {c.title}
                 </h3>
-                <p className="mt-1 truncate font-mono text-[9px] uppercase tracking-wider text-fg-dim">
+                <p className="mt-1 truncate font-mono text-[0.5625rem] uppercase tracking-wider text-fg-dim">
                   {c.issuer}
                 </p>
               </div>
@@ -217,18 +226,18 @@ export default function Certificates() {
             <h3 className="font-sans text-sm font-semibold text-fg">
               MakeX Challenge - six months, one robot
             </h3>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-fg-dim">
+            <span className="font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim">
               Team Prometheus · Jun to Nov 2025
             </span>
           </div>
-          <ol className="flex gap-0 overflow-x-auto pb-1 [scrollbar-width:thin]">
+          <ol className="flex gap-0 overflow-x-auto pb-1 scrollbar-thin">
             {route.map((c, i) => {
               const meta = ROUTE_LABEL[c.file] ?? { when: '', what: c.title }
               const last = i === route.length - 1
               return (
                 <li
                   key={c.file}
-                  className="flex min-w-[92px] flex-1 flex-col items-center sm:min-w-[104px]"
+                  className="flex min-w-[5.75rem] flex-1 flex-col items-center sm:min-w-[6.5rem]"
                 >
                   <div className="relative flex h-7 w-full items-center">
                     <span
@@ -240,7 +249,7 @@ export default function Certificates() {
                     <button
                       onClick={() => setActive(c)}
                       aria-label={`${meta.what} - ${c.title}`}
-                      className="relative mx-auto -my-3 rounded-full p-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
+                      className="relative mx-auto -my-3 rounded-full p-3 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
                     >
                       {last ? (
                         <Seal medal="bronze" still={still} size={26} />
@@ -251,18 +260,18 @@ export default function Certificates() {
                   </div>
                   <button
                     onClick={() => setActive(c)}
-                    className="group mt-1.5 w-full px-1 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
+                    className="group mt-1.5 w-full px-1 text-center focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
                   >
-                    <span className="block font-mono text-[9px] uppercase tracking-wider text-fg-dim">
+                    <span className="block font-mono text-[0.5625rem] uppercase tracking-wider text-fg-dim">
                       {meta.when}
                     </span>
                     <span
-                      className={`mt-0.5 block font-sans text-[11px] font-medium leading-tight transition-colors group-hover:text-fg ${last ? 'text-fg' : 'text-fg/70'}`}
+                      className={`mt-0.5 block font-sans text-[0.6875rem] font-medium leading-tight transition-colors group-hover:text-fg ${last ? 'text-fg' : 'text-fg/70'}`}
                     >
                       {meta.what}
                     </span>
                     {last && (
-                      <span className="mt-0.5 block font-mono text-[8px] uppercase leading-tight tracking-wider text-fg-muted">
+                      <span className="mt-0.5 block font-mono text-[0.5rem] uppercase leading-tight tracking-wider text-fg-muted">
                         3rd + Best Alliance
                       </span>
                     )}
@@ -284,7 +293,7 @@ export default function Certificates() {
               key={c.key}
               onClick={() => setCat(c.key)}
               aria-pressed={on}
-              className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
+              className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
                 on ? 'text-bg' : 'text-fg/70 hover:text-fg'
               }`}
             >
@@ -320,7 +329,7 @@ export default function Certificates() {
             <div
               key={c.file}
               style={{ opacity: fade, filter: soften ? `blur(${soften}px)` : undefined }}
-              className="group/fade transition-[opacity,filter] duration-300 hover:!opacity-100 hover:!blur-none focus-within:!opacity-100 focus-within:!blur-none"
+              className="group/fade transition-[opacity,filter] duration-300 hover:opacity-100! hover:blur-none! focus-within:opacity-100! focus-within:blur-none!"
             >
               <CertCard cert={c} index={i} still={still} onOpen={setActive} />
             </div>
@@ -332,7 +341,7 @@ export default function Certificates() {
         <div className="mt-6 flex justify-center">
           <Link
             href="/certificates"
-            className="group inline-flex items-center gap-2 rounded-full border border-fg/25 px-5 py-2.5 font-sans text-sm font-medium text-fg/80 transition-colors hover:border-fg/60 hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+            className="group inline-flex items-center gap-2 rounded-full border border-fg/25 px-5 py-2.5 font-sans text-sm font-medium text-fg/80 transition-colors hover:border-fg/60 hover:text-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
           >
             Explore all {certStats.total} certificates
             <span className="font-mono text-fg-dim transition-colors group-hover:text-fg/80">

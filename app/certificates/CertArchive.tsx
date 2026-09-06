@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import CertCard from '@/components/ui/CertCard'
 import CertLightbox from '@/components/ui/CertLightbox'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -45,7 +45,7 @@ export default function CertArchive() {
     return () => clearInterval(id)
   }, [])
 
-  const byCat = useMemo(groupByCategory, [])
+  const byCat = useMemo(() => groupByCategory(), [])
   const list = useMemo(
     () => byNewest((byCat.get(cat) ?? []).filter((c) => certMatches(c, query))),
     [byCat, cat, query],
@@ -72,7 +72,7 @@ export default function CertArchive() {
     <main className="min-h-screen pb-20">
       {/* ---------- title ------------------------------------------------------ */}
       <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6">
-        <div className="flex items-center gap-2 font-mono text-[12px]">
+        <div className="flex items-center gap-2 font-mono text-[0.75rem]">
           <span className="shrink-0 select-none">
             <span className="text-fg/70">{handle}</span>
             <span className="text-fg/25">@exe</span>
@@ -82,7 +82,7 @@ export default function CertArchive() {
           <span className="caret text-fg">certificates/</span>
           <Link
             href="/#certificates"
-            className="ml-auto inline-flex min-h-[32px] shrink-0 items-center text-fg-dim transition-colors hover:text-fg"
+            className="ml-auto inline-flex min-h-[2rem] shrink-0 items-center text-fg-dim transition-colors hover:text-fg"
           >
             &#8592; back
           </Link>
@@ -95,7 +95,7 @@ export default function CertArchive() {
         <h1 className="mt-3 font-crt text-6xl leading-[0.85] tracking-[0.06em] text-fg txt-glow sm:text-7xl lg:text-8xl">
           CERTIFICATES
         </h1>
-        <p className="mt-2 font-mono text-[11px] text-fg-dim sm:text-xs">
+        <p className="mt-2 font-mono text-[0.6875rem] text-fg-dim sm:text-xs">
           {certStats.total} records · {certStats.gold} gold · {certStats.national} national ·{' '}
           {certStats.intl} international · {certSpan}
         </p>
@@ -108,7 +108,7 @@ export default function CertArchive() {
       <div className="z-30 mt-5 border-y border-fg/10 bg-bg/85 backdrop-blur-xl lg:sticky lg:top-0">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="flex min-w-0 flex-1 basis-56 items-center gap-2 rounded-full border border-fg/15 bg-fg/[0.04] px-4 py-2 transition-colors focus-within:border-fg/45 sm:max-w-xs">
+            <label className="flex min-w-0 flex-1 basis-56 items-center gap-2 rounded-full border border-fg/15 bg-fg/4 px-4 py-2 transition-colors focus-within:border-fg/45 sm:max-w-xs">
               <span aria-hidden className="shrink-0 text-fg-dim">
                 &#9906;
               </span>
@@ -118,7 +118,7 @@ export default function CertArchive() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search certificates"
                 aria-label="Search certificates"
-                className="min-w-0 flex-1 bg-transparent font-sans text-sm text-fg caret-fg outline-none placeholder:text-fg-dim"
+                className="min-w-0 flex-1 bg-transparent font-sans text-sm text-fg caret-fg outline-hidden placeholder:text-fg-dim"
               />
               {query && (
                 <button
@@ -134,7 +134,7 @@ export default function CertArchive() {
               )}
             </label>
 
-            <span className="shrink-0 font-mono text-[11px] text-fg-dim">
+            <span className="shrink-0 font-mono text-[0.6875rem] text-fg-dim">
               {list.length === certStats.total
                 ? `${certStats.total} certificates`
                 : `${list.length} of ${certStats.total}`}
@@ -150,7 +150,7 @@ export default function CertArchive() {
                   key={c.key}
                   onClick={() => setCat(c.key)}
                   aria-pressed={on}
-                  className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
+                  className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
                     on ? 'text-bg' : 'text-fg/70 hover:text-fg'
                   }`}
                 >
@@ -210,7 +210,7 @@ export default function CertArchive() {
 
         <div className="mx-auto mt-8 max-w-md">
           <div className="ascii-rule opacity-40" />
-          <p className="mt-3 text-center font-mono text-[11px] text-fg-dim">
+          <p className="mt-3 text-center font-mono text-[0.6875rem] text-fg-dim">
             {list.length} of {certStats.total} records listed
           </p>
         </div>

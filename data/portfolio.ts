@@ -2,7 +2,7 @@
  * ============================================================================
  *  NONTHANAPHONG.EXE - content
  *  Single source of content for the whole site. Edit the text/values below and
- *  the site updates. Placeholders you should replace are marked  // TODO.
+ *  the site updates.
  * ============================================================================
  */
 
@@ -11,8 +11,8 @@
  * ------------------------------------------------------------------------- */
 export const player = {
   name: 'Nonthanaphong Saechua',
-  firstName: 'Nonthanaphong', // TODO
-  lastName: 'Saechua', // TODO
+  firstName: 'Nonthanaphong',
+  lastName: 'Saechua',
   handle: 'NONTHANAPHONG.EXE',
   role: 'Full-Stack Dev · Pentester · 3D & Graphic Designer',
   tagline: 'Academic Portfolio',
@@ -34,10 +34,177 @@ export const player = {
  * ------------------------------------------------------------------------- */
 export const nav = [
   { label: 'ABOUT', id: 'about' },
+  { label: 'EDUCATION', id: 'education' },
+  { label: 'SKILLS', id: 'skills' },
   { label: 'CERTIFICATES', id: 'certificates' },
   { label: 'PROJECTS', id: 'projects' },
+  // its own route (server-rendered MDX), so it carries an href
+  { label: 'WRITEUPS', id: 'writeups', href: '/writeups' },
   { label: 'CONTACT', id: 'contact' },
 ] as const
+
+/* ---------------------------------------------------------------------------
+ *  PROFILE - the system_profile cards beside the About terminal.
+ * ------------------------------------------------------------------------- */
+export const profile = {
+  location: 'Thailand',
+  school: 'Assumption College Thonburi',
+  status: 'Open to opportunities',
+  mbti: {
+    type: 'ENFJ',
+    name: 'The Protagonist',
+    description:
+      'Reads a room, then gets it moving. The part of me that presents, leads the team and talks people into building the thing.',
+  },
+  stack: ['Next.js', 'TypeScript', 'Python', 'Supabase', 'Three.js', 'Tailwind', 'Fusion 360', 'Burp Suite', 'Linux'],
+}
+
+/* ---------------------------------------------------------------------------
+ *  EDUCATION - the timeline, one chapter per school stage, oldest first.
+ *  `from`/`to` are the years the chapter spans (to open = still there); the
+ *  section counts the certificates dated inside them, so that number is
+ *  never typed.
+ * ------------------------------------------------------------------------- */
+export type Chapter = {
+  /** shown as written, e.g. '2016 – 2022' */
+  years: string
+  from: number
+  to?: number
+  stage: string
+  school: string
+  href?: string
+  title: string
+  summary: string
+  focus: string[]
+  achievements: string[]
+  /** three short pillars: what the years were made of */
+  pillars: { label: string; text: string }[]
+  /** one line to remember the chapter by */
+  quote?: string
+}
+
+export const education: Chapter[] = [
+  {
+    years: '2014 – 2021',
+    from: 2014,
+    to: 2020,
+    stage: 'Primary school',
+    school: 'Buranawit School',
+    title: 'First contact',
+    summary:
+      'Bottom of the class most years, until a first computer and Roblox. That was the first time making something felt possible, and the digital world stopped being a place other people built.',
+    focus: ['Roblox', 'First lines of code'],
+    achievements: [],
+    pillars: [
+      { label: 'Foundation', text: 'Reading, writing, numbers, and a report card that said try harder.' },
+      { label: 'Activities', text: 'Roblox, first as a game and then as a place with scripts behind it.' },
+      { label: 'First spark', text: 'A first computer, and the first thing I made that did what I said.' },
+    ],
+    quote: 'The first time making something felt possible.',
+  },
+  {
+    years: '2021 – 2024',
+    from: 2021,
+    to: 2023,
+    stage: 'Junior high',
+    school: 'Watkhemapirataram School',
+    title: 'Trying everything',
+    summary:
+      'Coding for real: plugins, then back ends. Game development, robotics and electronics one after another, and none of them quite the one, until cyber security and CTF.',
+    focus: ['Game dev', 'Robotics', 'Electronics', 'Back end'],
+    achievements: [],
+    pillars: [
+      { label: 'Foundation', text: 'Real code: plugins, then the back ends behind them.' },
+      { label: 'Activities', text: 'Game development, robotics, electronics, each for a while.' },
+      { label: 'The turn', text: 'A first CTF, and the feeling of a system giving way.' },
+    ],
+    quote: 'None of them quite the one, until cyber security.',
+  },
+  {
+    years: '2024 – present',
+    from: 2024,
+    stage: 'Senior high',
+    school: 'Assumption College Thonburi',
+    href: 'https://www.act.ac.th',
+    title: 'Build it, break it',
+    summary:
+      'Cyber security turned out to be the thing worth waking up for. Competitions and camps on the weekends, a device that won gold, and an ambassador year that taught how to explain any of it to a room.',
+    focus: ['Cyber security', 'CTF', 'Full-stack', '3D design'],
+    achievements: [
+      'Gold medal, Thailand New Gen Inventors Award 2026, for PDLite',
+      '3rd nationally, CODEKIT website competition 2026',
+      '3rd place and Best Favourite Alliance Team, MakeX Challenge 2025',
+      'ACT Brand Ambassador 2025',
+      'RTARF Cyber Bootcamp: Network Defense and Ethical Hacking Essentials',
+    ],
+    pillars: [
+      { label: 'Craft', text: 'Full-stack on weekdays, Fusion 360 and design in between: PDLite, Doodee Future, Seluna.' },
+      { label: 'Competition', text: 'MakeX, CODEKIT, I-New Gen, RSMS: a season of building against a clock.' },
+      { label: 'Direction', text: 'Cyber security, CTF, and the camps and certificates that point at it.' },
+    ],
+    quote: 'This is what I want to wake up and do every day.',
+  },
+]
+
+/* ---------------------------------------------------------------------------
+ *  SKILLS - the inventory, in groups. `level` is 1 to 5 and is Sky's own
+ *  call (the numbers below are a first draft // TODO: set them); `tags`
+ *  are the project tags that count as this skill, so "used in N projects"
+ *  is counted, never typed.
+ * ------------------------------------------------------------------------- */
+export type Skill = {
+  name: string
+  level: 1 | 2 | 3 | 4 | 5
+  /** project tags that mean this skill was used */
+  tags?: string[]
+  note: string
+}
+export type SkillGroup = { key: string; label: string; skills: Skill[] }
+
+export const skills: SkillGroup[] = [
+  {
+    key: 'web',
+    label: 'Web & full-stack',
+    skills: [
+      { name: 'Next.js', level: 5, tags: ['Next.js'], note: 'The default for anything with a screen: PDLite, Doodee Future, Seluna, this site.' },
+      { name: 'TypeScript', level: 4, tags: ['TypeScript', 'Next.js'], note: 'Types first, so a refactor is a compiler error and not a bug report.' },
+      { name: 'React', level: 4, tags: ['Next.js', 'React Three Fiber', 'Frontend'], note: 'Components, hooks, and the discipline of keeping state where it belongs.' },
+      { name: 'Tailwind CSS', level: 4, tags: ['Tailwind', 'Responsive', 'UI Design'], note: 'Layouts that survive a phone. Every page here is one.' },
+      { name: 'Supabase & Prisma', level: 3, tags: ['Supabase', 'Prisma', 'Neon'], note: 'Postgres behind a good API: readings for PDLite, records for Doodee Future.' },
+      { name: 'Astro & Cloudflare', level: 2, tags: ['Astro', 'Cloudflare'], note: 'Static-first sites at the edge, for Nebula and Seluna.' },
+    ],
+  },
+  {
+    key: 'security',
+    label: 'Security',
+    skills: [
+      { name: 'Web exploitation', level: 4, note: 'My CTF role: injection, auth flaws, SSRF, and reading an app the way it was not meant to be read.' },
+      { name: 'Networking', level: 3, note: 'The other CTF role: packets, protocols, what a service says when nobody is asking.' },
+      { name: 'Burp Suite', level: 3, note: 'Proxy, repeater, intruder: where the web target gets taken apart.' },
+      { name: 'Linux', level: 4, note: 'Daily driver. The shell is where the site and the exploits both get written.' },
+      { name: 'Defense & ethics', level: 3, note: 'Network Defense and Ethical Hacking Essentials, from the RTARF Cyber Bootcamp.' },
+    ],
+  },
+  {
+    key: 'data',
+    label: 'Python, data & AI',
+    skills: [
+      { name: 'Python', level: 4, tags: ['Python'], note: 'Scripts, pipelines, tooling, and most of the exploit code.' },
+      { name: 'OCR & NER pipelines', level: 3, tags: ['OCR', 'NER', 'Data Pipeline'], note: 'Scanned asset declarations into queryable records, for the Hackathon Digitize entry.' },
+      { name: 'AI & ML', level: 2, note: 'Courses and camps so far: prompt engineering, data analytics, CiRA CORE.' },
+    ],
+  },
+  {
+    key: 'design',
+    label: 'Design & 3D',
+    skills: [
+      { name: 'Fusion 360', level: 4, tags: ['Fusion 360', '3D Design'], note: 'Enclosures and mechanisms that get printed: PDLite, the MakeX robot.' },
+      { name: 'Three.js & WebGL', level: 3, tags: ['React Three Fiber', '3D Hero', 'WebGL'], note: 'The orb, the torus, the Seluna moon, the Nebula dome.' },
+      { name: 'Motion', level: 3, tags: ['GSAP'], note: 'GSAP and Motion: the reveals, the film, the water.' },
+      { name: 'Graphic design', level: 4, tags: ['UI Design', 'Design'], note: 'Layout, type and colour, on screen and in print.' },
+    ],
+  },
+]
 
 /* ---------------------------------------------------------------------------
  *  ABOUT ME
@@ -47,12 +214,11 @@ export const about = {
     "I'm Nonthanaphong Saechua - a full-stack developer and penetration tester who also works in 3D and graphic design. I build things end to end: shipping web apps, breaking them to make them safer, and designing how they look and feel.",
     'From robotics competitions to CTF boot camps and AI courses, I learn by building and testing. This portfolio brings together who I am, the certificates I have earned, the projects I have worked on, and how to reach me.',
   ],
-  // TODO: tweak these details.
   facts: [
     { key: 'ROLE', value: 'Full-Stack Dev · Pentester' },
     { key: 'CRAFT', value: '3D Design · Graphic Design' },
-    { key: 'STACK', value: 'Next.js · TypeScript · Python' }, // TODO: your stack
-    { key: 'LOCATION', value: 'Thailand' }, // TODO
+    { key: 'STACK', value: 'Next.js · TypeScript · Python' },
+    { key: 'LOCATION', value: 'Thailand' },
     { key: 'STATUS', value: 'Open to opportunities' },
   ],
 }
@@ -714,9 +880,7 @@ export const contact = {
  *  ASSET PATHS - files live in /public.
  * ------------------------------------------------------------------------- */
 export const assets = {
-  handArt: '/ASCII-Art/Hand-ascii-art.png',
   handText: '/ASCII-Art-text/Hand-ascii-art.txt',
-  skyArtText: '/ASCII-Art-text/MtNameSky.txt', // sky ASCII shown inside the orb
   skyLogoText: '/ASCII-Art-text/Sky-ASCII.txt', // "Sky" logo behind About Me
   portrait: '/portrait/MeNameSky-web.jpg', // optimized web copy (original kept)
   certDir: '/certificates/',

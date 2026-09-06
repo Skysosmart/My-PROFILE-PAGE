@@ -105,9 +105,10 @@ export default function TerminalLog({
       { threshold: 0.2 },
     )
     io.observe(node)
+    const t = timers.current
     return () => {
       io.disconnect()
-      timers.current.forEach(clearTimeout)
+      t.forEach(clearTimeout)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

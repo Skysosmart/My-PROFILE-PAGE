@@ -1,8 +1,9 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
-import { player } from '@/data/portfolio'
+import { motion } from 'motion/react'
+import { useContent } from '@/lib/use-content'
+import HandBackground from '@/components/effects/HandBackground'
 
 /**
  * Loading screen - shows ONLY the terminal boot text.
@@ -17,6 +18,7 @@ import { player } from '@/data/portfolio'
  * Click or any key skips ahead.
  */
 export default function BootScreen({ onStart }: { onStart: () => void }) {
+  const { player } = useContent()
   const [lineCount, setLineCount] = useState(0)
   const [leaving, setLeaving] = useState(false)
   const timers = useRef<number[]>([])
@@ -31,7 +33,7 @@ export default function BootScreen({ onStart }: { onStart: () => void }) {
   const skip = useCallback(() => {
     setLineCount(player.bootLog.length)
     setLeaving(true)
-  }, [])
+  }, [player.bootLog])
 
   // Reveal the log on a stagger, then begin leaving.
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function BootScreen({ onStart }: { onStart: () => void }) {
     })
     t.push(window.setTimeout(() => setLeaving(true), 380 * player.bootLog.length + 600))
     return () => t.forEach(clearTimeout)
-  }, [finish])
+  }, [finish, player.bootLog])
 
   // Safety net: hand over even if onAnimationComplete never arrives.
   useEffect(() => {
@@ -69,8 +71,10 @@ export default function BootScreen({ onStart }: { onStart: () => void }) {
       animate={{ opacity: leaving ? 0 : 1 }}
       transition={{ duration: 0.5 }}
       onAnimationComplete={() => leaving && finish()}
-      className="fixed inset-0 z-[80] flex cursor-pointer items-center justify-center bg-void px-6"
+      className="fixed inset-0 z-80 flex cursor-pointer items-center justify-center overflow-hidden bg-void px-6"
     >
+      {/* the ASCII hands generate behind the log and leave with it */}
+      <HandBackground duration={2600} className="text-fg/35 max-md:text-fg/25" />
       <div className="w-full max-w-2xl">
         <pre className="m-0 whitespace-pre-wrap font-mono text-sm leading-relaxed text-phosphor sm:text-base">
           {player.bootLog.slice(0, lineCount).map((line, i) => (

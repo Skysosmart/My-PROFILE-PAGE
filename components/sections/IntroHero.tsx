@@ -9,12 +9,11 @@ import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
 
 /**
- * Full-height intro shown first. The ASCII hand and the liquid sky orb are
- * as they were; the duck waves from the left and three short lines sit on
- * the right, and that is all. The numbers moved down to the profile: three
- * focal points on one screen was already plenty. Name lives in the top-right
- * tag; roles in the bottom-left ticker. The hand is a layer INSIDE this
- * section, so it scrolls up and away with the hero.
+ * Full-height intro shown first. Two halves: on the left the duck says
+ * hello with three short lines beside it; on the right the liquid sky orb,
+ * as it always was, over the ASCII hand. Name lives in the top-right tag;
+ * roles in the bottom-left ticker. The hand is a layer INSIDE this section,
+ * so it scrolls up and away with the hero.
  */
 export default function IntroHero() {
   const t = ui[useLang()].hero
@@ -33,14 +32,22 @@ export default function IntroHero() {
       {/* ASCII hand - scoped to this section only */}
       <HandBackground />
 
-      <div className="flex w-full max-w-5xl flex-col items-center gap-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-6">
-        {/* the duck, waving from the left */}
-        <motion.div {...rise(0.5)} className="order-2 flex justify-center lg:order-1 lg:justify-end lg:pr-4">
-          <Duck pose="hero" width={120} parallax={12} priority className="lg:!w-[170px] xl:!w-[200px]" />
+      <div className="flex w-full max-w-5xl flex-col items-center gap-10 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-center lg:gap-8">
+        {/* left: the duck says hello, the lines stand beside it */}
+        <motion.div
+          {...rise(0.5)}
+          className="flex flex-col items-center gap-4 sm:flex-row sm:items-end sm:gap-6 lg:justify-start"
+        >
+          <Duck pose="hero" width={150} parallax={12} priority className="sm:!w-[190px] xl:!w-[230px]" />
+          <div className="flex flex-col items-center gap-0.5 pb-2 text-center sm:items-start sm:pb-8 sm:text-left">
+            <span className="whitespace-nowrap font-crt text-4xl leading-[0.95] text-fg txt-glow sm:text-5xl">{t.line1}</span>
+            <span className="whitespace-nowrap font-crt text-4xl leading-[0.95] text-fg txt-glow sm:text-5xl">{t.line2}</span>
+            <span className="whitespace-nowrap font-crt text-4xl leading-[0.95] text-duck sm:text-5xl">{t.line3}</span>
+          </div>
         </motion.div>
 
-        {/* the orb, as it was */}
-        <div className="order-1 flex flex-col items-center lg:order-2">
+        {/* right: the orb, as it was */}
+        <div className="flex flex-col items-center lg:justify-self-end lg:pr-6">
           <motion.p
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -51,16 +58,6 @@ export default function IntroHero() {
           </motion.p>
           <SkyOrb />
         </div>
-
-        {/* three short lines, in Sky's voice */}
-        <motion.div
-          {...rise(0.7)}
-          className="order-3 flex flex-col items-center gap-0.5 text-center lg:items-start lg:pl-4 lg:text-left"
-        >
-          <span className="whitespace-nowrap font-crt text-4xl leading-[0.95] text-fg txt-glow sm:text-5xl">{t.line1}</span>
-          <span className="whitespace-nowrap font-crt text-4xl leading-[0.95] text-fg txt-glow sm:text-5xl">{t.line2}</span>
-          <span className="whitespace-nowrap font-crt text-4xl leading-[0.95] text-duck sm:text-5xl">{t.line3}</span>
-        </motion.div>
       </div>
 
       <motion.div

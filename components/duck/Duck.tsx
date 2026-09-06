@@ -11,7 +11,8 @@ import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } fro
  * globals.css shows one per data-theme, so no script has to know which
  * theme is on and the drawing is right on the first paint.
  *
- *   hero     waving hi, beside the orb
+ *   hero     saying hello, at the left of the hero
+ *   wave     the plain wave, kept for later
  *   podium   holding the trophy, by the certificate podium
  *   laptop   typing, at the head of the project filmstrip
  *   thumbs   thumbs up, at the ending
@@ -20,11 +21,12 @@ import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } fro
  *   hacker   hacker mode at the TUF laptop, with the writeups (a cutout,
  *            it carries its own scene)
  */
-export type DuckPose = 'hero' | 'podium' | 'laptop' | 'thumbs' | 'stand' | 'sleep' | 'hacker'
+export type DuckPose = 'hero' | 'wave' | 'podium' | 'laptop' | 'thumbs' | 'stand' | 'sleep' | 'hacker'
 
 // file stem and intrinsic size of the composites (the script prints them)
 const POSE: Record<DuckPose, { src: string; w: number; h: number; className?: string }> = {
-  hero: { src: 'wave', w: 630, h: 1007, className: '-rotate-2' },
+  hero: { src: 'hello', w: 705, h: 1009 },
+  wave: { src: 'wave', w: 630, h: 1007, className: '-rotate-2' },
   podium: { src: 'trophy', w: 702, h: 1012, className: 'rotate-3' },
   laptop: { src: 'laptop', w: 718, h: 1005 },
   thumbs: { src: 'thumbs', w: 601, h: 1002, className: 'rotate-2' },

@@ -29,18 +29,29 @@ export default function IntroHero() {
       {/* lives here, not in the page shell, so it scrolls away with the hero */}
       <RoleTicker />
 
-      <div className="flex w-full max-w-6xl flex-col items-center gap-10 lg:grid lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-center lg:gap-8">
+      <div className="flex w-full max-w-7xl flex-col items-center gap-10 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-center lg:gap-8">
         {/* left: the duck says hello, the lines stand beside it */}
         <motion.div
           {...rise(0.5)}
           // staggered on desktop: the left half sits a little lower, the orb a little higher
-          className="flex flex-col items-center gap-4 sm:flex-row sm:items-end sm:gap-6 lg:translate-y-10 lg:justify-start"
+          className="relative flex flex-col items-center gap-4 sm:flex-row sm:items-end sm:gap-5 lg:translate-y-10 lg:justify-start"
         >
-          <Duck pose="hero" width={180} parallax={12} priority className="sm:!w-[220px] lg:!w-[250px] xl:!w-[280px]" />
-          <div className="flex flex-col items-center gap-0.5 pb-2 text-center sm:items-start sm:pb-8 sm:text-left">
-            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-fg txt-glow sm:text-6xl">{t.line1}</span>
-            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-fg txt-glow sm:text-6xl">{t.line2}</span>
-            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-duck sm:text-6xl">{t.line3}</span>
+          {/* a wash of light behind the pair: ink-coloured, so it is white on
+              the dark theme and a soft black on paper */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -inset-x-12 -bottom-8 -top-20 -z-10 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_40%,rgb(var(--fg)/0.14),transparent_64%)] blur-2xl"
+          />
+          {/* the duck casts a floor shadow in the same ink */}
+          <div className="[filter:drop-shadow(0_26px_22px_rgb(var(--fg)/0.28))]">
+            <Duck pose="hero" width={220} parallax={12} priority className="sm:!w-[240px] lg:!w-[260px] xl:!w-[300px] 2xl:!w-[320px]" />
+          </div>
+          {/* sizes follow the room beside the duck: a row from sm, a 2:1 grid
+              from lg where the column is narrower again, wide from xl */}
+          <div className="flex flex-col items-center gap-1 pb-2 text-center [text-shadow:0_0_10px_var(--glow),0_0_42px_var(--glow-far)] sm:items-start sm:pb-8 sm:text-left">
+            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-fg md:text-6xl lg:text-5xl xl:text-7xl">{t.line1}</span>
+            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-fg md:text-6xl lg:text-5xl xl:text-7xl">{t.line2}</span>
+            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-duck md:text-6xl lg:text-5xl xl:text-7xl">{t.line3}</span>
           </div>
         </motion.div>
 

@@ -37,6 +37,7 @@ export default function WriteupList({
         <li key={w.slug}>
           <Link
             href={`/writeups/${w.slug}`}
+            data-cursor-label="read"
             className="group flex items-center gap-4 border-b border-fg/10 px-2 py-4 transition-colors hover:bg-fg/[0.04] sm:px-4"
           >
             <svg

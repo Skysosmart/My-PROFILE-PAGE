@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import Image from 'next/image'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import GlassSection from '@/components/ui/GlassSection'
 import { certificates } from '@/data/portfolio'
@@ -69,17 +70,22 @@ export default function Education() {
               <li key={ch.title} className={`relative md:grid md:grid-cols-[17rem_minmax(0,1fr)] md:gap-10 ${last ? '' : 'pb-16 md:pb-28'}`}>
                 {/* left: sticks beside its chapter while that chapter scrolls */}
                 <div className="hidden self-start md:sticky md:top-32 md:flex md:items-start md:gap-5">
+                  {/* the node: the school's crest on a paper disc, so every crest reads on both themes */}
                   <motion.span
                     aria-hidden
                     initial={{ scale: 0.6, opacity: 0.4 }}
                     whileInView={{ scale: 1, opacity: 1 }}
                     viewport={{ amount: 'all', margin: '-25% 0px -55% 0px' }}
                     transition={{ duration: 0.4 }}
-                    className={`relative mt-1 grid h-11 w-11 shrink-0 place-items-center rounded-full border bg-bg ${
-                      last ? 'border-duck text-duck shadow-[0_0_18px_rgb(245_190_91/0.6)]' : 'border-fg/40 text-fg'
+                    className={`relative mt-1 grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border bg-[#f3f0e8] ${
+                      last ? 'border-duck shadow-[0_0_18px_rgb(245_190_91/0.6)]' : 'border-fg/40'
                     }`}
                   >
-                    <span className="font-mono text-[0.6875rem] font-bold">{num}</span>
+                    {ch.logo ? (
+                      <Image src={ch.logo} alt="" width={40} height={40} sizes="44px" className="h-9 w-9 object-contain" />
+                    ) : (
+                      <span className="font-mono text-[0.6875rem] font-bold text-[#111]">{num}</span>
+                    )}
                   </motion.span>
                   <div className="flex flex-col gap-1 pt-1">
                     <span className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-fg-dim">
@@ -122,17 +128,22 @@ export default function Education() {
                       <h3 className="mt-2 max-w-2xl font-sans text-3xl font-bold leading-[1.05] text-fg sm:text-4xl lg:text-5xl">
                         {ch.title}
                       </h3>
+                      {/* the school, with its crest (the phone has no sticky column to carry it) */}
                       {ch.href ? (
                         <a
                           href={ch.href}
                           target="_blank"
                           rel="noreferrer"
-                          className="mt-4 inline-flex items-center gap-2 font-mono text-[0.8125rem] text-fg underline-offset-4 transition-colors hover:text-duck hover:underline"
+                          className="mt-4 inline-flex items-center gap-2.5 font-mono text-[0.8125rem] text-fg underline-offset-4 transition-colors hover:text-duck hover:underline"
                         >
+                          {ch.logo && <Image src={ch.logo} alt="" width={28} height={28} sizes="28px" className="h-7 w-7 rounded-full bg-[#f3f0e8] object-contain p-0.5 md:hidden" />}
                           ◇ {ch.school} ↗
                         </a>
                       ) : (
-                        <span className="mt-4 inline-flex items-center gap-2 font-mono text-[0.8125rem] text-fg-muted">◇ {ch.school}</span>
+                        <span className="mt-4 inline-flex items-center gap-2.5 font-mono text-[0.8125rem] text-fg-muted">
+                          {ch.logo && <Image src={ch.logo} alt="" width={28} height={28} sizes="28px" className="h-7 w-7 rounded-full bg-[#f3f0e8] object-contain p-0.5 md:hidden" />}
+                          ◇ {ch.school}
+                        </span>
                       )}
                     </div>
                     {/* the counts */}

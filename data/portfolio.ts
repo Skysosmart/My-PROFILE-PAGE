@@ -72,6 +72,8 @@ export type Chapter = {
   to?: number
   stage: string
   school: string
+  /** the school's crest, under /public */
+  logo?: string
   href?: string
   title: string
   summary: string
@@ -90,6 +92,7 @@ export const education: Chapter[] = [
     to: 2020,
     stage: 'Primary school',
     school: 'Buranawit School',
+    logo: '/education/buranawit.png',
     title: 'First contact',
     summary:
       'Bottom of the class most years, until a first computer and Roblox. That was the first time making something felt possible, and the digital world stopped being a place other people built.',
@@ -108,6 +111,7 @@ export const education: Chapter[] = [
     to: 2023,
     stage: 'Junior high',
     school: 'Watkhemapirataram School',
+    logo: '/education/watkhemapirataram.png',
     title: 'Trying everything',
     summary:
       'Coding for real: plugins, then back ends. Game development, robotics and electronics one after another, and none of them quite the one, until cyber security and CTF.',
@@ -125,6 +129,7 @@ export const education: Chapter[] = [
     from: 2024,
     stage: 'Senior high',
     school: 'Assumption College Thonburi',
+    logo: '/education/act.png',
     href: 'https://www.act.ac.th',
     title: 'Build it, break it',
     summary:

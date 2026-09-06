@@ -148,6 +148,7 @@ export default function Header() {
             setOpen(true)
             inputRef.current?.focus()
           }}
+          data-cursor-label="type"
           className={`flex cursor-text items-center gap-2 border bg-bg/95 px-3 py-2 font-mono text-[0.75rem] md:bg-bg/85 md:backdrop-blur-xl transition-colors sm:px-4 ${
             open ? 'border-fg/40' : 'border-fg/15 hover:border-fg/25'
           } ${open ? 'rounded-t-lg' : 'rounded-lg'}`}
@@ -205,6 +206,7 @@ export default function Header() {
                     <button
                       onMouseEnter={() => setCursor(i)}
                       onClick={() => go(n.id)}
+                      data-cursor-label="go"
                       className={`flex w-full items-center gap-2 px-3 py-1.5 text-left transition-colors sm:px-4 ${
                         on ? 'bg-fg/10 text-fg' : 'text-fg-muted hover:text-fg'
                       }`}

@@ -33,6 +33,7 @@ export default function CertCard({
       transition={{ duration: 0.35, delay: Math.min(index * 0.035, 0.35), ease: [0.16, 1, 0.3, 1] }}
       whileHover={still ? undefined : { y: -6 }}
       onClick={() => onOpen(c)}
+      data-cursor-label="open"
       className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-fg/10 bg-panel text-left shadow-[0_12px_40px_-14px_rgba(0,0,0,var(--shade))] transition-shadow hover:shadow-[0_28px_70px_-16px_rgba(0,0,0,var(--shade))] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
     >
       <div className="relative aspect-4/3 w-full shrink-0 bg-white">

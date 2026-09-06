@@ -41,7 +41,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form action={action} className="flex w-full max-w-xl flex-col gap-2.5" data-cursor="text">
+    <form action={action} className="flex w-full max-w-xl flex-col gap-2.5">
       <div className="grid gap-2.5 sm:grid-cols-2">
         <input name="name" required maxLength={120} autoComplete="name" placeholder={t.form.name} className={field} />
         <input name="email" type="email" required maxLength={200} autoComplete="email" placeholder={t.form.email} className={field} />

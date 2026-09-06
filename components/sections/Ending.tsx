@@ -79,6 +79,7 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
             ) : (
               <a
                 href={email?.href}
+                data-cursor-label="mail"
                 className="inline-flex min-h-[2.5rem] w-fit items-center gap-2 rounded-full bg-fg px-5 font-mono text-[0.6875rem] uppercase tracking-[0.15em] text-bg transition-opacity hover:opacity-90"
               >
                 {t.mail} →
@@ -91,6 +92,7 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
                 href={resume.href}
                 target="_blank"
                 rel="noreferrer"
+                data-cursor-label="pdf ↗"
                 className="inline-flex min-h-[2.5rem] w-fit items-center gap-2 rounded-full border border-fg/30 px-5 font-mono text-[0.6875rem] uppercase tracking-[0.15em] text-fg transition-colors hover:border-fg/70"
               >
                 <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

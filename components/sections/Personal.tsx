@@ -56,7 +56,7 @@ export default function Personal() {
           <p className="font-mono text-[0.75rem] text-fg-muted">
             {n} albums · {cards.reduce((s, c) => s + c.album.photos.length, 0)} photos · {t.hint}
           </p>
-          <Duck pose="stand" width={120} parallax={6} className="mt-2 hidden lg:block" />
+          <Duck pose="sleep" width={240} parallax={6} className="mt-4 hidden lg:block" />
         </div>
 
         <div className="relative mx-auto h-[23.75rem] w-full max-w-[35rem] sm:h-[28.75rem]">
@@ -68,6 +68,7 @@ export default function Personal() {
                 key={c.key}
                 type="button"
                 onClick={() => setOpen({ cert: c.cert, photo: c.photo })}
+                data-cursor-label="open album"
                 initial={reduce ? false : { opacity: 0, y: 30, rotate: angle }}
                 whileInView={{ opacity: 1, y: 0, rotate: angle }}
                 whileHover={reduce ? undefined : { y: -18, rotate: 0, zIndex: 40, scale: 1.04 }}

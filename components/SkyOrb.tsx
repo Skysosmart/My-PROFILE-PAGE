@@ -324,6 +324,7 @@ export default function SkyOrb() {
       <motion.div
         whileHover={{ scale: 1.06 }}
         transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+        data-cursor-label="ripple"
         className="liquid-orb group relative flex h-[clamp(9.375rem,22vw,15rem)] w-[clamp(9.375rem,22vw,15rem)] items-center justify-center"
       >
         {/* water surface */}

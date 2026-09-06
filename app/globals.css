@@ -560,6 +560,19 @@
 [data-theme='light'] .duck-dark { display: none; }
 [data-theme='light'] .duck-light { display: block; }
 
+/* the profile's spec label: a cream sticker on both themes. On the dark
+   page it floats on a soft shadow; on paper, where the page is the same
+   cream, it is stuck on with a hard one */
+.spec-label {
+  border: 1px solid rgba(17, 17, 17, 0.45);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.12),
+    0 26px 50px -22px rgba(0, 0, 0, 0.6);
+}
+[data-theme='light'] .spec-label {
+  box-shadow: 6px 6px 0 #111;
+}
+
 
 /* halftone dot screen for the personal prints (lamalama's dither, in CSS) */
 .dither {

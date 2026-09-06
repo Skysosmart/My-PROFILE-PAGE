@@ -9,7 +9,7 @@ Almost everything you would want to change is content, and content lives in
 | ------------------------------------ | -------------------------------------------------- |
 | Name, handle, roles, boot log        | `player` (+ `playerTh`)                            |
 | Header entries                       | `nav` (an entry with `href` is its own route)      |
-| System-profile cards, MBTI, stack    | `profile` (+ `profileTh`)                          |
+| The spec label: MBTI, stack, status  | `profile` (+ `profileTh`); see the label note below |
 | The two About paragraphs, facts      | `about` (+ `aboutTh`)                              |
 | Statement of purpose (`sop` command) | `sop` (+ `sopTh`)                                  |
 | Principles (`inspiration` command)   | `inspiration` (+ `inspirationTh`)                  |
@@ -26,6 +26,17 @@ waiting for a native read.
 Interface strings (buttons, labels, the hero's three lines, the ending) are
 in `data/ui.ts`, both languages side by side. The marked terms with tooltips
 are in `data/glossary.ts`.
+
+## The spec label: `components/SpecLabel.tsx`
+
+The System Profile is the label on the back of the device. Its rows read
+`player`, `profile`, the certificate counts and the project count, so they
+follow the data; the REV is the day of the build. The two codes on it are
+real: `node scripts/codes.mjs` asks `zint` and `qrencode` (both installed
+locally) for a Code 128 of the handle and a QR of `/resume.pdf` and writes
+them to `data/codes.ts`. Run it again after changing the handle or the site
+url in `lib/site.ts`. The duck on it is `public/duck/stand-print.png`, a 1-bit
+halftone of the standing pose (ImageMagick `-ordered-dither h4x4a`).
 
 ## Writeups: `content/writeups/*.mdx`
 

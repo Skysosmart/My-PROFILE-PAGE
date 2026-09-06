@@ -25,14 +25,14 @@ export type DuckPose = 'hero' | 'wave' | 'podium' | 'laptop' | 'thumbs' | 'stand
 
 // file stem and intrinsic size of the composites (the script prints them)
 const POSE: Record<DuckPose, { src: string; w: number; h: number; className?: string }> = {
-  hero: { src: 'hello', w: 705, h: 1009 },
-  wave: { src: 'wave', w: 630, h: 1007, className: '-rotate-2' },
-  podium: { src: 'trophy', w: 702, h: 1012, className: 'rotate-3' },
-  laptop: { src: 'laptop', w: 718, h: 1005 },
-  thumbs: { src: 'thumbs', w: 601, h: 1002, className: 'rotate-2' },
-  stand: { src: 'stand', w: 540, h: 1015, className: '-rotate-3' },
-  sleep: { src: 'sleep', w: 1097, h: 631 },
-  hacker: { src: 'hacker', w: 1100, h: 1040 },
+  hero: { src: 'hello', w: 701, h: 1006 },
+  wave: { src: 'wave', w: 626, h: 1004, className: '-rotate-2' },
+  podium: { src: 'trophy', w: 764, h: 1008, className: 'rotate-3' },
+  laptop: { src: 'laptop', w: 715, h: 1003 },
+  thumbs: { src: 'thumbs', w: 597, h: 999, className: 'rotate-2' },
+  stand: { src: 'stand', w: 538, h: 1012, className: '-rotate-3' },
+  sleep: { src: 'sleep', w: 1094, h: 628 },
+  hacker: { src: 'hacker', w: 1094, h: 1034 },
 }
 
 export default function Duck({

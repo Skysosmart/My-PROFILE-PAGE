@@ -52,6 +52,8 @@ const en = {
     used: 'used in {n} projects',
     usedOne: 'used in 1 project',
     unused: 'not on a project yet',
+    intro: '{n} skills in {g} groups. The levels are my own call; the project counts are not, they are read off the projects.',
+    keys: '↑ ↓ rows · ← → groups',
   },
   certs: {
     explore: 'Explore all {n} certificates',
@@ -150,6 +152,8 @@ const th: UI = {
     used: 'ใช้ใน {n} โปรเจกต์',
     usedOne: 'ใช้ใน 1 โปรเจกต์',
     unused: 'ยังไม่ได้ใช้ในโปรเจกต์',
+    intro: 'ทักษะ {n} อย่างใน {g} กลุ่ม ระดับคือผมประเมินเอง ส่วนจำนวนโปรเจกต์นับจากโปรเจกต์จริง',
+    keys: '↑ ↓ เลื่อนแถว · ← → เปลี่ยนกลุ่ม',
   },
   certs: {
     explore: 'ดูใบประกาศทั้งหมด {n} ใบ',

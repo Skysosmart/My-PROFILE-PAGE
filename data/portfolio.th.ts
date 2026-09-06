@@ -143,7 +143,15 @@ export const profileTh = {
 }
 
 /** the education chapters, in the order of the English file */
-export const educationTh: { stage: string; title: string; summary: string; focus: string[]; achievements: string[] }[] = [
+export const educationTh: {
+  stage: string
+  title: string
+  summary: string
+  focus: string[]
+  achievements: string[]
+  pillars: { label: string; text: string }[]
+  quote?: string
+}[] = [
   {
     stage: 'ประถม',
     title: 'สัมผัสแรก',
@@ -151,6 +159,12 @@ export const educationTh: { stage: string; title: string; summary: string; focus
       'อยู่ท้ายห้องเกือบทุกปี จนได้จับคอมพิวเตอร์เครื่องแรกและ Roblox เป็นครั้งแรกที่รู้สึกว่าสร้างอะไรบางอย่างได้ และโลกดิจิทัลก็ไม่ใช่ที่ที่คนอื่นสร้างให้อีกต่อไป',
     focus: ['Roblox', 'โค้ดบรรทัดแรก'],
     achievements: [],
+    pillars: [
+      { label: 'พื้นฐาน', text: 'อ่าน เขียน เลข และสมุดพกที่บอกว่าต้องพยายามอีก' },
+      { label: 'กิจกรรม', text: 'Roblox ตอนแรกในฐานะเกม แล้วในฐานะที่ที่มีสคริปต์อยู่ข้างหลัง' },
+      { label: 'ประกายแรก', text: 'คอมพิวเตอร์เครื่องแรก และสิ่งแรกที่ผมสร้างแล้วมันทำตามที่บอก' },
+    ],
+    quote: 'ครั้งแรกที่รู้สึกว่าสร้างอะไรบางอย่างได้',
   },
   {
     stage: 'มัธยมต้น',
@@ -159,6 +173,12 @@ export const educationTh: { stage: string; title: string; summary: string; focus
       'เขียนโค้ดจริงจัง เริ่มจากปลั๊กอินแล้วไปหลังบ้าน ลองพัฒนาเกม หุ่นยนต์ อิเล็กทรอนิกส์ทีละอย่าง แต่ยังไม่ใช่สักอย่าง จนเจอ Cyber Security กับ CTF',
     focus: ['พัฒนาเกม', 'หุ่นยนต์', 'อิเล็กทรอนิกส์', 'หลังบ้าน'],
     achievements: [],
+    pillars: [
+      { label: 'พื้นฐาน', text: 'โค้ดของจริง: ปลั๊กอิน แล้วก็หลังบ้านที่อยู่เบื้องหลัง' },
+      { label: 'กิจกรรม', text: 'พัฒนาเกม หุ่นยนต์ อิเล็กทรอนิกส์ อย่างละพักหนึ่ง' },
+      { label: 'จุดเปลี่ยน', text: 'CTF ครั้งแรก และความรู้สึกตอนที่ระบบยอมแพ้' },
+    ],
+    quote: 'ยังไม่ใช่สักอย่าง จนกระทั่งเจอ Cyber Security',
   },
   {
     stage: 'มัธยมปลาย',
@@ -173,6 +193,12 @@ export const educationTh: { stage: string; title: string; summary: string; focus
       'ACT Brand Ambassador 2025',
       'RTARF Cyber Bootcamp: Network Defense และ Ethical Hacking Essentials',
     ],
+    pillars: [
+      { label: 'ฝีมือ', text: 'ฟูลสแตกวันธรรมดา Fusion 360 กับดีไซน์ระหว่างนั้น: PDLite, Doodee Future, Seluna' },
+      { label: 'การแข่งขัน', text: 'MakeX, CODEKIT, I-New Gen, RSMS: หนึ่งฤดูกาลของการสร้างแข่งกับเวลา' },
+      { label: 'ทิศทาง', text: 'Cyber Security, CTF และค่ายกับใบประกาศที่ชี้ไปทางนั้น' },
+    ],
+    quote: 'นี่แหละคือสิ่งที่อยากตื่นมาทำทุกวัน',
   },
 ]
 

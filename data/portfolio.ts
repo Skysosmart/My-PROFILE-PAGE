@@ -77,6 +77,10 @@ export type Chapter = {
   summary: string
   focus: string[]
   achievements: string[]
+  /** three short pillars: what the years were made of */
+  pillars: { label: string; text: string }[]
+  /** one line to remember the chapter by */
+  quote?: string
 }
 
 export const education: Chapter[] = [
@@ -91,6 +95,12 @@ export const education: Chapter[] = [
       'Bottom of the class most years, until a first computer and Roblox. That was the first time making something felt possible, and the digital world stopped being a place other people built.',
     focus: ['Roblox', 'First lines of code'],
     achievements: [],
+    pillars: [
+      { label: 'Foundation', text: 'Reading, writing, numbers, and a report card that said try harder.' },
+      { label: 'Activities', text: 'Roblox, first as a game and then as a place with scripts behind it.' },
+      { label: 'First spark', text: 'A first computer, and the first thing I made that did what I said.' },
+    ],
+    quote: 'The first time making something felt possible.',
   },
   {
     years: '[2022] – [2025]', // TODO: the real years
@@ -103,6 +113,12 @@ export const education: Chapter[] = [
       'Coding for real: plugins, then back ends. Game development, robotics and electronics one after another, and none of them quite the one, until cyber security and CTF.',
     focus: ['Game dev', 'Robotics', 'Electronics', 'Back end'],
     achievements: [],
+    pillars: [
+      { label: 'Foundation', text: 'Real code: plugins, then the back ends behind them.' },
+      { label: 'Activities', text: 'Game development, robotics, electronics, each for a while.' },
+      { label: 'The turn', text: 'A first CTF, and the feeling of a system giving way.' },
+    ],
+    quote: 'None of them quite the one, until cyber security.',
   },
   {
     years: '2025 – present',
@@ -121,6 +137,12 @@ export const education: Chapter[] = [
       'ACT Brand Ambassador 2025',
       'RTARF Cyber Bootcamp: Network Defense and Ethical Hacking Essentials',
     ],
+    pillars: [
+      { label: 'Craft', text: 'Full-stack on weekdays, Fusion 360 and design in between: PDLite, Doodee Future, Seluna.' },
+      { label: 'Competition', text: 'MakeX, CODEKIT, I-New Gen, RSMS: a season of building against a clock.' },
+      { label: 'Direction', text: 'Cyber security, CTF, and the camps and certificates that point at it.' },
+    ],
+    quote: 'This is what I want to wake up and do every day.',
   },
 ]
 

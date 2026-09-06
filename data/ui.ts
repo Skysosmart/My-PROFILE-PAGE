@@ -40,6 +40,9 @@ const en = {
     achievements: 'achievements',
     signals: '{n} certificates from these years',
     none: 'before the certificates started',
+    intro: 'Not a list of schools. The points where the direction changed, and what each stretch was made of.',
+    signalsShort: 'signals',
+    focusShort: 'focus',
   },
   skills: {
     label: 'skills',
@@ -135,6 +138,9 @@ const th: UI = {
     achievements: 'ผลงาน',
     signals: 'ใบประกาศ {n} ใบจากช่วงนี้',
     none: 'ก่อนจะเริ่มเก็บใบประกาศ',
+    intro: 'ไม่ใช่รายชื่อโรงเรียน แต่เป็นจุดที่ทิศทางเปลี่ยน และแต่ละช่วงประกอบขึ้นจากอะไร',
+    signalsShort: 'สัญญาณ',
+    focusShort: 'โฟกัส',
   },
   skills: {
     label: 'ทักษะ',

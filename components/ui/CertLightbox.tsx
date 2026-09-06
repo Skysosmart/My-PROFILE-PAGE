@@ -59,7 +59,7 @@ export default function CertLightbox({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-95 flex items-center justify-center bg-bg/85 p-4 backdrop-blur-md"
+          className="fixed inset-0 z-95 flex items-center justify-center bg-bg/85 p-3 backdrop-blur-md sm:p-4"
         >
           <motion.div
             initial={{ scale: 0.95, y: 12, opacity: 0 }}
@@ -70,19 +70,31 @@ export default function CertLightbox({
             role="dialog"
             aria-modal="true"
             aria-label={cert.title}
-            className="relative grid w-full max-w-6xl overflow-hidden rounded-3xl bg-bg shadow-2xl lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]"
+            // dvh, not vh: on a phone vh is the tall viewport behind the browser
+            // bars, and a card sized to it ran off both edges of the screen with
+            // its Close button below the fold and no backdrop left to tap
+            className="relative grid max-h-[calc(100dvh-1.5rem)] w-full max-w-6xl grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-3xl bg-bg shadow-2xl lg:max-h-[calc(100dvh-2rem)] lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:grid-rows-1"
           >
+            {/* always on screen, whatever the card does below */}
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="absolute right-3 top-3 z-10 grid h-11 w-11 place-items-center rounded-full border border-fg/15 bg-bg/85 font-mono text-xl leading-none text-fg shadow-lg backdrop-blur transition-colors hover:bg-fg hover:text-bg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+            >
+              ×
+            </button>
             <div
-              className={`flex max-h-[52vh] items-center justify-center p-3 sm:p-5 lg:max-h-[82vh] ${photo ? 'bg-bg' : 'bg-neutral-100'}`}
+              className={`flex max-h-[48dvh] items-center justify-center p-3 sm:p-5 lg:max-h-[calc(100dvh-2rem)] ${photo ? 'bg-bg' : 'bg-neutral-100'}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={photo && cert.moment ? momentSrc(cert.moment, photo) : certSrc(cert.file)}
                 alt={photo ? `${album?.label ?? cert.title} - photograph` : cert.title}
-                className="max-h-[46vh] w-auto max-w-full object-contain drop-shadow-xl lg:max-h-[74vh]"
+                className="max-h-[42dvh] w-auto max-w-full object-contain drop-shadow-xl lg:max-h-[calc(100dvh-4.5rem)]"
               />
             </div>
-            <div className="flex max-h-[38vh] flex-col overflow-y-auto p-5 sm:p-6 lg:max-h-[82vh]">
+            <div className="flex min-h-0 flex-col overflow-y-auto overscroll-contain p-5 sm:p-6">
               <div className="flex items-start justify-between gap-3">
                 <span
                   className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[11px] font-semibold ${catMeta(categorize(cert)).chip}`}
@@ -159,8 +171,9 @@ export default function CertLightbox({
               )}
 
               <button
+                type="button"
                 onClick={onClose}
-                className="mt-auto self-start rounded-full bg-fg px-4 py-2 font-sans text-sm font-medium text-bg transition-colors hover:bg-fg/85 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+                className="mt-6 self-start rounded-full bg-fg px-4 py-2 font-sans text-sm font-medium text-bg transition-colors hover:bg-fg/85 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:mt-auto"
               >
                 Close
               </button>

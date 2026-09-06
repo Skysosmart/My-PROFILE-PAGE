@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Duck from '@/components/duck/Duck'
 import WriteupChrome from '@/components/writeups/WriteupChrome'
 import WriteupList from '@/components/writeups/WriteupList'
 import { player } from '@/data/portfolio'
@@ -20,18 +21,21 @@ export default async function WriteupsPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 pb-16 pt-5 sm:px-6">
       <WriteupChrome path="writeups/" />
-      <header className="mt-10 flex flex-col gap-3">
-        <span className="font-mono text-[11px] tracking-[0.35em] text-fg-dim">[ 04 · WRITEUPS ]</span>
-        <h1
-          className="font-crt text-5xl leading-none text-fg sm:text-6xl"
-          style={{ textShadow: '0 0 10px rgb(var(--fg) / 0.5)' }}
-        >
-          CTF &amp; Security Writeups
-        </h1>
-        <p className="max-w-xl font-mono text-[12px] leading-relaxed text-fg-muted">
-          {items.length} {items.length === 1 ? 'post' : 'posts'} · web exploitation and networking
-          first, because those are the roles I play.
-        </p>
+      <header className="mt-10 flex items-end justify-between gap-6">
+        <div className="flex flex-col gap-3">
+          <span className="font-mono text-[11px] tracking-[0.35em] text-fg-dim">[ 04 · WRITEUPS ]</span>
+          <h1
+            className="font-crt text-5xl leading-none text-fg sm:text-6xl"
+            style={{ textShadow: '0 0 10px rgb(var(--fg) / 0.5)' }}
+          >
+            CTF &amp; Security Writeups
+          </h1>
+          <p className="max-w-xl font-mono text-[12px] leading-relaxed text-fg-muted">
+            {items.length} {items.length === 1 ? 'post' : 'posts'} · web exploitation and networking
+            first, because those are the roles I play.
+          </p>
+        </div>
+        <Duck pose="hacker" width={200} className="hidden sm:block" />
       </header>
       <div className="mt-8">
         <WriteupList items={items} />

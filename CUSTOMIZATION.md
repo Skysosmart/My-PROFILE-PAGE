@@ -36,14 +36,19 @@ blocks are highlighted in both themes. Files starting with `_` never publish.
 
 ## The duck: `public/duck/`
 
-The mascot is one drawing (`assets/duck/duck-source.png`) split into layers:
-`duck-lines.png`, `duck-fill.png`, `duck-yellow.png`, plus the two composites
-the site actually loads, `duck-dark.png` and `duck-light.png`, and the head
-crops. `components/duck/Duck.tsx` maps a `pose` to a crop or tilt of that one
-drawing. To add a real drawing for a pose, export it as
-`duck-<pose>-dark.png` and `duck-<pose>-light.png` on transparent backgrounds
-and point that pose's `src` at it. The favicon (`app/icon.png`), the Apple
-icon and the share card (`public/og.png`) are the head and the full duck.
+Every pose is its own drawing in `assets/duck/<pose>-source.png` (black lines
+and a few flat colours on cream). `scripts/duck-split.sh <pose> <pose>-source.png`
+turns one into the two composites the site loads, `public/duck/<pose>-dark.png`
+(near-black body, white lines) and `<pose>-light.png` (paper body, black
+lines); coloured parts keep their colour in both. Pass `cutout` as the third
+argument for a drawing that carries its own scene (hacker mode) to keep it
+as drawn and only drop the background. Then add the pose to the table in
+`components/duck/Duck.tsx` with the size the script prints.
+
+The twelve expressions come from one sheet (`emotes-source.png`), cropped to
+`emote-<name>-source.png` and split the same way; `components/duck/Emote.tsx`
+shows one as a sticker. The favicon (`app/icon.png`), the Apple icon and the
+share card (`public/og.png`) are the standing duck.
 
 ## Theme and colours
 

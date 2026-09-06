@@ -161,9 +161,9 @@ export default function Certificates() {
           <div className="pointer-events-none absolute inset-0 opacity-25">
             <CertWall />
           </div>
-          {/* the duck leans on the podium tier, desktop only */}
-          <div className="pointer-events-none absolute right-8 top-6 hidden xl:block">
-            <Duck pose="podium" width={130} parallax={6} />
+          {/* the duck with the trophy, by the podium tier, desktop only */}
+          <div className="pointer-events-none absolute right-8 top-4 hidden xl:block">
+            <Duck pose="podium" width={150} parallax={6} />
           </div>
         </>
       }

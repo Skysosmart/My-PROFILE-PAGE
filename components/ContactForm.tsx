@@ -2,8 +2,17 @@
 
 import { useActionState, useEffect, useState } from 'react'
 import { sendContact, type ContactState } from '@/app/actions/contact'
+import Emote, { type EmoteName } from '@/components/duck/Emote'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
+
+// the duck's face for each reply
+const FACE: Record<'invalid' | 'tooFast' | 'tooMany' | 'failed', EmoteName> = {
+  invalid: 'question',
+  tooFast: 'sweat',
+  tooMany: 'angry',
+  failed: 'crying',
+}
 
 /**
  * Name, email, message, send. Two hidden fields feed the server action's
@@ -24,8 +33,9 @@ export default function ContactForm() {
 
   if (state?.ok) {
     return (
-      <p role="status" className="font-mono text-[12px] text-fg">
-        <span className="text-duck">✓</span> {t.form.sent}
+      <p role="status" className="flex items-center gap-3 font-mono text-[12px] text-fg">
+        <Emote name="hearts" size={44} />
+        {t.form.sent}
       </p>
     )
   }
@@ -53,7 +63,8 @@ export default function ContactForm() {
           {pending ? t.form.sending : t.form.send} →
         </button>
         {state && !state.ok && (
-          <p role="alert" className="font-mono text-[11px] text-red-400">
+          <p role="alert" className="flex items-center gap-2 font-mono text-[11px] text-red-400">
+            <Emote name={FACE[state.code]} size={36} />
             {t.form[state.code]}
           </p>
         )}

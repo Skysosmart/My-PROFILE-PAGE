@@ -50,7 +50,7 @@ export default function NotFound() {
         <span className="break-all">{path}</span>
       </p>
 
-      <div className="mt-10 flex items-end gap-6">
+      <div className="mt-10 flex flex-wrap items-end gap-8">
         <pre
           aria-hidden
           className="whitespace-pre font-mono text-[22px] leading-[1.1] text-fg sm:text-[30px]"
@@ -58,12 +58,8 @@ export default function NotFound() {
         >
           {FIGLET}
         </pre>
-        <div className="flex items-end gap-2">
-          <Duck pose="sleep" width={96} />
-          <span aria-hidden className="mb-6 font-crt text-2xl text-fg-dim">
-            z z z<span className="animate-blink">▋</span>
-          </span>
-        </div>
+        {/* asleep on the job, under the ZaruTech blanket */}
+        <Duck pose="sleep" width={240} />
       </div>
       <h1 className="mt-4 font-sans text-lg font-semibold text-fg">Not in this filesystem.</h1>
       <p className="mt-1 max-w-md font-sans text-sm text-fg/70">

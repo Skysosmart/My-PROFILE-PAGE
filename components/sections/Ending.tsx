@@ -31,7 +31,7 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
       </div>
       <div className="mx-auto grid w-full max-w-5xl gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
         <div className="flex justify-center lg:justify-start">
-          <Duck pose="peace" width={150} parallax={8} className="lg:!w-[240px]" />
+          <Duck pose="thumbs" width={150} parallax={8} className="lg:!w-[240px]" />
         </div>
 
         <div className="flex flex-col gap-8">

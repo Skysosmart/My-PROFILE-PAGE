@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Duck from '@/components/duck/Duck'
 import WriteupList from '@/components/writeups/WriteupList'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
@@ -25,15 +26,19 @@ export default function WriteupsTeaser({ items }: { items: WriteupMeta[] }) {
         LOGS
       </div>
       <div className="mx-auto w-full max-w-5xl">
-        <div className="mb-7 flex flex-col gap-2 pb-4">
-          <span className="font-mono text-[11px] tracking-[0.35em] text-fg-dim">[ 04 · WRITEUPS ]</span>
-          <div className="flex items-baseline gap-3">
-            <span className="font-mono text-xs text-fg-dim">04</span>
-            <h2 className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-fg txt-glow sm:text-xl">
-              {t.writeups.title}
-            </h2>
+        <div className="mb-7 flex items-end justify-between gap-6 pb-4">
+          <div className="flex flex-col gap-2">
+            <span className="font-mono text-[11px] tracking-[0.35em] text-fg-dim">[ 04 · WRITEUPS ]</span>
+            <div className="flex items-baseline gap-3">
+              <span className="font-mono text-xs text-fg-dim">04</span>
+              <h2 className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-fg txt-glow sm:text-xl">
+                {t.writeups.title}
+              </h2>
+            </div>
+            <p className="font-mono text-[12px] text-fg-muted">{t.writeups.teaser}</p>
           </div>
-          <p className="font-mono text-[12px] text-fg-muted">{t.writeups.teaser}</p>
+          {/* hacker mode, the drawing with its own scene */}
+          <Duck pose="hacker" width={180} parallax={4} className="hidden sm:block lg:!w-[220px]" />
         </div>
         <WriteupList items={items} limit={3} />
         <div className="mt-5">

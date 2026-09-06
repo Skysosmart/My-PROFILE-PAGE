@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Emote from '@/components/duck/Emote'
 import type { WriteupMeta } from '@/lib/writeups'
 import { fmt, ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
@@ -23,7 +24,8 @@ export default function WriteupList({
 
   if (shown.length === 0) {
     return (
-      <p className="border-t border-fg/10 py-8 font-mono text-[12px] text-fg-muted">
+      <p className="flex items-center gap-4 border-t border-fg/10 py-8 font-mono text-[12px] text-fg-muted">
+        <Emote name="question" size={56} />
         {t.writeups.empty}
       </p>
     )

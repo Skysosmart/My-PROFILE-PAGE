@@ -56,7 +56,7 @@ export default function Personal() {
           <p className="font-mono text-[12px] text-fg-muted">
             {n} albums · {cards.reduce((s, c) => s + c.album.photos.length, 0)} photos · {t.hint}
           </p>
-          <Duck pose="hero" width={120} parallax={6} className="mt-2 hidden lg:block" />
+          <Duck pose="stand" width={120} parallax={6} className="mt-2 hidden lg:block" />
         </div>
 
         <div className="relative mx-auto h-[380px] w-full max-w-[560px] sm:h-[460px]">

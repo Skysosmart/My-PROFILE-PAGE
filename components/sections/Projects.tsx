@@ -403,7 +403,7 @@ export default function Projects() {
           {/* text LEFT, screenshot RIGHT from lg; the image leads on a phone
               held upright. A rotated phone is short but WIDE, so it gets the
               two-column layout too - stacked, nothing fit above the fold */}
-          <div className="order-first mx-auto w-full max-w-[44.800000000000004svh] [@media(max-height:520px)]:order-last [@media(max-height:520px)]:max-w-[83.2svh] lg:order-last lg:ml-0 lg:max-w-[89.60000000000001svh]">
+          <div className="order-first mx-auto w-full max-w-[34svh] [@media(max-height:520px)]:order-last [@media(max-height:520px)]:max-w-[62svh] lg:order-last lg:ml-0 lg:max-w-[64svh]">
             <Screen key={arrivalKey} p={p} />
           </div>
 

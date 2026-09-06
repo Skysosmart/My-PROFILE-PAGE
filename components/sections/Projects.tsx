@@ -350,7 +350,7 @@ export default function Projects() {
 
         {/* header: the GlassSection markup verbatim, so this matches every
             other section even though it cannot be one */}
-        <span className="mb-2 block font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">
+        <span className="mb-2 block font-mono text-[0.6875rem] uppercase tracking-[0.35em] text-fg-dim">
           [ 05 · PROJECTS ]
         </span>
         <div className="relative mb-7 flex items-baseline gap-3 pb-4">
@@ -419,20 +419,20 @@ export default function Projects() {
                   ...(figletPx ? { fontSize: figletPx } : null),
                   textShadow: '0 0 14px rgb(var(--fg) / 0.3), 0 0 34px rgb(var(--fg) / 0.12)',
                 }}
-                className="m-0 whitespace-pre font-mono text-[13px] leading-[1.1] text-fg lg:text-[18px]"
+                className="m-0 whitespace-pre font-mono text-[0.8125rem] leading-[1.1] text-fg lg:text-[1.125rem]"
               >
                 {figletFor(p.title)}
               </motion.pre>
 
-              <h3 className="mt-3 font-sans text-[15px] font-semibold leading-snug text-fg lg:mt-4 lg:text-xl">
+              <h3 className="mt-3 font-sans text-[0.9375rem] font-semibold leading-snug text-fg lg:mt-4 lg:text-xl">
                 {p.title}
               </h3>
               <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-fg-dim lg:text-[11px]">
+                <p className="font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim lg:text-[0.6875rem]">
                   {p.role} · {p.period}
                 </p>
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider ${
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[0.5625rem] uppercase tracking-wider ${
                     statusStyle[p.status] ?? statusStyle.Upcoming
                   }`}
                 >
@@ -449,7 +449,7 @@ export default function Projects() {
               {/* sans, not mono: a paragraph, and the meta around it already
                   carries the terminal voice. Clamped on a phone, where the
                   stage has 700px to spend on everything */}
-              <p className="mt-2 line-clamp-3 font-sans text-[13px] leading-normal text-fg/70 lg:mt-3 lg:line-clamp-none lg:text-[14px] lg:leading-relaxed">
+              <p className="mt-2 line-clamp-3 font-sans text-[0.8125rem] leading-normal text-fg/70 lg:mt-3 lg:line-clamp-none lg:text-[0.875rem] lg:leading-relaxed">
                 {p.description}
               </p>
 
@@ -457,7 +457,7 @@ export default function Projects() {
                 {p.tags.map((t, i) => (
                   <span
                     key={t}
-                    className={`rounded border border-fg/12 px-1.5 py-0.5 font-mono text-[10px] text-fg-muted ${
+                    className={`rounded border border-fg/12 px-1.5 py-0.5 font-mono text-[0.625rem] text-fg-muted ${
                       i >= MOBILE_TAGS ? 'hidden lg:inline-block' : ''
                     }`}
                   >
@@ -470,7 +470,7 @@ export default function Projects() {
                   link because it is the same kind of claim: checkable.
                   Desktop only; the phone stage has no room for it */}
               {p.contribution && (
-                <p className="mt-3 hidden font-mono text-[10px] leading-relaxed text-fg-muted lg:block">
+                <p className="mt-3 hidden font-mono text-[0.625rem] leading-relaxed text-fg-muted lg:block">
                   {p.contribution}
                 </p>
               )}
@@ -494,7 +494,7 @@ export default function Projects() {
         {/* the rail: where you are, and the whole film at a glance. On a phone
             the filmstrip wraps onto its own line under the counter */}
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-fg/10 pb-3 pt-2 lg:pb-6 lg:pt-4">
-          <span className="font-mono text-[11px] tabular-nums text-fg-muted">
+          <span className="font-mono text-[0.6875rem] tabular-nums text-fg-muted">
             {pad(index + 1)}/{pad(total)}
           </span>
 
@@ -502,7 +502,7 @@ export default function Projects() {
             {projects.map((_, i) => (
               <span
                 key={i}
-                className={`h-[3px] flex-1 rounded-xs transition-colors ${i <= index ? 'bg-fg/80' : 'bg-fg/15'}`}
+                className={`h-[0.1875rem] flex-1 rounded-xs transition-colors ${i <= index ? 'bg-fg/80' : 'bg-fg/15'}`}
               />
             ))}
           </div>
@@ -511,7 +511,7 @@ export default function Projects() {
               does not reflow when the hint goes */}
           <span
             aria-hidden
-            className={`font-mono text-[10px] uppercase tracking-wider text-fg-dim lg:order-last ${
+            className={`font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim lg:order-last ${
               index === total - 1 ? 'invisible' : ''
             }`}
           >
@@ -536,7 +536,7 @@ export default function Projects() {
                   onClick={() => goTo(i)}
                   aria-label={`${pad(i + 1)} ${q.title}`}
                   aria-current={on ? 'true' : undefined}
-                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[3px] border border-fg/10 bg-bg/60 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:aspect-16/10 lg:h-auto lg:w-[72px] lg:flex-none ${
+                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[0.1875rem] border border-fg/10 bg-bg/60 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:aspect-16/10 lg:h-auto lg:w-[4.5rem] lg:flex-none ${
                     on ? 'ring-1 ring-fg' : ''
                   }`}
                 >
@@ -577,10 +577,10 @@ function Screen({ p }: { p: Project }) {
   if (!p.image) {
     return (
       <div className={`flex flex-col items-center justify-center gap-2 px-4 text-center ${frame}`} style={DOTS}>
-        <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-fg-dim">
+        <span className="font-mono text-[0.6875rem] uppercase tracking-[0.25em] text-fg-dim">
           {p.tags.slice(0, 3).join(' / ')}
         </span>
-        <span className="font-mono text-[10px] text-fg/25">nothing to render</span>
+        <span className="font-mono text-[0.625rem] text-fg/25">nothing to render</span>
       </div>
     )
   }
@@ -595,7 +595,7 @@ function Link({ href, label }: { href: string; label: string }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="group/l inline-flex min-h-[32px] items-center font-mono text-[10px] uppercase tracking-wider text-fg-muted transition-colors hover:text-fg lg:text-[11px]"
+      className="group/l inline-flex min-h-[2rem] items-center font-mono text-[0.625rem] uppercase tracking-wider text-fg-muted transition-colors hover:text-fg lg:text-[0.6875rem]"
     >
       <span aria-hidden>&#8599;</span>{' '}
       <span className="underline-offset-2 group-hover/l:underline">{label}</span>

@@ -163,7 +163,7 @@ export default function HandBackground({
     >
       <pre
         ref={preRef}
-        className={`m-0 origin-center whitespace-pre font-mono text-[10px] leading-none md:[text-shadow:0_0_8px_rgb(var(--fg)/0.3)] ${className}`}
+        className={`m-0 origin-center whitespace-pre font-mono text-[0.625rem] leading-none md:[text-shadow:0_0_8px_rgb(var(--fg)/0.3)] ${className}`}
       />
     </div>
   )

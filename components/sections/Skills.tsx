@@ -24,11 +24,11 @@ function usedIn(sk: Skill) {
 
 function Bar({ level, on = false }: { level: number; on?: boolean }) {
   return (
-    <span aria-label={`level ${level} of 5`} className="inline-flex gap-[3px]">
+    <span aria-label={`level ${level} of 5`} className="inline-flex gap-[0.1875rem]">
       {SEGMENTS.map((n) => (
         <span
           key={n}
-          className={`h-2.5 w-3 rounded-[2px] ${
+          className={`h-2.5 w-3 rounded-[0.125rem] ${
             n <= level ? (on ? 'bg-duck' : 'bg-fg/80') : 'border border-fg/20'
           }`}
         />
@@ -69,10 +69,10 @@ export default function Skills() {
           {skills.map((g, gi) => (
             <div key={g.key} className="flex flex-col gap-2 rounded-xl border border-fg/12 bg-panel/66 p-4">
               <div className="flex items-baseline justify-between gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-fg-dim">
+                <span className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-fg-dim">
                   {String(gi + 1).padStart(2, '0')} / {g.label}
                 </span>
-                <span className="font-mono text-[10px] text-fg-dim">{g.skills.length}</span>
+                <span className="font-mono text-[0.625rem] text-fg-dim">{g.skills.length}</span>
               </div>
               <ul className="flex flex-col">
                 {g.skills.map((sk) => {
@@ -87,7 +87,7 @@ export default function Skills() {
                           on ? 'bg-fg/10' : 'hover:bg-fg/[0.05]'
                         }`}
                       >
-                        <span className={`font-sans text-[13px] font-semibold ${on ? 'text-fg' : 'text-fg/85'}`}>
+                        <span className={`font-sans text-[0.8125rem] font-semibold ${on ? 'text-fg' : 'text-fg/85'}`}>
                           {sk.name}
                         </span>
                         <Bar level={sk.level} on={on} />
@@ -102,7 +102,7 @@ export default function Skills() {
 
         {/* the picked skill */}
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.3em] text-fg-dim">{t.hint}</span>
+          <span className="mb-2 block font-mono text-[0.625rem] uppercase tracking-[0.3em] text-fg-dim">{t.hint}</span>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={current.name}
@@ -114,17 +114,17 @@ export default function Skills() {
             >
               <div className="flex flex-col gap-1">
                 <span className="font-crt text-4xl leading-none text-fg">{current.name}</span>
-                <span className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-fg-dim">
+                <span className="flex items-center gap-3 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-fg-dim">
                   {t.level} <Bar level={current.level} on />
                 </span>
               </div>
-              <p className="font-sans text-[13px] leading-relaxed text-fg/85">{current.note}</p>
+              <p className="font-sans text-[0.8125rem] leading-relaxed text-fg/85">{current.note}</p>
               <div className="flex flex-col gap-1.5 border-t border-fg/10 pt-3">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-fg-dim">{usedLabel(current)}</span>
+                <span className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-fg-dim">{usedLabel(current)}</span>
                 {used.length > 0 && (
                   <ul className="flex flex-col gap-0.5">
                     {used.map((p) => (
-                      <li key={p.title} className="truncate font-mono text-[11px] text-fg/75">
+                      <li key={p.title} className="truncate font-mono text-[0.6875rem] text-fg/75">
                         <span aria-hidden className="text-duck">
                           ›{' '}
                         </span>

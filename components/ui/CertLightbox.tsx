@@ -97,7 +97,7 @@ export default function CertLightbox({
             <div className="flex min-h-0 flex-col overflow-y-auto overscroll-contain p-5 sm:p-6">
               <div className="flex items-start justify-between gap-3">
                 <span
-                  className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[11px] font-semibold ${catMeta(categorize(cert)).chip}`}
+                  className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[0.6875rem] font-semibold ${catMeta(categorize(cert)).chip}`}
                 >
                   {catMeta(categorize(cert)).label}
                 </span>
@@ -107,7 +107,7 @@ export default function CertLightbox({
                     style={{ background: MEDAL_FILL[cert.medal] }}
                     className="grid h-11 w-11 shrink-0 place-items-center rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)/0.5)]"
                   >
-                    <span className="font-pixel text-[6px] leading-none text-black/55">
+                    <span className="font-pixel text-[0.375rem] leading-none text-black/55">
                       {cert.medal === 'gold' ? 'GOLD' : '3RD'}
                     </span>
                   </span>
@@ -116,7 +116,7 @@ export default function CertLightbox({
               <h3 className="mt-3 font-sans text-xl font-semibold leading-snug text-fg">
                 {cert.title}
               </h3>
-              <dl className="mt-4 space-y-1.5 border-t border-fg/10 pt-4 font-mono text-[12px]">
+              <dl className="mt-4 space-y-1.5 border-t border-fg/10 pt-4 font-mono text-[0.75rem]">
                 {rows(cert).map(([k, v]) => (
                   <div key={k} className="flex gap-3">
                     <dt className="w-24 shrink-0 uppercase tracking-wider text-fg-dim">{k}</dt>
@@ -131,7 +131,7 @@ export default function CertLightbox({
               )}
               {album && album.photos.length > 0 && (
                 <div className="mt-4 border-t border-fg/10 pt-4">
-                  <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-fg-dim">
+                  <p className="mb-2 font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim">
                     {album.photos.length} photo{album.photos.length > 1 ? 's' : ''} from {album.label}
                   </p>
                   <div className="flex flex-wrap gap-2">

@@ -54,16 +54,16 @@ export default async function WriteupPage({ params }: Params) {
       <WriteupChrome path={`writeups/${meta.slug}`} />
       <article className="mt-10">
         <header className="flex flex-col gap-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-fg-dim">
+          <span className="font-mono text-[0.625rem] uppercase tracking-[0.25em] text-fg-dim">
             {[meta.event, meta.date, meta.category, meta.difficulty].filter(Boolean).join(' · ')}
             {meta.draft && ' · draft'}
           </span>
           <h1 className="font-sans text-3xl font-bold leading-tight text-fg sm:text-4xl">{meta.title}</h1>
-          {meta.summary && <p className="font-sans text-[15px] text-fg-muted">{meta.summary}</p>}
+          {meta.summary && <p className="font-sans text-[0.9375rem] text-fg-muted">{meta.summary}</p>}
           {meta.tags.length > 0 && (
             <ul className="flex flex-wrap gap-1.5">
               {meta.tags.map((t) => (
-                <li key={t} className="rounded-sm border border-fg/20 px-2 py-0.5 font-mono text-[10px] text-fg/75">
+                <li key={t} className="rounded-sm border border-fg/20 px-2 py-0.5 font-mono text-[0.625rem] text-fg/75">
                   {t}
                 </li>
               ))}
@@ -75,7 +75,7 @@ export default async function WriteupPage({ params }: Params) {
       </article>
       <div className="mt-auto pt-16">
         <div className="ascii-rule opacity-40" />
-        <p className="mt-3 font-mono text-[11px] text-fg-dim">
+        <p className="mt-3 font-mono text-[0.6875rem] text-fg-dim">
           {meta.minutes} min · {player.name}
         </p>
       </div>

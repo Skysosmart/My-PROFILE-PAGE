@@ -44,7 +44,7 @@ export function Mark({ term, children }: { term: string; children?: ReactNode })
       onPointerLeave={() => fine && setOpen(false)}
       onClick={() => !fine && setOpen((o) => !o)}
     >
-      <mark className="rounded-[2px] bg-transparent px-0.5 text-fg [background-image:linear-gradient(transparent_58%,rgb(245_190_91/0.45)_58%)] [box-shadow:inset_0_-1px_0_rgb(245_190_91/0.9)]">
+      <mark className="rounded-[0.125rem] bg-transparent px-0.5 text-fg [background-image:linear-gradient(transparent_58%,rgb(245_190_91/0.45)_58%)] [box-shadow:inset_0_-1px_0_rgb(245_190_91/0.9)]">
         {children ?? term}
       </mark>
       {open && text && (
@@ -53,11 +53,11 @@ export function Mark({ term, children }: { term: string; children?: ReactNode })
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
           style={fine ? { position: 'fixed', left: 0, top: 0, x, y } : undefined}
-          className={`z-[75] block w-64 rounded-md border border-duck/60 bg-panel px-3 py-2 font-mono text-[11px] leading-relaxed text-fg shadow-[0_12px_30px_rgba(0,0,0,0.6)] ${
+          className={`z-[75] block w-64 rounded-md border border-duck/60 bg-panel px-3 py-2 font-mono text-[0.6875rem] leading-relaxed text-fg shadow-[0_12px_30px_rgba(0,0,0,0.6)] ${
             fine ? 'pointer-events-none' : 'absolute left-0 top-full mt-2'
           }`}
         >
-          <span className="mb-1 block text-[9px] uppercase tracking-[0.3em] text-duck">{term}</span>
+          <span className="mb-1 block text-[0.5625rem] uppercase tracking-[0.3em] text-duck">{term}</span>
           {text}
         </motion.span>
       )}

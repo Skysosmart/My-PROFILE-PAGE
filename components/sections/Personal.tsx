@@ -41,25 +41,25 @@ export default function Personal() {
     <section id="personal" className="relative isolate scroll-mt-28 overflow-x-clip px-4 py-16 sm:px-6 sm:py-24">
       <div
         aria-hidden
-        className="pointer-events-none absolute left-2 bottom-0 -z-10 select-none font-crt text-[160px] leading-none text-fg/[0.04] sm:text-[300px]"
+        className="pointer-events-none absolute left-2 bottom-0 -z-10 select-none font-crt text-[10rem] leading-none text-fg/[0.04] sm:text-[18.75rem]"
       >
         MOMENTS
       </div>
       <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-center">
         <div className="flex flex-col gap-4">
-          <span className="font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">[ 07 · {t.label} ]</span>
+          <span className="font-mono text-[0.6875rem] uppercase tracking-[0.35em] text-fg-dim">[ 07 · {t.label} ]</span>
           <h2 className="font-crt text-5xl leading-[0.95] text-fg txt-glow sm:text-6xl">
             {t.title1}
             <br />
             {t.title2}
           </h2>
-          <p className="font-mono text-[12px] text-fg-muted">
+          <p className="font-mono text-[0.75rem] text-fg-muted">
             {n} albums · {cards.reduce((s, c) => s + c.album.photos.length, 0)} photos · {t.hint}
           </p>
           <Duck pose="stand" width={120} parallax={6} className="mt-2 hidden lg:block" />
         </div>
 
-        <div className="relative mx-auto h-[380px] w-full max-w-[560px] sm:h-[460px]">
+        <div className="relative mx-auto h-[23.75rem] w-full max-w-[35rem] sm:h-[28.75rem]">
           {cards.map((c, i) => {
             const angle = -spread / 2 + (spread * i) / Math.max(n - 1, 1)
             const left = 6 + (70 * i) / Math.max(n - 1, 1)
@@ -75,7 +75,7 @@ export default function Personal() {
                 transition={{ duration: 0.5, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
                 aria-label={c.album.label}
                 style={{ left: `${left}%`, top: `${12 + Math.abs(angle) * 0.9}%`, zIndex: i }}
-                className="group absolute w-[46%] -translate-x-1/2 rounded-[3px] bg-[#f3f0e8] p-1.5 pb-7 text-left shadow-[0_20px_40px_rgba(0,0,0,0.55)] transition-shadow hover:shadow-[0_30px_60px_rgba(0,0,0,0.7)] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg sm:w-[44%]"
+                className="group absolute w-[46%] -translate-x-1/2 rounded-[0.1875rem] bg-[#f3f0e8] p-1.5 pb-7 text-left shadow-[0_20px_40px_rgba(0,0,0,0.55)] transition-shadow hover:shadow-[0_30px_60px_rgba(0,0,0,0.7)] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg sm:w-[44%]"
               >
                 <span className="relative block aspect-4/3 w-full overflow-hidden bg-neutral-200">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -92,7 +92,7 @@ export default function Personal() {
                     className="dither pointer-events-none absolute inset-0 opacity-60 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0"
                   />
                 </span>
-                <span className="mt-2 block truncate px-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-800">
+                <span className="mt-2 block truncate px-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-800">
                   {c.album.label}
                 </span>
               </motion.button>

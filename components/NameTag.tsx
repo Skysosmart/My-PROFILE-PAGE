@@ -15,12 +15,12 @@ export default function NameTag() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4, duration: 0.6 }}
-      className="pointer-events-none absolute right-4 top-[74px] z-65 text-right font-mono sm:right-6 xl:fixed xl:top-5"
+      className="pointer-events-none absolute right-4 top-[4.625rem] z-65 text-right font-mono sm:right-6 xl:fixed xl:top-5"
     >
       <p className="text-lg font-bold uppercase leading-none tracking-wide text-fg txt-glow sm:text-xl">
         {player.firstName}
       </p>
-      <p className="mt-1.5 text-[11px] uppercase tracking-[0.35em] text-fg-muted">
+      <p className="mt-1.5 text-[0.6875rem] uppercase tracking-[0.35em] text-fg-muted">
         {player.lastName}
       </p>
     </motion.div>

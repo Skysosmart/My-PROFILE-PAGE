@@ -26,7 +26,7 @@ export default function WriteupChrome({ path }: { path: string }) {
   const handle = player.handle.toLowerCase().replace('.exe', '')
 
   return (
-    <div className="flex items-center gap-2 font-mono text-[12px]">
+    <div className="flex items-center gap-2 font-mono text-[0.75rem]">
       <span className="shrink-0 select-none">
         <span className="text-fg/70">{handle}</span>
         <span className="text-fg/25">@exe</span>

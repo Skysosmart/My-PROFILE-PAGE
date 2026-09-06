@@ -29,8 +29,8 @@ export default function StatsBar({ className = '' }: { className?: string }) {
             i < items.length - 1 ? 'border-r border-fg/12' : ''
           }`}
         >
-          <dd className="m-0 font-crt text-3xl leading-none text-duck sm:text-[40px]">{it.n}</dd>
-          <dt className="font-mono text-[8px] uppercase tracking-[0.25em] text-fg-muted sm:text-[10px] sm:tracking-[0.3em]">
+          <dd className="m-0 font-crt text-3xl leading-none text-duck sm:text-[2.5rem]">{it.n}</dd>
+          <dt className="font-mono text-[0.5rem] uppercase tracking-[0.25em] text-fg-muted sm:text-[0.625rem] sm:tracking-[0.3em]">
             {it.label}
           </dt>
         </div>

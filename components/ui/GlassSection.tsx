@@ -114,7 +114,7 @@ export default function GlassSection({
       {watermark && (
         <div
           aria-hidden
-          className="pointer-events-none absolute right-2 top-0 -z-10 select-none font-crt text-[160px] leading-none text-fg/[0.04] sm:right-6 sm:text-[300px]"
+          className="pointer-events-none absolute right-2 top-0 -z-10 select-none font-crt text-[10rem] leading-none text-fg/[0.04] sm:right-6 sm:text-[18.75rem]"
         >
           {watermark}
         </div>
@@ -134,7 +134,7 @@ export default function GlassSection({
         }
       >
         {label && (
-          <span className="mb-2 block font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">
+          <span className="mb-2 block font-mono text-[0.6875rem] uppercase tracking-[0.35em] text-fg-dim">
             [ {label} ]
           </span>
         )}

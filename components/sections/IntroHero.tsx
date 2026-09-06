@@ -44,7 +44,7 @@ export default function IntroHero() {
           />
           {/* the duck casts a floor shadow in the same ink */}
           <div className="[filter:drop-shadow(0_26px_22px_rgb(var(--fg)/0.28))]">
-            <Duck pose="hero" width={220} parallax={12} priority className="sm:!w-[240px] lg:!w-[260px] xl:!w-[300px] 2xl:!w-[320px]" />
+            <Duck pose="hero" width={220} parallax={12} priority className="sm:!w-[15rem] lg:!w-[16.25rem] xl:!w-[18.75rem] " />
           </div>
           {/* sizes follow the room beside the duck: a row from sm, a 2:1 grid
               from lg where the column is narrower again, wide from xl */}
@@ -61,7 +61,7 @@ export default function IntroHero() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="font-mono text-[11px] uppercase tracking-[0.45em] text-fg-muted"
+            className="font-mono text-[0.6875rem] uppercase tracking-[0.45em] text-fg-muted"
           >
             ◇ {t.loaded}
           </motion.p>
@@ -70,13 +70,13 @@ export default function IntroHero() {
             {/* the answer to the duck's hello: a bubble off the orb's shoulder */}
             <motion.span
               {...rise(1.0)}
-              className="absolute -right-6 top-6 whitespace-nowrap rounded-2xl rounded-bl-sm border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[12px] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))] sm:-right-10"
+              className="absolute -right-6 top-6 whitespace-nowrap rounded-2xl rounded-bl-sm border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[0.75rem] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))] sm:-right-10"
             >
               {t.bubble}
               {/* the tail */}
               <span
                 aria-hidden
-                className="absolute -bottom-[7px] left-3 h-3 w-3 rotate-45 border-b border-r border-fg/40 bg-bg"
+                className="absolute -bottom-[0.4375rem] left-3 h-3 w-3 rotate-45 border-b border-r border-fg/40 bg-bg"
               />
             </motion.span>
           </div>
@@ -84,7 +84,7 @@ export default function IntroHero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
-            className="mt-2 flex flex-col items-center gap-1.5 font-mono text-[11px] text-fg-dim"
+            className="mt-2 flex flex-col items-center gap-1.5 font-mono text-[0.6875rem] text-fg-dim"
           >
             <span className="uppercase tracking-[0.2em]">{t.scroll}</span>
             <span className="animate-blink text-fg">▼</span>

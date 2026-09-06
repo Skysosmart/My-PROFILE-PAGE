@@ -24,7 +24,7 @@ export default function WriteupList({
 
   if (shown.length === 0) {
     return (
-      <p className="flex items-center gap-4 border-t border-fg/10 py-8 font-mono text-[12px] text-fg-muted">
+      <p className="flex items-center gap-4 border-t border-fg/10 py-8 font-mono text-[0.75rem] text-fg-muted">
         <Emote name="question" size={56} />
         {t.writeups.empty}
       </p>
@@ -60,10 +60,10 @@ export default function WriteupList({
               )}
             </svg>
             <span className="flex min-w-0 flex-1 flex-col gap-1">
-              <span className="font-sans text-[15px] font-semibold text-fg group-hover:underline group-hover:underline-offset-4">
+              <span className="font-sans text-[0.9375rem] font-semibold text-fg group-hover:underline group-hover:underline-offset-4">
                 {w.title}
               </span>
-              <span className="truncate font-mono text-[10px] uppercase tracking-[0.2em] text-fg-dim">
+              <span className="truncate font-mono text-[0.625rem] uppercase tracking-[0.2em] text-fg-dim">
                 {[w.event, w.date, w.category, fmt(t.writeups.minutes, { n: w.minutes })]
                   .filter(Boolean)
                   .join(' · ')}
@@ -73,12 +73,12 @@ export default function WriteupList({
               </span>
             </span>
             {w.draft && (
-              <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-fg-dim">
+              <span className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-fg-dim">
                 {t.writeups.draft}
               </span>
             )}
             {w.difficulty && (
-              <span className="shrink-0 rounded-sm border border-duck/70 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-duck">
+              <span className="shrink-0 rounded-sm border border-duck/70 px-2 py-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-duck">
                 {w.difficulty}
               </span>
             )}

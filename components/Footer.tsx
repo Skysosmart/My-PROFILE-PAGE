@@ -25,7 +25,7 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-fg/12 bg-panel/80 px-4 py-3 sm:px-6">
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-8 gap-y-2 font-mono text-[10px] uppercase tracking-[0.22em] text-fg-muted">
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-8 gap-y-2 font-mono text-[0.625rem] uppercase tracking-[0.22em] text-fg-muted">
         <div className="flex flex-wrap items-center gap-x-8 gap-y-1">
           <span>
             {certStats.total} {t.stats.certificates}

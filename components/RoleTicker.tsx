@@ -26,9 +26,9 @@ export default function RoleTicker() {
     // top-left, the mirror of the name tag at top-right; on a phone both sit
     // under the header pill (the ticker one row lower than the tag on a narrow
     // phone, where the two would meet); from xl the pill leaves the corners free
-    <div className="pointer-events-none absolute left-4 top-[116px] z-60 font-mono sm:left-6 sm:top-[74px] xl:top-6">
+    <div className="pointer-events-none absolute left-4 top-[7.25rem] z-60 font-mono sm:left-6 sm:top-[4.625rem] xl:top-6">
       <div className="flex items-baseline gap-2">
-        <span className="text-[10px] uppercase tracking-[0.35em] text-fg-dim">role</span>
+        <span className="text-[0.625rem] uppercase tracking-[0.35em] text-fg-dim">role</span>
         <span className="text-fg/20">{'//'}</span>
 
         {/* rotating word */}

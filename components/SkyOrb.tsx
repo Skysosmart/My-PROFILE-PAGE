@@ -324,7 +324,7 @@ export default function SkyOrb() {
       <motion.div
         whileHover={{ scale: 1.06 }}
         transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-        className="liquid-orb group relative flex h-[clamp(150px,22vw,240px)] w-[clamp(150px,22vw,240px)] items-center justify-center"
+        className="liquid-orb group relative flex h-[clamp(9.375rem,22vw,15rem)] w-[clamp(9.375rem,22vw,15rem)] items-center justify-center"
       >
         {/* water surface */}
         {/* orb-canvas carries the same morph: an element's own border-radius
@@ -334,7 +334,7 @@ export default function SkyOrb() {
         {/* glass highlight over the water */}
         <div className="orb-gloss pointer-events-none absolute inset-0" />
 
-        <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[8px] uppercase tracking-[0.4em] text-fg-muted">
+        <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[0.5rem] uppercase tracking-[0.4em] text-fg-muted">
           ◇ sky
         </span>
       </motion.div>

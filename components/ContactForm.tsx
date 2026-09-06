@@ -29,11 +29,11 @@ export default function ContactForm() {
   useEffect(() => setStarted(Date.now()), [])
 
   const field =
-    'w-full rounded-md border border-fg/18 bg-panel/90 px-3 py-2.5 font-mono text-[12px] text-fg placeholder:text-fg/40 outline-hidden transition-colors focus:border-fg/50'
+    'w-full rounded-md border border-fg/18 bg-panel/90 px-3 py-2.5 font-mono text-[0.75rem] text-fg placeholder:text-fg/40 outline-hidden transition-colors focus:border-fg/50'
 
   if (state?.ok) {
     return (
-      <p role="status" className="flex items-center gap-3 font-mono text-[12px] text-fg">
+      <p role="status" className="flex items-center gap-3 font-mono text-[0.75rem] text-fg">
         <Emote name="hearts" size={44} />
         {t.form.sent}
       </p>
@@ -48,7 +48,7 @@ export default function ContactForm() {
       </div>
       <textarea name="message" required minLength={2} maxLength={5000} rows={4} placeholder={t.form.message} className={field} />
       {/* honeypot: off screen, out of the tab order, ignored by readers */}
-      <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
+      <div aria-hidden className="absolute -left-[624.9375rem] h-px w-px overflow-hidden">
         <label>
           website <input name="website" tabIndex={-1} autoComplete="off" />
         </label>
@@ -58,12 +58,12 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-fg px-5 font-mono text-[11px] uppercase tracking-[0.15em] text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-fg px-5 font-mono text-[0.6875rem] uppercase tracking-[0.15em] text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {pending ? t.form.sending : t.form.send} →
         </button>
         {state && !state.ok && (
-          <p role="alert" className="flex items-center gap-2 font-mono text-[11px] text-red-400">
+          <p role="alert" className="flex items-center gap-2 font-mono text-[0.6875rem] text-red-400">
             <Emote name={FACE[state.code]} size={36} />
             {t.form[state.code]}
           </p>

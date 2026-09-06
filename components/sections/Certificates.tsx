@@ -88,11 +88,11 @@ function Seal({ medal, still, size = 44 }: { medal: string; still: boolean; size
       style={{ width: size, height: size, background: face.fill }}
       className="relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)/0.5)]"
     >
-      <span className="font-pixel text-[6px] leading-none text-black/55">
+      <span className="font-pixel text-[0.375rem] leading-none text-black/55">
         {medal === 'gold' ? 'GOLD' : '3RD'}
       </span>
       {!still && (
-        <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-foil bg-fg/45 blur-[2px]" />
+        <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-foil bg-fg/45 blur-[0.125rem]" />
       )}
     </span>
   )
@@ -171,7 +171,7 @@ export default function Certificates() {
       revealAmount="some"
     >
       {/* stat rail */}
-      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-fg/12 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-fg-dim">
+      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-fg/12 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-fg-dim">
         <span>
           <Tally to={certStats.total} still={still} /> records
         </span>
@@ -202,15 +202,15 @@ export default function Certificates() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
-                  <span className={`font-pixel text-[8px] leading-none ${face.text}`}>
+                  <span className={`font-pixel text-[0.5rem] leading-none ${face.text}`}>
                     {c.medal === 'gold' ? 'GOLD MEDAL' : '3RD PLACE'}
                   </span>
                   <Seal medal={c.medal ?? 'gold'} still={still} size={34} />
                 </div>
-                <h3 className="mt-1.5 line-clamp-2 font-sans text-[13px] font-semibold leading-snug text-fg">
+                <h3 className="mt-1.5 line-clamp-2 font-sans text-[0.8125rem] font-semibold leading-snug text-fg">
                   {c.title}
                 </h3>
-                <p className="mt-1 truncate font-mono text-[9px] uppercase tracking-wider text-fg-dim">
+                <p className="mt-1 truncate font-mono text-[0.5625rem] uppercase tracking-wider text-fg-dim">
                   {c.issuer}
                 </p>
               </div>
@@ -226,7 +226,7 @@ export default function Certificates() {
             <h3 className="font-sans text-sm font-semibold text-fg">
               MakeX Challenge - six months, one robot
             </h3>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-fg-dim">
+            <span className="font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim">
               Team Prometheus · Jun to Nov 2025
             </span>
           </div>
@@ -237,7 +237,7 @@ export default function Certificates() {
               return (
                 <li
                   key={c.file}
-                  className="flex min-w-[92px] flex-1 flex-col items-center sm:min-w-[104px]"
+                  className="flex min-w-[5.75rem] flex-1 flex-col items-center sm:min-w-[6.5rem]"
                 >
                   <div className="relative flex h-7 w-full items-center">
                     <span
@@ -262,16 +262,16 @@ export default function Certificates() {
                     onClick={() => setActive(c)}
                     className="group mt-1.5 w-full px-1 text-center focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
                   >
-                    <span className="block font-mono text-[9px] uppercase tracking-wider text-fg-dim">
+                    <span className="block font-mono text-[0.5625rem] uppercase tracking-wider text-fg-dim">
                       {meta.when}
                     </span>
                     <span
-                      className={`mt-0.5 block font-sans text-[11px] font-medium leading-tight transition-colors group-hover:text-fg ${last ? 'text-fg' : 'text-fg/70'}`}
+                      className={`mt-0.5 block font-sans text-[0.6875rem] font-medium leading-tight transition-colors group-hover:text-fg ${last ? 'text-fg' : 'text-fg/70'}`}
                     >
                       {meta.what}
                     </span>
                     {last && (
-                      <span className="mt-0.5 block font-mono text-[8px] uppercase leading-tight tracking-wider text-fg-muted">
+                      <span className="mt-0.5 block font-mono text-[0.5rem] uppercase leading-tight tracking-wider text-fg-muted">
                         3rd + Best Alliance
                       </span>
                     )}

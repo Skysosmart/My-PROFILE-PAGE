@@ -277,6 +277,11 @@
   }
 
   html {
+    /* The site grows with the screen: 16px up to a 1371px viewport, then
+     linearly to 22.4px (140%) at 1920px, and every size in the app is in
+     rem so it follows. A 1920 display gets the layout of a 1371 one, scaled,
+     which is how Sky likes it: it is the browser at 140%, built in. */
+    font-size: clamp(100%, 1.1675vw, 140%);
     scroll-behavior: smooth;
     /* nav offsets are handled per-section via scroll-margin (scroll-mt-*) */
   }
@@ -529,13 +534,13 @@
    variables per token (rehype-pretty-code, defaultColor: false) and the
    theme picks one, so a block recolours with the rest of the page.
    -------------------------------------------------------------------------- */
-.writeup-prose { font-family: var(--font-sans); font-size: 15px; line-height: 1.75; color: rgb(var(--fg) / 0.85); }
+.writeup-prose { font-family: var(--font-sans); font-size: 0.9375rem; line-height: 1.75; color: rgb(var(--fg) / 0.85); }
 .writeup-prose > * + * { margin-top: 1em; }
 .writeup-prose h2, .writeup-prose h3, .writeup-prose h4 {
   font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgb(var(--fg));
   margin-top: 2.2em; text-shadow: 0 0 6px var(--glow), 0 0 18px var(--glow-far);
 }
-.writeup-prose h2 { font-size: 15px; } .writeup-prose h3 { font-size: 13px; } .writeup-prose h4 { font-size: 12px; }
+.writeup-prose h2 { font-size: 0.9375rem; } .writeup-prose h3 { font-size: 0.8125rem; } .writeup-prose h4 { font-size: 0.75rem; }
 .writeup-prose h2::before, .writeup-prose h3::before { content: '# '; color: var(--fg-dim); }
 .writeup-prose a { color: rgb(var(--fg)); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgb(var(--fg) / 0.4); }
 .writeup-prose a:hover { text-decoration-color: rgb(var(--fg)); }
@@ -551,14 +556,14 @@
   background: rgb(var(--fg) / 0.08); border: 1px solid rgb(var(--fg) / 0.1); color: rgb(var(--fg));
 }
 .writeup-prose pre {
-  font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6; overflow-x: auto;
+  font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.6; overflow-x: auto;
   padding: 14px 16px; border-radius: 6px; background: rgb(var(--panel) / 0.92); border: 1px solid rgb(var(--fg) / 0.16);
 }
 .writeup-prose pre code { display: grid; }
 .writeup-prose figure[data-rehype-pretty-code-figure] { margin: 0; }
 .writeup-prose [data-rehype-pretty-code-title] {
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-dim);
-  padding: 6px 16px 0;
+  font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-dim);
+  padding: 0.375rem 1rem 0;
 }
 .writeup-prose [data-highlighted-line] { background: rgb(var(--fg) / 0.07); margin: 0 -16px; padding: 0 16px; }
 /* the two-theme token colours */

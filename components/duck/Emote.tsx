@@ -31,14 +31,14 @@ export default function Emote({
   className?: string
 }) {
   return (
-    <span aria-hidden className={`relative inline-block shrink-0 ${className}`} style={{ width: size, height: size }}>
+    <span aria-hidden className={`relative inline-block shrink-0 ${className}`} style={{ width: `${size / 16}rem`, height: `${size / 16}rem` }}>
       {(['dark', 'light'] as const).map((theme) => (
         <Image
           key={theme}
           src={`/duck/emote-${name}-${theme}.png`}
           alt=""
           fill
-          sizes={`${size}px`}
+          sizes={`${Math.round(size * 1.4)}px`}
           draggable={false}
           className={`duck-${theme} object-contain select-none`}
         />

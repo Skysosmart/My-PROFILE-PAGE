@@ -40,7 +40,7 @@ export default function Education() {
         {/* the rail */}
         <span
           aria-hidden
-          className="absolute bottom-3 left-[9px] top-3 w-px bg-fg/15 sm:left-[calc(9rem+9px)]"
+          className="absolute bottom-3 left-[0.5625rem] top-3 w-px bg-fg/15 sm:left-[calc(9rem+9px)]"
         />
         {education.map((ch, i) => {
           const n = count(ch.from, ch.to)
@@ -57,20 +57,20 @@ export default function Education() {
               {/* the node */}
               <span
                 aria-hidden
-                className={`absolute left-1 top-2 h-[11px] w-[11px] rounded-full border sm:left-[calc(9rem+4px)] ${
+                className={`absolute left-1 top-2 h-[0.6875rem] w-[0.6875rem] rounded-full border sm:left-[calc(9rem+4px)] ${
                   last ? 'border-duck bg-duck shadow-[0_0_12px_rgb(245_190_91)]' : 'border-fg/50 bg-bg'
                 }`}
               />
 
               {/* years, down the left */}
               <div className="flex flex-col gap-1 sm:pr-8 sm:text-right">
-                <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-fg-dim">
+                <span className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-fg-dim">
                   {t.chapter} {String(i + 1).padStart(2, '0')}
                 </span>
                 <span className="font-crt text-3xl leading-none text-fg">
                   {ch.years.replace(/present/i, t.present)}
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-fg-muted">{ch.stage}</span>
+                <span className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-fg-muted">{ch.stage}</span>
               </div>
 
               {/* the chapter */}
@@ -82,21 +82,21 @@ export default function Education() {
                       href={ch.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="w-fit font-mono text-[11px] text-fg-muted underline-offset-4 hover:text-fg hover:underline"
+                      className="w-fit font-mono text-[0.6875rem] text-fg-muted underline-offset-4 hover:text-fg hover:underline"
                     >
                       ◇ {ch.school} ↗
                     </a>
                   ) : (
-                    <span className="font-mono text-[11px] text-fg-muted">◇ {ch.school}</span>
+                    <span className="font-mono text-[0.6875rem] text-fg-muted">◇ {ch.school}</span>
                   )}
                 </div>
-                <p className="max-w-2xl font-sans text-[14px] leading-relaxed text-fg/85">{ch.summary}</p>
+                <p className="max-w-2xl font-sans text-[0.875rem] leading-relaxed text-fg/85">{ch.summary}</p>
 
                 <div className="flex flex-col gap-1.5">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-fg-dim">{t.focus}</span>
+                  <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-fg-dim">{t.focus}</span>
                   <ul className="flex flex-wrap gap-1.5">
                     {ch.focus.map((f) => (
-                      <li key={f} className="rounded-sm border border-fg/18 px-2 py-0.5 font-mono text-[11px] text-fg/75">
+                      <li key={f} className="rounded-sm border border-fg/18 px-2 py-0.5 font-mono text-[0.6875rem] text-fg/75">
                         {f}
                       </li>
                     ))}
@@ -105,10 +105,10 @@ export default function Education() {
 
                 {ch.achievements.length > 0 && (
                   <div className="flex flex-col gap-1.5">
-                    <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-fg-dim">{t.achievements}</span>
+                    <span className="font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-fg-dim">{t.achievements}</span>
                     <ul className="space-y-1">
                       {ch.achievements.map((a) => (
-                        <li key={a} className="flex gap-2 font-mono text-[12px] leading-relaxed text-fg/85">
+                        <li key={a} className="flex gap-2 font-mono text-[0.75rem] leading-relaxed text-fg/85">
                           <span aria-hidden className="shrink-0 text-duck">
                             ✓
                           </span>
@@ -119,7 +119,7 @@ export default function Education() {
                   </div>
                 )}
 
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-fg-dim">
+                <span className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-fg-dim">
                   {n > 0 ? fmt(t.signals, { n }) : t.none}
                 </span>
               </div>

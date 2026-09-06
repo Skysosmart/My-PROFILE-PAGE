@@ -67,7 +67,7 @@ export default function ProjectWall() {
                   </div>
                   {/* a hero block, then a few lines of copy */}
                   <div className="space-y-2 p-3">
-                    <div className="h-1/4 min-h-[16px] w-full rounded-sm bg-fg/6" />
+                    <div className="h-1/4 min-h-[1rem] w-full rounded-sm bg-fg/6" />
                     {Array.from({ length: bars }, (_, b) => (
                       <div
                         key={b}

@@ -72,7 +72,7 @@ export default function CertArchive() {
     <main className="min-h-screen pb-20">
       {/* ---------- title ------------------------------------------------------ */}
       <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6">
-        <div className="flex items-center gap-2 font-mono text-[12px]">
+        <div className="flex items-center gap-2 font-mono text-[0.75rem]">
           <span className="shrink-0 select-none">
             <span className="text-fg/70">{handle}</span>
             <span className="text-fg/25">@exe</span>
@@ -82,7 +82,7 @@ export default function CertArchive() {
           <span className="caret text-fg">certificates/</span>
           <Link
             href="/#certificates"
-            className="ml-auto inline-flex min-h-[32px] shrink-0 items-center text-fg-dim transition-colors hover:text-fg"
+            className="ml-auto inline-flex min-h-[2rem] shrink-0 items-center text-fg-dim transition-colors hover:text-fg"
           >
             &#8592; back
           </Link>
@@ -95,7 +95,7 @@ export default function CertArchive() {
         <h1 className="mt-3 font-crt text-6xl leading-[0.85] tracking-[0.06em] text-fg txt-glow sm:text-7xl lg:text-8xl">
           CERTIFICATES
         </h1>
-        <p className="mt-2 font-mono text-[11px] text-fg-dim sm:text-xs">
+        <p className="mt-2 font-mono text-[0.6875rem] text-fg-dim sm:text-xs">
           {certStats.total} records · {certStats.gold} gold · {certStats.national} national ·{' '}
           {certStats.intl} international · {certSpan}
         </p>
@@ -134,7 +134,7 @@ export default function CertArchive() {
               )}
             </label>
 
-            <span className="shrink-0 font-mono text-[11px] text-fg-dim">
+            <span className="shrink-0 font-mono text-[0.6875rem] text-fg-dim">
               {list.length === certStats.total
                 ? `${certStats.total} certificates`
                 : `${list.length} of ${certStats.total}`}
@@ -210,7 +210,7 @@ export default function CertArchive() {
 
         <div className="mx-auto mt-8 max-w-md">
           <div className="ascii-rule opacity-40" />
-          <p className="mt-3 text-center font-mono text-[11px] text-fg-dim">
+          <p className="mt-3 text-center font-mono text-[0.6875rem] text-fg-dim">
             {list.length} of {certStats.total} records listed
           </p>
         </div>

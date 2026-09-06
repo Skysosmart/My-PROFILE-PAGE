@@ -82,7 +82,7 @@ export default function Duck({
       height={p.h}
       priority={priority}
       draggable={false}
-      sizes={`${width}px`}
+      sizes={`${Math.round(width * 1.4)}px`}
       className={`duck-${theme} h-auto w-full select-none`}
     />
   )
@@ -90,7 +90,8 @@ export default function Duck({
   return (
     <motion.div
       aria-hidden
-      style={{ width, x, y }}
+      // in rem, so the drawing scales with the root font size like everything else
+      style={{ width: `${width / 16}rem`, x, y }}
       className={`pointer-events-none relative shrink-0 ${p.className ?? ''} ${className}`}
     >
       {/* both themes are in the tree; globals.css shows one per data-theme */}

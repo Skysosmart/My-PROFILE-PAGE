@@ -46,20 +46,20 @@ export default function CertCard({
         />
         {c.medal && (
           <span
-            className={`absolute right-3 top-3 rounded-full px-2 py-0.5 font-sans text-[10px] font-bold shadow-sm ${c.medal === 'gold' ? 'bg-white text-neutral-900' : 'border border-white/60 bg-neutral-900/85 text-white'}`}
+            className={`absolute right-3 top-3 rounded-full px-2 py-0.5 font-sans text-[0.625rem] font-bold shadow-sm ${c.medal === 'gold' ? 'bg-white text-neutral-900' : 'border border-white/60 bg-neutral-900/85 text-white'}`}
           >
             {c.medal === 'gold' ? 'GOLD' : '3RD'}
           </span>
         )}
         {c.level && !c.medal && (c.level === 'National' || c.level === 'International') && (
-          <span className="absolute right-3 top-3 rounded-sm bg-neutral-900/85 px-1.5 py-0.5 font-mono text-[9px] font-semibold tracking-wider text-white">
+          <span className="absolute right-3 top-3 rounded-sm bg-neutral-900/85 px-1.5 py-0.5 font-mono text-[0.5625rem] font-semibold tracking-wider text-white">
             {LEVEL_TAG[c.level]}
           </span>
         )}
       </div>
       <div className="flex flex-1 flex-col border-t border-fg/10 p-4">
         <span
-          className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[11px] font-semibold ${catMeta(categorize(c)).chip}`}
+          className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[0.6875rem] font-semibold ${catMeta(categorize(c)).chip}`}
         >
           {catMeta(categorize(c)).label}
         </span>
@@ -68,7 +68,7 @@ export default function CertCard({
         </h3>
         {c.issuer && <p className="mt-1 truncate font-sans text-xs text-fg-muted">{c.issuer}</p>}
         {(c.result || c.date) && (
-          <p className="mt-auto truncate pt-2 font-mono text-[10px] uppercase tracking-wider text-fg-dim">
+          <p className="mt-auto truncate pt-2 font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim">
             {[c.result, c.date].filter(Boolean).join(' · ')}
           </p>
         )}

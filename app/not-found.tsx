@@ -32,7 +32,7 @@ export default function NotFound() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 pb-16 pt-5 sm:px-6">
-      <div className="flex items-center gap-2 font-mono text-[12px]">
+      <div className="flex items-center gap-2 font-mono text-[0.75rem]">
         <span className="shrink-0 select-none">
           <span className="text-fg/70">{handle}</span>
           <span className="text-fg/25">@exe</span>
@@ -45,7 +45,7 @@ export default function NotFound() {
         </span>
       </div>
 
-      <p className="mt-2 font-mono text-[12px] text-red-400">
+      <p className="mt-2 font-mono text-[0.75rem] text-red-400">
         zsh: no such file or directory{path ? ': ' : ''}
         <span className="break-all">{path}</span>
       </p>
@@ -53,7 +53,7 @@ export default function NotFound() {
       <div className="mt-10 flex flex-wrap items-end gap-8">
         <pre
           aria-hidden
-          className="whitespace-pre font-mono text-[22px] leading-[1.1] text-fg sm:text-[30px]"
+          className="whitespace-pre font-mono text-[1.375rem] leading-[1.1] text-fg sm:text-[1.875rem]"
           style={{ textShadow: '0 0 14px rgb(var(--fg) / 0.3), 0 0 34px rgb(var(--fg) / 0.12)' }}
         >
           {FIGLET}
@@ -67,7 +67,7 @@ export default function NotFound() {
         that exists is one of these:
       </p>
 
-      <ul className="mt-6 space-y-1 font-mono text-[13px]">
+      <ul className="mt-6 space-y-1 font-mono text-[0.8125rem]">
         {[
           { cmd: 'cd ~', note: 'home', href: '/' },
           { cmd: 'ls certificates/', note: 'every certificate', href: '/certificates' },
@@ -87,7 +87,7 @@ export default function NotFound() {
             </>
           )
           const cls =
-            'group inline-flex min-h-[32px] items-center gap-3 text-fg/85 transition-colors hover:text-fg'
+            'group inline-flex min-h-[2rem] items-center gap-3 text-fg/85 transition-colors hover:text-fg'
           return (
             <li key={l.href}>
               {l.file ? (
@@ -106,7 +106,7 @@ export default function NotFound() {
 
       <div className="mt-auto pt-16">
         <div className="ascii-rule opacity-40" />
-        <p className="mt-3 font-mono text-[11px] text-fg-dim">exit code 404</p>
+        <p className="mt-3 font-mono text-[0.6875rem] text-fg-dim">exit code 404</p>
       </div>
     </main>
   )

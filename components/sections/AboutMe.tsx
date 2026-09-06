@@ -224,7 +224,7 @@ export default function AboutMe() {
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
-            <span className="ml-2 font-mono text-[11px] text-fg-dim">~/about - interactive</span>
+            <span className="ml-2 font-mono text-[0.6875rem] text-fg-dim">~/about - interactive</span>
           </div>
 
           {/* FIXED-SIZE terminal screen - output scrolls inside, the window
@@ -233,12 +233,12 @@ export default function AboutMe() {
             {/* banner + boot (hidden by `clear`, restored by `banner`) */}
             <div className={showBoot ? '' : 'hidden'}>
               {/* cowsay bubble */}
-              <pre className="m-0 font-mono text-sm leading-snug text-orange-400 sm:text-[15px]">
+              <pre className="m-0 font-mono text-sm leading-snug text-orange-400 sm:text-[0.9375rem]">
                 {COWSAY}
               </pre>
 
               {/* the eyes (cowsay -f eyes), rainbow like lolcat */}
-              <pre className="m-0 font-mono text-[10px] leading-snug sm:text-xs">
+              <pre className="m-0 font-mono text-[0.625rem] leading-snug sm:text-xs">
                 {EYES.map((line, i) => (
                   <div key={i} className={EYES_COLORS[i % EYES_COLORS.length]}>
                     {line}
@@ -259,12 +259,12 @@ export default function AboutMe() {
                 linePause={130}
                 endCaret={false}
                 onDone={() => setReady(true)}
-                className="mt-3 text-sm sm:text-[15px]"
+                className="mt-3 text-sm sm:text-[0.9375rem]"
               />
             </div>
 
             {/* command output log */}
-            <div className="font-mono text-sm sm:text-[15px]">
+            <div className="font-mono text-sm sm:text-[0.9375rem]">
               {log.map((o, i) => (
                 <div key={i} className="whitespace-pre-wrap leading-relaxed">
                   {o.prefix && <span className={o.prefix.className}>{o.prefix.text}</span>}
@@ -287,7 +287,7 @@ export default function AboutMe() {
 
             {/* prompt + input (appears when boot completes) */}
             {ready && (
-              <div className="mt-1 flex items-center gap-2 font-mono text-sm sm:text-[15px]">
+              <div className="mt-1 flex items-center gap-2 font-mono text-sm sm:text-[0.9375rem]">
                 <span className="text-green-400">→</span>
                 <span className="text-teal-300">~</span>
                 <input
@@ -325,12 +325,12 @@ export default function AboutMe() {
         </div>
 
         {/* portrait (right) - same window chrome as the terminal */}
-        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:bg-bg/40 md:w-[320px] lg:w-[360px]">
+        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:bg-bg/40 md:w-[20rem] lg:w-[22.5rem]">
           <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/3 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
-            <span className="ml-2 font-mono text-[11px] text-fg-dim">~/portrait - me.jpg</span>
+            <span className="ml-2 font-mono text-[0.6875rem] text-fg-dim">~/portrait - me.jpg</span>
           </div>
           <Image
             src={assets.portrait}
@@ -340,7 +340,7 @@ export default function AboutMe() {
             sizes="(min-width: 1024px) 360px, (min-width: 768px) 320px, 100vw"
             className="h-64 w-full flex-1 object-cover object-top grayscale transition-all duration-500 group-hover:grayscale-0 md:h-auto"
           />
-          <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-fg-dim">
+          <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[0.625rem] uppercase tracking-widest text-fg-dim">
             {player.name} · {player.role}
           </figcaption>
         </figure>

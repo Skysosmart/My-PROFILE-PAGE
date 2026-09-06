@@ -23,14 +23,14 @@ export default async function WriteupsPage() {
       <WriteupChrome path="writeups/" />
       <header className="mt-10 flex items-end justify-between gap-6">
         <div className="flex flex-col gap-3">
-          <span className="font-mono text-[11px] tracking-[0.35em] text-fg-dim">[ 06 · WRITEUPS ]</span>
+          <span className="font-mono text-[0.6875rem] tracking-[0.35em] text-fg-dim">[ 06 · WRITEUPS ]</span>
           <h1
             className="font-crt text-5xl leading-none text-fg sm:text-6xl"
             style={{ textShadow: '0 0 10px rgb(var(--fg) / 0.5)' }}
           >
             CTF &amp; Security Writeups
           </h1>
-          <p className="max-w-xl font-mono text-[12px] leading-relaxed text-fg-muted">
+          <p className="max-w-xl font-mono text-[0.75rem] leading-relaxed text-fg-muted">
             {items.length} {items.length === 1 ? 'post' : 'posts'} · web exploitation and networking
             first, because those are the roles I play.
           </p>

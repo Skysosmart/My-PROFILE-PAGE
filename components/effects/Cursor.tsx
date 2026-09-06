@@ -67,7 +67,9 @@ export default function Cursor() {
 
   if (!on) return null
   const hidden = mode === 'text' || mode === 'none'
-  const ring = mode === 'link' ? 44 : 28
+  // in px, scaled by the root font size (the site grows with the viewport)
+  const rem = typeof document === 'undefined' ? 1 : parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1
+  const ring = (mode === 'link' ? 44 : 28) * rem
 
   return (
     <>

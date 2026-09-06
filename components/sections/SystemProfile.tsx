@@ -20,7 +20,7 @@ export default function SystemProfile() {
   const { profile, player, about } = useContent()
 
   const card = 'flex flex-col gap-2 rounded-xl border border-fg/12 bg-panel/66 p-4 shadow-[inset_0_1px_0_rgb(var(--fg)/0.16)]'
-  const k = 'font-mono text-[10px] uppercase tracking-[0.3em] text-fg-dim'
+  const k = 'font-mono text-[0.625rem] uppercase tracking-[0.3em] text-fg-dim'
 
   // mark the glossary terms wherever they appear in the paragraphs
   const marked = (text: string) => {
@@ -56,7 +56,7 @@ export default function SystemProfile() {
         <div className={card}>
           <span className={k}>{t.location}</span>
           <span className="font-sans text-base font-bold text-fg">{profile.location}</span>
-          <span className="font-mono text-[11px] text-fg-muted">{profile.school}</span>
+          <span className="font-mono text-[0.6875rem] text-fg-muted">{profile.school}</span>
         </div>
         <div className={card}>
           <span className={k}>{t.status}</span>
@@ -64,11 +64,11 @@ export default function SystemProfile() {
             <span aria-hidden className="h-2 w-2 rounded-full bg-duck shadow-[0_0_10px_rgb(245_190_91)]" />
             {profile.status}
           </span>
-          <span className="font-mono text-[11px] text-fg-muted">{player.role}</span>
+          <span className="font-mono text-[0.6875rem] text-fg-muted">{player.role}</span>
         </div>
         <div className={card}>
           <span className={k}>{t.roles}</span>
-          <span className="font-sans text-[13px] leading-relaxed text-fg">
+          <span className="font-sans text-[0.8125rem] leading-relaxed text-fg">
             {player.roles.map((r) => (
               <span key={r} className="block">
                 {r}
@@ -82,13 +82,13 @@ export default function SystemProfile() {
             <span className="font-crt text-4xl leading-none text-duck">{profile.mbti.type}</span>
             <span className="font-sans text-base font-bold text-fg">{profile.mbti.name}</span>
           </span>
-          <span className="font-sans text-[13px] leading-relaxed text-fg/80">{profile.mbti.description}</span>
+          <span className="font-sans text-[0.8125rem] leading-relaxed text-fg/80">{profile.mbti.description}</span>
         </div>
         <div className={card}>
           <span className={k}>{t.stack}</span>
           <ul className="flex flex-wrap gap-1.5">
             {profile.stack.map((s) => (
-              <li key={s} className="rounded-sm border border-fg/18 px-2 py-0.5 font-mono text-[11px] text-fg/75">
+              <li key={s} className="rounded-sm border border-fg/18 px-2 py-0.5 font-mono text-[0.6875rem] text-fg/75">
                 {s}
               </li>
             ))}
@@ -96,7 +96,7 @@ export default function SystemProfile() {
         </div>
       </div>
 
-      <div className="mt-7 max-w-3xl space-y-4 font-sans text-[15px] leading-relaxed text-fg/85">
+      <div className="mt-7 max-w-3xl space-y-4 font-sans text-[0.9375rem] leading-relaxed text-fg/85">
         {about.paragraphs.map((p, i) => (
           <p key={i}>{marked(p)}</p>
         ))}

@@ -1,96 +1,103 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react'
 
 /**
- * The custom cursor: a 6 px yellow dot that sits on the pointer and a 28 px
- * ring that follows on a spring. Over anything clickable the ring grows and
- * inverts what is under it; over a text field it steps aside and the native
- * caret cursor comes back. An element can ask for a mode with
- * data-cursor="link|text|none".
+ * The cursor label, the way lamalama.com does it: the native cursor stays,
+ * and a small monospace tag rides just beside it, hidden at rest, that
+ * appears over anything you can act on and says what will happen. The text
+ * reveals glyph by glyph, the way the boot screen's hand does.
  *
- * Desktop pointers only: it never mounts on a touch screen, under
- * prefers-reduced-motion, or while the boot screen is up. The native cursor
- * is hidden only while this one is actually drawn, so nothing is ever
- * without a cursor.
+ * What an element says comes from the nearest `data-cursor-label`; a link
+ * without one says OPEN (with an arrow when it leaves the site), anything
+ * else says nothing. Desktop pointers only: it never mounts on a touch
+ * screen or under prefers-reduced-motion.
  */
-type Mode = 'default' | 'link' | 'text' | 'none'
+const NOISE = '01+x$X;/\\|=<>*'
+const REVEAL_MS = 260
 
-const CLICKABLE = 'a, button, [role="button"], [role="option"], summary, label, input[type="checkbox"], input[type="radio"], select'
-const TEXTY = 'input:not([type="checkbox"]):not([type="radio"]), textarea, [contenteditable="true"]'
+function labelFor(el: Element | null): string {
+  const asked = el?.closest<HTMLElement>('[data-cursor-label]')
+  if (asked) return asked.dataset.cursorLabel ?? ''
+  const a = el?.closest<HTMLAnchorElement>('a[href]')
+  if (a) return a.target === '_blank' || /^https?:/.test(a.getAttribute('href') ?? '') ? 'open ↗' : 'open'
+  return ''
+}
 
 export default function Cursor() {
   const reduce = useReducedMotion()
   const [on, setOn] = useState(false)
-  const [mode, setMode] = useState<Mode>('default')
-  const [down, setDown] = useState(false)
-  const x = useMotionValue(-100)
-  const y = useMotionValue(-100)
-  const rx = useSpring(x, { stiffness: 500, damping: 40, mass: 0.6 })
-  const ry = useSpring(y, { stiffness: 500, damping: 40, mass: 0.6 })
+  const [label, setLabel] = useState('')
+  const [shown, setShown] = useState('')
+  const x = useMotionValue(-200)
+  const y = useMotionValue(-200)
+  // a light lag, so the tag trails the pointer instead of being glued to it
+  const sx = useSpring(x, { stiffness: 900, damping: 60, mass: 0.5 })
+  const sy = useSpring(y, { stiffness: 900, damping: 60, mass: 0.5 })
+  const raf = useRef(0)
 
   useEffect(() => {
     if (reduce) return
-    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
-    if (!mq.matches) return
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
     setOn(true)
-    document.documentElement.dataset.cursor = 'custom'
-
-    const modeFor = (el: Element | null): Mode => {
-      const asked = el?.closest<HTMLElement>('[data-cursor]')?.dataset.cursor
-      if (asked === 'link' || asked === 'text' || asked === 'none') return asked
-      if (el?.closest(TEXTY)) return 'text'
-      if (el?.closest(CLICKABLE)) return 'link'
-      return 'default'
-    }
     const move = (e: PointerEvent) => {
       x.set(e.clientX)
       y.set(e.clientY)
-      setMode(modeFor(e.target as Element | null))
+      setLabel(labelFor(e.target as Element | null))
     }
-    const leave = () => x.set(-100)
-    const pressOn = () => setDown(true)
-    const pressOff = () => setDown(false)
+    const leave = () => setLabel('')
     window.addEventListener('pointermove', move, { passive: true })
     document.documentElement.addEventListener('pointerleave', leave)
-    window.addEventListener('pointerdown', pressOn)
-    window.addEventListener('pointerup', pressOff)
+    window.addEventListener('blur', leave)
     return () => {
       window.removeEventListener('pointermove', move)
       document.documentElement.removeEventListener('pointerleave', leave)
-      window.removeEventListener('pointerdown', pressOn)
-      window.removeEventListener('pointerup', pressOff)
-      delete document.documentElement.dataset.cursor
+      window.removeEventListener('blur', leave)
     }
   }, [reduce, x, y])
 
-  if (!on) return null
-  const hidden = mode === 'text' || mode === 'none'
-  // in px, scaled by the root font size (the site grows with the viewport)
-  const rem = typeof document === 'undefined' ? 1 : parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1
-  const ring = (mode === 'link' ? 44 : 28) * rem
+  // reveal: each glyph settles left to right, scrambling until it does
+  useEffect(() => {
+    cancelAnimationFrame(raf.current)
+    if (!label) {
+      setShown('')
+      return
+    }
+    const text = label.toUpperCase()
+    const t0 = performance.now()
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / REVEAL_MS)
+      const settled = Math.floor(p * text.length)
+      let out = ''
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i]
+        if (i < settled || ch === ' ') out += ch
+        else out += NOISE[(Math.random() * NOISE.length) | 0]
+      }
+      setShown(out)
+      if (p < 1) raf.current = requestAnimationFrame(tick)
+      else setShown(text)
+    }
+    raf.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf.current)
+  }, [label])
 
+  if (!on) return null
   return (
-    <>
-      {/* the dot: no spring, it is the pointer */}
-      <motion.div
-        aria-hidden
-        style={{ x, y, translateX: '-50%', translateY: '-50%' }}
-        className={`pointer-events-none fixed left-0 top-0 z-[90] h-1.5 w-1.5 rounded-full bg-duck transition-opacity duration-150 ${
-          hidden ? 'opacity-0' : 'opacity-100'
+    <motion.div
+      aria-hidden
+      style={{ x: sx, y: sy }}
+      className="pointer-events-none fixed left-0 top-0 z-[90]"
+    >
+      <span
+        className={`ml-4 mt-5 flex h-[1.375rem] items-center bg-fg px-2 font-mono text-[0.625rem] font-medium uppercase tracking-[0.12em] text-bg transition-opacity duration-150 ${
+          label ? 'opacity-100' : 'opacity-0'
         }`}
-      />
-      {/* the ring: lags, grows over links, inverts what it covers */}
-      <motion.div
-        aria-hidden
-        style={{ x: rx, y: ry, translateX: '-50%', translateY: '-50%' }}
-        animate={{ width: ring, height: ring, scale: down ? 0.85 : 1 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-        className={`pointer-events-none fixed left-0 top-0 z-[89] rounded-full border border-white mix-blend-difference transition-opacity duration-150 ${
-          hidden ? 'opacity-0' : mode === 'link' ? 'bg-white/90 opacity-100' : 'opacity-70'
-        }`}
-      />
-    </>
+      >
+        <span className="mr-1.5 text-duck">▸</span>
+        {shown || ' '}
+      </span>
+    </motion.div>
   )
 }

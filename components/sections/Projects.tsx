@@ -403,7 +403,7 @@ export default function Projects() {
           {/* text LEFT, screenshot RIGHT from lg; the image leads on a phone
               held upright. A rotated phone is short but WIDE, so it gets the
               two-column layout too - stacked, nothing fit above the fold */}
-          <div className="order-first mx-auto w-full max-w-[44.800000000000004svh] [@media(max-height:520px)]:order-last [@media(max-height:520px)]:max-w-[83.2svh] lg:order-last lg:ml-0 lg:max-w-[89.60000000000001svh]">
+          <div className="order-first mx-auto w-full max-w-[34svh] [@media(max-height:520px)]:order-last [@media(max-height:520px)]:max-w-[62svh] lg:order-last lg:ml-0 lg:max-w-[64svh]">
             <Screen key={arrivalKey} p={p} />
           </div>
 
@@ -534,6 +534,7 @@ export default function Projects() {
                   key={q.title}
                   type="button"
                   onClick={() => goTo(i)}
+                  data-cursor-label={`jump ${pad(i + 1)}`}
                   aria-label={`${pad(i + 1)} ${q.title}`}
                   aria-current={on ? 'true' : undefined}
                   className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[0.1875rem] border border-fg/10 bg-bg/60 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:aspect-16/10 lg:h-auto lg:w-[4.5rem] lg:flex-none ${
@@ -595,6 +596,7 @@ function Link({ href, label }: { href: string; label: string }) {
       href={href}
       target="_blank"
       rel="noreferrer"
+      data-cursor-label={`${label} ↗`}
       className="group/l inline-flex min-h-[2rem] items-center font-mono text-[0.625rem] uppercase tracking-wider text-fg-muted transition-colors hover:text-fg lg:text-[0.6875rem]"
     >
       <span aria-hidden>&#8599;</span>{' '}

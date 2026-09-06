@@ -194,6 +194,7 @@ export default function Certificates() {
             <button
               key={c.file}
               onClick={() => setActive(c)}
+              data-cursor-label="open"
               className={`group flex items-start gap-3 rounded-2xl border ${face.ring} bg-linear-to-b from-fg/6 to-transparent p-2.5 text-left transition-colors hover:from-fg/11 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70`}
             >
               <div className="w-16 shrink-0 overflow-hidden rounded-md bg-white shadow-[0_8px_22px_-10px_rgba(0,0,0,0.9)]">

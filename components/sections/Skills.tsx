@@ -113,6 +113,7 @@ export default function Skills() {
                 aria-selected={on}
                 type="button"
                 onClick={() => openGroup(gi)}
+                data-cursor-label="switch"
                 className={`flex min-h-[3.5rem] items-center justify-between gap-3 rounded-md border px-4 py-3 text-left transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${
                   on ? 'border-fg bg-fg text-bg' : 'border-fg/15 bg-panel/40 text-fg/80 hover:border-fg/45 hover:text-fg'
                 }`}
@@ -151,6 +152,7 @@ export default function Skills() {
                     <button
                       type="button"
                       onClick={() => setPicked(sk.name)}
+                      data-cursor-label="pick"
                       onMouseEnter={() => setPicked(sk.name)}
                       className={`group flex w-full items-center gap-4 border-b border-fg/12 px-2 py-4 text-left transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg sm:px-3 ${
                         on ? 'bg-fg/[0.06]' : 'hover:bg-fg/[0.04]'

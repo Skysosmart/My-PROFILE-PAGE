@@ -44,6 +44,7 @@ export default function WriteupsTeaser({ items }: { items: WriteupMeta[] }) {
         <div className="mt-5">
           <Link
             href="/writeups"
+            data-cursor-label="all writeups"
             className="inline-flex min-h-[2.25rem] items-center gap-2 rounded-full border border-fg/25 px-4 font-mono text-[0.6875rem] text-fg/85 transition-colors hover:border-fg/60 hover:text-fg"
           >
             {t.writeups.all} →

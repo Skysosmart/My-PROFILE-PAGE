@@ -35,6 +35,7 @@ export default function ThemeToggle() {
         applyPref(next)
       }}
       aria-label={`Switch to ${next} theme`}
+      data-cursor-label={`theme ${next}`}
       title={`theme ${next}`}
       className="shrink-0 rounded-sm px-1 font-mono text-[0.8125rem] leading-none text-fg/70 transition-colors hover:text-fg focus-visible:outline-solid focus-visible:outline-1 focus-visible:outline-fg/60"
     >

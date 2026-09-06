@@ -578,12 +578,6 @@
 [data-theme='light'] .duck-dark { display: none; }
 [data-theme='light'] .duck-light { display: block; }
 
-/* --------------------------------------------------------------------------
-   Custom cursor (components/effects/Cursor.tsx). The native cursor goes only
-   while the custom one is drawn, and comes back over anything you type in.
-   -------------------------------------------------------------------------- */
-html[data-cursor='custom'], html[data-cursor='custom'] a, html[data-cursor='custom'] button { cursor: none; }
-html[data-cursor='custom'] :is(input:not([type='checkbox']):not([type='radio']), textarea, [contenteditable='true'], [data-cursor='text'], [data-cursor='text'] *) { cursor: auto; }
 
 /* halftone dot screen for the personal prints (lamalama's dither, in CSS) */
 .dither {

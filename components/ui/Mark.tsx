@@ -35,6 +35,7 @@ export function Mark({ term, children }: { term: string; children?: ReactNode })
     <span
       ref={ref}
       className="relative"
+      data-cursor-label="what is this"
       onPointerEnter={(e) => {
         if (!fine) return
         move(e)

@@ -31,7 +31,9 @@ export default function Education() {
   // the rail fills as the list scrolls through the middle of the viewport
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 75%', 'end 45%'] })
   const fill = useSpring(scrollYProgress, { stiffness: 80, damping: 24, mass: 0.4 })
-  const height = useTransform(fill, (v) => `${(reduce ? 1 : v) * 100}%`)
+  // a scale, not a height: the rail fills on the compositor instead of
+  // re-laying-out the page on every frame the spring moves
+  const scaleY = useTransform(fill, (v) => (reduce ? 1 : v))
 
   const count = (from: number, to?: number) =>
     certificates.filter((c) => {
@@ -58,8 +60,8 @@ export default function Education() {
           <span aria-hidden className="absolute left-[1.35rem] top-0 hidden h-full w-px bg-fg/12 md:block" />
           <motion.span
             aria-hidden
-            style={{ height }}
-            className="absolute left-[1.35rem] top-0 hidden w-px bg-linear-to-b from-duck via-fg to-transparent md:block"
+            style={{ scaleY }}
+            className="absolute left-[1.35rem] top-0 hidden h-full w-px origin-top bg-linear-to-b from-duck via-fg to-transparent md:block"
           />
 
           {education.map((ch, i) => {

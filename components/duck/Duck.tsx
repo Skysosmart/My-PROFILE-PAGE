@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react'
 
 /**
@@ -52,6 +52,7 @@ export default function Duck({
 }) {
   const p = POSE[pose]
   const reduce = useReducedMotion()
+  const ref = useRef<HTMLDivElement>(null)
 
   // pointer parallax: the duck leans a few px away from the cursor, on a
   // spring so it settles rather than snaps. Desktop pointers only; a touch
@@ -66,12 +67,30 @@ export default function Duck({
   useEffect(() => {
     if (!parallax || reduce) return
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    const el = ref.current
+    if (!el) return
     const onMove = (e: PointerEvent) => {
       px.set(-(e.clientX / window.innerWidth - 0.5) * 2)
       py.set(-(e.clientY / window.innerHeight - 0.5) * 2)
     }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    return () => window.removeEventListener('pointermove', onMove)
+    // the listener, and the springs it drives, only while this duck is near
+    // the screen: seven ducks used to lean on every pointer move, six of them
+    // off screen
+    let on = false
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting === on) return
+        on = e.isIntersecting
+        if (on) window.addEventListener('pointermove', onMove, { passive: true })
+        else window.removeEventListener('pointermove', onMove)
+      },
+      { rootMargin: '10% 0px' },
+    )
+    io.observe(el)
+    return () => {
+      io.disconnect()
+      window.removeEventListener('pointermove', onMove)
+    }
   }, [parallax, reduce, px, py])
 
   const img = (theme: 'dark' | 'light') => (
@@ -89,9 +108,12 @@ export default function Duck({
 
   return (
     <motion.div
+      ref={ref}
       aria-hidden
-      // in rem, so the drawing scales with the root font size like everything else
-      style={{ width: `${width / 16}rem`, x, y }}
+      // in rem, so the drawing scales with the root font size like everything
+      // else. A leaning duck gets its own compositor layer: without one, every
+      // pointer move re-rasterised the drawing (and, in the hero, its shadow)
+      style={{ width: `${width / 16}rem`, x, y, willChange: parallax ? 'transform' : undefined }}
       className={`pointer-events-none relative shrink-0 ${p.className ?? ''} ${className}`}
     >
       {/* both themes are in the tree; globals.css shows one per data-theme */}

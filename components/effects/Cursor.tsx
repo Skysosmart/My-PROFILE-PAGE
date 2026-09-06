@@ -87,7 +87,7 @@ export default function Cursor() {
   return (
     <motion.div
       aria-hidden
-      style={{ x: sx, y: sy }}
+      style={{ x: sx, y: sy, willChange: 'transform' }}
       className="pointer-events-none fixed left-0 top-0 z-[90]"
     >
       <span

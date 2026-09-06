@@ -36,7 +36,8 @@ export default function IntroHero() {
         {/* left: the duck says hello, the lines stand beside it */}
         <motion.div
           {...rise(0.5)}
-          className="flex flex-col items-center gap-4 sm:flex-row sm:items-end sm:gap-6 lg:justify-start"
+          // staggered on desktop: the left half sits a little lower, the orb a little higher
+          className="flex flex-col items-center gap-4 sm:flex-row sm:items-end sm:gap-6 lg:translate-y-10 lg:justify-start"
         >
           <Duck pose="hero" width={150} parallax={12} priority className="sm:!w-[190px] xl:!w-[230px]" />
           <div className="flex flex-col items-center gap-0.5 pb-2 text-center sm:items-start sm:pb-8 sm:text-left">
@@ -47,7 +48,7 @@ export default function IntroHero() {
         </motion.div>
 
         {/* right: the orb, as it was */}
-        <div className="flex flex-col items-center lg:justify-self-end lg:pr-6">
+        <div className="flex flex-col items-center lg:-translate-y-10 lg:justify-self-end lg:pr-6">
           <motion.p
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}

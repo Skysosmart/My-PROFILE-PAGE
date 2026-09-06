@@ -63,7 +63,7 @@ export const profile = {
  *  EDUCATION - the timeline, one chapter per school stage, oldest first.
  *  `from`/`to` are the years the chapter spans (to open = still there); the
  *  section counts the certificates dated inside them, so that number is
- *  never typed. Values in [brackets] are waiting for the real ones.  // TODO
+ *  never typed.
  * ------------------------------------------------------------------------- */
 export type Chapter = {
   /** shown as written, e.g. '2016 – 2022' */
@@ -85,11 +85,11 @@ export type Chapter = {
 
 export const education: Chapter[] = [
   {
-    years: '[2016] – [2022]', // TODO: the real years
-    from: 2016,
-    to: 2021,
+    years: '2014 – 2021',
+    from: 2014,
+    to: 2020,
     stage: 'Primary school',
-    school: '[PRIMARY SCHOOL]', // TODO
+    school: 'Buranawit School'
     title: 'First contact',
     summary:
       'Bottom of the class most years, until a first computer and Roblox. That was the first time making something felt possible, and the digital world stopped being a place other people built.',
@@ -103,11 +103,11 @@ export const education: Chapter[] = [
     quote: 'The first time making something felt possible.',
   },
   {
-    years: '[2022] – [2025]', // TODO: the real years
-    from: 2022,
-    to: 2024,
+    years: '2021 – 2024',
+    from: 2021,
+    to: 2023,
     stage: 'Junior high',
-    school: '[JUNIOR HIGH SCHOOL]', // TODO
+    school: 'Watkhemapirataram School'
     title: 'Trying everything',
     summary:
       'Coding for real: plugins, then back ends. Game development, robotics and electronics one after another, and none of them quite the one, until cyber security and CTF.',
@@ -121,8 +121,8 @@ export const education: Chapter[] = [
     quote: 'None of them quite the one, until cyber security.',
   },
   {
-    years: '2025 – present',
-    from: 2025,
+    years: '2024 – present',
+    from: 2024,
     stage: 'Senior high',
     school: 'Assumption College Thonburi',
     href: 'https://www.act.ac.th',

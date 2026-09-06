@@ -47,7 +47,7 @@ export default function Personal() {
       </div>
       <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-center">
         <div className="flex flex-col gap-4">
-          <span className="font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">[ 05 · {t.label} ]</span>
+          <span className="font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">[ 07 · {t.label} ]</span>
           <h2 className="font-crt text-5xl leading-[0.95] text-fg txt-glow sm:text-6xl">
             {t.title1}
             <br />

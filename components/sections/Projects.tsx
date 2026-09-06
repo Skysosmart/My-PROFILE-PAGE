@@ -351,7 +351,7 @@ export default function Projects() {
         {/* header: the GlassSection markup verbatim, so this matches every
             other section even though it cannot be one */}
         <span className="mb-2 block font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">
-          [ 03 · PROJECTS ]
+          [ 05 · PROJECTS ]
         </span>
         <div className="relative mb-7 flex items-baseline gap-3 pb-4">
           <motion.span
@@ -361,7 +361,7 @@ export default function Projects() {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="font-mono text-xs text-fg-dim"
           >
-            03
+            05
           </motion.span>
           <motion.h2
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}

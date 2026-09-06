@@ -36,7 +36,7 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
 
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2">
-            <span className="font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">[ 06 · {t.label} ]</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">[ 08 · {t.label} ]</span>
             <h2 className="font-crt text-5xl leading-[0.95] text-fg txt-glow sm:text-6xl">{t.title1}</h2>
             <p className="font-crt text-3xl leading-none text-duck sm:text-4xl">{t.title2}</p>
           </div>

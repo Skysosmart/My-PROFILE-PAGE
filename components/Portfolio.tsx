@@ -29,6 +29,8 @@ const split = <P extends object>(load: () => Promise<{ default: React.ComponentT
   dynamic(load, { ssr: false, loading: Reserve })
 const SystemProfile = split(() => import('@/components/sections/SystemProfile'))
 const AboutMe = split(() => import('@/components/sections/AboutMe'))
+const Education = split(() => import('@/components/sections/Education'))
+const Skills = split(() => import('@/components/sections/Skills'))
 const Personal = split(() => import('@/components/sections/Personal'))
 const Ending = split(() => import('@/components/sections/Ending'))
 const Certificates = split(() => import('@/components/sections/Certificates'))
@@ -101,6 +103,12 @@ export default function Portfolio({
             </Deferred>
             <Deferred id="about">
               <AboutMe />
+            </Deferred>
+            <Deferred id="education" minHeight="70svh">
+              <Education />
+            </Deferred>
+            <Deferred id="skills" minHeight="70svh">
+              <Skills />
             </Deferred>
             <Deferred id="certificates">
               <Certificates />

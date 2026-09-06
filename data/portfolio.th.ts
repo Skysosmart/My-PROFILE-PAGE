@@ -141,3 +141,67 @@ export const profileTh = {
       'อ่านบรรยากาศออก แล้วพาทุกคนขยับไปข้างหน้า คือส่วนที่ทำให้ผมกล้านำเสนอ นำทีม และชวนคนมาลงมือสร้างของจริง',
   },
 }
+
+/** the education chapters, in the order of the English file */
+export const educationTh: { stage: string; title: string; summary: string; focus: string[]; achievements: string[] }[] = [
+  {
+    stage: 'ประถม',
+    title: 'สัมผัสแรก',
+    summary:
+      'อยู่ท้ายห้องเกือบทุกปี จนได้จับคอมพิวเตอร์เครื่องแรกและ Roblox เป็นครั้งแรกที่รู้สึกว่าสร้างอะไรบางอย่างได้ และโลกดิจิทัลก็ไม่ใช่ที่ที่คนอื่นสร้างให้อีกต่อไป',
+    focus: ['Roblox', 'โค้ดบรรทัดแรก'],
+    achievements: [],
+  },
+  {
+    stage: 'มัธยมต้น',
+    title: 'ลองทุกอย่าง',
+    summary:
+      'เขียนโค้ดจริงจัง เริ่มจากปลั๊กอินแล้วไปหลังบ้าน ลองพัฒนาเกม หุ่นยนต์ อิเล็กทรอนิกส์ทีละอย่าง แต่ยังไม่ใช่สักอย่าง จนเจอ Cyber Security กับ CTF',
+    focus: ['พัฒนาเกม', 'หุ่นยนต์', 'อิเล็กทรอนิกส์', 'หลังบ้าน'],
+    achievements: [],
+  },
+  {
+    stage: 'มัธยมปลาย',
+    title: 'สร้างมัน แล้วเจาะมัน',
+    summary:
+      'Cyber Security กลายเป็นสิ่งที่คุ้มค่าจะตื่นมาทำ แข่งและเข้าค่ายวันหยุด อุปกรณ์ที่ได้เหรียญทอง และปีที่เป็นแบรนด์แอมบาสเดอร์ซึ่งสอนให้อธิบายทุกอย่างให้คนทั้งห้องเข้าใจ',
+    focus: ['Cyber Security', 'CTF', 'ฟูลสแตก', 'ออกแบบ 3D'],
+    achievements: [
+      'เหรียญทอง Thailand New Gen Inventors Award 2026 จาก PDLite',
+      'อันดับ 3 ระดับประเทศ CODEKIT website competition 2026',
+      'อันดับ 3 และ Best Favourite Alliance Team, MakeX Challenge 2025',
+      'ACT Brand Ambassador 2025',
+      'RTARF Cyber Bootcamp: Network Defense และ Ethical Hacking Essentials',
+    ],
+  },
+]
+
+/** the skill groups' labels and each skill's note, keyed by the English name */
+export const skillsTh: { labels: Record<string, string>; notes: Record<string, string> } = {
+  labels: {
+    web: 'เว็บและฟูลสแตก',
+    security: 'ความปลอดภัย',
+    data: 'Python ข้อมูล และ AI',
+    design: 'ออกแบบและ 3D',
+  },
+  notes: {
+    'Next.js': 'ค่าเริ่มต้นของทุกอย่างที่มีหน้าจอ: PDLite, Doodee Future, Seluna และเว็บนี้',
+    TypeScript: 'ใส่ type ก่อน เพื่อให้การรีแฟกเตอร์เป็น error ของคอมไพเลอร์ ไม่ใช่รายงานบั๊ก',
+    React: 'คอมโพเนนต์ ฮุก และวินัยในการเก็บ state ไว้ให้ถูกที่',
+    'Tailwind CSS': 'เลย์เอาต์ที่รอดบนมือถือ ทุกหน้าในนี้เป็นแบบนั้น',
+    'Supabase & Prisma': 'Postgres หลัง API ที่ดี: ค่าที่วัดได้ของ PDLite, ข้อมูลของ Doodee Future',
+    'Astro & Cloudflare': 'เว็บสแตติกที่ขอบเครือข่าย สำหรับ Nebula และ Seluna',
+    'Web exploitation': 'บทบาทของผมใน CTF: injection, ช่องโหว่ auth, SSRF และการอ่านแอปในแบบที่มันไม่ได้ตั้งใจให้อ่าน',
+    Networking: 'อีกบทบาทใน CTF: แพ็กเก็ต โปรโตคอล และสิ่งที่เซอร์วิสบอกตอนไม่มีใครถาม',
+    'Burp Suite': 'Proxy, repeater, intruder: ที่ที่เป้าหมายเว็บถูกแยกชิ้น',
+    Linux: 'ใช้ทุกวัน เชลล์คือที่ที่ทั้งเว็บนี้และ exploit ถูกเขียน',
+    'Defense & ethics': 'Network Defense และ Ethical Hacking Essentials จาก RTARF Cyber Bootcamp',
+    Python: 'สคริปต์ ไปป์ไลน์ เครื่องมือ และโค้ด exploit ส่วนใหญ่',
+    'OCR & NER pipelines': 'แปลงบัญชีทรัพย์สินที่สแกนมาเป็นข้อมูลที่ค้นได้ สำหรับงาน Hackathon Digitize',
+    'AI & ML': 'ตอนนี้ยังเป็นคอร์สและค่าย: prompt engineering, data analytics, CiRA CORE',
+    'Fusion 360': 'ตัวเครื่องและกลไกที่ได้พิมพ์จริง: PDLite และหุ่นยนต์ MakeX',
+    'Three.js & WebGL': 'ลูกแก้ว ทอรัส ดวงจันทร์ของ Seluna โดมของ Nebula',
+    Motion: 'GSAP และ Motion: การเผย ฟิล์ม และผิวน้ำ',
+    'Graphic design': 'เลย์เอาต์ ตัวอักษร และสี ทั้งบนจอและบนกระดาษ',
+  },
+}

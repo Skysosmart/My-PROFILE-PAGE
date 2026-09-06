@@ -23,7 +23,7 @@ export default async function WriteupsPage() {
       <WriteupChrome path="writeups/" />
       <header className="mt-10 flex items-end justify-between gap-6">
         <div className="flex flex-col gap-3">
-          <span className="font-mono text-[11px] tracking-[0.35em] text-fg-dim">[ 04 · WRITEUPS ]</span>
+          <span className="font-mono text-[11px] tracking-[0.35em] text-fg-dim">[ 06 · WRITEUPS ]</span>
           <h1
             className="font-crt text-5xl leading-none text-fg sm:text-6xl"
             style={{ textShadow: '0 0 10px rgb(var(--fg) / 0.5)' }}

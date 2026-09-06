@@ -28,9 +28,9 @@ export default function WriteupsTeaser({ items }: { items: WriteupMeta[] }) {
       <div className="mx-auto w-full max-w-5xl">
         <div className="mb-7 flex items-end justify-between gap-6 pb-4">
           <div className="flex flex-col gap-2">
-            <span className="font-mono text-[11px] tracking-[0.35em] text-fg-dim">[ 04 · WRITEUPS ]</span>
+            <span className="font-mono text-[11px] tracking-[0.35em] text-fg-dim">[ 06 · WRITEUPS ]</span>
             <div className="flex items-baseline gap-3">
-              <span className="font-mono text-xs text-fg-dim">04</span>
+              <span className="font-mono text-xs text-fg-dim">06</span>
               <h2 className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-fg txt-glow sm:text-xl">
                 {t.writeups.title}
               </h2>

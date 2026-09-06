@@ -148,9 +148,9 @@ export default function Certificates() {
   return (
     <GlassSection
       id="certificates"
-      index="02"
+      index="04"
       title="Certificates"
-      label="02 · CERTIFICATES"
+      label="04 · CERTIFICATES"
       watermark="CERTS"
       // "rise" only offsets y by a fixed 44px. flip/zoom/blur displace by a
       // share of the element, which throws a tall section off its own

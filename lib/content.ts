@@ -1,6 +1,6 @@
 import type { Lang } from '@/lib/lang'
-import { about, contact, inspiration, player, profile, projects, sop } from '@/data/portfolio'
-import { aboutTh, contactTh, inspirationTh, playerTh, profileTh, projectsTh, sopTh } from '@/data/portfolio.th'
+import { about, contact, education, inspiration, player, profile, projects, skills, sop } from '@/data/portfolio'
+import { aboutTh, contactTh, educationTh, inspirationTh, playerTh, profileTh, projectsTh, skillsTh, sopTh } from '@/data/portfolio.th'
 
 /**
  * The site's prose in one language. English is data/portfolio.ts as it is;
@@ -10,7 +10,7 @@ import { aboutTh, contactTh, inspirationTh, playerTh, profileTh, projectsTh, sop
  * directly and never sees this.
  */
 export function localize(lang: Lang) {
-  if (lang !== 'th') return { player, about, sop, inspiration, projects, contact, profile }
+  if (lang !== 'th') return { player, about, sop, inspiration, projects, contact, profile, education, skills }
   return {
     player: { ...player, ...playerTh },
     about: {
@@ -28,6 +28,12 @@ export function localize(lang: Lang) {
       status: profileTh.status,
       mbti: { ...profile.mbti, ...profileTh.mbti },
     },
+    education: education.map((ch, n) => ({ ...ch, ...educationTh[n] })),
+    skills: skills.map((g) => ({
+      ...g,
+      label: skillsTh.labels[g.key] ?? g.label,
+      skills: g.skills.map((sk) => ({ ...sk, note: skillsTh.notes[sk.name] ?? sk.note })),
+    })),
   }
 }
 

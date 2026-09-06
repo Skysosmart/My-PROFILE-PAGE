@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 import BootScreen from '@/components/BootScreen'
 import Header from '@/components/Header'

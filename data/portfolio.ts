@@ -50,7 +50,7 @@ export const about = {
   facts: [
     { key: 'ROLE', value: 'Full-Stack Dev · Pentester' },
     { key: 'CRAFT', value: '3D Design · Graphic Design' },
-    { key: 'STACK', value: 'Next.js · TypeScript · Python' }
+    { key: 'STACK', value: 'Next.js · TypeScript · Python' },
     { key: 'LOCATION', value: 'Thailand' },
     { key: 'STATUS', value: 'Open to opportunities' },
   ],

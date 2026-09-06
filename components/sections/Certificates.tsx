@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView } from 'motion/react'
 import GlassSection from '@/components/ui/GlassSection'
 import CertWall from '@/components/effects/CertWall'
 import CertCard from '@/components/ui/CertCard'
@@ -124,7 +124,7 @@ export default function Certificates() {
   }, [])
 
   const byFile = useMemo(() => new Map(certificates.map((c) => [c.file, c])), [])
-  const byCat = useMemo(groupByCategory, [])
+  const byCat = useMemo(() => groupByCategory(), [])
 
   const podium = useMemo(
     () =>

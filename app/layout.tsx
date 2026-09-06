@@ -91,6 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
       className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable}`}
     >
       <body>

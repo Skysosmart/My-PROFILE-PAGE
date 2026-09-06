@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import { motion, useReducedMotion, type Variants } from 'motion/react'
 
 /**
  * A frosted-glass content panel with a monospace eyebrow label + title.

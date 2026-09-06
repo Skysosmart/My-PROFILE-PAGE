@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import CertCard from '@/components/ui/CertCard'
 import CertLightbox from '@/components/ui/CertLightbox'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -45,7 +45,7 @@ export default function CertArchive() {
     return () => clearInterval(id)
   }, [])
 
-  const byCat = useMemo(groupByCategory, [])
+  const byCat = useMemo(() => groupByCategory(), [])
   const list = useMemo(
     () => byNewest((byCat.get(cat) ?? []).filter((c) => certMatches(c, query))),
     [byCat, cat, query],

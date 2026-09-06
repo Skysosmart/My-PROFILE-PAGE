@@ -47,6 +47,10 @@ export default function CertWall() {
             >
               {/* duplicated sequence -> seamless -50% loop */}
               {[...row, ...row].map((c, i) => (
+                // a plain img on purpose: the marquee is auto-width and these
+                // are pre-generated thumbs, so next/image would only add a
+                // fixed-size wrapper to fight with
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   key={i}
                   src={thumb(c.file)}

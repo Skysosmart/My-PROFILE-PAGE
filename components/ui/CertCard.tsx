@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { certThumb, categorize, catMeta, LEVEL_TAG } from '@/lib/certs'
 import type { Certificate } from '@/data/portfolio'
 

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { player, nav } from '@/data/portfolio'
 import ThemeToggle from '@/components/ThemeToggle'
 import { applyPref, currentTheme } from '@/lib/theme'

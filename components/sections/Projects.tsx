@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from 'framer-motion'
+import { motion, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react'
 import AsciiImage from '@/components/effects/AsciiImage'
 import ProjectWall from '@/components/effects/ProjectWall'
 import { figletFor } from '@/data/figlets'

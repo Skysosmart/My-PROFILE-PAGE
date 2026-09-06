@@ -1,7 +1,7 @@
 'use client'
 
 import RoleTicker from '@/components/RoleTicker'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import SkyOrb from '@/components/SkyOrb'
 import HandBackground from '@/components/effects/HandBackground'
 

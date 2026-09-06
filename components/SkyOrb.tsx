@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
 import { inkColors, onThemeChange } from '@/lib/theme'
 import { assets } from '@/data/portfolio'
 

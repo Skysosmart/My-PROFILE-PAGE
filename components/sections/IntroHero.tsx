@@ -3,17 +3,16 @@
 import RoleTicker from '@/components/RoleTicker'
 import { motion, useReducedMotion } from 'motion/react'
 import SkyOrb from '@/components/SkyOrb'
-import HandBackground from '@/components/effects/HandBackground'
 import Duck from '@/components/duck/Duck'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
 
 /**
- * Full-height intro shown first. Two halves: on the left the duck says
- * hello with three short lines beside it; on the right the liquid sky orb,
- * as it always was, over the ASCII hand. Name lives in the top-right tag;
- * roles in the bottom-left ticker. The hand is a layer INSIDE this section,
- * so it scrolls up and away with the hero.
+ * Full-height intro shown first. Two halves in conversation: on the left
+ * the duck says hello with three short lines beside it; on the right Sky's
+ * face in the liquid orb, answering from its own bubble. The ASCII hands
+ * that used to fill this screen now generate on the boot screen instead.
+ * Name lives in the top-right tag; roles in the bottom-left ticker.
  */
 export default function IntroHero() {
   const t = ui[useLang()].hero
@@ -29,8 +28,6 @@ export default function IntroHero() {
     <header className="relative isolate flex min-h-[100svh] flex-col items-center justify-center px-4 pb-24 pt-36 text-center sm:pb-28 md:pt-24">
       {/* lives here, not in the page shell, so it scrolls away with the hero */}
       <RoleTicker />
-      {/* ASCII hand - scoped to this section only */}
-      <HandBackground />
 
       <div className="flex w-full max-w-5xl flex-col items-center gap-10 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-center lg:gap-8">
         {/* left: the duck says hello, the lines stand beside it */}
@@ -47,7 +44,7 @@ export default function IntroHero() {
           </div>
         </motion.div>
 
-        {/* right: the orb, as it was */}
+        {/* right: the face in the orb, with its own word */}
         <div className="flex flex-col items-center lg:-translate-y-10 lg:justify-self-end lg:pr-6">
           <motion.p
             initial={{ opacity: 0, y: -8 }}
@@ -57,20 +54,32 @@ export default function IntroHero() {
           >
             ◇ {t.loaded}
           </motion.p>
-          <SkyOrb />
-          {/* the scroll cue lives under the orb, on the right, so the left half ends on the lines */}
+          <div className="relative">
+            <SkyOrb />
+            {/* the answer to the duck's hello: a bubble off the orb's shoulder */}
+            <motion.span
+              {...rise(1.0)}
+              className="absolute -right-6 top-6 whitespace-nowrap rounded-2xl rounded-bl-sm border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[12px] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))] sm:-right-10"
+            >
+              {t.bubble}
+              {/* the tail */}
+              <span
+                aria-hidden
+                className="absolute -bottom-[7px] left-3 h-3 w-3 rotate-45 border-b border-r border-fg/40 bg-bg"
+              />
+            </motion.span>
+          </div>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
-            className="mt-8 flex flex-col items-center gap-1.5 rounded-full bg-bg/75 px-4 py-2 font-mono text-[11px] text-fg-dim backdrop-blur-sm"
+            className="mt-2 flex flex-col items-center gap-1.5 font-mono text-[11px] text-fg-dim"
           >
             <span className="uppercase tracking-[0.2em]">{t.scroll}</span>
             <span className="animate-blink text-fg">▼</span>
           </motion.div>
         </div>
       </div>
-
     </header>
   )
 }

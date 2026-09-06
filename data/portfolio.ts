@@ -732,7 +732,6 @@ export const contact = {
  * ------------------------------------------------------------------------- */
 export const assets = {
   handText: '/ASCII-Art-text/Hand-ascii-art.txt',
-  skyArtText: '/ASCII-Art-text/MtNameSky.txt', // sky ASCII shown inside the orb
   skyLogoText: '/ASCII-Art-text/Sky-ASCII.txt', // "Sky" logo behind About Me
   portrait: '/portrait/MeNameSky-web.jpg', // optimized web copy (original kept)
   certDir: '/certificates/',

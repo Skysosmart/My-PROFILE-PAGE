@@ -14,6 +14,7 @@ const en = {
     line1: 'I build it.',
     line2: 'I break it.',
     line3: 'Then I ship it.',
+    bubble: "Hi, I'm Sky.",
     role: 'role',
   },
   stats: {
@@ -90,6 +91,7 @@ const th: UI = {
     line1: 'ผมสร้างมันขึ้นมา',
     line2: 'แล้วลองเจาะมันดู',
     line3: 'ก่อนจะปล่อยของจริง',
+    bubble: 'สวัสดี ผมสกายเอง',
     role: 'บทบาท',
   },
   stats: {

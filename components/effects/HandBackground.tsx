@@ -9,18 +9,26 @@ import { assets } from '@/data/portfolio'
  * hold static (no loop). The art is scaled with a CSS transform so it always
  * COVERS its parent section, and rescales on resize.
  *
- * Rendered as an absolute layer INSIDE the hero section (not fixed), so it
- * scrolls up and away together with the hero when the next sections slide up.
+ * Rendered as an absolute layer INSIDE whatever hosts it: the boot screen,
+ * where it generates while the log types and goes with the fade.
  * The ~9k-cell art is animated by writing straight to a <pre> via a ref in one
  * requestAnimationFrame loop that stops once materializing finishes.
  * Honors prefers-reduced-motion.
  */
 
 const NOISE = '01+x$X;/\\|=<>*'.split('')
-const MATERIALIZE = 4200 // ms for the one-time generate
 const BAND = 0.08 // width of the scrambling frontier
 
-export default function HandBackground() {
+export default function HandBackground({
+  duration = 4200,
+  className = 'text-fg/50 max-md:text-fg/32',
+}: {
+  /** ms for the one-time generate */
+  duration?: number
+  /** the ink strength, as text colour classes */
+  className?: string
+}) {
+  const MATERIALIZE = duration
   const preRef = useRef<HTMLPreElement>(null)
   const hostRef = useRef<HTMLDivElement>(null)
 
@@ -155,7 +163,7 @@ export default function HandBackground() {
     >
       <pre
         ref={preRef}
-        className="m-0 origin-center whitespace-pre font-mono text-[10px] leading-none text-fg/50 max-md:text-fg/32 md:[text-shadow:0_0_8px_rgb(var(--fg)/0.3)]"
+        className={`m-0 origin-center whitespace-pre font-mono text-[10px] leading-none md:[text-shadow:0_0_8px_rgb(var(--fg)/0.3)] ${className}`}
       />
     </div>
   )

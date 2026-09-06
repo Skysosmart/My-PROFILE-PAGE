@@ -27,7 +27,7 @@ export default function Footer() {
         </div>
 
         <p className="mt-2.5 text-center font-mono text-[10px] text-fg-dim">
-          NONTHANAPHONG.EXE · rendered in ASCII · © 2025
+          NONTHANAPHONG.EXE · rendered in ASCII · © {new Date().getFullYear()}
         </p>
       </div>
     </footer>

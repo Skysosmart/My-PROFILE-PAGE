@@ -2,7 +2,7 @@
  * ============================================================================
  *  NONTHANAPHONG.EXE - content
  *  Single source of content for the whole site. Edit the text/values below and
- *  the site updates. Placeholders you should replace are marked  // TODO.
+ *  the site updates.
  * ============================================================================
  */
 
@@ -11,8 +11,8 @@
  * ------------------------------------------------------------------------- */
 export const player = {
   name: 'Nonthanaphong Saechua',
-  firstName: 'Nonthanaphong', // TODO
-  lastName: 'Saechua', // TODO
+  firstName: 'Nonthanaphong',
+  lastName: 'Saechua',
   handle: 'NONTHANAPHONG.EXE',
   role: 'Full-Stack Dev · Pentester · 3D & Graphic Designer',
   tagline: 'Academic Portfolio',
@@ -47,12 +47,11 @@ export const about = {
     "I'm Nonthanaphong Saechua - a full-stack developer and penetration tester who also works in 3D and graphic design. I build things end to end: shipping web apps, breaking them to make them safer, and designing how they look and feel.",
     'From robotics competitions to CTF boot camps and AI courses, I learn by building and testing. This portfolio brings together who I am, the certificates I have earned, the projects I have worked on, and how to reach me.',
   ],
-  // TODO: tweak these details.
   facts: [
     { key: 'ROLE', value: 'Full-Stack Dev · Pentester' },
     { key: 'CRAFT', value: '3D Design · Graphic Design' },
-    { key: 'STACK', value: 'Next.js · TypeScript · Python' }, // TODO: your stack
-    { key: 'LOCATION', value: 'Thailand' }, // TODO
+    { key: 'STACK', value: 'Next.js · TypeScript · Python' }
+    { key: 'LOCATION', value: 'Thailand' },
     { key: 'STATUS', value: 'Open to opportunities' },
   ],
 }
@@ -714,7 +713,6 @@ export const contact = {
  *  ASSET PATHS - files live in /public.
  * ------------------------------------------------------------------------- */
 export const assets = {
-  handArt: '/ASCII-Art/Hand-ascii-art.png',
   handText: '/ASCII-Art-text/Hand-ascii-art.txt',
   skyArtText: '/ASCII-Art-text/MtNameSky.txt', // sky ASCII shown inside the orb
   skyLogoText: '/ASCII-Art-text/Sky-ASCII.txt', // "Sky" logo behind About Me

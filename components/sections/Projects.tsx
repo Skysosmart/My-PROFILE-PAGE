@@ -6,6 +6,7 @@ import AsciiImage from '@/components/effects/AsciiImage'
 import ProjectWall from '@/components/effects/ProjectWall'
 import { figletFor } from '@/data/figlets'
 import { projects, type Project } from '@/data/portfolio'
+import { useContent } from '@/lib/use-content'
 
 /**
  * PROJECTS - a film of nine screens, and scroll is the only control.
@@ -314,7 +315,8 @@ export default function Projects() {
     return () => ro.disconnect()
   }, [])
 
-  const p = projects[index]
+  // role and description follow the language; everything else is shared
+  const p = useContent().projects[index]
 
   // initial={false} before arming and under reduced motion: framer renders
   // the animate state outright, so the screen is complete on its first frame

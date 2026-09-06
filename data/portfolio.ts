@@ -45,16 +45,14 @@ export const nav = [
  *  PROFILE - the system_profile cards beside the About terminal.
  * ------------------------------------------------------------------------- */
 export const profile = {
-  location: { en: 'Thailand', th: 'ประเทศไทย' },
+  location: 'Thailand',
   school: 'Assumption College Thonburi',
-  status: { en: 'Open to opportunities', th: 'เปิดรับโอกาสใหม่ ๆ' },
+  status: 'Open to opportunities',
   mbti: {
     type: 'ENFJ',
-    name: { en: 'The Protagonist', th: 'ผู้นำโดยธรรมชาติ' }, // TODO(th-review)
-    description: {
-      en: 'Reads a room, then gets it moving. The part of me that presents, leads the team and talks people into building the thing.',
-      th: 'อ่านบรรยากาศออก แล้วพาทุกคนขยับไปข้างหน้า คือส่วนที่ทำให้ผมกล้านำเสนอ นำทีม และชวนคนมาลงมือสร้างของจริง', // TODO(th-review)
-    },
+    name: 'The Protagonist',
+    description:
+      'Reads a room, then gets it moving. The part of me that presents, leads the team and talks people into building the thing.',
   },
   stack: ['Next.js', 'TypeScript', 'Python', 'Supabase', 'Three.js', 'Tailwind', 'Fusion 360', 'Burp Suite', 'Linux'],
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { player } from '@/data/portfolio'
+import { useContent } from '@/lib/use-content'
 
 /**
  * Terminal ticker that cycles through player.roles, swapping every 5 seconds
@@ -13,6 +13,7 @@ import { player } from '@/data/portfolio'
  */
 export default function RoleTicker() {
   const [i, setI] = useState(0)
+  const { player } = useContent()
   const roles = player.roles
 
   useEffect(() => {

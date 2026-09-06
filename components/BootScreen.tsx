@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'motion/react'
-import { player } from '@/data/portfolio'
+import { useContent } from '@/lib/use-content'
 
 /**
  * Loading screen - shows ONLY the terminal boot text.
@@ -17,6 +17,7 @@ import { player } from '@/data/portfolio'
  * Click or any key skips ahead.
  */
 export default function BootScreen({ onStart }: { onStart: () => void }) {
+  const { player } = useContent()
   const [lineCount, setLineCount] = useState(0)
   const [leaving, setLeaving] = useState(false)
   const timers = useRef<number[]>([])
@@ -31,7 +32,7 @@ export default function BootScreen({ onStart }: { onStart: () => void }) {
   const skip = useCallback(() => {
     setLineCount(player.bootLog.length)
     setLeaving(true)
-  }, [])
+  }, [player.bootLog])
 
   // Reveal the log on a stagger, then begin leaving.
   useEffect(() => {
@@ -47,7 +48,7 @@ export default function BootScreen({ onStart }: { onStart: () => void }) {
     })
     t.push(window.setTimeout(() => setLeaving(true), 380 * player.bootLog.length + 600))
     return () => t.forEach(clearTimeout)
-  }, [finish])
+  }, [finish, player.bootLog])
 
   // Safety net: hand over even if onAnimationComplete never arrives.
   useEffect(() => {

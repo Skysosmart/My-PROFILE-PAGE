@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import GlassSection from '@/components/ui/GlassSection'
 import TerminalLog, { type Line } from '@/components/ui/TerminalLog'
 import Ascii3D from '@/components/effects/Ascii3D'
-import { about, assets, player, sop, inspiration, contact } from '@/data/portfolio'
+import { assets } from '@/data/portfolio'
+import { useContent } from '@/lib/use-content'
 
 /**
  * ABOUT ME - an INTERACTIVE hacker-terminal (cowsay bubble, rainbow eyes,
@@ -58,6 +59,9 @@ type Out = {
 }
 
 export default function AboutMe() {
+  // the prose in the language that is on; the scrollback keeps whatever
+  // language it was typed in, like a real terminal would
+  const { about, sop, inspiration, contact, player } = useContent()
   const [figlet, setFiglet] = useState('')
   const [ready, setReady] = useState(false) // boot sequence finished
   const [showBoot, setShowBoot] = useState(true) // banner+boot visible (cleared by `clear`)

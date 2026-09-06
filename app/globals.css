@@ -185,8 +185,8 @@
   border: 1px solid rgb(var(--fg) / 0.28);
   box-shadow:
     inset 0 0 0 1px rgb(var(--fg) / 0.04),
-    0 0 0 1px rgba(0, 0, 0, 0.6),
-    0 18px 50px -20px rgba(0, 0, 0, 0.9);
+    0 0 0 1px rgba(0, 0, 0, var(--shade)),
+    0 18px 50px -20px rgba(0, 0, 0, var(--shade));
   &::before {
     /* corner ticks -> ASCII bracket feel */
     content: '';
@@ -251,6 +251,7 @@
     --cyan: #cfcfcf;
     --lime: rgb(var(--fg));
     --scanline: rgba(0, 0, 0, 0.28);
+    --shade: 0.75; /* drop-shadow strength: ink on black */
   }
   [data-theme='light'] {
     color-scheme: light;
@@ -268,6 +269,7 @@
     --thumb-a: #111111;
     --thumb-b: #777777;
     --cyan: #444444;
+    --shade: 0.18; /* the same shadows read as smudges on paper */
   }
 
   * {
@@ -428,7 +430,7 @@
   border: 1px solid rgb(var(--fg) / 0.12);
   box-shadow:
     inset 0 1px 0 rgb(var(--fg) / 0.16),
-    0 12px 40px rgba(0, 0, 0, 0.5);
+    0 12px 40px rgba(0, 0, 0, var(--shade));
 }
 /* Lighter variant - used on "light" screens (e.g. About). */
 .glass-panel--light {
@@ -487,7 +489,7 @@
 /* Header nav link */
 .nav-link {
   position: relative;
-  color: rgb(var(--fg) / 0.62);
+  color: var(--fg-muted);
   transition: color 0.2s ease;
 }
 .nav-link:hover { color: rgb(var(--fg)); }
@@ -562,3 +564,24 @@
 /* the two-theme token colours */
 .writeup-prose pre span[style*="--shiki"], .writeup-prose pre code { color: var(--shiki-light); }
 [data-theme='dark'] .writeup-prose pre span[style*="--shiki"], [data-theme='dark'] .writeup-prose pre code { color: var(--shiki-dark); }
+
+/* --------------------------------------------------------------------------
+   The duck ships in both themes; the theme shows one. Under data-theme the
+   swap is pure CSS, so the drawing is right on the first paint.
+   -------------------------------------------------------------------------- */
+.duck-light { display: none; }
+[data-theme='light'] .duck-dark { display: none; }
+[data-theme='light'] .duck-light { display: block; }
+
+/* --------------------------------------------------------------------------
+   Custom cursor (components/effects/Cursor.tsx). The native cursor goes only
+   while the custom one is drawn, and comes back over anything you type in.
+   -------------------------------------------------------------------------- */
+html[data-cursor='custom'], html[data-cursor='custom'] a, html[data-cursor='custom'] button { cursor: none; }
+html[data-cursor='custom'] :is(input:not([type='checkbox']):not([type='radio']), textarea, [contenteditable='true'], [data-cursor='text'], [data-cursor='text'] *) { cursor: auto; }
+
+/* halftone dot screen for the personal prints (lamalama's dither, in CSS) */
+.dither {
+  background-image: radial-gradient(circle at center, rgba(0,0,0,0.9) 0.8px, transparent 1.1px);
+  background-size: 3px 3px;
+}

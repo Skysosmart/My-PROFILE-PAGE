@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import GlassSection from '@/components/ui/GlassSection'
 import TerminalLog, { type Line } from '@/components/ui/TerminalLog'
 import Ascii3D from '@/components/effects/Ascii3D'
+import Image from 'next/image'
 import { assets } from '@/data/portfolio'
+import { DUCK_ASCII } from '@/data/duck-ascii'
 import { useContent } from '@/lib/use-content'
 
 /**
@@ -24,18 +26,9 @@ const COWSAY = ` _____
     \\
      \\`
 
-// the classic \`cowsay -f eyes\` art, rainbow-colored per line (lolcat style)
-const EYES: string[] = [
-  '                                   .::!!!!!!!:.',
-  '  .!!!!!:.                        .:!!!!!!!!!!!!',
-  '  ~~~~!!!!!!.                 .:!!!!!!!!!UWWW$$$',
-  '      :$$NWX!!:           .:!!!!!!XUWW$$$$$$$$$P',
-  '      $$$$$##WX!:      .<!!!!UW$$$$"  $$$$$$$$#',
-  '      $$$$$  $$$UX   :!!UW$$$$$$$$$   4$$$$$*',
-  '      ^$$$B  $$$$\\     $$$$$$$$$$$$   d$$R"',
-  '        "*$bd$$$$      \'*$$$$$$$$$$$o+#"',
-  '             """"          """""""',
-]
+// ducksay: the ZaruTech duck where cowsay's cow would stand, rainbow-colored
+// per line (lolcat style)
+const EYES: string[] = DUCK_ASCII.split('\n')
 const EYES_COLORS = [
   'text-sky-400',
   'text-pink-500',
@@ -236,7 +229,7 @@ export default function AboutMe() {
 
           {/* FIXED-SIZE terminal screen - output scrolls inside, the window
               never stretches the section as lines print */}
-          <div ref={bodyRef} className="h-[48vh] overflow-y-auto p-4 sm:h-[54vh] sm:p-6">
+          <div ref={bodyRef} className="h-[48svh] overflow-y-auto p-4 sm:h-[54svh] sm:p-6">
             {/* banner + boot (hidden by `clear`, restored by `banner`) */}
             <div className={showBoot ? '' : 'hidden'}>
               {/* cowsay bubble */}
@@ -339,10 +332,12 @@ export default function AboutMe() {
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
             <span className="ml-2 font-mono text-[11px] text-fg-dim">~/portrait - me.jpg</span>
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={assets.portrait}
             alt={player.name}
+            width={900}
+            height={1398}
+            sizes="(min-width: 1024px) 360px, (min-width: 768px) 320px, 100vw"
             className="h-64 w-full flex-1 object-cover object-top grayscale transition-all duration-500 group-hover:grayscale-0 md:h-auto"
           />
           <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-fg-dim">

@@ -52,6 +52,8 @@ export default function GlassSection({
   id,
   index,
   title,
+  label,
+  watermark,
   variant = 'rise',
   background,
   fullScreen = false,
@@ -63,6 +65,10 @@ export default function GlassSection({
   id: string
   index: string
   title: string
+  /** bracket label above the title: `[ 02 · CERTIFICATES ]` */
+  label?: string
+  /** a giant faded word behind the section, sirayuth.com style */
+  watermark?: string
   variant?: RevealVariant
   /** Optional section-scoped background layer (e.g. an ASCII art watermark). */
   background?: ReactNode
@@ -93,7 +99,7 @@ export default function GlassSection({
       // in their hidden state, which would add horizontal page overflow.
       className={`relative isolate overflow-x-clip px-4 sm:px-6 ${
         fullScreen
-          ? 'flex min-h-screen scroll-mt-0 flex-col justify-center py-24'
+          ? 'flex min-h-svh scroll-mt-0 flex-col justify-center py-16 sm:py-24'
           : 'scroll-mt-28 py-10 sm:py-14'
       }`}
     >
@@ -105,6 +111,14 @@ export default function GlassSection({
         />
       )}
       {background}
+      {watermark && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute right-2 top-0 -z-10 select-none font-crt text-[160px] leading-none text-fg/[0.04] sm:right-6 sm:text-[300px]"
+        >
+          {watermark}
+        </div>
+      )}
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -119,6 +133,11 @@ export default function GlassSection({
             : 'flex w-full flex-1 flex-col' // flat: content IS the screen
         }
       >
+        {label && (
+          <span className="mb-2 block font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">
+            [ {label} ]
+          </span>
+        )}
         {/* header: index + title reveal with a growing underline */}
         <div className="relative mb-7 flex items-baseline gap-3 pb-4">
           <motion.span

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 
 import BootScreen from '@/components/BootScreen'
@@ -12,6 +12,7 @@ import IntroHero from '@/components/sections/IntroHero'
 import Deferred from '@/components/ui/Deferred'
 import Footer from '@/components/Footer'
 import WriteupsTeaser from '@/components/sections/WriteupsTeaser'
+import Cursor from '@/components/effects/Cursor'
 import type { WriteupMeta } from '@/lib/writeups'
 
 // Each section is its own chunk, fetched when Deferred mounts it. ssr: false
@@ -24,9 +25,12 @@ import type { WriteupMeta } from '@/lib/writeups'
 // all three sections in one cascade, which is the exact spike this exists to
 // prevent.
 const Reserve = () => <div aria-hidden style={{ minHeight: '100svh' }} />
-const split = (load: () => Promise<{ default: React.ComponentType }>) =>
+const split = <P extends object>(load: () => Promise<{ default: React.ComponentType<P> }>) =>
   dynamic(load, { ssr: false, loading: Reserve })
+const SystemProfile = split(() => import('@/components/sections/SystemProfile'))
 const AboutMe = split(() => import('@/components/sections/AboutMe'))
+const Personal = split(() => import('@/components/sections/Personal'))
+const Ending = split(() => import('@/components/sections/Ending'))
 const Certificates = split(() => import('@/components/sections/Certificates'))
 const Projects = split(() => import('@/components/sections/Projects'))
 
@@ -49,9 +53,25 @@ export default function Portfolio({
   /** whether the server has a mail key, so the footer can show the form */
   formEnabled?: boolean
 }) {
-  const [started, setStarted] = useState(false)
+  // 'unknown' until the client has looked at sessionStorage: a visitor who
+  // already sat through the boot this session lands on the site directly,
+  // and ?boot=1 replays it on purpose
+  const [phase, setPhase] = useState<'unknown' | 'boot' | 'site'>('unknown')
+  useEffect(() => {
+    let seen = false
+    try {
+      seen = sessionStorage.getItem('booted') === '1' && !new URLSearchParams(location.search).has('boot')
+    } catch {}
+    setPhase(seen ? 'site' : 'boot')
+  }, [])
   // stable identity so BootScreen's timers are never reset by a new prop
-  const start = useCallback(() => setStarted(true), [])
+  const start = useCallback(() => {
+    try {
+      sessionStorage.setItem('booted', '1')
+    } catch {}
+    setPhase('site')
+  }, [])
+  const started = phase === 'site'
 
   return (
     <>
@@ -60,11 +80,12 @@ export default function Portfolio({
           at full opacity over an already-rendered site, so the only way past
           the boot screen was to click it. BootScreen fades itself out and then
           calls onStart, so a plain conditional is both simpler and reliable. */}
-      {!started && <BootScreen onStart={start} />}
+      {phase === 'boot' && <BootScreen onStart={start} />}
 
       {/* Site */}
       {started && (
         <>
+          <Cursor />
           <Header />
           <NameTag />
           <motion.main
@@ -75,6 +96,9 @@ export default function Portfolio({
           >
             <IntroHero />
             {/* one section at a time: see Deferred */}
+            <Deferred id="profile" minHeight="60svh">
+              <SystemProfile />
+            </Deferred>
             <Deferred id="about">
               <AboutMe />
             </Deferred>
@@ -85,7 +109,13 @@ export default function Portfolio({
               <Projects />
             </Deferred>
             <WriteupsTeaser items={writeups} />
-            <Footer formEnabled={formEnabled} />
+            <Deferred id="personal" minHeight="70svh">
+              <Personal />
+            </Deferred>
+            <Deferred id="contact" minHeight="70svh">
+              <Ending formEnabled={formEnabled} />
+            </Deferred>
+            <Footer />
           </motion.main>
         </>
       )}

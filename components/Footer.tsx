@@ -1,42 +1,50 @@
 'use client'
 
-import { contact } from '@/data/portfolio'
-import ContactForm from '@/components/ContactForm'
+import { useEffect, useState } from 'react'
+import ThemeToggle from '@/components/ThemeToggle'
+import LangToggle from '@/components/LangToggle'
+import { player } from '@/data/portfolio'
+import { ui } from '@/data/ui'
+import { certStats } from '@/lib/certs'
+import { useLang } from '@/lib/use-lang'
 
 /**
- * Site footer - the contact section, compacted, at the end of the page.
- * Carries id="contact" so the header nav's CONTACT link scrolls here.
- * With a mail key on the server the form shows above the channels; without
- * one the EMAIL channel's mailto link is the whole story.
+ * The stats bar that closes the page (lamalama.com ends this way): a count,
+ * where, the live clock in brackets, the sign-off, and the two toggles. The
+ * contact section above it (Ending) is where the reaching-out happens.
  */
-export default function Footer({ formEnabled = false }: { formEnabled?: boolean }) {
-  return (
-    <footer id="contact" className="scroll-mt-28 px-4 pb-6 pt-10 sm:px-6">
-      <div className="mx-auto w-full max-w-5xl border-t border-fg/10 pt-4">
-        {formEnabled && (
-          <div className="mb-6 flex justify-center">
-            <ContactForm />
-          </div>
-        )}
-        {/* contact channels */}
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 font-mono text-xs">
-          {contact.channels.map((c) => (
-            <a
-              key={c.key}
-              href={c.href}
-              target={c.href.startsWith('mailto:') ? undefined : '_blank'}
-              rel="noreferrer"
-              className="group inline-flex min-h-[32px] items-center text-fg-muted transition-colors hover:text-fg"
-            >
-              <span className="mr-2 uppercase tracking-wider text-fg-dim">{c.key}</span>
-              <span className="underline-offset-2 group-hover:underline">{c.value}</span>
-            </a>
-          ))}
-        </div>
+export default function Footer() {
+  const t = ui[useLang()]
+  const [time, setTime] = useState('')
+  useEffect(() => {
+    const tick = () => setTime(new Date().toLocaleTimeString('en-GB'))
+    tick()
+    const id = window.setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [])
 
-        <p className="mt-2.5 text-center font-mono text-[10px] text-fg-dim">
-          NONTHANAPHONG.EXE · rendered in ASCII · © {new Date().getFullYear()}
-        </p>
+  return (
+    <footer className="border-t border-fg/12 bg-panel/80 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-8 gap-y-2 font-mono text-[10px] uppercase tracking-[0.22em] text-fg-muted">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-1">
+          <span>
+            {certStats.total} {t.stats.certificates}
+          </span>
+          <span>{t.footer.based}</span>
+          <span className="text-fg">
+            [ <span className="text-duck">●</span>{' '}
+            <span className="tabular-nums tracking-[0.3em]">{time || '--:--:--'}</span> ]
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
+          <span>
+            {player.handle} · {t.footer.rendered} · © {new Date().getFullYear()}
+          </span>
+          <span className="flex items-center gap-2 normal-case tracking-normal">
+            <LangToggle />
+            <ThemeToggle />
+          </span>
+        </div>
       </div>
     </footer>
   )

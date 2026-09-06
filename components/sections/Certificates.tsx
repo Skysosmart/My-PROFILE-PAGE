@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion, useInView } from 'motion/react'
 import GlassSection from '@/components/ui/GlassSection'
+import Duck from '@/components/duck/Duck'
 import CertWall from '@/components/effects/CertWall'
 import CertCard from '@/components/ui/CertCard'
 import CertLightbox from '@/components/ui/CertLightbox'
@@ -149,14 +150,22 @@ export default function Certificates() {
       id="certificates"
       index="02"
       title="Certificates"
+      label="02 · CERTIFICATES"
+      watermark="CERTS"
       // "rise" only offsets y by a fixed 44px. flip/zoom/blur displace by a
       // share of the element, which throws a tall section off its own
       // viewport observer and leaves it hidden forever.
       variant="rise"
       background={
-        <div className="pointer-events-none absolute inset-0 opacity-25">
-          <CertWall />
-        </div>
+        <>
+          <div className="pointer-events-none absolute inset-0 opacity-25">
+            <CertWall />
+          </div>
+          {/* the duck leans on the podium tier, desktop only */}
+          <div className="pointer-events-none absolute right-8 top-6 hidden xl:block">
+            <Duck pose="podium" width={130} parallax={6} />
+          </div>
+        </>
       }
       panel={false}
       revealAmount="some"
@@ -193,7 +202,7 @@ export default function Certificates() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
-                  <span className={`font-pixel text-[7px] leading-none ${face.text}`}>
+                  <span className={`font-pixel text-[8px] leading-none ${face.text}`}>
                     {c.medal === 'gold' ? 'GOLD MEDAL' : '3RD PLACE'}
                   </span>
                   <Seal medal={c.medal ?? 'gold'} still={still} size={34} />

@@ -7,6 +7,7 @@ import ProjectWall from '@/components/effects/ProjectWall'
 import { figletFor } from '@/data/figlets'
 import { projects, type Project } from '@/data/portfolio'
 import { useContent } from '@/lib/use-content'
+import Duck from '@/components/duck/Duck'
 
 /**
  * PROJECTS - a film of nine screens, and scroll is the only control.
@@ -349,6 +350,9 @@ export default function Projects() {
 
         {/* header: the GlassSection markup verbatim, so this matches every
             other section even though it cannot be one */}
+        <span className="mb-2 block font-mono text-[11px] uppercase tracking-[0.35em] text-fg-dim">
+          [ 03 · PROJECTS ]
+        </span>
         <div className="relative mb-7 flex items-baseline gap-3 pb-4">
           <motion.span
             initial={reduce ? { opacity: 0 } : { opacity: 0, x: -8 }}
@@ -519,6 +523,15 @@ export default function Projects() {
             aria-label="Project filmstrip"
             className="flex basis-full gap-1 lg:basis-auto lg:flex-1 lg:justify-center lg:gap-1.5"
           >
+            {/* the duck at its laptop, at the head of the strip (desktop) */}
+            <div aria-hidden className="relative mr-2 hidden h-[45px] w-[84px] shrink-0 self-end lg:block">
+              <div className="absolute bottom-3 left-0 w-[64px]">
+                <Duck pose="laptop" width={64} parallax={3} />
+              </div>
+              <div className="absolute bottom-0 left-4 flex h-5 w-[64px] items-center justify-center rounded-t-[3px] border border-b-4 border-fg/70 bg-panel font-mono text-[7px] tracking-[0.2em] text-fg/60">
+                [▌▌▌]
+              </div>
+            </div>
             {projects.map((q, i) => {
               const on = i === index
               return (

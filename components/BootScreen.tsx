@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'motion/react'
 import { useContent } from '@/lib/use-content'
+import { DUCK_ASCII } from '@/data/duck-ascii'
 
 /**
  * Loading screen - shows ONLY the terminal boot text.
@@ -72,8 +73,18 @@ export default function BootScreen({ onStart }: { onStart: () => void }) {
       onAnimationComplete={() => leaving && finish()}
       className="fixed inset-0 z-80 flex cursor-pointer items-center justify-center bg-void px-6"
     >
-      <div className="w-full max-w-2xl">
-        <pre className="m-0 whitespace-pre-wrap font-mono text-sm leading-relaxed text-phosphor sm:text-base">
+      <div className="flex w-full max-w-3xl items-end gap-6">
+        {/* the mascot, printed with the first line, dim until the log ends */}
+        <motion.pre
+          aria-hidden
+          initial={{ opacity: 0 }}
+          animate={{ opacity: lineCount >= player.bootLog.length ? 0.9 : 0.35 }}
+          transition={{ duration: 0.6 }}
+          className="m-0 hidden shrink-0 whitespace-pre font-mono text-[7px] leading-[8px] text-phosphor sm:block"
+        >
+          {DUCK_ASCII}
+        </motion.pre>
+        <pre className="m-0 min-w-0 flex-1 whitespace-pre-wrap font-mono text-sm leading-relaxed text-phosphor sm:text-base">
           {player.bootLog.slice(0, lineCount).map((line, i) => (
             <div key={i}>
               <span className="text-phosphor/50">{'>'} </span>

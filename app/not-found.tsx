@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import ThemeToggle from '@/components/ThemeToggle'
+import Duck from '@/components/duck/Duck'
 import { player } from '@/data/portfolio'
 
 /**
@@ -10,7 +11,7 @@ import { player } from '@/data/portfolio'
  * certificates page wears; the block letters are pyfiglet's `small`, the
  * same face as every project title. Three things to do next, in the voice
  * of the About terminal, so a wrong URL lands inside the site instead of
- * on the framework's white default.
+ * on the framework's white default. The duck is asleep on the job.
  */
 
 // pyfiglet -f small 404
@@ -49,13 +50,21 @@ export default function NotFound() {
         <span className="break-all">{path}</span>
       </p>
 
-      <pre
-        aria-hidden
-        className="mt-10 whitespace-pre font-mono text-[22px] leading-[1.1] text-fg sm:text-[30px]"
-        style={{ textShadow: '0 0 14px rgb(var(--fg) / 0.3), 0 0 34px rgb(var(--fg) / 0.12)' }}
-      >
-        {FIGLET}
-      </pre>
+      <div className="mt-10 flex items-end gap-6">
+        <pre
+          aria-hidden
+          className="whitespace-pre font-mono text-[22px] leading-[1.1] text-fg sm:text-[30px]"
+          style={{ textShadow: '0 0 14px rgb(var(--fg) / 0.3), 0 0 34px rgb(var(--fg) / 0.12)' }}
+        >
+          {FIGLET}
+        </pre>
+        <div className="flex items-end gap-2">
+          <Duck pose="sleep" width={96} />
+          <span aria-hidden className="mb-6 font-crt text-2xl text-fg-dim">
+            z z z<span className="animate-blink">▋</span>
+          </span>
+        </div>
+      </div>
       <h1 className="mt-4 font-sans text-lg font-semibold text-fg">Not in this filesystem.</h1>
       <p className="mt-1 max-w-md font-sans text-sm text-fg/70">
         The address may have been mistyped, or the page moved when the site was rebuilt. Everything
@@ -66,6 +75,7 @@ export default function NotFound() {
         {[
           { cmd: 'cd ~', note: 'home', href: '/' },
           { cmd: 'ls certificates/', note: 'every certificate', href: '/certificates' },
+          { cmd: 'ls writeups/', note: 'CTF and security notes', href: '/writeups' },
           // a plain anchor, not Link: next/link prefetches its target as an
           // RSC payload, and asking a route handler that returns a PDF for
           // one answered 500 on every hover

@@ -17,9 +17,12 @@ const MEDAL_FILL: Record<string, string> = {
 /** The record view: the document beside its metadata and, where there is one, its story. */
 export default function CertLightbox({
   cert,
+  initialPhoto,
   onClose,
 }: {
   cert: Certificate | null
+  /** open on this photo of the certificate's album rather than the document */
+  initialPhoto?: string
   onClose: () => void
 }) {
   const [mounted, setMounted] = useState(false)
@@ -27,7 +30,7 @@ export default function CertLightbox({
   const [photo, setPhoto] = useState<string | null>(null)
   useEffect(() => setMounted(true), [])
   // a different certificate always opens on its document, never on a stale photo
-  useEffect(() => setPhoto(null), [cert?.file])
+  useEffect(() => setPhoto(initialPhoto ?? null), [cert?.file, initialPhoto])
 
   const album = cert?.moment ? moments[cert.moment] : undefined
 

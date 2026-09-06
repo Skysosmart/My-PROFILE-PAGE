@@ -1,61 +1,64 @@
-# Customization Guide — NONTHANAPHONG.EXE
+# Customization Guide
 
-This site is an **ASCII / retro-game academic portfolio**. Almost everything you
-need to change lives in **one file**:
+Almost everything you would want to change is content, and content lives in
+`data/`. The components read from it; nothing is typed twice.
 
-## 👉 Edit content in `data/portfolio.ts`
+## Content: `data/portfolio.ts` (English) and `data/portfolio.th.ts` (Thai)
 
-Open [`data/portfolio.ts`](data/portfolio.ts). Every section reads from it.
-Placeholders to replace are marked with `// TODO`.
+| What you want to change              | Edit this export                                   |
+| ------------------------------------ | -------------------------------------------------- |
+| Name, handle, roles, boot log        | `player` (+ `playerTh`)                            |
+| Header entries                       | `nav` (an entry with `href` is its own route)      |
+| System-profile cards, MBTI, stack    | `profile` (+ `profileTh`)                          |
+| The two About paragraphs, facts      | `about` (+ `aboutTh`)                              |
+| Statement of purpose (`sop` command) | `sop` (+ `sopTh`)                                  |
+| Principles (`inspiration` command)   | `inspiration` (+ `inspirationTh`)                  |
+| Projects, in film order              | `projects` (+ `projectsTh`, keyed by title)        |
+| Photo albums for the personal stack  | `moments`, files in `public/moments/<key>/`        |
+| Certificates                         | `certificates`, scans in `public/certificates/`    |
+| Contact channels                     | `contact.channels`                                 |
 
-| What you want to change | Edit this export |
-| --- | --- |
-| Your name, boot-up log, tagline | `player` |
-| The checkpoint menu (order / labels) | `checkpoints` |
-| 01 Character Profile card + bio | `profile` |
-| 02 Origin Story (inspiration) | `origin` |
-| 03 Academic Stats (bars + data sheet) | `stats` |
-| 04 Skill Inventory (item cards) | `skills` |
-| 05 Quest Log (projects/activities) | `quests` |
-| 06 Achievements Unlocked | `achievements` |
-| 07 Final Mission (goals) | `mission` |
-| 08 Contact NPC (email/links) | `contact` |
+Thai holds prose only; keys, files, URLs, tags and dates are shared with the
+English file. A project's Thai entry is looked up by its English title, so
+rename both together. Lines marked `// TODO(th-review)` are machine drafts
+waiting for a native read.
 
-Notes:
-- **Stat bars** (`stats.bars`) use a `value` from 0–100.
-- **Skills / Achievements** use a `rarity` of `common | rare | epic | legendary`
-  (changes the card color/glow). Achievements with `unlocked: false` render locked.
-- **Quests** use a `status` of `Completed | In Progress | Upcoming` (colors the badge).
-- To **add/remove a section**, update the matching export AND the `checkpoints`
-  array (the `id` must match the section's `id`).
+Interface strings (buttons, labels, the hero's three lines, the ending) are
+in `data/ui.ts`, both languages side by side. The marked terms with tooltips
+are in `data/glossary.ts`.
 
-## Colors & theme
+## Writeups: `content/writeups/*.mdx`
 
-Palette and animations live in
-[`tailwind.config.ts`](tailwind.config.ts) (`phosphor`, `cyan`, `lime`, `amber`…)
-and base terminal styles in [`app/globals.css`](app/globals.css)
-(scanlines, glow, grid background).
+Copy `_template.mdx` to `<slug>.mdx`; the file name is the URL. Frontmatter:
+`title`, `date`, `event`, `category`, `difficulty`, `tags`, `summary`, `draft`.
+A draft shows locally and on Vercel previews, never in production. Code
+blocks are highlighted in both themes. Files starting with `_` never publish.
 
-## ASCII assets
+## The duck: `public/duck/`
 
-The PNG/TXT art lives in `public/ASCII-Art/` and `public/ASCII-Art-text/`
-and is referenced from `assets` in `data/portfolio.ts`:
-- `Fullname-ascii-art.png` → hero name / boot logo
-- `Hand-ascii-art.png` → menu pointer + character avatar + NPC portrait
-- `Sky-ascii-art.png` / `Sky-ASCII.txt` → ambient background atmosphere
+The mascot is one drawing (`assets/duck/duck-source.png`) split into layers:
+`duck-lines.png`, `duck-fill.png`, `duck-yellow.png`, plus the two composites
+the site actually loads, `duck-dark.png` and `duck-light.png`, and the head
+crops. `components/duck/Duck.tsx` maps a `pose` to a crop or tilt of that one
+drawing. To add a real drawing for a pose, export it as
+`duck-<pose>-dark.png` and `duck-<pose>-light.png` on transparent backgrounds
+and point that pose's `src` at it. The favicon (`app/icon.png`), the Apple
+icon and the share card (`public/og.png`) are the head and the full duck.
 
-## Structure (for reference)
+## Theme and colours
 
-- `app/page.tsx` → renders `components/Portfolio.tsx`
-- `components/Portfolio.tsx` → boot screen → checkpoint HUD + all sections
-- `components/BootScreen.tsx` → boot sequence + PRESS START
-- `components/CheckpointMenu.tsx` → the quest menu (click + ↑/↓ keyboard nav)
-- `components/sections/*` → one file per checkpoint
-- `components/ui/*`, `components/effects/*` → shared building blocks
+Dark is the design; light is the same terminal on warm paper. Tokens are the
+`--bg`, `--fg`, `--panel` RGB triplets at the top of `app/globals.css`, with
+the Tailwind names (`fg`, `bg`, `panel`, `fg-dim`, `fg-muted`, `duck`) in the
+`@theme` block right after. The duck's yellow (`--color-duck`) is the only
+colour in the palette; use it sparingly.
+
+`theme` and `lang` are remembered in localStorage and applied before first
+paint by the two inline scripts in `app/layout.tsx`.
 
 ## Run it
 
 ```bash
-bun run dev     # or: npm run dev   → http://localhost:3000
-bun run build   # production build
+npm run dev     # http://localhost:3000
+npm run build   # production build
 ```

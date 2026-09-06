@@ -108,7 +108,7 @@ export default function CertArchive() {
       <div className="z-30 mt-5 border-y border-fg/10 bg-bg/85 backdrop-blur-xl lg:sticky lg:top-0">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="flex min-w-0 flex-1 basis-56 items-center gap-2 rounded-full border border-fg/15 bg-fg/[0.04] px-4 py-2 transition-colors focus-within:border-fg/45 sm:max-w-xs">
+            <label className="flex min-w-0 flex-1 basis-56 items-center gap-2 rounded-full border border-fg/15 bg-fg/4 px-4 py-2 transition-colors focus-within:border-fg/45 sm:max-w-xs">
               <span aria-hidden className="shrink-0 text-fg-dim">
                 &#9906;
               </span>
@@ -118,7 +118,7 @@ export default function CertArchive() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search certificates"
                 aria-label="Search certificates"
-                className="min-w-0 flex-1 bg-transparent font-sans text-sm text-fg caret-fg outline-none placeholder:text-fg-dim"
+                className="min-w-0 flex-1 bg-transparent font-sans text-sm text-fg caret-fg outline-hidden placeholder:text-fg-dim"
               />
               {query && (
                 <button
@@ -150,7 +150,7 @@ export default function CertArchive() {
                   key={c.key}
                   onClick={() => setCat(c.key)}
                   aria-pressed={on}
-                  className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
+                  className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
                     on ? 'text-bg' : 'text-fg/70 hover:text-fg'
                   }`}
                 >

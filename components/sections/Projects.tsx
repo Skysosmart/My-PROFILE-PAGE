@@ -342,7 +342,7 @@ export default function Projects() {
     >
       {/* the stage: pinned for the whole section. pt clears the fixed header;
           isolate keeps the wall's -z-10 inside the stage */}
-      <div className="sticky top-0 isolate flex h-[100svh] flex-col overflow-hidden px-4 pt-20 sm:px-6 lg:pt-24">
+      <div className="sticky top-0 isolate flex h-svh flex-col overflow-hidden px-4 pt-20 sm:px-6 lg:pt-24">
         <ProjectWall />
 
         {/* header: the GlassSection markup verbatim, so this matches every
@@ -384,7 +384,7 @@ export default function Projects() {
           initial={animate ? { opacity: 0 } : false}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, ease: EASE_OUT }}
-          className="pointer-events-none absolute bottom-[6vh] left-[-1vw] -z-10 select-none font-mono text-[38vh] font-bold leading-none text-fg/[0.05]"
+          className="pointer-events-none absolute bottom-[6vh] left-[-1vw] -z-10 select-none font-mono text-[38vh] font-bold leading-none text-fg/5"
         >
           {pad(index + 1)}
         </motion.span>
@@ -393,11 +393,11 @@ export default function Projects() {
             min-h-0 + overflow-hidden so a tall screen can never push the rail
             off the stage; "safe center" keeps a too-tall column top-aligned
             instead of clipping its head under the header */}
-        <div className="grid min-h-0 flex-1 grid-cols-1 content-start gap-3 overflow-hidden [@media(max-height:520px)]:grid-cols-2 [@media(max-height:520px)]:items-start [@media(max-height:520px)]:gap-5 [@media(max-height:520px)]:overflow-y-auto lg:grid-cols-2 lg:content-stretch lg:gap-10 lg:[align-items:safe_center]">
+        <div className="grid min-h-0 flex-1 grid-cols-1 content-start gap-3 overflow-hidden [@media(max-height:520px)]:grid-cols-2 [@media(max-height:520px)]:items-start [@media(max-height:520px)]:gap-5 [@media(max-height:520px)]:overflow-y-auto lg:grid-cols-2 lg:content-stretch lg:gap-10 lg:items-center-safe">
           {/* text LEFT, screenshot RIGHT from lg; the image leads on a phone
               held upright. A rotated phone is short but WIDE, so it gets the
               two-column layout too - stacked, nothing fit above the fold */}
-          <div className="order-first mx-auto w-full max-w-[calc(28svh*1.6)] [@media(max-height:520px)]:order-last [@media(max-height:520px)]:max-w-[calc(52svh*1.6)] lg:order-last lg:ml-0 lg:max-w-[calc(56svh*1.6)]">
+          <div className="order-first mx-auto w-full max-w-[44.800000000000004svh] [@media(max-height:520px)]:order-last [@media(max-height:520px)]:max-w-[83.2svh] lg:order-last lg:ml-0 lg:max-w-[89.60000000000001svh]">
             <Screen key={arrivalKey} p={p} />
           </div>
 
@@ -451,7 +451,7 @@ export default function Projects() {
                 {p.tags.map((t, i) => (
                   <span
                     key={t}
-                    className={`rounded border border-fg/[0.12] px-1.5 py-0.5 font-mono text-[10px] text-fg-muted ${
+                    className={`rounded border border-fg/12 px-1.5 py-0.5 font-mono text-[10px] text-fg-muted ${
                       i >= MOBILE_TAGS ? 'hidden lg:inline-block' : ''
                     }`}
                   >
@@ -496,7 +496,7 @@ export default function Projects() {
             {projects.map((_, i) => (
               <span
                 key={i}
-                className={`h-[3px] flex-1 rounded-sm transition-colors ${i <= index ? 'bg-fg/80' : 'bg-fg/15'}`}
+                className={`h-[3px] flex-1 rounded-xs transition-colors ${i <= index ? 'bg-fg/80' : 'bg-fg/15'}`}
               />
             ))}
           </div>
@@ -526,7 +526,7 @@ export default function Projects() {
                   onClick={() => goTo(i)}
                   aria-label={`${pad(i + 1)} ${q.title}`}
                   aria-current={on ? 'true' : undefined}
-                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[3px] border border-fg/10 bg-bg/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:aspect-[16/10] lg:h-auto lg:w-[72px] lg:flex-none ${
+                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[3px] border border-fg/10 bg-bg/60 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:aspect-16/10 lg:h-auto lg:w-[72px] lg:flex-none ${
                     on ? 'ring-1 ring-fg' : ''
                   }`}
                 >
@@ -563,7 +563,7 @@ export default function Projects() {
 /** The screenshot, developing out of ASCII on arrival - or the dotted panel. */
 function Screen({ p }: { p: Project }) {
   const frame =
-    'aspect-[16/10] w-full overflow-hidden rounded-xl border border-fg/[0.12] bg-bg/60 shadow-[0_50px_140px_-50px_rgba(0,0,0,0.95),0_0_60px_-20px_rgb(var(--fg)_/_0.07)]'
+    'aspect-16/10 w-full overflow-hidden rounded-xl border border-fg/12 bg-bg/60 shadow-[0_50px_140px_-50px_rgba(0,0,0,0.95),0_0_60px_-20px_rgb(var(--fg)/0.07)]'
   if (!p.image) {
     return (
       <div className={`flex flex-col items-center justify-center gap-2 px-4 text-center ${frame}`} style={DOTS}>

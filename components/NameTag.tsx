@@ -15,7 +15,7 @@ export default function NameTag() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4, duration: 0.6 }}
-      className="pointer-events-none absolute right-4 top-[74px] z-[65] text-right font-mono sm:right-6 md:fixed md:top-5"
+      className="pointer-events-none absolute right-4 top-[74px] z-65 text-right font-mono sm:right-6 md:fixed md:top-5"
     >
       <p className="text-lg font-bold uppercase leading-none tracking-wide text-fg txt-glow sm:text-xl">
         {player.firstName}

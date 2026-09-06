@@ -35,7 +35,7 @@ export default function CertWall() {
           'radial-gradient(ellipse 100% 90% at 50% 45%, black 30%, transparent 85%)',
       }}
     >
-      <div className="absolute -left-[10%] top-1/2 flex w-[120%] -translate-y-1/2 -rotate-3 flex-col gap-8 opacity-[0.16] saturate-[0.8]">
+      <div className="absolute left-[-10%] top-1/2 flex w-[120%] -translate-y-1/2 -rotate-3 flex-col gap-8 opacity-[0.16] saturate-[0.8]">
         {rows.map((row, r) => (
           <div key={r} className="flex overflow-hidden">
             <div

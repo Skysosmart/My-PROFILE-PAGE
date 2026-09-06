@@ -56,7 +56,7 @@ export default function CertLightbox({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-bg/85 p-4 backdrop-blur-md"
+          className="fixed inset-0 z-95 flex items-center justify-center bg-bg/85 p-4 backdrop-blur-md"
         >
           <motion.div
             initial={{ scale: 0.95, y: 12, opacity: 0 }}
@@ -90,7 +90,7 @@ export default function CertLightbox({
                   <span
                     aria-hidden
                     style={{ background: MEDAL_FILL[cert.medal] }}
-                    className="grid h-11 w-11 shrink-0 place-items-center rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)_/_0.5)]"
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)/0.5)]"
                   >
                     <span className="font-pixel text-[6px] leading-none text-black/55">
                       {cert.medal === 'gold' ? 'GOLD' : '3RD'}
@@ -124,7 +124,7 @@ export default function CertLightbox({
                     <button
                       onClick={() => setPhoto(null)}
                       aria-pressed={!photo}
-                      className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border bg-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${!photo ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border bg-white transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${!photo ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
                       title="Back to the certificate"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -140,7 +140,7 @@ export default function CertLightbox({
                         key={f}
                         onClick={() => setPhoto(f)}
                         aria-pressed={photo === f}
-                        className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${photo === f ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                        className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${photo === f ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
@@ -157,7 +157,7 @@ export default function CertLightbox({
 
               <button
                 onClick={onClose}
-                className="mt-auto self-start rounded-full bg-fg px-4 py-2 font-sans text-sm font-medium text-bg transition-colors hover:bg-fg/85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+                className="mt-auto self-start rounded-full bg-fg px-4 py-2 font-sans text-sm font-medium text-bg transition-colors hover:bg-fg/85 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
               >
                 Close
               </button>

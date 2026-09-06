@@ -31,9 +31,9 @@ export default function CertCard({
       transition={{ duration: 0.35, delay: Math.min(index * 0.035, 0.35), ease: [0.16, 1, 0.3, 1] }}
       whileHover={still ? undefined : { y: -6 }}
       onClick={() => onOpen(c)}
-      className="group flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white text-left shadow-[0_12px_40px_-14px_rgba(0,0,0,0.7)] transition-shadow hover:shadow-[0_28px_70px_-16px_rgba(0,0,0,0.85)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+      className="group flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white text-left shadow-[0_12px_40px_-14px_rgba(0,0,0,0.7)] transition-shadow hover:shadow-[0_28px_70px_-16px_rgba(0,0,0,0.85)] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
     >
-      <div className="relative aspect-[4/3] w-full shrink-0 bg-white">
+      <div className="relative aspect-4/3 w-full shrink-0 bg-white">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={certThumb(c.file)}
@@ -44,13 +44,13 @@ export default function CertCard({
         />
         {c.medal && (
           <span
-            className={`absolute right-3 top-3 rounded-full px-2 py-0.5 font-sans text-[10px] font-bold shadow ${c.medal === 'gold' ? 'bg-white text-neutral-900' : 'border border-white/60 bg-neutral-900/85 text-white'}`}
+            className={`absolute right-3 top-3 rounded-full px-2 py-0.5 font-sans text-[10px] font-bold shadow-sm ${c.medal === 'gold' ? 'bg-white text-neutral-900' : 'border border-white/60 bg-neutral-900/85 text-white'}`}
           >
             {c.medal === 'gold' ? 'GOLD' : '3RD'}
           </span>
         )}
         {c.level && !c.medal && (c.level === 'National' || c.level === 'International') && (
-          <span className="absolute right-3 top-3 rounded bg-neutral-900/85 px-1.5 py-0.5 font-mono text-[9px] font-semibold tracking-wider text-white">
+          <span className="absolute right-3 top-3 rounded-sm bg-neutral-900/85 px-1.5 py-0.5 font-mono text-[9px] font-semibold tracking-wider text-white">
             {LEVEL_TAG[c.level]}
           </span>
         )}

@@ -1,156 +1,362 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-/* ==========================================================================
-   NONTHANAPHONG.EXE - terminal theme base
-   ========================================================================== */
+/* dark: follows the site's own theme switch (lib/theme.ts), not the OS */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
-/* --------------------------------------------------------------------------
-   Theme tokens. Dark is the site as designed; light is the same terminal
-   printed on warm paper. RGB triplets so Tailwind can add its own alpha.
-   -------------------------------------------------------------------------- */
-:root {
-  color-scheme: dark;
-  --bg: 5 5 5;            /* the page */
-  --fg: 255 255 255;      /* the ink */
-  --panel: 13 13 15;      /* glass fill */
-  --fg-dim: rgb(var(--fg) / 0.4);    /* labels, eyebrows, counts */
-  --fg-muted: rgb(var(--fg) / 0.58); /* secondary copy */
-  --glow: rgb(var(--fg) / 0.5);      /* txt-glow: phosphor bleed */
-  --glow-far: rgb(var(--fg) / 0.18);
-  --grid: rgb(var(--fg) / 0.05);
-  --vignette: rgb(var(--fg) / 0.07);
-  --thumb-a: #ffffff;     /* scrollbar */
-  --thumb-b: #888888;
-  --void: rgb(var(--bg));
-  --phosphor: rgb(var(--fg));
-  --cyan: #cfcfcf;
-  --lime: rgb(var(--fg));
-  --scanline: rgba(0, 0, 0, 0.28);
-}
-[data-theme='light'] {
-  color-scheme: light;
-  --bg: 243 240 232;      /* warm paper */
-  --fg: 17 17 17;         /* ink */
-  --panel: 255 255 255;
-  /* the same ramp reads lighter on paper, so the two label greys are darker
-     than a raw 40% / 58% would be: both clear 4.5:1 on the paper */
-  --fg-dim: rgba(17, 17, 17, 0.6);
-  --fg-muted: rgba(17, 17, 17, 0.72);
-  --glow: rgba(17, 17, 17, 0.22);        /* ink bleed, not light */
-  --glow-far: rgba(17, 17, 17, 0.08);
-  --grid: rgba(0, 0, 0, 0.06);
-  --vignette: rgba(0, 0, 0, 0.05);
-  --thumb-a: #111111;
-  --thumb-b: #777777;
-  --cyan: #444444;
+@layer base {
+  /* v4 preflight dropped the pointer cursor on buttons; this site is full of them */
+  button:not(:disabled) { cursor: pointer; }
 }
 
-* {
-  box-sizing: border-box;
-}
+@theme {
+  --color-void: rgb(var(--bg));
+  --color-ink: rgb(var(--panel));
+  --color-fg: rgb(var(--fg));
+  --color-bg: rgb(var(--bg));
+  --color-panel: rgb(var(--panel));
+  --color-fg-dim: var(--fg-dim);
+  --color-fg-muted: var(--fg-muted);
 
-html {
-  scroll-behavior: smooth;
-  /* nav offsets are handled per-section via scroll-margin (scroll-mt-*) */
-}
+  --color-phosphor: rgb(var(--fg));
+  --color-phosphor-dim: #bdbdbd;
+  --color-phosphor-deep: #4d4d4d;
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+  --color-cyan: #d0d0d0;
+  --color-cyan-dim: #8a8a8a;
+
+  --color-lime: #ffffff;
+  --color-amber: #cfcfcf;
+  --color-magenta: #e0e0e0;
+  --color-muted: #7a7a7a;
+
+  /* next/font injects --font-jetbrains etc. on <html>; the theme names
+     (--font-mono ...) are what the utilities read, so they cannot be the
+     same variable or the value loops back on itself */
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-pixel: var(--font-press-start), var(--font-jetbrains), monospace;
+  --font-crt: var(--font-vt323), var(--font-jetbrains), monospace;
+  --font-sans: var(--font-grotesk), system-ui, sans-serif;
+
+  --shadow-glow-sm: 0 0 8px rgba(255, 255, 255, 0.3);
+  --shadow-glow:
+    0 0 14px rgba(255, 255, 255, 0.3), 0 0 40px rgba(255, 255, 255, 0.1);
+  --shadow-glow-cyan:
+    0 0 14px rgba(255, 255, 255, 0.32), 0 0 40px rgba(255, 255, 255, 0.1);
+  --shadow-glow-lime:
+    0 0 16px rgba(255, 255, 255, 0.4), 0 0 44px rgba(255, 255, 255, 0.12);
+
+  --animate-blink: blink 1s step-end infinite;
+  --animate-flicker: flicker 6s linear infinite;
+  --animate-scan: scan 7s linear infinite;
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-drift: drift 20s linear infinite alternate;
+  --animate-marquee: marquee 70s linear infinite;
+  --animate-foil: foil 5.5s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 2.6s ease-in-out infinite;
+
+  @keyframes blink {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes flicker {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    3% {
+      opacity: 0.82;
+    }
+    6% {
+      opacity: 1;
+    }
+    9% {
+      opacity: 0.9;
+    }
+    12% {
+      opacity: 1;
+    }
+  }
+  @keyframes scan {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes fade-up {
+    0% {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes drift {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-40px);
+    }
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes foil {
+    0% {
+      transform: translateX(-120%) skewX(-18deg);
+    }
+    55%,
+    100% {
+      transform: translateX(320%) skewX(-18deg);
+    }
+  }
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      text-shadow: 0 0 6px rgba(87, 255, 176, 0.5);
+    }
+    50% {
+      text-shadow:
+        0 0 14px rgba(87, 255, 176, 0.9),
+        0 0 26px rgba(87, 255, 176, 0.4);
+    }
   }
 }
 
-body {
-  margin: 0;
-  background-color: var(--void);
-  color: rgb(var(--fg) / 0.9);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-/* Deep atmospheric backdrop: neutral vignette + faint grid (black & white) */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background:
-    radial-gradient(ellipse 120% 80% at 50% -10%, var(--vignette), transparent 60%),
-    radial-gradient(ellipse 90% 70% at 50% 120%, var(--grid), transparent 55%),
-    var(--void);
-}
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 85%);
-  opacity: 0.5;
-}
-
-/* --------------------------------------------------------------------------
-   Scrollbar
-   -------------------------------------------------------------------------- */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: rgb(var(--bg)); }
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--thumb-a), var(--thumb-b));
-  border-radius: 0;
-  border: 2px solid rgb(var(--bg));
-}
-::selection { background: rgb(var(--fg)); color: rgb(var(--bg)); }
-
-/* --------------------------------------------------------------------------
-   Reusable component utilities
-   -------------------------------------------------------------------------- */
-@layer components {
+@utility txt-glow {
   /* Glow text presets (monochrome white) */
-  .txt-glow { text-shadow: 0 0 6px var(--glow), 0 0 18px var(--glow-far); }
-  .txt-glow-cyan { text-shadow: 0 0 6px var(--glow), 0 0 18px var(--glow-far); }
-  .txt-glow-lime { text-shadow: 0 0 8px var(--glow), 0 0 20px var(--glow-far); }
+  text-shadow:
+    0 0 6px var(--glow),
+    0 0 18px var(--glow-far);
+}
 
+@utility txt-glow-cyan {
+  text-shadow:
+    0 0 6px var(--glow),
+    0 0 18px var(--glow-far);
+}
+
+@utility txt-glow-lime {
+  text-shadow:
+    0 0 8px var(--glow),
+    0 0 20px var(--glow-far);
+}
+
+@utility term-window {
   /* The terminal "window" chrome shared across sections */
-  .term-window {
-    position: relative;
-    background: rgb(var(--panel) / 0.92);
-    border: 1px solid rgb(var(--fg) / 0.28);
-    box-shadow: inset 0 0 0 1px rgb(var(--fg) / 0.04),
-                0 0 0 1px rgba(0, 0, 0, 0.6),
-                0 18px 50px -20px rgba(0, 0, 0, 0.9);
-  }
-  .term-window::before {
+  position: relative;
+  background: rgb(var(--panel) / 0.92);
+  border: 1px solid rgb(var(--fg) / 0.28);
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--fg) / 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 18px 50px -20px rgba(0, 0, 0, 0.9);
+  &::before {
     /* corner ticks -> ASCII bracket feel */
     content: '';
     position: absolute;
     inset: 5px;
     pointer-events: none;
     background:
-      linear-gradient(var(--phosphor), var(--phosphor)) left top / 12px 1px no-repeat,
-      linear-gradient(var(--phosphor), var(--phosphor)) left top / 1px 12px no-repeat,
-      linear-gradient(var(--phosphor), var(--phosphor)) right top / 12px 1px no-repeat,
-      linear-gradient(var(--phosphor), var(--phosphor)) right top / 1px 12px no-repeat,
-      linear-gradient(var(--phosphor), var(--phosphor)) left bottom / 12px 1px no-repeat,
-      linear-gradient(var(--phosphor), var(--phosphor)) left bottom / 1px 12px no-repeat,
-      linear-gradient(var(--phosphor), var(--phosphor)) right bottom / 12px 1px no-repeat,
-      linear-gradient(var(--phosphor), var(--phosphor)) right bottom / 1px 12px no-repeat;
+      linear-gradient(var(--phosphor), var(--phosphor)) left top / 12px 1px
+        no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) left top / 1px 12px
+        no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) right top / 12px 1px
+        no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) right top / 1px 12px
+        no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) left bottom / 12px 1px
+        no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) left bottom / 1px 12px
+        no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) right bottom / 12px 1px
+        no-repeat,
+      linear-gradient(var(--phosphor), var(--phosphor)) right bottom / 1px 12px
+        no-repeat;
     opacity: 0.55;
   }
+}
 
+@utility ascii-rule {
   /* Dotted/dashed ASCII divider */
-  .ascii-rule {
-    height: 1px;
-    background-image: repeating-linear-gradient(90deg, rgb(var(--fg) / 0.5) 0 6px, transparent 6px 12px);
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgb(var(--fg) / 0.5) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+@layer utilities {
+  /* ==========================================================================
+   NONTHANAPHONG.EXE - terminal theme base
+   ========================================================================== */
+
+  /* --------------------------------------------------------------------------
+   Theme tokens. Dark is the site as designed; light is the same terminal
+   printed on warm paper. RGB triplets so Tailwind can add its own alpha.
+   -------------------------------------------------------------------------- */
+  :root {
+    color-scheme: dark;
+    --bg: 5 5 5; /* the page */
+    --fg: 255 255 255; /* the ink */
+    --panel: 13 13 15; /* glass fill */
+    --fg-dim: rgb(var(--fg) / 0.4); /* labels, eyebrows, counts */
+    --fg-muted: rgb(var(--fg) / 0.58); /* secondary copy */
+    --glow: rgb(var(--fg) / 0.5); /* txt-glow: phosphor bleed */
+    --glow-far: rgb(var(--fg) / 0.18);
+    --grid: rgb(var(--fg) / 0.05);
+    --vignette: rgb(var(--fg) / 0.07);
+    --thumb-a: #ffffff; /* scrollbar */
+    --thumb-b: #888888;
+    --void: rgb(var(--bg));
+    --phosphor: rgb(var(--fg));
+    --cyan: #cfcfcf;
+    --lime: rgb(var(--fg));
+    --scanline: rgba(0, 0, 0, 0.28);
   }
+  [data-theme='light'] {
+    color-scheme: light;
+    --bg: 243 240 232; /* warm paper */
+    --fg: 17 17 17; /* ink */
+    --panel: 255 255 255;
+    /* the same ramp reads lighter on paper, so the two label greys are darker
+     than a raw 40% / 58% would be: both clear 4.5:1 on the paper */
+    --fg-dim: rgba(17, 17, 17, 0.6);
+    --fg-muted: rgba(17, 17, 17, 0.72);
+    --glow: rgba(17, 17, 17, 0.22); /* ink bleed, not light */
+    --glow-far: rgba(17, 17, 17, 0.08);
+    --grid: rgba(0, 0, 0, 0.06);
+    --vignette: rgba(0, 0, 0, 0.05);
+    --thumb-a: #111111;
+    --thumb-b: #777777;
+    --cyan: #444444;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* nav offsets are handled per-section via scroll-margin (scroll-mt-*) */
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--void);
+    color: rgb(var(--fg) / 0.9);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Deep atmospheric backdrop: neutral vignette + faint grid (black & white) */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(
+        ellipse 120% 80% at 50% -10%,
+        var(--vignette),
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 90% 70% at 50% 120%,
+        var(--grid),
+        transparent 55%
+      ),
+      var(--void);
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(
+      ellipse 80% 70% at 50% 40%,
+      #000 30%,
+      transparent 85%
+    );
+    opacity: 0.5;
+  }
+
+  /* --------------------------------------------------------------------------
+   Scrollbar
+   -------------------------------------------------------------------------- */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--bg));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--thumb-a), var(--thumb-b));
+    border-radius: 0;
+    border: 2px solid rgb(var(--bg));
+  }
+  ::selection {
+    background: rgb(var(--fg));
+    color: rgb(var(--bg));
+  }
+
+  /* --------------------------------------------------------------------------
+   Reusable component utilities
+   -------------------------------------------------------------------------- */
 }
 
 /* Typewriter caret helper */

@@ -69,7 +69,7 @@ export default function BootScreen({ onStart }: { onStart: () => void }) {
       animate={{ opacity: leaving ? 0 : 1 }}
       transition={{ duration: 0.5 }}
       onAnimationComplete={() => leaving && finish()}
-      className="fixed inset-0 z-[80] flex cursor-pointer items-center justify-center bg-void px-6"
+      className="fixed inset-0 z-80 flex cursor-pointer items-center justify-center bg-void px-6"
     >
       <div className="w-full max-w-2xl">
         <pre className="m-0 whitespace-pre-wrap font-mono text-sm leading-relaxed text-phosphor sm:text-base">

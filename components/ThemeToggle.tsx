@@ -36,7 +36,7 @@ export default function ThemeToggle() {
       }}
       aria-label={`Switch to ${next} theme`}
       title={`theme ${next}`}
-      className="shrink-0 rounded px-1 font-mono text-[13px] leading-none text-fg/55 transition-colors hover:text-fg focus-visible:outline focus-visible:outline-1 focus-visible:outline-fg/60"
+      className="shrink-0 rounded-sm px-1 font-mono text-[13px] leading-none text-fg/55 transition-colors hover:text-fg focus-visible:outline-solid focus-visible:outline-1 focus-visible:outline-fg/60"
     >
       {/* both glyphs are in the mono font already; no icon set to ship */}
       <span aria-hidden>{theme === null ? '\u25D0' : theme === 'light' ? '\u263E' : '\u2600'}</span>

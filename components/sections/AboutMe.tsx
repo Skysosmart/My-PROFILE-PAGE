@@ -219,11 +219,11 @@ export default function AboutMe() {
       <div className="flex flex-1 flex-col gap-4 md:flex-row">
         {/* interactive terminal (left) */}
         <div
-          className="flex flex-1 flex-col overflow-hidden rounded-xl border border-fg/[0.12] bg-bg/80 md:bg-bg/35"
+          className="flex flex-1 flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:bg-bg/35"
           onClick={() => ready && inputRef.current?.focus()}
         >
           {/* terminal title bar */}
-          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/[0.03] px-4 py-2.5">
+          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/3 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
@@ -302,7 +302,7 @@ export default function AboutMe() {
                   autoComplete="off"
                   aria-label="Terminal command input"
                   placeholder="type a command… (help)"
-                  className="min-w-0 flex-1 border-none bg-transparent font-mono text-fg caret-fg outline-none placeholder:text-fg/25"
+                  className="min-w-0 flex-1 border-none bg-transparent font-mono text-fg caret-fg outline-hidden placeholder:text-fg/25"
                 />
               </div>
             )}
@@ -310,7 +310,7 @@ export default function AboutMe() {
 
           {/* selectable command chips */}
           {ready && (
-            <div className="flex flex-wrap gap-2 border-t border-fg/10 bg-fg/[0.02] px-4 py-3">
+            <div className="flex flex-wrap gap-2 border-t border-fg/10 bg-fg/2 px-4 py-3">
               {COMMANDS.map((c) => (
                 <button
                   key={c}
@@ -318,7 +318,7 @@ export default function AboutMe() {
                     e.stopPropagation()
                     run(c)
                   }}
-                  className="rounded border border-fg/20 bg-bg/40 px-3 py-1 font-mono text-xs text-green-400 transition-colors hover:border-green-400/60 hover:bg-green-400/10"
+                  className="rounded-sm border border-fg/20 bg-bg/40 px-3 py-1 font-mono text-xs text-green-400 transition-colors hover:border-green-400/60 hover:bg-green-400/10"
                 >
                   {c}
                 </button>
@@ -328,8 +328,8 @@ export default function AboutMe() {
         </div>
 
         {/* portrait (right) - same window chrome as the terminal */}
-        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/[0.12] bg-bg/80 md:bg-bg/40 md:w-[320px] lg:w-[360px]">
-          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/[0.03] px-4 py-2.5">
+        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:bg-bg/40 md:w-[320px] lg:w-[360px]">
+          <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/3 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />

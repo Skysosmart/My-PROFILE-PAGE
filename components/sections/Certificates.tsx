@@ -85,7 +85,7 @@ function Seal({ medal, still, size = 44 }: { medal: string; still: boolean; size
     <span
       aria-hidden
       style={{ width: size, height: size, background: face.fill }}
-      className="relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)_/_0.5)]"
+      className="relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)/0.5)]"
     >
       <span className="font-pixel text-[6px] leading-none text-black/55">
         {medal === 'gold' ? 'GOLD' : '3RD'}
@@ -185,7 +185,7 @@ export default function Certificates() {
             <button
               key={c.file}
               onClick={() => setActive(c)}
-              className={`group flex items-start gap-3 rounded-2xl border ${face.ring} bg-gradient-to-b from-fg/[0.06] to-transparent p-2.5 text-left transition-colors hover:from-fg/[0.11] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70`}
+              className={`group flex items-start gap-3 rounded-2xl border ${face.ring} bg-linear-to-b from-fg/6 to-transparent p-2.5 text-left transition-colors hover:from-fg/11 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70`}
             >
               <div className="w-16 shrink-0 overflow-hidden rounded-md bg-white shadow-[0_8px_22px_-10px_rgba(0,0,0,0.9)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -221,7 +221,7 @@ export default function Certificates() {
               Team Prometheus · Jun to Nov 2025
             </span>
           </div>
-          <ol className="flex gap-0 overflow-x-auto pb-1 [scrollbar-width:thin]">
+          <ol className="flex gap-0 overflow-x-auto pb-1 scrollbar-thin">
             {route.map((c, i) => {
               const meta = ROUTE_LABEL[c.file] ?? { when: '', what: c.title }
               const last = i === route.length - 1
@@ -240,7 +240,7 @@ export default function Certificates() {
                     <button
                       onClick={() => setActive(c)}
                       aria-label={`${meta.what} - ${c.title}`}
-                      className="relative mx-auto -my-3 rounded-full p-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
+                      className="relative mx-auto -my-3 rounded-full p-3 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
                     >
                       {last ? (
                         <Seal medal="bronze" still={still} size={26} />
@@ -251,7 +251,7 @@ export default function Certificates() {
                   </div>
                   <button
                     onClick={() => setActive(c)}
-                    className="group mt-1.5 w-full px-1 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
+                    className="group mt-1.5 w-full px-1 text-center focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
                   >
                     <span className="block font-mono text-[9px] uppercase tracking-wider text-fg-dim">
                       {meta.when}
@@ -284,7 +284,7 @@ export default function Certificates() {
               key={c.key}
               onClick={() => setCat(c.key)}
               aria-pressed={on}
-              className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
+              className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
                 on ? 'text-bg' : 'text-fg/70 hover:text-fg'
               }`}
             >
@@ -320,7 +320,7 @@ export default function Certificates() {
             <div
               key={c.file}
               style={{ opacity: fade, filter: soften ? `blur(${soften}px)` : undefined }}
-              className="group/fade transition-[opacity,filter] duration-300 hover:!opacity-100 hover:!blur-none focus-within:!opacity-100 focus-within:!blur-none"
+              className="group/fade transition-[opacity,filter] duration-300 hover:opacity-100! hover:blur-none! focus-within:opacity-100! focus-within:blur-none!"
             >
               <CertCard cert={c} index={i} still={still} onOpen={setActive} />
             </div>
@@ -332,7 +332,7 @@ export default function Certificates() {
         <div className="mt-6 flex justify-center">
           <Link
             href="/certificates"
-            className="group inline-flex items-center gap-2 rounded-full border border-fg/25 px-5 py-2.5 font-sans text-sm font-medium text-fg/80 transition-colors hover:border-fg/60 hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+            className="group inline-flex items-center gap-2 rounded-full border border-fg/25 px-5 py-2.5 font-sans text-sm font-medium text-fg/80 transition-colors hover:border-fg/60 hover:text-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
           >
             Explore all {certStats.total} certificates
             <span className="font-mono text-fg-dim transition-colors group-hover:text-fg/80">

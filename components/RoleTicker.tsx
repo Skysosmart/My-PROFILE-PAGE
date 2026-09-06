@@ -21,7 +21,7 @@ export default function RoleTicker() {
   }, [roles.length])
 
   return (
-    <div className="pointer-events-none absolute bottom-4 left-4 z-[60] font-mono sm:bottom-6 sm:left-6">
+    <div className="pointer-events-none absolute bottom-4 left-4 z-60 font-mono sm:bottom-6 sm:left-6">
       <div className="flex items-baseline gap-2">
         <span className="text-[10px] uppercase tracking-[0.35em] text-fg-dim">role</span>
         <span className="text-fg/20">{'//'}</span>

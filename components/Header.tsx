@@ -120,7 +120,7 @@ export default function Header() {
       initial={{ opacity: 0, y: -18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-      className="pointer-events-none fixed inset-x-0 top-0 z-[70] flex justify-center px-3 pt-3 sm:px-4 sm:pt-4"
+      className="pointer-events-none fixed inset-x-0 top-0 z-70 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4"
     >
       <div ref={boxRef} className="pointer-events-auto w-full max-w-2xl">
         {/* the prompt */}
@@ -152,7 +152,7 @@ export default function Header() {
             aria-autocomplete="list"
             aria-label="Jump to a section"
             placeholder={open ? '' : 'type or ⌘K'}
-            className="min-w-0 flex-1 bg-transparent text-fg caret-fg outline-none placeholder:text-fg/25"
+            className="min-w-0 flex-1 bg-transparent text-fg caret-fg outline-hidden placeholder:text-fg/25"
           />
 
           <span className="hidden shrink-0 select-none tabular-nums tracking-widest text-fg-dim sm:inline">

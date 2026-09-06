@@ -10,28 +10,28 @@ import { THEME_BOOT } from '@/lib/theme'
 const mono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
-  variable: '--font-mono',
+  variable: '--font-jetbrains',
   display: 'swap',
 })
 // Big CRT terminal display font
 const crt = VT323({
   subsets: ['latin'],
   weight: '400',
-  variable: '--font-crt',
+  variable: '--font-vt323',
   display: 'swap',
 })
 // Pixel HUD accents (labels, buttons)
 const pixel = Press_Start_2P({
   subsets: ['latin'],
   weight: '400',
-  variable: '--font-pixel',
+  variable: '--font-press-start',
   display: 'swap',
 })
 // Modern sans for the gallery card system (breaks out of the terminal theme)
 const sans = Space_Grotesk({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-sans',
+  variable: '--font-grotesk',
   display: 'swap',
 })
 

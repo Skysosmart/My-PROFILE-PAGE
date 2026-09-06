@@ -498,11 +498,9 @@
    hero. Same picture, cheaper to draw.
    -------------------------------------------------------------------------- */
 @media (max-width: 767px) {
-  /* a border-radius that animates re-clips the WebGL canvas inside it every
-     frame; a static circle is the same orb at rest */
-  .liquid-orb, .orb-canvas { animation: none; border-radius: 50%; }
-  /* blending the gloss over a canvas forces a blend group per frame */
-  .orb-gloss { mix-blend-mode: normal; opacity: 0.55; }
+  /* (the orb's morph used to be off here: it re-rastered its shadows every
+     frame. Its body and glow are still layers now, so a phone gets the
+     same water as a laptop) */
   /* fixed, masked layers are repainted on every scroll on iOS; scrolling
      with the page and dropping the mask keeps them as plain textures */
   body::before, body::after { position: absolute; }

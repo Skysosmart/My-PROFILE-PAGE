@@ -8,6 +8,7 @@ import { certStats } from '@/lib/certs'
 import { SITE } from '@/lib/site'
 import { THEME_BOOT } from '@/lib/theme'
 import { LANG_BOOT } from '@/lib/lang'
+import { VIEWPORT_BOOT } from '@/lib/viewport'
 
 // Body / UI monospace
 const mono = JetBrains_Mono({
@@ -112,6 +113,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         {/* same idea for the language: stamps <html lang> before first paint */}
         <script dangerouslySetInnerHTML={{ __html: LANG_BOOT }} />
+        {/* and for tablets: pins the viewport to a desktop width, so an iPad
+            gets the computer's layout (see lib/viewport.ts) */}
+        <script dangerouslySetInnerHTML={{ __html: VIEWPORT_BOOT }} />
         {/* '<' escaped so no string in the data could ever close this tag */}
         <script
           type="application/ld+json"

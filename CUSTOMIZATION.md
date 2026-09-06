@@ -38,6 +38,16 @@ them to `data/codes.ts`. Run it again after changing the handle or the site
 url in `lib/site.ts`. The duck on it is `public/duck/stand-print.png`, a 1-bit
 halftone of the standing pose (ImageMagick `-ordered-dither h4x4a`).
 
+## Phones and tablets
+
+Everything that leans with the reader (the ducks, the orb's drift, the
+torus's tilt) takes its lean from `lib/lean.ts`: the pointer on a computer,
+the tilt of the device on a phone or tablet (iOS asks for motion access on
+the first tap; until then, and where there is no gyroscope, the finger). A
+finger dragged over the orb makes ripples. Tablets get the computer's
+layout: `lib/viewport.ts` pins the viewport to 1024 (portrait) or 1280
+(landscape) on a touch screen whose short side is 700px or more.
+
 ## Writeups: `content/writeups/*.mdx`
 
 Copy `_template.mdx` to `<slug>.mdx`; the file name is the URL. Frontmatter:

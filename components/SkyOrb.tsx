@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
 import { inkColors, onThemeChange } from '@/lib/theme'
 import { assets } from '@/data/portfolio'
+import { onLean } from '@/lib/lean'
 
 /**
  * Interactive WATER orb for the hero.
@@ -100,15 +101,13 @@ export default function SkyOrb() {
   const ox = useTransform(sx, (v) => v * 0.08)
   const oy = useTransform(sy, (v) => v * 0.08)
 
-  // Orb follows the cursor a little.
+  // Orb follows the cursor a little - or the tilt of the phone (lib/lean.ts).
   useEffect(() => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
-    const onMove = (e: PointerEvent) => {
-      mx.set(e.clientX - window.innerWidth / 2)
-      my.set(e.clientY - window.innerHeight / 2)
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    return () => window.removeEventListener('pointermove', onMove)
+    return onLean(({ x, y }) => {
+      mx.set((x * window.innerWidth) / 2)
+      my.set((y * window.innerHeight) / 2)
+    })
   }, [mx, my])
 
   // Water shader.
@@ -338,8 +337,10 @@ export default function SkyOrb() {
 
         {/* water surface */}
         {/* orb-canvas carries the same morph: an element's own border-radius
-            clips its own layer, which an ancestor's cannot be relied on to */}
-        <canvas ref={canvasRef} className="orb-canvas absolute inset-0 h-full w-full" />
+            clips its own layer, which an ancestor's cannot be relied on to.
+            touch-none: a finger dragged over the water makes ripples instead
+            of scrolling the page (there is a whole screen around it to scroll) */}
+        <canvas ref={canvasRef} className="orb-canvas absolute inset-0 h-full w-full touch-none" />
 
         {/* glass highlight over the water */}
         <div className="orb-gloss pointer-events-none absolute inset-0" />

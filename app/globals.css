@@ -29,13 +29,16 @@
   --color-magenta: #e0e0e0;
   --color-muted: #7a7a7a;
 
+  /* the duck's beak and feet: the one colour in the palette, used sparingly */
+  --color-duck: rgb(245 190 91);
+
   /* next/font injects --font-jetbrains etc. on <html>; the theme names
      (--font-mono ...) are what the utilities read, so they cannot be the
      same variable or the value loops back on itself */
-  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-pixel: var(--font-press-start), var(--font-jetbrains), monospace;
-  --font-crt: var(--font-vt323), var(--font-jetbrains), monospace;
-  --font-sans: var(--font-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), var(--font-thai), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-pixel: var(--font-press-start), var(--font-jetbrains), var(--font-thai), monospace;
+  --font-crt: var(--font-vt323), var(--font-thai), var(--font-jetbrains), monospace;
+  --font-sans: var(--font-grotesk), var(--font-thai), system-ui, sans-serif;
 
   --shadow-glow-sm: 0 0 8px rgba(255, 255, 255, 0.3);
   --shadow-glow:
@@ -517,3 +520,45 @@
   body::after { mask-image: none; -webkit-mask-image: none; opacity: 0.28; }
   body { position: relative; }
 }
+
+/* --------------------------------------------------------------------------
+   Writeups: MDX prose in the site's voice. Headings in the mono face,
+   body in the sans, code in the mono. Code colours come as two CSS
+   variables per token (rehype-pretty-code, defaultColor: false) and the
+   theme picks one, so a block recolours with the rest of the page.
+   -------------------------------------------------------------------------- */
+.writeup-prose { font-family: var(--font-sans); font-size: 15px; line-height: 1.75; color: rgb(var(--fg) / 0.85); }
+.writeup-prose > * + * { margin-top: 1em; }
+.writeup-prose h2, .writeup-prose h3, .writeup-prose h4 {
+  font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgb(var(--fg));
+  margin-top: 2.2em; text-shadow: 0 0 6px var(--glow), 0 0 18px var(--glow-far);
+}
+.writeup-prose h2 { font-size: 15px; } .writeup-prose h3 { font-size: 13px; } .writeup-prose h4 { font-size: 12px; }
+.writeup-prose h2::before, .writeup-prose h3::before { content: '# '; color: var(--fg-dim); }
+.writeup-prose a { color: rgb(var(--fg)); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgb(var(--fg) / 0.4); }
+.writeup-prose a:hover { text-decoration-color: rgb(var(--fg)); }
+.writeup-prose strong { color: rgb(var(--fg)); }
+.writeup-prose ul, .writeup-prose ol { padding-left: 1.4em; }
+.writeup-prose li + li { margin-top: 0.35em; }
+.writeup-prose ul li::marker { color: var(--fg-dim); }
+.writeup-prose blockquote { border-left: 2px solid rgb(var(--fg) / 0.25); padding-left: 1em; color: var(--fg-muted); font-style: italic; }
+.writeup-prose img { border: 1px solid rgb(var(--fg) / 0.15); border-radius: 6px; }
+.writeup-prose hr { border: 0; height: 1px; background-image: repeating-linear-gradient(90deg, rgb(var(--fg) / 0.5) 0 6px, transparent 6px 12px); }
+.writeup-prose :not(pre) > code {
+  font-family: var(--font-mono); font-size: 0.88em; padding: 0.1em 0.4em; border-radius: 4px;
+  background: rgb(var(--fg) / 0.08); border: 1px solid rgb(var(--fg) / 0.1); color: rgb(var(--fg));
+}
+.writeup-prose pre {
+  font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6; overflow-x: auto;
+  padding: 14px 16px; border-radius: 6px; background: rgb(var(--panel) / 0.92); border: 1px solid rgb(var(--fg) / 0.16);
+}
+.writeup-prose pre code { display: grid; }
+.writeup-prose figure[data-rehype-pretty-code-figure] { margin: 0; }
+.writeup-prose [data-rehype-pretty-code-title] {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-dim);
+  padding: 6px 16px 0;
+}
+.writeup-prose [data-highlighted-line] { background: rgb(var(--fg) / 0.07); margin: 0 -16px; padding: 0 16px; }
+/* the two-theme token colours */
+.writeup-prose pre span[style*="--shiki"], .writeup-prose pre code { color: var(--shiki-light); }
+[data-theme='dark'] .writeup-prose pre span[style*="--shiki"], [data-theme='dark'] .writeup-prose pre code { color: var(--shiki-dark); }

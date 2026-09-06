@@ -5,7 +5,11 @@ import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'motion/react'
 import { player, nav } from '@/data/portfolio'
 import ThemeToggle from '@/components/ThemeToggle'
+import LangToggle from '@/components/LangToggle'
 import { applyPref, currentTheme } from '@/lib/theme'
+import { applyLang, currentLang, isLang } from '@/lib/lang'
+import { ui } from '@/data/ui'
+import { useLang } from '@/lib/use-lang'
 
 /**
  * The navigation IS a command line.
@@ -24,6 +28,7 @@ export default function Header() {
   const [query, setQuery] = useState('')
   const [cursor, setCursor] = useState(0)
   const [time, setTime] = useState('')
+  const lang = useLang()
 
   const inputRef = useRef<HTMLInputElement>(null)
   const boxRef = useRef<HTMLDivElement>(null)
@@ -50,6 +55,12 @@ export default function Header() {
       setOpen(false)
       setQuery('')
       inputRef.current?.blur()
+      // some entries are their own route (the writeups), not an anchor
+      const item = nav.find((n) => n.id === id)
+      if (item && 'href' in item) {
+        router.push(item.href)
+        return
+      }
       // the archive lives on its own route, so from there we have to travel
       // back to the one-pager before the anchor means anything
       if (pathname !== '/') {
@@ -100,6 +111,14 @@ export default function Header() {
       const [cmd, arg] = query.trim().toLowerCase().split(/\s+/)
       if (cmd === 'theme') {
         applyPref(arg === 'light' || arg === 'dark' || arg === 'system' ? arg : currentTheme() === 'dark' ? 'light' : 'dark')
+        setOpen(false)
+        setQuery('')
+        inputRef.current?.blur()
+        return
+      }
+      // `lang th|en`, bare `lang` flips
+      if (cmd === 'lang') {
+        applyLang(isLang(arg) ? arg : currentLang() === 'th' ? 'en' : 'th')
         setOpen(false)
         setQuery('')
         inputRef.current?.blur()
@@ -158,6 +177,7 @@ export default function Header() {
           <span className="hidden shrink-0 select-none tabular-nums tracking-widest text-fg-dim sm:inline">
             {time || '--:--:--'}
           </span>
+          <LangToggle />
           <ThemeToggle />
         </div>
 
@@ -173,9 +193,9 @@ export default function Header() {
           >
             {matches.length === 0 && (
               <li className="px-3 py-2 text-fg-dim sm:px-4">
-                {query.trim().toLowerCase().startsWith('theme')
-                  ? 'theme light | dark | system'
-                  : `no such section: ${query}`}
+                {/^(theme|lang)/.test(query.trim().toLowerCase())
+                  ? ui[lang].nav.hint
+                  : `${ui[lang].nav.noSuch}: ${query}`}
               </li>
             )}
             {matches.map((n, i) => {

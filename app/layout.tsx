@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, VT323, Press_Start_2P, Space_Grotesk } from 'next/font/google'
+import { JetBrains_Mono, VT323, Press_Start_2P, Space_Grotesk, Noto_Sans_Thai_Looped } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import { assets, contact, player, projects } from '@/data/portfolio'
 import { certStats } from '@/lib/certs'
 import { SITE } from '@/lib/site'
 import { THEME_BOOT } from '@/lib/theme'
+import { LANG_BOOT } from '@/lib/lang'
 
 // Body / UI monospace
 const mono = JetBrains_Mono({
@@ -32,6 +35,15 @@ const sans = Space_Grotesk({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-grotesk',
+  display: 'swap',
+})
+
+// Thai glyphs for the TH toggle: none of the faces above carry them, so this
+// sits at the end of every stack and the browser falls through to it per glyph
+const thai = Noto_Sans_Thai_Looped({
+  subsets: ['thai'],
+  weight: ['400', '700'],
+  variable: '--font-thai',
   display: 'swap',
 })
 
@@ -92,18 +104,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable}`}
+      className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable} ${thai.variable}`}
     >
       <body>
         {/* runs before first paint, so a returning light-theme visitor never
             sees a dark flash; reads the saved choice, else the OS setting */}
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+        {/* same idea for the language: stamps <html lang> before first paint */}
+        <script dangerouslySetInnerHTML={{ __html: LANG_BOOT }} />
         {/* '<' escaped so no string in the data could ever close this tag */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON).replace(/</g, '\\u003c') }}
         />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

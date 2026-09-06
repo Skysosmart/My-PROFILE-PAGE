@@ -1,15 +1,23 @@
 'use client'
 
 import { contact } from '@/data/portfolio'
+import ContactForm from '@/components/ContactForm'
 
 /**
  * Site footer - the contact section, compacted, at the end of the page.
  * Carries id="contact" so the header nav's CONTACT link scrolls here.
+ * With a mail key on the server the form shows above the channels; without
+ * one the EMAIL channel's mailto link is the whole story.
  */
-export default function Footer() {
+export default function Footer({ formEnabled = false }: { formEnabled?: boolean }) {
   return (
     <footer id="contact" className="scroll-mt-28 px-4 pb-6 pt-10 sm:px-6">
       <div className="mx-auto w-full max-w-5xl border-t border-fg/10 pt-4">
+        {formEnabled && (
+          <div className="mb-6 flex justify-center">
+            <ContactForm />
+          </div>
+        )}
         {/* contact channels */}
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 font-mono text-xs">
           {contact.channels.map((c) => (

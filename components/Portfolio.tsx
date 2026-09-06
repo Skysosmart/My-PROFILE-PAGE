@@ -11,6 +11,8 @@ import dynamic from 'next/dynamic'
 import IntroHero from '@/components/sections/IntroHero'
 import Deferred from '@/components/ui/Deferred'
 import Footer from '@/components/Footer'
+import WriteupsTeaser from '@/components/sections/WriteupsTeaser'
+import type { WriteupMeta } from '@/lib/writeups'
 
 // Each section is its own chunk, fetched when Deferred mounts it. ssr: false
 // costs nothing here: nothing below the boot screen was ever server-rendered,
@@ -38,7 +40,15 @@ const Projects = split(() => import('@/components/sections/Projects'))
  * code-split and mount one by one as the reader approaches them, so a phone
  * is never asked to build the whole page in the frame after boot.
  */
-export default function Portfolio() {
+export default function Portfolio({
+  writeups = [],
+  formEnabled = false,
+}: {
+  /** the newest posts, read on the server; the teaser shows them */
+  writeups?: WriteupMeta[]
+  /** whether the server has a mail key, so the footer can show the form */
+  formEnabled?: boolean
+}) {
   const [started, setStarted] = useState(false)
   // stable identity so BootScreen's timers are never reset by a new prop
   const start = useCallback(() => setStarted(true), [])
@@ -74,7 +84,8 @@ export default function Portfolio() {
             <Deferred id="projects">
               <Projects />
             </Deferred>
-            <Footer />
+            <WriteupsTeaser items={writeups} />
+            <Footer formEnabled={formEnabled} />
           </motion.main>
         </>
       )}

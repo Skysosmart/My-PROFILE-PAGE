@@ -1,0 +1,26 @@
+---
+title: "Challenge name - one line on what it was"
+date: 2026-01-01
+event: "CTF or course name"
+category: web            # web | network | crypto | forensics | pwn | rev | osint | misc | notes
+difficulty: medium       # easy | medium | hard | insane
+tags: [sqli, ssrf]
+summary: "One or two sentences. This is what the list and the link preview show."
+draft: true              # drafts show on previews and locally, never on production
+---
+
+Copy this file to `content/writeups/<slug>.mdx`. The file name is the URL.
+
+## Recon
+
+What the target looked like, what you noticed first.
+
+## Exploit
+
+```bash
+curl -s "$TARGET/login" -d "user=admin'--&pass=x"
+```
+
+## Flag
+
+Why it worked, what would have stopped it.

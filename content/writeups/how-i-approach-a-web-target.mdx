@@ -1,0 +1,39 @@
+---
+title: "How I approach a web target"
+date: 2026-09-06
+category: notes
+tags: [methodology, web, recon]
+summary: "The checklist I run before touching an exploit: map, read, then break. A working draft, not a finished guide."
+draft: true
+---
+
+> Draft. Sky, this is a placeholder so the writeups pages have something to
+> render on previews. Replace it with your own notes or delete it.
+
+## Map first
+
+Before any payload, I want to know what the application is made of:
+
+- every route the front end can reach, and every one it hints at
+- what the session is (cookie, token, both), and who sets it
+- which inputs reach the server, and which of those reach a database, a file
+  system or another service
+
+## Read the errors
+
+An application tells you most about itself when it fails. A login form that
+reflects the username into its error message is already halfway to a finding.
+
+```http
+POST /login HTTP/1.1
+Host: target.example
+Content-Type: application/x-www-form-urlencoded
+
+user=admin'--&pass=x
+```
+
+## Then break it
+
+Only when the map is done do I pick a door. The order is always the same:
+authentication, then authorization, then everything that talks to something
+else on the server's behalf.

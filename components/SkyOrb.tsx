@@ -320,13 +320,22 @@ export default function SkyOrb() {
   }, [epoch])
 
   return (
-    <motion.div style={{ x: ox, y: oy }} className="my-10">
+    // will-change: the drift is a transform on every pointer move, and without
+    // its own layer the whole orb re-rastered each time
+    <motion.div style={{ x: ox, y: oy, willChange: 'transform' }} className="relative my-10">
+      {/* the outer glow, on a still circle behind the morphing rim: a shadow
+          on the rim itself was re-rastered on every frame of the morph */}
+      <span aria-hidden className="orb-glow pointer-events-none absolute inset-0 rounded-full" />
       <motion.div
         whileHover={{ scale: 1.06 }}
         transition={{ type: 'spring', stiffness: 200, damping: 18 }}
         data-cursor-label="ripple"
         className="liquid-orb group relative flex h-[clamp(9.375rem,22vw,15rem)] w-[clamp(9.375rem,22vw,15rem)] items-center justify-center"
       >
+        {/* the glass body under the water: a still layer the morphing rim
+            clips (see .orb-fill in globals.css) */}
+        <span aria-hidden className="orb-fill" />
+
         {/* water surface */}
         {/* orb-canvas carries the same morph: an element's own border-radius
             clips its own layer, which an ancestor's cannot be relied on to */}

@@ -58,18 +58,19 @@ export default function IntroHero() {
             ◇ {t.loaded}
           </motion.p>
           <SkyOrb />
+          {/* the scroll cue lives under the orb, on the right, so the left half ends on the lines */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="mt-8 flex flex-col items-center gap-1.5 rounded-full bg-bg/75 px-4 py-2 font-mono text-[11px] text-fg-dim backdrop-blur-sm"
+          >
+            <span className="uppercase tracking-[0.2em]">{t.scroll}</span>
+            <span className="animate-blink text-fg">▼</span>
+          </motion.div>
         </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        className="mt-10 flex flex-col items-center gap-2 font-mono text-[11px] text-fg-dim"
-      >
-        <span className="uppercase tracking-[0.2em]">{t.scroll}</span>
-        <span className="animate-blink text-fg">▼</span>
-      </motion.div>
     </header>
   )
 }

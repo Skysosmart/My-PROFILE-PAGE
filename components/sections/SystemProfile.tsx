@@ -1,6 +1,7 @@
 'use client'
 
 import GlassSection from '@/components/ui/GlassSection'
+import StatsBar from '@/components/StatsBar'
 import { Mark } from '@/components/ui/Mark'
 import { ui } from '@/data/ui'
 import { useContent } from '@/lib/use-content'
@@ -47,6 +48,10 @@ export default function SystemProfile() {
       variant="rise"
       revealAmount="some"
     >
+      {/* the numbers, counted off the data: they used to crowd the hero */}
+      <div className="mb-6">
+        <StatsBar />
+      </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <div className={card}>
           <span className={k}>{t.location}</span>

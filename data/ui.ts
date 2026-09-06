@@ -11,7 +11,6 @@ const en = {
   hero: {
     loaded: 'Player Loaded',
     scroll: 'Scroll to explore',
-    hi: 'Hi,',
     line1: 'I build it.',
     line2: 'I break it.',
     line3: 'Then I ship it.',
@@ -88,7 +87,6 @@ const th: UI = {
   hero: {
     loaded: 'โหลดผู้เล่นแล้ว',
     scroll: 'เลื่อนลงเพื่อสำรวจ',
-    hi: 'สวัสดี,',
     line1: 'ผมสร้างมันขึ้นมา',
     line2: 'แล้วลองเจาะมันดู',
     line3: 'ก่อนจะปล่อยของจริง',

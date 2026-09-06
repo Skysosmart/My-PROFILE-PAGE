@@ -12,7 +12,7 @@ import { ResumeDoc } from './ResumeDoc'
 export const dynamic = 'force-static'
 
 export async function GET() {
-  const built = new Date().toISOString().slice(0, 10)
+  const built = process.env.NEXT_PUBLIC_BUILT ?? new Date().toISOString().slice(0, 10)
   // renderToBuffer wants the <Document> element's props; ours takes `built`
   // and renders one, which the types cannot see through
   const doc = createElement(ResumeDoc, { built }) as unknown as ReactElement<DocumentProps>

@@ -98,7 +98,7 @@ export default function Portfolio({
           >
             <IntroHero />
             {/* one section at a time: see Deferred */}
-            <Deferred id="profile" minHeight="60svh">
+            <Deferred id="profile" minHeight="min(100svh, 56rem)">
               <SystemProfile />
             </Deferred>
             <Deferred id="about">

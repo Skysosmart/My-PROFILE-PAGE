@@ -29,18 +29,18 @@ export default function IntroHero() {
       {/* lives here, not in the page shell, so it scrolls away with the hero */}
       <RoleTicker />
 
-      <div className="flex w-full max-w-5xl flex-col items-center gap-10 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-center lg:gap-8">
+      <div className="flex w-full max-w-6xl flex-col items-center gap-10 lg:grid lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-center lg:gap-8">
         {/* left: the duck says hello, the lines stand beside it */}
         <motion.div
           {...rise(0.5)}
           // staggered on desktop: the left half sits a little lower, the orb a little higher
           className="flex flex-col items-center gap-4 sm:flex-row sm:items-end sm:gap-6 lg:translate-y-10 lg:justify-start"
         >
-          <Duck pose="hero" width={150} parallax={12} priority className="sm:!w-[190px] xl:!w-[230px]" />
+          <Duck pose="hero" width={180} parallax={12} priority className="sm:!w-[220px] lg:!w-[250px] xl:!w-[280px]" />
           <div className="flex flex-col items-center gap-0.5 pb-2 text-center sm:items-start sm:pb-8 sm:text-left">
-            <span className="whitespace-nowrap font-crt text-4xl leading-[0.95] text-fg txt-glow sm:text-5xl">{t.line1}</span>
-            <span className="whitespace-nowrap font-crt text-4xl leading-[0.95] text-fg txt-glow sm:text-5xl">{t.line2}</span>
-            <span className="whitespace-nowrap font-crt text-4xl leading-[0.95] text-duck sm:text-5xl">{t.line3}</span>
+            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-fg txt-glow sm:text-6xl">{t.line1}</span>
+            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-fg txt-glow sm:text-6xl">{t.line2}</span>
+            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-duck sm:text-6xl">{t.line3}</span>
           </div>
         </motion.div>
 

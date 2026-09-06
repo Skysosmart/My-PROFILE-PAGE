@@ -10,6 +10,7 @@ import { useContent } from '@/lib/use-content'
  *
  * Positioned absolute, not fixed: it belongs to the hero and should scroll away
  * with it. Fixed meant it sat over every section all the way down the page.
+ * Top-left, opposite the name tag.
  */
 export default function RoleTicker() {
   const [i, setI] = useState(0)
@@ -22,7 +23,10 @@ export default function RoleTicker() {
   }, [roles.length])
 
   return (
-    <div className="pointer-events-none absolute bottom-4 left-4 z-60 font-mono sm:bottom-6 sm:left-6">
+    // top-left, the mirror of the name tag at top-right; on a phone both sit
+    // under the header pill (the ticker one row lower than the tag on a narrow
+    // phone, where the two would meet); from lg the pill leaves the corners free
+    <div className="pointer-events-none absolute left-4 top-[116px] z-60 font-mono sm:left-6 sm:top-[74px] lg:top-6">
       <div className="flex items-baseline gap-2">
         <span className="text-[10px] uppercase tracking-[0.35em] text-fg-dim">role</span>
         <span className="text-fg/20">{'//'}</span>

@@ -89,7 +89,7 @@ export const education: Chapter[] = [
     from: 2014,
     to: 2020,
     stage: 'Primary school',
-    school: 'Buranawit School'
+    school: 'Buranawit School',
     title: 'First contact',
     summary:
       'Bottom of the class most years, until a first computer and Roblox. That was the first time making something felt possible, and the digital world stopped being a place other people built.',
@@ -107,7 +107,7 @@ export const education: Chapter[] = [
     from: 2021,
     to: 2023,
     stage: 'Junior high',
-    school: 'Watkhemapirataram School'
+    school: 'Watkhemapirataram School',
     title: 'Trying everything',
     summary:
       'Coding for real: plugins, then back ends. Game development, robotics and electronics one after another, and none of them quite the one, until cyber security and CTF.',

@@ -431,7 +431,7 @@ export const projects: Project[] = [
     tags: ['Next.js', 'TypeScript', 'WebGL', 'Design'],
     image: '/projects/portfolio.jpg',
     contribution: 'Sole author \u00b7 51 commits',
-    demo: 'https://nonthanaphong.vercel.app',
+    demo: 'https://zarutech.dev',
     repo: 'https://github.com/Skysosmart/My-PROFILE-PAGE',
   },
 ]

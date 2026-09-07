@@ -45,8 +45,10 @@ only the handle and the site url are baked into the codes.
 ## Scrolling: `lib/smooth-scroll.ts`
 
 The page has weight: Lenis eases the window toward where a gesture asked for
-instead of jumping, and coasts to a stop. `lerp` is the dial - 0.075, below
-the library's 0.1 default, so it takes its time. It drives the real window
+instead of jumping, and coasts to a stop. `lerp` is the dial - 0.06, well under
+the library's 0.1 default, so it takes its time. For scale: one 300px
+wheel notch is 90% travelled at ~630ms and settled by ~1.2s; at the 0.075
+it started from, that was ~500ms and ~1.0s. It drives the real window
 scroll, which is why the film's sticky stage, `useScroll` and every
 `getBoundingClientRect` on the page are unaware of it.
 

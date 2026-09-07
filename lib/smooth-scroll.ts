@@ -37,7 +37,7 @@ export const getLenis = () => lenis
 export function startSmoothScroll() {
   if (lenis) return () => {}
   const l = new Lenis({
-    lerp: 0.075, // below the 0.1 default: the page takes its time
+    lerp: 0.06, // well below the 0.1 default: the page takes its time
     smoothWheel: true,
     syncTouch: false,
     // evaluated on a gesture, never per frame - `held` measures the stage,

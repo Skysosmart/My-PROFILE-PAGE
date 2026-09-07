@@ -49,7 +49,10 @@ export default function SystemProfile() {
       revealAmount="some"
       panel={false}
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start lg:gap-12 xl:gap-16">
+      {/* items-center, not items-start: the label runs about 740px and the
+            prose about 290, so top-aligning them left the whole lower right
+            of the section empty and the text reading as something left over */}
+      <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-center lg:gap-12 xl:gap-16">
         <SpecLabel />
         {/* the paragraphs arrive once the label has printed */}
         <motion.div
@@ -57,10 +60,10 @@ export default function SystemProfile() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ delay: reduce ? 0 : 1.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="lg:pt-2"
+          className="lg:border-t lg:border-fg/15 lg:pt-6"
         >
           <span className="mb-4 block font-mono text-[0.625rem] uppercase tracking-[0.35em] text-fg-dim">{t.readBeforeUse}</span>
-          <div className="space-y-4 font-sans text-[0.9375rem] leading-relaxed text-fg/85">
+          <div className="space-y-4 font-sans text-[0.9375rem] leading-relaxed text-fg/85 lg:space-y-5 lg:text-[1.0625rem] lg:leading-[1.72]">
             {about.paragraphs.map((p, i) => (
               <p key={i}>{marked(p)}</p>
             ))}

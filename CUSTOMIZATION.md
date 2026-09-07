@@ -68,8 +68,14 @@ Two things to know before changing any of this:
   target's `scroll-margin-top`, the same thing `scrollIntoView` honours, so
   the `scroll-mt-*` on each section still clears the header. Passing it again
   lands every flight one header short.
-- A pane that scrolls inside the page needs `data-lenis-prevent`; the cert
-  lightbox, the About terminal and the personal filmstrip have it.
+- A pane that scrolls the way the page does, and must keep the wheel to
+  itself, needs `data-lenis-prevent`: the cert lightbox and the About
+  terminal have it. **Do not put it on a sideways-only strip.** `lenis.css`
+  puts `overscroll-behavior: contain` on every prevent variant, so a vertical
+  wheel over such a strip chains nowhere and the page freezes under the
+  pointer - which is exactly what the personal filmstrip's roll of thumbs did
+  until it was taken off. Lenis reads vertical gestures only, so a sideways
+  one already falls through on its own and no attribute is wanted.
 - The film is the only section that takes the wheel. The personal section is
   a filmstrip too, but it is dragged, swiped, arrowed or clicked and never
   touches the wheel - deliberately, so there is one owner of that gesture and

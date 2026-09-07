@@ -154,10 +154,16 @@ export default function Personal() {
             <span className="ml-auto shrink-0 text-fg-dim">{current.album.photos.length} photos</span>
           </p>
 
-          {/* the roll: every album at once, so nobody browses blind. Scrolls
-              on its own on a narrow screen - data-lenis-prevent so the page's
-              inertia does not swallow the gesture */}
-          <div data-lenis-prevent className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+          {/* the roll: every album at once, so nobody browses blind.
+              NO data-lenis-prevent here. It is for a pane that scrolls the
+              way the page does and must keep the wheel to itself; this one
+              only scrolls sideways, and the attribute cost the page its
+              scroll entirely - lenis.css puts overscroll-behavior:contain on
+              every prevent variant, so a vertical wheel over the strip
+              chained nowhere and the page froze under the pointer. Lenis
+              reads vertical gestures only, so a sideways one already falls
+              through to this element on its own. */}
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
             {albums.map((a, k) => (
               <button
                 key={a.key}

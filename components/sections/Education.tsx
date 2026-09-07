@@ -57,11 +57,11 @@ export default function Education() {
 
         <ol ref={ref} className="relative">
           {/* the rail, and the part of it already read */}
-          <span aria-hidden className="absolute left-[1.35rem] top-0 hidden h-full w-px bg-fg/12 md:block" />
+          <span aria-hidden className="absolute left-4 top-0 h-full w-px bg-fg/12 md:left-[1.35rem]" />
           <motion.span
             aria-hidden
             style={{ scaleY }}
-            className="absolute left-[1.35rem] top-0 hidden h-full w-px origin-top bg-linear-to-b from-duck via-fg to-transparent md:block"
+            className="absolute left-4 top-0 h-full w-px origin-top bg-linear-to-b from-duck via-fg to-transparent md:left-[1.35rem]"
           />
 
           {education.map((ch, i) => {
@@ -69,7 +69,7 @@ export default function Education() {
             const last = i === education.length - 1
             const num = String(i + 1).padStart(2, '0')
             return (
-              <li key={ch.title} className={`relative md:grid md:grid-cols-[17rem_minmax(0,1fr)] md:gap-10 ${last ? '' : 'pb-16 md:pb-28'}`}>
+              <li key={ch.title} className={`relative pl-11 md:grid md:grid-cols-[17rem_minmax(0,1fr)] md:gap-10 md:pl-0 ${last ? '' : 'pb-16 md:pb-28'}`}>
                 {/* left: sticks beside its chapter while that chapter scrolls */}
                 <div className="hidden self-start md:sticky md:top-32 md:flex md:items-start md:gap-5">
                   {/* the node: the school's crest on a paper disc, so every crest reads on both themes */}
@@ -100,8 +100,30 @@ export default function Education() {
                   </div>
                 </div>
 
+                {/* the node, on a phone: the chapter's number, not the crest -
+                    the crest already sits inline beside the school below, and
+                    showing it twice on one screen reads as a mistake. Same
+                    arrival as the desktop node, centred on the rail. */}
+                <motion.span
+                  aria-hidden
+                  initial={{ scale: 0.6, opacity: 0.4 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  // not the desktop node's band: that one sits in a sticky
+                  // column and dwells inside it, while this one scrolls past
+                  // with the chapter - a flick clears a 20%-tall band without
+                  // ever satisfying it, and the node stays half-drawn. Once,
+                  // when most of it has arrived.
+                  viewport={{ once: true, amount: 0.8 }}
+                  transition={{ duration: 0.4 }}
+                  className={`absolute left-0 top-0 grid h-8 w-8 place-items-center rounded-full border bg-[#f3f0e8] md:hidden ${
+                    last ? 'border-duck shadow-[0_0_18px_rgb(245_190_91/0.6)]' : 'border-fg/40'
+                  }`}
+                >
+                  <span className="font-mono text-[0.625rem] font-bold text-[#111]">{num}</span>
+                </motion.span>
+
                 {/* the years, on a phone, above the content */}
-                <div className="mb-4 flex items-baseline gap-3 md:hidden">
+                <div className="mb-4 flex h-8 items-center gap-3 md:hidden">
                   <span className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-fg-dim">
                     {t.chapter} {num}
                   </span>

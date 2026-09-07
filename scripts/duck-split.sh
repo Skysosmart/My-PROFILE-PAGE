@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Split a line-art duck drawing into the two theme composites the site loads.
 #
-#   scripts/duck-split.sh <name> <source.png> [ink|cutout]
+#   scripts/duck-split.sh <name> <source.png> [ink|cutout|print]
 #
 # Reads assets/duck/<source>, writes public/duck/<name>-dark.png and
 # public/duck/<name>-light.png. Needs ImageMagick 7 (`magick`).
@@ -18,6 +18,10 @@
 #            lines on a near-black body; light gets black lines on paper.
 #   cutout   keeps the drawing exactly as drawn and only removes the
 #            background, for illustrations that carry their own scene.
+#   print    the spec label's treatment: the light composite taken to one
+#            ink through an ordered dither (h4x4a), so the sticker prints
+#            the way a real one does - a white body, black lines, and every
+#            flat colour as its own density of dots.
 set -euo pipefail
 name=$1
 src=assets/duck/$2
@@ -94,6 +98,22 @@ magick -size "$(magick identify -format '%wx%h' "$src")" xc:black "$tmp/lines-so
 magick "$src" -alpha off "$tmp/sat.png" -compose CopyOpacity -composite "$tmp/colour.png"
 # the body, as a flat silhouette to be tinted
 magick -size "$(magick identify -format '%wx%h' "$src")" xc:white "$tmp/mask.png" -alpha off -compose CopyOpacity -composite "$tmp/fill.png"
+
+if [[ $mode == print ]]; then
+  # sized first, then dithered: a halftone resized afterwards turns to mush,
+  # so the drawing is brought to its final width (PRINT_W, 480 by default)
+  # while it is still continuous tone.
+  # the light composite, then one ink: the paper's cream dithers to nearly
+  # solid white, the lines stay black, and a mid-tone (a suit, a laptop)
+  # becomes a halftone of its own weight. The alpha is carried across
+  # untouched, so the sticker's own colour shows through around the drawing.
+  magick "$tmp/fill.png" -fill '#f3f0e8' -colorize 100 "$tmp/colour.png" -composite "$tmp/lines.png" -composite -trim +repage -resize "${PRINT_W:-480}x" "$tmp/light.png"
+  magick "$tmp/light.png" -alpha extract "$tmp/print-alpha.png"
+  magick "$tmp/light.png" -alpha off -colorspace gray -ordered-dither h4x4a "$tmp/dots.png"
+  magick "$tmp/dots.png" "$tmp/print-alpha.png" -compose CopyOpacity -composite "$out/$name-print.png"
+  echo "wrote $out/$name-print.png (print, $(magick identify -format '%wx%h' "$out/$name-print.png"))"
+  exit 0
+fi
 
 # dark: near-black body, white lines. light: paper body, black lines.
 magick "$tmp/fill.png" -fill '#0d0d0f' -colorize 100 "$tmp/colour.png" -composite \( "$tmp/lines.png" -fill white -colorize 100 \) -composite -trim +repage "$out/$name-dark.png"

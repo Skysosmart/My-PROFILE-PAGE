@@ -61,9 +61,15 @@ export default function SpecLabel() {
   const last = education[education.length - 1]
   const serial = `${initials(last.school)}-${last.from}-${profile.mbti.type}`
 
-  const rows: { key: string; value: string; sub?: string; dot?: boolean }[] = [
+  // `art` is the drawing that stands in a row, printed in the same ink
+  const rows: { key: string; value: string; sub?: string; dot?: boolean; art?: { src: string; w: number; h: number } }[] = [
     { key: p.type, value: player.role.toUpperCase() },
-    { key: p.core, value: `${profile.mbti.type} · ${profile.mbti.name}`.toUpperCase(), sub: profile.mbti.description },
+    {
+      key: p.core,
+      value: `${profile.mbti.type} · ${profile.mbti.name}`.toUpperCase(),
+      sub: profile.mbti.description,
+      art: { src: '/duck/suit-print.png', w: 480, h: 910 },
+    },
     { key: p.input, value: profile.stack.join(' · ').toUpperCase() },
     { key: p.output, value: `${projects.length} ${t.stats.projects}`.toUpperCase() },
     { key: p.origin, value: `${profile.location} · ${profile.school}`.toUpperCase() },
@@ -103,12 +109,12 @@ export default function SpecLabel() {
           {/* a plain img: next/image would re-encode the 1-bit halftone into mush */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/duck/stand-print.png"
+            src="/duck/hacker-print.png"
             alt=""
             width={480}
-            height={903}
+            height={454}
             draggable={false}
-            className="h-16 w-auto shrink-0 select-none sm:h-20"
+            className="h-20 w-auto shrink-0 select-none sm:h-24"
           />
           <div className="flex min-w-0 flex-col">
             <span className="font-pixel text-[0.5rem] tracking-[0.25em]">ZARUTECH</span>
@@ -132,13 +138,32 @@ export default function SpecLabel() {
           <Fragment key={r.key}>
             <dt className="pt-0.5 text-[0.5625rem] uppercase tracking-[0.3em] text-[#111]/50 sm:text-[0.625rem]">{r.key}</dt>
             <dd className="m-0 min-w-0">
-              {r.dot && <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-duck align-middle" />}
-              <Typed text={r.value} on={on} delay={start.get(`v${k}`)} className="font-semibold" />
-              {r.sub && (
-                <span className="mt-1 block text-[0.6875rem] leading-relaxed text-[#111]/65">
-                  <Typed text={r.sub} on={on} delay={start.get(`s${k}`)} speed={SUB} caret={false} />
-                </span>
-              )}
+              {/* a row that carries a drawing puts it beside the text rather
+                  than floating it: Typed is an inline-block at full width, so
+                  it cannot wrap around a float - it clears it */}
+              <div className={r.art ? 'flex items-start gap-3 sm:gap-4' : undefined}>
+                <div className={r.art ? 'min-w-0 flex-1' : undefined}>
+                  {r.dot && <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-duck align-middle" />}
+                  <Typed text={r.value} on={on} delay={start.get(`v${k}`)} className="font-semibold" />
+                  {r.sub && (
+                    <span className="mt-1 block text-[0.6875rem] leading-relaxed text-[#111]/65">
+                      <Typed text={r.sub} on={on} delay={start.get(`s${k}`)} speed={SUB} caret={false} />
+                    </span>
+                  )}
+                </div>
+                {r.art && (
+                  // a plain img for the same reason as the mark above
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={r.art.src}
+                    alt=""
+                    width={r.art.w}
+                    height={r.art.h}
+                    draggable={false}
+                    className="h-16 w-auto shrink-0 select-none sm:h-20"
+                  />
+                )}
+              </div>
             </dd>
           </Fragment>
         ))}

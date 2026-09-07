@@ -35,8 +35,12 @@ follow the data; the REV is the day of the build. The two codes on it are
 real: `node scripts/codes.mjs` asks `zint` and `qrencode` (both installed
 locally) for a Code 128 of the handle and a QR of `/resume.pdf` and writes
 them to `data/codes.ts`. Run it again after changing the handle or the site
-url in `lib/site.ts`. The duck on it is `public/duck/stand-print.png`, a 1-bit
-halftone of the standing pose (ImageMagick `-ordered-dither h4x4a`).
+url in `lib/site.ts`. Two ducks are printed on it, both 1-bit halftones from
+`duck-split.sh`'s `print` mode: `hacker-print.png` is the mark in the header,
+and `suit-print.png` stands in the CORE row, floated so the MBTI description
+wraps around it. The MBTI itself is `profile.mbti` (+ `profileTh.mbti`); the
+serial under the barcode is built from it, so it follows along on its own -
+only the handle and the site url are baked into the codes.
 
 ## Phones and tablets
 
@@ -63,7 +67,12 @@ turns one into the two composites the site loads, `public/duck/<pose>-dark.png`
 (near-black body, white lines) and `<pose>-light.png` (paper body, black
 lines); coloured parts keep their colour in both. Pass `cutout` as the third
 argument for a drawing that carries its own scene (hacker mode) to keep it
-as drawn and only drop the background. Then add the pose to the table in
+as drawn and only drop the background. Pass `print` for the spec label's
+treatment instead: the drawing is brought to 480px wide (`PRINT_W` overrides)
+and then taken to one ink through an ordered dither, giving
+`public/duck/<pose>-print.png` - a white body, black lines, and every flat
+colour as its own density of dots. Sizing before dithering is the point; a
+halftone resized afterwards turns to mush. Then add the pose to the table in
 `components/duck/Duck.tsx` with the size the script prints.
 
 The twelve expressions come from one sheet (`emotes-source.png`), cropped to

@@ -3,6 +3,11 @@
 /* dark: follows the site's own theme switch (lib/theme.ts), not the OS */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
+/* thai: the script stacks a vowel above the consonant and a tone mark above
+   that, so a line box tuned for Latin crops it. Used to lift only the tight
+   settings, never as a blanket override - lib/lang.ts stamps data-lang. */
+@custom-variant th (&:where([data-lang='th'], [data-lang='th'] *));
+
 @layer base {
   /* v4 preflight dropped the pointer cursor on buttons; this site is full of them */
   button:not(:disabled) { cursor: pointer; }

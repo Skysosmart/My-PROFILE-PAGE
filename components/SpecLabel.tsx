@@ -177,7 +177,7 @@ export default function SpecLabel() {
             <span className="font-crt text-3xl leading-none sm:text-4xl">
               <Typed text={String(r.n)} on={on} delay={ratingAt(i)} speed={90} caret={false} />
             </span>
-            <span className="max-w-full bg-duck px-1 py-0.5 text-center font-mono text-[0.4375rem] uppercase leading-[1.2] tracking-[0.1em] sm:px-1.5 sm:text-[0.5rem] sm:tracking-[0.15em]">
+            <span className="max-w-full bg-duck px-1 py-0.5 text-center font-mono text-[0.4375rem] uppercase leading-[1.2] th:leading-[1.45] tracking-[0.1em] sm:px-1.5 sm:text-[0.5rem] sm:tracking-[0.15em]">
               {r.label}
             </span>
           </div>

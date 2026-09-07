@@ -93,7 +93,7 @@ export default function Education() {
                     <span className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-fg-dim">
                       {t.chapter} {num}
                     </span>
-                    <span className="font-crt text-4xl leading-none text-fg/60 lg:text-5xl">
+                    <span className="font-crt text-4xl leading-none th:leading-[1.3] text-fg/60 lg:text-5xl">
                       {ch.years.replace(/present/i, t.present)}
                     </span>
                     <span className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-fg-muted">{ch.stage}</span>
@@ -127,7 +127,7 @@ export default function Education() {
                   <span className="font-mono text-[0.625rem] uppercase tracking-[0.3em] text-fg-dim">
                     {t.chapter} {num}
                   </span>
-                  <span className="font-crt text-3xl leading-none text-fg/60">{ch.years.replace(/present/i, t.present)}</span>
+                  <span className="font-crt text-3xl leading-none th:leading-[1.3] text-fg/60">{ch.years.replace(/present/i, t.present)}</span>
                 </div>
 
                 {/* right: the chapter */}
@@ -149,7 +149,7 @@ export default function Education() {
                   <div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                     <div className="min-w-0">
                       <span className="font-mono text-[0.6875rem] uppercase tracking-[0.25em] text-fg-dim">{ch.stage}</span>
-                      <h3 className="mt-2 max-w-2xl font-sans text-3xl font-bold leading-[1.05] text-fg sm:text-4xl lg:text-5xl">
+                      <h3 className="mt-2 max-w-2xl font-sans text-3xl font-bold leading-[1.05] th:leading-[1.3] text-fg sm:text-4xl lg:text-5xl">
                         {ch.title}
                       </h3>
                       {/* the school, with its crest (the phone has no sticky column to carry it) */}

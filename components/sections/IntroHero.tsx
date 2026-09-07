@@ -55,9 +55,9 @@ export default function IntroHero() {
               phone the size follows the width, so the widest Thai line still
               fits a 360px screen */}
           <div className="flex flex-col items-center gap-1 pb-2 text-center [text-shadow:0_0_10px_var(--glow),0_0_42px_var(--glow-far)] sm:items-start sm:pb-8 sm:text-left">
-            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line1}</span>
-            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line2}</span>
-            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] text-duck sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line3}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] th:leading-[1.3] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line1}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] th:leading-[1.3] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line2}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] th:leading-[1.3] text-duck sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line3}</span>
           </div>
         </motion.div>
 

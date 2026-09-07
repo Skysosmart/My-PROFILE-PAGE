@@ -24,8 +24,10 @@ rename both together. Lines marked `// TODO(th-review)` are machine drafts
 waiting for a native read.
 
 Interface strings (buttons, labels, the hero's three lines, the ending) are
-in `data/ui.ts`, both languages side by side. The marked terms with tooltips
-are in `data/glossary.ts`.
+in `data/ui.ts`, both languages side by side. The quick-start steps beside
+the spec label are there too (`profile.steps`): a step can carry one reading
+for every device or one for the mouse and one for the finger, and the
+section it jumps to.
 
 ## The spec label: `components/SpecLabel.tsx`
 
@@ -41,6 +43,9 @@ and `suit-print.png` stands in the CORE row, floated so the MBTI description
 wraps around it. The MBTI itself is `profile.mbti` (+ `profileTh.mbti`); the
 serial under the barcode is built from it, so it follows along on its own -
 only the handle and the site url are baked into the codes.
+Beside the label, `components/QuickStart.tsx` is the leaflet from the box:
+how to play the page, one line per thing it does (`profile.steps` in
+`data/ui.ts`).
 
 ## The About terminal, and the Linux behind it
 
@@ -156,6 +161,11 @@ One palette: the terminal on warm paper. Tokens are the `--bg`, `--fg`,
 names (`fg`, `bg`, `panel`, `fg-dim`, `fg-muted`, `duck`) in the `@theme`
 block right after. The duck's yellow (`--color-duck`) is the only colour in
 the palette; use it sparingly.
+
+The paper changes stock from section to section: the `--tint-<section>`
+triplets next to the tokens and `lib/tint.ts`, which gives the tone to
+whichever section spans the middle of the screen. A section without a tone
+(the hero, the footer) is the plain paper.
 
 There was a dark theme beside this one, with a toggle, a `theme` command and
 a drawing of every duck pose in each. It was dropped; the history has all of

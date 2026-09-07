@@ -7,6 +7,7 @@ import CertLightbox from '@/components/ui/CertLightbox'
 import { certificates, moments, type Certificate } from '@/data/portfolio'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
+import { useTint } from '@/lib/tint'
 
 /**
  * 07 · PERSONAL - "This is where it gets personal." Every album from the
@@ -30,6 +31,7 @@ const SWIPE_PX = 60 // drag past this and the strip moves on
 export default function Personal() {
   const t = ui[useLang()].personal
   const reduce = useReducedMotion()
+  const ref = useTint('personal')
   const [open, setOpen] = useState<{ cert: Certificate | null; albumKey: string; photo: string } | null>(null)
   const [i, setI] = useState(0)
   const dragged = useRef(false)
@@ -51,7 +53,7 @@ export default function Personal() {
   const photos = albums.reduce((s, a) => s + a.album.photos.length, 0)
 
   return (
-    <section id="personal" className="relative isolate scroll-mt-28 overflow-x-clip px-4 py-16 sm:px-6 sm:py-24">
+    <section ref={ref} id="personal" className="relative isolate scroll-mt-28 overflow-x-clip px-4 py-16 sm:px-6 sm:py-24">
       <div
         aria-hidden
         className="pointer-events-none absolute left-2 bottom-0 -z-10 select-none font-crt text-[10rem] leading-none text-fg/[0.04] sm:text-[18.75rem]"

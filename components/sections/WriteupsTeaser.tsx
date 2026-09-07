@@ -6,6 +6,7 @@ import WriteupList from '@/components/writeups/WriteupList'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
 import type { WriteupMeta } from '@/lib/writeups'
+import { useTint } from '@/lib/tint'
 
 /**
  * The three newest writeups on the one-pager, as a folder listing, with the
@@ -15,10 +16,11 @@ import type { WriteupMeta } from '@/lib/writeups'
 export default function WriteupsTeaser({ items }: { items: WriteupMeta[] }) {
   const lang = useLang()
   const t = ui[lang]
+  const ref = useTint('writeups')
   if (items.length === 0) return null
 
   return (
-    <section id="writeups" className="relative isolate scroll-mt-28 px-4 py-10 sm:px-6 sm:py-14">
+    <section ref={ref} id="writeups" className="relative isolate scroll-mt-28 px-4 py-10 sm:px-6 sm:py-14">
       <div
         aria-hidden
         className="pointer-events-none absolute right-4 top-0 -z-10 select-none font-crt text-[12.5rem] leading-none text-fg/[0.04] sm:text-[18.75rem]"

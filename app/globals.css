@@ -258,6 +258,16 @@
     --lime: rgb(var(--fg));
     --scanline: rgba(0, 0, 0, 0.28);
     --shade: 0.18; /* drop-shadow strength: hard shadows read as smudges here */
+    /* the paper's stock per section (lib/tint.ts) */
+    --tint-profile: 231 237 241;
+    --tint-about: 231 240 233;
+    --tint-education: 246 238 224;
+    --tint-skills: 239 235 244;
+    --tint-certificates: 247 242 224;
+    --tint-projects: 233 236 241;
+    --tint-writeups: 236 236 234;
+    --tint-personal: 246 235 233;
+    --tint-contact: 243 240 232;
   }
 
   * {
@@ -298,6 +308,29 @@
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
+
+  /* The paper's tone, one per section. A fixed layer of its own under the
+     vignette and the grid, so a change is one solid repaint of one layer
+     and the fade never touches the main thread. Which tone is on is
+     `<html data-tint>` from lib/tint.ts; none means the plain paper. */
+  .page-tint {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    pointer-events: none;
+    background-color: rgb(var(--tint, var(--bg)));
+    transition: background-color 1.2s ease;
+    will-change: transform;
+  }
+  html[data-tint='profile'] { --tint: var(--tint-profile); }
+  html[data-tint='about'] { --tint: var(--tint-about); }
+  html[data-tint='education'] { --tint: var(--tint-education); }
+  html[data-tint='skills'] { --tint: var(--tint-skills); }
+  html[data-tint='certificates'] { --tint: var(--tint-certificates); }
+  html[data-tint='projects'] { --tint: var(--tint-projects); }
+  html[data-tint='writeups'] { --tint: var(--tint-writeups); }
+  html[data-tint='personal'] { --tint: var(--tint-personal); }
+  html[data-tint='contact'] { --tint: var(--tint-contact); }
 
   /* Deep atmospheric backdrop: neutral vignette + faint grid (black & white) */
   body::before {

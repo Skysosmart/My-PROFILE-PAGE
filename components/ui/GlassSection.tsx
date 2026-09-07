@@ -1,7 +1,8 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { motion, useReducedMotion, type Variants } from 'motion/react'
+import { useTint } from '@/lib/tint'
 
 /**
  * A frosted-glass content panel with a monospace eyebrow label + title.
@@ -88,12 +89,15 @@ export default function GlassSection({
   children: ReactNode
 }) {
   const reduce = useReducedMotion()
+  // the paper takes this section's tone while it spans the middle of the screen
+  const ref = useTint(id)
   const variants: Variants = reduce
     ? { hidden: { opacity: 0 }, show: { opacity: 1 } }
     : VARIANTS[variant]
 
   return (
     <section
+      ref={ref}
       id={id}
       // overflow-x-clip: 3D reveal variants (flip) project a wider bounding box
       // in their hidden state, which would add horizontal page overflow.

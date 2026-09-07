@@ -52,13 +52,12 @@ components/
   sections/           one file per section, in page order (see Portfolio.tsx)
   duck/Duck.tsx       the mascot and its poses
   effects/            hand, orb sky, torus, cursor, walls
-  ui/                 GlassSection, cards, lightbox, terminal, Mark
+  ui/                 GlassSection, cards, lightbox, terminal, codes
   writeups/           chrome and list for the MDX pages
 content/writeups/     the writeups, one .mdx each (see _template.mdx)
 data/portfolio.ts     every word of content, in English
 data/portfolio.th.ts  the same prose in Thai
 data/ui.ts            interface strings, both languages
-data/glossary.ts      the marked terms and their tooltips
 lib/                  certs, resume, theme, lang, content, writeups
 public/duck/          the duck, split into theme-aware layers
 assets/               fonts for the PDF, the duck's source drawing

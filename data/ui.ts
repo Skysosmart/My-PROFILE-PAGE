@@ -90,7 +90,7 @@ const en = {
     label: 'personal',
     title1: 'This is where',
     title2: 'it gets personal.',
-    hint: 'click a card to open its album',
+    hint: 'drag the print, or pick one below',
   },
   ending: {
     label: 'contact',
@@ -205,7 +205,7 @@ const th: UI = {
     label: 'ส่วนตัว',
     title1: 'ตรงนี้คือ',
     title2: 'เรื่องส่วนตัวล้วน ๆ',
-    hint: 'แตะการ์ดเพื่อเปิดอัลบั้ม',
+    hint: 'ลากรูป หรือเลือกจากด้านล่าง',
   },
   ending: {
     label: 'ติดต่อ',

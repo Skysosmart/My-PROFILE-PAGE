@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import Duck from '@/components/duck/Duck'
 import CertLightbox from '@/components/ui/CertLightbox'
@@ -9,33 +9,46 @@ import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
 
 /**
- * 05 · PERSONAL - "This is where it gets personal." The photo albums from
- * the events (data/portfolio.ts `moments`) were only reachable through a
- * certificate's lightbox; here they fan out as a stack of prints, one per
- * album, halftoned at rest and in colour under the pointer. A click opens
- * the album in the same lightbox, on that photo.
+ * 07 · PERSONAL - "This is where it gets personal." Every album from the
+ * events (data/portfolio.ts `moments`) as a filmstrip: one print on the
+ * stage, the whole roll underneath.
+ *
+ * This replaced a fan of prints. At thirteen albums the fan buried its own
+ * cards - ten of the eleven labels were truncated to three or four letters,
+ * the leftmost prints fell off a phone screen entirely, and the whole thing
+ * was `whileHover`, so a phone got a static pile with nothing to press.
+ *
+ * It is NOT scroll-driven, deliberately. The projects film pins its stage
+ * and takes the wheel, and the page's inertia (lib/smooth-scroll.ts) stands
+ * down while it holds it; a second section doing that is a second thing to
+ * get wrong. This one is dragged, swiped, clicked or arrowed, and the wheel
+ * passes straight through to the page.
  */
 const thumb = (key: string, file: string) => `/moments/${key}/thumbs/${file}`
+const SWIPE_PX = 60 // drag past this and the strip moves on
 
 export default function Personal() {
   const t = ui[useLang()].personal
   const reduce = useReducedMotion()
-  const [open, setOpen] = useState<{ cert: Certificate; photo: string } | null>(null)
+  const [open, setOpen] = useState<{ cert: Certificate | null; albumKey: string; photo: string } | null>(null)
+  const [i, setI] = useState(0)
+  const dragged = useRef(false)
 
-  // one card per album, through the certificate that points at it
-  const cards = useMemo(
+  // every album, whether or not a certificate points at it: two of them
+  // (the brand ambassador and the outstanding student) have photographs and
+  // no certificate, and used to be unreachable from anywhere on the site
+  const albums = useMemo(
     () =>
       Object.entries(moments)
-        .map(([key, album]) => {
-          const cert = certificates.find((c) => c.moment === key)
-          return cert && album.photos[0] ? { key, album, cert, photo: album.photos[0] } : null
-        })
-        .filter((c): c is NonNullable<typeof c> => c !== null),
+        .filter(([, album]) => album.photos.length > 0)
+        .map(([key, album]) => ({ key, album, cert: certificates.find((c) => c.moment === key) ?? null })),
     [],
   )
-  // fan angles spread evenly across the stack, a little offset each
-  const n = cards.length
-  const spread = 32
+  const n = albums.length
+  const current = albums[i]
+  const go = useCallback((next: number) => setI((next + n) % n), [n])
+
+  const photos = albums.reduce((s, a) => s + a.album.photos.length, 0)
 
   return (
     <section id="personal" className="relative isolate scroll-mt-28 overflow-x-clip px-4 py-16 sm:px-6 sm:py-24">
@@ -45,7 +58,7 @@ export default function Personal() {
       >
         MOMENTS
       </div>
-      <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-center">
+      <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-center">
         <div className="flex flex-col gap-4">
           <span className="font-mono text-[0.6875rem] uppercase tracking-[0.35em] text-fg-dim">[ 07 · {t.label} ]</span>
           <h2 className="font-crt text-5xl leading-[0.95] th:leading-[1.25] text-fg txt-glow sm:text-6xl">
@@ -54,55 +67,130 @@ export default function Personal() {
             {t.title2}
           </h2>
           <p className="font-mono text-[0.75rem] text-fg-muted">
-            {n} albums · {cards.reduce((s, c) => s + c.album.photos.length, 0)} photos · {t.hint}
+            {n} albums · {photos} photos · {t.hint}
           </p>
           <Duck pose="sleep" width={240} parallax={6} className="mt-4 hidden lg:block" />
         </div>
 
-        <div className="relative mx-auto h-[23.75rem] w-full max-w-[35rem] sm:h-[28.75rem]">
-          {cards.map((c, i) => {
-            const angle = -spread / 2 + (spread * i) / Math.max(n - 1, 1)
-            const left = 6 + (70 * i) / Math.max(n - 1, 1)
-            return (
-              <motion.button
-                key={c.key}
+        {/* min-w-0: without it the implicit grid column on a phone sizes to
+            the strip's max-content - thirteen thumbs, about 940px - and the
+            print, being w-full, is dragged out past the screen with it */}
+        <div className="flex min-w-0 flex-col gap-4">
+          {/* the stage. Arrow keys move the strip; the print itself opens it */}
+          <div
+            role="group"
+            aria-roledescription="carousel"
+            aria-label={t.label}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'ArrowRight') { e.preventDefault(); go(i + 1) }
+              if (e.key === 'ArrowLeft') { e.preventDefault(); go(i - 1) }
+            }}
+            className="relative rounded-lg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg"
+          >
+            <motion.div
+              // remounted per album, never an exit animation: framer's exits
+              // do not settle in this project (see the projects film)
+              key={current.key}
+              initial={reduce ? false : { opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              drag={reduce ? false : 'x'}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.18}
+              onDragStart={() => { dragged.current = false }}
+              onDrag={(_, info) => { if (Math.abs(info.offset.x) > 6) dragged.current = true }}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -SWIPE_PX) go(i + 1)
+                else if (info.offset.x > SWIPE_PX) go(i - 1)
+              }}
+              className="cursor-grab active:cursor-grabbing"
+            >
+              <button
                 type="button"
-                onClick={() => setOpen({ cert: c.cert, photo: c.photo })}
+                onClick={() => {
+                  if (dragged.current) return // that was a swipe, not a press
+                  setOpen({ cert: current.cert, albumKey: current.key, photo: current.album.photos[0] })
+                }}
                 data-cursor-label="open album"
-                initial={reduce ? false : { opacity: 0, y: 30, rotate: angle }}
-                whileInView={{ opacity: 1, y: 0, rotate: angle }}
-                whileHover={reduce ? undefined : { y: -18, rotate: 0, zIndex: 40, scale: 1.04 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                aria-label={c.album.label}
-                style={{ left: `${left}%`, top: `${12 + Math.abs(angle) * 0.9}%`, zIndex: i }}
-                className="group absolute w-[46%] -translate-x-1/2 rounded-[0.1875rem] bg-[#f3f0e8] p-1.5 pb-7 text-left shadow-[0_20px_40px_rgba(0,0,0,0.55)] transition-shadow hover:shadow-[0_30px_60px_rgba(0,0,0,0.7)] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg sm:w-[44%]"
+                aria-label={`${t.hint}: ${current.album.label}`}
+                className="block w-full rounded-[0.1875rem] bg-[#f3f0e8] p-2 pb-3 text-left shadow-[0_18px_40px_rgba(0,0,0,0.28)]"
               >
                 <span className="relative block aspect-4/3 w-full overflow-hidden bg-neutral-200">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={thumb(c.key, c.photo)}
+                    src={thumb(current.key, current.album.photos[0])}
                     alt=""
-                    loading="lazy"
                     draggable={false}
-                    className="h-full w-full object-cover grayscale contrast-110 transition-[filter] duration-500 group-hover:grayscale-0 group-hover:contrast-100"
-                  />
-                  {/* halftone: a dot screen over the print, lifted on hover */}
-                  <span
-                    aria-hidden
-                    className="dither pointer-events-none absolute inset-0 opacity-60 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0"
+                    className="h-full w-full object-cover"
                   />
                 </span>
-                <span className="mt-2 block truncate px-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-800">
-                  {c.album.label}
-                </span>
-              </motion.button>
-            )
-          })}
+              </button>
+            </motion.div>
+
+            {/* for a mouse that will not think to drag */}
+            {[-1, 1].map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => go(i + d)}
+                aria-label={d < 0 ? 'Previous album' : 'Next album'}
+                className={`absolute top-1/2 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-fg/20 bg-bg/85 font-mono text-fg backdrop-blur transition-colors hover:bg-fg hover:text-bg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg sm:grid ${
+                  d < 0 ? '-left-5' : '-right-5'
+                }`}
+              >
+                {d < 0 ? '‹' : '›'}
+              </button>
+            ))}
+          </div>
+
+          <p className="flex items-baseline gap-3 font-mono text-[0.75rem]">
+            <span className="tabular-nums text-fg-dim">
+              {String(i + 1).padStart(2, '0')}/{String(n).padStart(2, '0')}
+            </span>
+            <span className="min-w-0 truncate font-semibold uppercase tracking-[0.12em] text-fg">
+              {current.album.label}
+            </span>
+            <span className="ml-auto shrink-0 text-fg-dim">{current.album.photos.length} photos</span>
+          </p>
+
+          {/* the roll: every album at once, so nobody browses blind. Scrolls
+              on its own on a narrow screen - data-lenis-prevent so the page's
+              inertia does not swallow the gesture */}
+          <div data-lenis-prevent className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+            {albums.map((a, k) => (
+              <button
+                key={a.key}
+                type="button"
+                onClick={() => go(k)}
+                aria-current={k === i}
+                aria-label={a.album.label}
+                title={a.album.label}
+                className={`relative h-12 w-16 shrink-0 overflow-hidden rounded-[0.125rem] border transition-opacity focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${
+                  k === i ? 'border-fg opacity-100' : 'border-fg/20 opacity-70 hover:opacity-100'
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={thumb(a.key, a.album.photos[0])}
+                  alt=""
+                  loading="lazy"
+                  draggable={false}
+                  className={`h-full w-full object-cover transition-[filter] duration-300 ${k === i ? '' : 'grayscale contrast-110'}`}
+                />
+                {k !== i && <span aria-hidden className="dither pointer-events-none absolute inset-0 opacity-50 mix-blend-multiply" />}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      <CertLightbox cert={open?.cert ?? null} initialPhoto={open?.photo} onClose={() => setOpen(null)} />
+      <CertLightbox
+        cert={open?.cert ?? null}
+        albumKey={open?.albumKey ?? null}
+        initialPhoto={open?.photo}
+        onClose={() => setOpen(null)}
+      />
     </section>
   )
 }

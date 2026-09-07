@@ -69,7 +69,11 @@ Two things to know before changing any of this:
   the `scroll-mt-*` on each section still clears the header. Passing it again
   lands every flight one header short.
 - A pane that scrolls inside the page needs `data-lenis-prevent`; the cert
-  lightbox and the About terminal have it.
+  lightbox, the About terminal and the personal filmstrip have it.
+- The film is the only section that takes the wheel. The personal section is
+  a filmstrip too, but it is dragged, swiped, arrowed or clicked and never
+  touches the wheel - deliberately, so there is one owner of that gesture and
+  not two.
 
 ## Phones and tablets
 

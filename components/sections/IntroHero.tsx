@@ -25,8 +25,11 @@ export default function IntroHero() {
 
   return (
     // pt clears the header pill and, on a phone, the name tag and the role
-    // ticker that share the row under it
-    <header className="relative isolate flex min-h-[100svh] flex-col items-center justify-center px-4 pb-24 pt-32 text-center sm:pb-28 md:pt-24">
+    // ticker that share the row under it. overflow-x-clip: the glow behind
+    // the duck reaches past its block, and on a phone in Thai that put it
+    // past the screen's edge - a page wider than the phone, which the phone
+    // then zoomed out to fit
+    <header className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-x-clip px-4 pb-24 pt-32 text-center sm:pb-28 md:pt-24">
       {/* lives here, not in the page shell, so it scrolls away with the hero */}
       <RoleTicker />
 
@@ -48,11 +51,13 @@ export default function IntroHero() {
             <Duck pose="hero" width={220} parallax={12} priority className="sm:!w-[15rem] lg:!w-[16.25rem] xl:!w-[18.75rem] " />
           </div>
           {/* sizes follow the room beside the duck: a row from sm, a 2:1 grid
-              from lg where the column is narrower again, wide from xl */}
+              from lg where the column is narrower again, wide from xl. On a
+              phone the size follows the width, so the widest Thai line still
+              fits a 360px screen */}
           <div className="flex flex-col items-center gap-1 pb-2 text-center [text-shadow:0_0_10px_var(--glow),0_0_42px_var(--glow-far)] sm:items-start sm:pb-8 sm:text-left">
-            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-fg md:text-6xl lg:text-5xl xl:text-7xl">{t.line1}</span>
-            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-fg md:text-6xl lg:text-5xl xl:text-7xl">{t.line2}</span>
-            <span className="whitespace-nowrap font-crt text-5xl leading-[0.95] text-duck md:text-6xl lg:text-5xl xl:text-7xl">{t.line3}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line1}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line2}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] text-duck sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line3}</span>
           </div>
         </motion.div>
 

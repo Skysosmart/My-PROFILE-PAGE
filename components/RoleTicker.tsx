@@ -23,12 +23,13 @@ export default function RoleTicker() {
   }, [roles.length])
 
   return (
-    // top-left, the mirror of the name tag at top-right; on a phone both sit
-    // under the header pill (the ticker one row lower than the tag on a narrow
-    // phone, where the two would meet); from xl the pill leaves the corners free
-    <div className="pointer-events-none absolute left-4 top-[7.25rem] z-60 font-mono sm:left-6 sm:top-[4.625rem] xl:top-6">
-      <div className="flex items-baseline gap-2">
-        <span className="text-[0.625rem] uppercase tracking-[0.35em] text-fg-dim">role</span>
+    // top-left, the mirror of the name tag at top-right, on the same row as
+    // the tag's first name; on a phone both sit under the header pill, and
+    // the ticker drops its "role" word and a size so the two share the row
+    // with room between them; from xl the pill leaves the corners free
+    <div className="pointer-events-none absolute left-4 top-[4.625rem] z-60 font-mono sm:left-6 xl:top-6">
+      <div className="flex items-baseline gap-1.5 sm:gap-2">
+        <span className="hidden text-[0.625rem] uppercase tracking-[0.35em] text-fg-dim sm:inline">role</span>
         <span className="text-fg/20">{'//'}</span>
 
         {/* rotating word */}
@@ -40,7 +41,7 @@ export default function RoleTicker() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -16, opacity: 0 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="block whitespace-nowrap text-sm font-bold uppercase tracking-wider text-fg txt-glow"
+              className="block whitespace-nowrap text-[0.625rem] font-bold uppercase tracking-[0.08em] text-fg txt-glow sm:text-sm sm:tracking-wider"
             >
               {roles[i]}
             </motion.span>

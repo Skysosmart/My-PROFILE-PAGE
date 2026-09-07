@@ -2,10 +2,12 @@
 
 import { useEffect, useRef } from 'react'
 import { currentTheme, inkColors, onThemeChange } from '@/lib/theme'
+import { onLean } from '@/lib/lean'
 
 /**
  * ASCII 3D - a real Three.js torus knot drawn AS CHARACTERS, floating behind
- * the About content. Auto-rotates and eases toward the cursor. Section-scoped
+ * the About content. Auto-rotates and eases toward the cursor (or the tilt
+ * of a phone). Section-scoped
  * background layer (absolute, not fixed) so it scrolls with its section.
  *
  * Its own asciifier, not three's AsciiEffect addon. The scene renders at the
@@ -282,13 +284,14 @@ export default function Ascii3D() {
         if (!cancelled) repaint()
       })
 
-      // --- cursor target (same lerp pattern as SkyOrb) -------------------------
+      // --- the tilt target: the pointer, or the phone's tilt (lib/lean.ts) ---
       const target = { x: 0, y: 0 }
-      const onMove = (e: PointerEvent) => {
-        target.y = (e.clientX / window.innerWidth - 0.5) * 2 * FOLLOW
-        target.x = (e.clientY / window.innerHeight - 0.5) * 2 * FOLLOW
-      }
-      if (!reduce) window.addEventListener('pointermove', onMove, { passive: true })
+      const offLean = reduce
+        ? () => {}
+        : onLean(({ x, y }) => {
+            target.y = x * FOLLOW
+            target.x = y * FOLLOW
+          })
 
       // --- loop, parked whenever the knot's band is off screen -----------------
       let raf = 0
@@ -340,7 +343,7 @@ export default function Ascii3D() {
         offTheme()
         document.removeEventListener('visibilitychange', wake)
         window.removeEventListener('resize', onResize)
-        window.removeEventListener('pointermove', onMove)
+        offLean()
         cv.remove()
         band.remove()
         dropFence()

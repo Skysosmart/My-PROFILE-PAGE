@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react'
+import { onLean } from '@/lib/lean'
 
 /**
  * The ZaruTech duck, Sky's mascot. Each pose is its own drawing (the sources
@@ -54,9 +55,9 @@ export default function Duck({
   const reduce = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
 
-  // pointer parallax: the duck leans a few px away from the cursor, on a
-  // spring so it settles rather than snaps. Desktop pointers only; a touch
-  // screen has no hover and the listener never fires.
+  // parallax: the duck leans a few px away from the pointer, or from the
+  // way a phone is tilted (lib/lean.ts), on a spring so it settles rather
+  // than snaps
   const px = useMotionValue(0)
   const py = useMotionValue(0)
   const sx = useSpring(px, { stiffness: 60, damping: 14 })
@@ -66,30 +67,30 @@ export default function Duck({
 
   useEffect(() => {
     if (!parallax || reduce) return
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
     const el = ref.current
     if (!el) return
-    const onMove = (e: PointerEvent) => {
-      px.set(-(e.clientX / window.innerWidth - 0.5) * 2)
-      py.set(-(e.clientY / window.innerHeight - 0.5) * 2)
-    }
-    // the listener, and the springs it drives, only while this duck is near
-    // the screen: seven ducks used to lean on every pointer move, six of them
+    // subscribed, and the springs driven, only while this duck is near the
+    // screen: seven ducks used to lean on every pointer move, six of them
     // off screen
-    let on = false
+    let off: (() => void) | null = null
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting === on) return
-        on = e.isIntersecting
-        if (on) window.addEventListener('pointermove', onMove, { passive: true })
-        else window.removeEventListener('pointermove', onMove)
+        if (e.isIntersecting) {
+          off ??= onLean(({ x, y }) => {
+            px.set(-x)
+            py.set(-y)
+          })
+        } else {
+          off?.()
+          off = null
+        }
       },
       { rootMargin: '10% 0px' },
     )
     io.observe(el)
     return () => {
       io.disconnect()
-      window.removeEventListener('pointermove', onMove)
+      off?.()
     }
   }, [parallax, reduce, px, py])
 

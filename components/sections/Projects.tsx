@@ -7,6 +7,7 @@ import ProjectWall from '@/components/effects/ProjectWall'
 import { figletFor } from '@/data/figlets'
 import { projects, type Project } from '@/data/portfolio'
 import { useContent } from '@/lib/use-content'
+import { watchTint } from '@/lib/tint'
 import Duck from '@/components/duck/Duck'
 
 /**
@@ -196,6 +197,9 @@ export default function Projects() {
   // stopped - because the earlier CSS-snap attempt proved how easily this
   // kind of interception becomes a trap. Keyboard and scrollbar scrolls are
   // untouched; the idle-snap above catches those.
+  // the paper takes the film's tone while the stage is pinned
+  useEffect(() => watchTint(sectionRef.current, 'projects'), [])
+
   useEffect(() => {
     const el = sectionRef.current
     if (!el) return

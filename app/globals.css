@@ -252,6 +252,16 @@
     --lime: rgb(var(--fg));
     --scanline: rgba(0, 0, 0, 0.28);
     --shade: 0.75; /* drop-shadow strength: ink on black */
+    /* the page's tone per section (lib/tint.ts): the void, barely lit */
+    --tint-profile: 7 10 16;
+    --tint-about: 5 13 8;
+    --tint-education: 15 10 5;
+    --tint-skills: 11 7 16;
+    --tint-certificates: 15 13 4;
+    --tint-projects: 7 9 14;
+    --tint-writeups: 9 9 12;
+    --tint-personal: 15 7 9;
+    --tint-contact: 5 5 5;
   }
   [data-theme='light'] {
     color-scheme: light;
@@ -270,6 +280,16 @@
     --thumb-b: #777777;
     --cyan: #444444;
     --shade: 0.18; /* the same shadows read as smudges on paper */
+    /* the same paper, a different stock per section */
+    --tint-profile: 231 237 241;
+    --tint-about: 231 240 233;
+    --tint-education: 246 238 224;
+    --tint-skills: 239 235 244;
+    --tint-certificates: 247 242 224;
+    --tint-projects: 233 236 241;
+    --tint-writeups: 236 236 234;
+    --tint-personal: 246 235 233;
+    --tint-contact: 243 240 232;
   }
 
   * {
@@ -307,6 +327,29 @@
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
+
+  /* The paper's tone, one per section. A fixed layer of its own under the
+     vignette and the grid, so a change is one solid repaint of one layer
+     and the fade never touches the main thread. Which tone is on is
+     `<html data-tint>` from lib/tint.ts; none means the plain paper. */
+  .page-tint {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    pointer-events: none;
+    background-color: rgb(var(--tint, var(--bg)));
+    transition: background-color 1.2s ease;
+    will-change: transform;
+  }
+  html[data-tint='profile'] { --tint: var(--tint-profile); }
+  html[data-tint='about'] { --tint: var(--tint-about); }
+  html[data-tint='education'] { --tint: var(--tint-education); }
+  html[data-tint='skills'] { --tint: var(--tint-skills); }
+  html[data-tint='certificates'] { --tint: var(--tint-certificates); }
+  html[data-tint='projects'] { --tint: var(--tint-projects); }
+  html[data-tint='writeups'] { --tint: var(--tint-writeups); }
+  html[data-tint='personal'] { --tint: var(--tint-personal); }
+  html[data-tint='contact'] { --tint: var(--tint-contact); }
 
   /* Deep atmospheric backdrop: neutral vignette + faint grid (black & white) */
   body::before {

@@ -6,6 +6,7 @@ import { contact } from '@/data/portfolio'
 import { ui } from '@/data/ui'
 import { useContent } from '@/lib/use-content'
 import { useLang } from '@/lib/use-lang'
+import { useTint } from '@/lib/tint'
 
 /**
  * 06 · CONTACT - the page's ending, the way cartooneast.in ends: a headline
@@ -15,6 +16,7 @@ import { useLang } from '@/lib/use-lang'
  */
 export default function Ending({ formEnabled = false }: { formEnabled?: boolean }) {
   const lang = useLang()
+  const ref = useTint('contact')
   const t = ui[lang].ending
   const { profile } = useContent()
   const email = contact.channels.find((c) => c.key === 'EMAIL')
@@ -22,7 +24,7 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
   const socials = contact.channels.filter((c) => !['EMAIL', 'RESUME'].includes(c.key))
 
   return (
-    <section id="contact" className="relative isolate scroll-mt-28 overflow-x-clip px-4 py-16 sm:px-6 sm:py-24">
+    <section ref={ref} id="contact" className="relative isolate scroll-mt-28 overflow-x-clip px-4 py-16 sm:px-6 sm:py-24">
       <div
         aria-hidden
         className="pointer-events-none absolute right-2 top-0 -z-10 select-none font-crt text-[10rem] leading-none text-fg/[0.04] sm:right-6 sm:text-[18.75rem]"

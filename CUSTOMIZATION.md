@@ -24,8 +24,10 @@ rename both together. Lines marked `// TODO(th-review)` are machine drafts
 waiting for a native read.
 
 Interface strings (buttons, labels, the hero's three lines, the ending) are
-in `data/ui.ts`, both languages side by side. The marked terms with tooltips
-are in `data/glossary.ts`.
+in `data/ui.ts`, both languages side by side. The quick-start steps beside
+the spec label are there too (`profile.steps`): a step can carry one reading
+for every device or one for the mouse and one for the finger, and the
+section it jumps to.
 
 ## The spec label: `components/SpecLabel.tsx`
 
@@ -37,6 +39,8 @@ locally) for a Code 128 of the handle and a QR of `/resume.pdf` and writes
 them to `data/codes.ts`. Run it again after changing the handle or the site
 url in `lib/site.ts`. The duck on it is `public/duck/stand-print.png`, a 1-bit
 halftone of the standing pose (ImageMagick `-ordered-dither h4x4a`).
+Beside it, `components/QuickStart.tsx` is the leaflet from the box: how to
+play the page, one line per thing it does.
 
 ## Phones and tablets
 
@@ -78,6 +82,11 @@ Dark is the design; light is the same terminal on warm paper. Tokens are the
 the Tailwind names (`fg`, `bg`, `panel`, `fg-dim`, `fg-muted`, `duck`) in the
 `@theme` block right after. The duck's yellow (`--color-duck`) is the only
 colour in the palette; use it sparingly.
+
+The paper changes stock from section to section: the `--tint-<section>`
+triplets next to the tokens (one set per theme) and `lib/tint.ts`, which
+gives the tone to whichever section spans the middle of the screen. A section
+without a tone (the hero, the footer) is the plain paper.
 
 `theme` and `lang` are remembered in localStorage and applied before first
 paint by the two inline scripts in `app/layout.tsx`.

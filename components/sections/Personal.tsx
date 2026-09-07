@@ -7,6 +7,7 @@ import CertLightbox from '@/components/ui/CertLightbox'
 import { certificates, moments, type Certificate } from '@/data/portfolio'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
+import { useTint } from '@/lib/tint'
 
 /**
  * 05 · PERSONAL - "This is where it gets personal." The photo albums from
@@ -20,6 +21,7 @@ const thumb = (key: string, file: string) => `/moments/${key}/thumbs/${file}`
 export default function Personal() {
   const t = ui[useLang()].personal
   const reduce = useReducedMotion()
+  const ref = useTint('personal')
   const [open, setOpen] = useState<{ cert: Certificate; photo: string } | null>(null)
 
   // one card per album, through the certificate that points at it
@@ -38,7 +40,7 @@ export default function Personal() {
   const spread = 32
 
   return (
-    <section id="personal" className="relative isolate scroll-mt-28 overflow-x-clip px-4 py-16 sm:px-6 sm:py-24">
+    <section ref={ref} id="personal" className="relative isolate scroll-mt-28 overflow-x-clip px-4 py-16 sm:px-6 sm:py-24">
       <div
         aria-hidden
         className="pointer-events-none absolute left-2 bottom-0 -z-10 select-none font-crt text-[10rem] leading-none text-fg/[0.04] sm:text-[18.75rem]"

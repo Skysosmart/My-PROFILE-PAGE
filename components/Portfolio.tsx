@@ -87,6 +87,8 @@ export default function Portfolio({
       {/* Site */}
       {started && (
         <>
+          {/* the paper, one tone per section: see lib/tint.ts */}
+          <div aria-hidden className="page-tint" />
           <Cursor />
           <Header />
           <NameTag />

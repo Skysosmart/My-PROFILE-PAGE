@@ -76,7 +76,7 @@ export default function IntroHero() {
             {/* the answer to the duck's hello: a bubble off the orb's shoulder */}
             <motion.span
               {...rise(1.0)}
-              className="absolute -right-6 top-6 whitespace-nowrap rounded-2xl rounded-bl-sm border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[0.75rem] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))] sm:-right-10"
+              className="absolute right-0 top-6 whitespace-nowrap rounded-2xl rounded-bl-sm border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[0.75rem] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))] sm:right-2"
             >
               {t.bubble}
               {/* the tail */}

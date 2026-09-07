@@ -8,10 +8,11 @@ import { getWriteup, getWriteups } from '@/lib/writeups'
 
 type Params = { params: Promise<{ slug: string }> }
 
-// Both themes are emitted as CSS variables on every token; globals.css picks
-// one by [data-theme], so the code recolours with the rest of the site.
+// One theme, so the highlighter writes each token's colour inline and no CSS
+// var indirection is needed. keepBackground false: the page's own paper shows
+// through instead of the theme's.
 const prettyCode: PrettyCodeOptions = {
-  theme: { light: 'github-light-default', dark: 'github-dark-default' },
+  theme: 'github-light-default',
   keepBackground: false,
 }
 

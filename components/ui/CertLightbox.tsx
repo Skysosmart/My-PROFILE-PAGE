@@ -17,10 +17,14 @@ const MEDAL_FILL: Record<string, string> = {
 /** The record view: the document beside its metadata and, where there is one, its story. */
 export default function CertLightbox({
   cert,
+  albumKey,
   initialPhoto,
   onClose,
 }: {
   cert: Certificate | null
+  /** open an album on its own: some events were photographed but never
+      certificated, and without this they are unreachable */
+  albumKey?: string | null
   /** open on this photo of the certificate's album rather than the document */
   initialPhoto?: string
   onClose: () => void
@@ -29,17 +33,26 @@ export default function CertLightbox({
   // null shows the document; a filename shows that photo from the event
   const [photo, setPhoto] = useState<string | null>(null)
   useEffect(() => setMounted(true), [])
-  // a different certificate always opens on its document, never on a stale photo
-  useEffect(() => setPhoto(initialPhoto ?? null), [cert?.file, initialPhoto])
 
   const album = cert?.moment ? moments[cert.moment] : undefined
+  // an album on its own, when there is no certificate to hang it off
+  const soloKey = !cert && albumKey ? albumKey : null
+  const solo = soloKey ? moments[soloKey] : undefined
+  const shown = album ?? solo
+  const momentKey = cert?.moment ?? soloKey
+  const isOpen = !!cert || !!solo
+
+  // a different certificate always opens on its document, never on a stale
+  // photo; an album has no document, so it opens on its first photograph
+  const firstPhoto = solo?.photos[0]
+  useEffect(() => setPhoto(initialPhoto ?? firstPhoto ?? null), [cert?.file, initialPhoto, firstPhoto])
 
   useEffect(() => {
-    if (!cert) return
+    if (!isOpen) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [cert, onClose])
+  }, [isOpen, onClose])
 
   const rows = (c: Certificate): [string, string][] => {
     const r: [string, string][] = []
@@ -53,7 +66,7 @@ export default function CertLightbox({
 
   const ui = (
     <AnimatePresence>
-      {cert && (
+      {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -69,7 +82,7 @@ export default function CertLightbox({
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label={cert.title}
+            aria-label={cert ? cert.title : (solo?.label ?? 'Album')}
             // dvh, not vh: on a phone vh is the tall viewport behind the browser
             // bars, and a card sized to it ran off both edges of the screen with
             // its Close button below the fold and no backdrop left to tap
@@ -89,12 +102,13 @@ export default function CertLightbox({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={photo && cert.moment ? momentSrc(cert.moment, photo) : certSrc(cert.file)}
-                alt={photo ? `${album?.label ?? cert.title} - photograph` : cert.title}
+                src={photo && momentKey ? momentSrc(momentKey, photo) : cert ? certSrc(cert.file) : ''}
+                alt={photo ? `${shown?.label ?? cert?.title ?? 'Album'} - photograph` : (cert?.title ?? '')}
                 className="max-h-[42dvh] w-auto max-w-full object-contain drop-shadow-xl lg:max-h-[calc(100dvh-4.5rem)]"
               />
             </div>
-            <div className="flex min-h-0 flex-col overflow-y-auto overscroll-contain p-5 sm:p-6">
+            <div data-lenis-prevent className="flex min-h-0 flex-col overflow-y-auto overscroll-contain p-5 sm:p-6">
+              {cert && (
               <div className="flex items-start justify-between gap-3">
                 <span
                   className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[0.6875rem] font-semibold ${catMeta(categorize(cert)).chip}`}
@@ -113,44 +127,50 @@ export default function CertLightbox({
                   </span>
                 )}
               </div>
+              )}
               <h3 className="mt-3 font-sans text-xl font-semibold leading-snug text-fg">
-                {cert.title}
+                {cert ? cert.title : shown?.label}
               </h3>
-              <dl className="mt-4 space-y-1.5 border-t border-fg/10 pt-4 font-mono text-[0.75rem]">
-                {rows(cert).map(([k, v]) => (
-                  <div key={k} className="flex gap-3">
-                    <dt className="w-24 shrink-0 uppercase tracking-wider text-fg-dim">{k}</dt>
-                    <dd className="min-w-0 text-fg/80">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-              {cert.detail && (
+              {cert && (
+                <dl className="mt-4 space-y-1.5 border-t border-fg/10 pt-4 font-mono text-[0.75rem]">
+                  {rows(cert).map(([k, v]) => (
+                    <div key={k} className="flex gap-3">
+                      <dt className="w-24 shrink-0 uppercase tracking-wider text-fg-dim">{k}</dt>
+                      <dd className="min-w-0 text-fg/80">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {cert?.detail && (
                 <p className="mt-4 border-t border-fg/10 pt-4 font-sans text-sm leading-relaxed text-fg-muted">
                   {cert.detail}
                 </p>
               )}
-              {album && album.photos.length > 0 && (
+              {shown && momentKey && shown.photos.length > 0 && (
                 <div className="mt-4 border-t border-fg/10 pt-4">
                   <p className="mb-2 font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim">
-                    {album.photos.length} photo{album.photos.length > 1 ? 's' : ''} from {album.label}
+                    {shown.photos.length} photo{shown.photos.length > 1 ? 's' : ''} from {shown.label}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {/* first chip returns to the document */}
-                    <button
-                      onClick={() => setPhoto(null)}
-                      aria-pressed={!photo}
-                      className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border bg-white transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${!photo ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
-                      title="Back to the certificate"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={certSrc(cert.file)}
-                        alt=""
-                        loading="lazy"
-                        className="h-full w-full object-contain p-0.5"
-                      />
-                    </button>
-                    {album.photos.map((f) => (
+                    {/* first chip returns to the document - an album on its
+                        own has none, so it is not offered one */}
+                    {cert && (
+                      <button
+                        onClick={() => setPhoto(null)}
+                        aria-pressed={!photo}
+                        className={`h-14 w-14 shrink-0 overflow-hidden rounded-md border bg-white transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${!photo ? 'border-fg' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                        title="Back to the certificate"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={certSrc(cert.file)}
+                          alt=""
+                          loading="lazy"
+                          className="h-full w-full object-contain p-0.5"
+                        />
+                      </button>
+                    )}
+                    {shown.photos.map((f) => (
                       <button
                         key={f}
                         onClick={() => setPhoto(f)}
@@ -159,7 +179,7 @@ export default function CertLightbox({
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={momentThumb(cert.moment!, f)}
+                          src={momentThumb(momentKey, f)}
                           alt=""
                           loading="lazy"
                           className="h-full w-full object-cover"

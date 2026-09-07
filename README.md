@@ -1,7 +1,7 @@
 # NONTHANAPHONG.EXE
 
 The portfolio of Nonthanaphong "Sky" Saechua: full-stack developer, penetration
-tester, 3D and graphic designer. Live at [nonthanaphong.vercel.app](https://nonthanaphong.vercel.app).
+tester, 3D and graphic designer. Live at [zarutech.dev](https://zarutech.dev).
 
 A terminal-themed one-pager with the ZaruTech duck as its mascot: a boot
 screen, a command-line header (`Ctrl/Cmd+K`, `theme light|dark|system`,

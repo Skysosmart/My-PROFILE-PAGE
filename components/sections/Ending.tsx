@@ -39,8 +39,8 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2">
             <span className="font-mono text-[0.6875rem] uppercase tracking-[0.35em] text-fg-dim">[ 08 · {t.label} ]</span>
-            <h2 className="font-crt text-5xl leading-[0.95] text-fg txt-glow sm:text-6xl">{t.title1}</h2>
-            <p className="font-crt text-3xl leading-none text-duck sm:text-4xl">{t.title2}</p>
+            <h2 className="font-crt text-5xl leading-[0.95] th:leading-[1.25] text-fg txt-glow sm:text-6xl">{t.title1}</h2>
+            <p className="font-crt text-3xl leading-none th:leading-[1.3] text-duck sm:text-4xl">{t.title2}</p>
           </div>
 
           <dl className="grid gap-6 sm:grid-cols-3">

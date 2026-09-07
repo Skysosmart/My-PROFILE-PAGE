@@ -55,13 +55,13 @@ const en = {
         fine: 'Move the cursor. The orb, the duck and the torus lean after it.',
         coarse: 'Tilt the phone. The orb, the duck and the torus lean with it; a finger on the orb makes ripples.',
       },
-      { text: 'The terminal takes commands: `help`, `sop`, `resume`. Type them, or tap the chips.', to: 'about' },
+      { text: 'The terminal takes commands: `help`, `sop`, `resume`. Type them, or tap the chips. `boot` starts a real Linux in the tab.', to: 'about' },
       { text: 'Pick a skill for its level and the projects it shipped on.', to: 'skills' },
       { text: 'Open a certificate. The archive holds all {n}.', to: 'certificates' },
       { fine: 'Scroll over the film to change project.', coarse: 'Swipe across the film to change project.', to: 'projects' },
       {
-        fine: 'Press `Ctrl` `K` and type a section to jump there. `theme dark` and `lang th` work there too.',
-        coarse: 'Tap the prompt at the top and type a section to jump there. `theme dark` and `lang th` work there too.',
+        fine: 'Press `Ctrl` `K` and type a section to jump there. `lang th` works there too.',
+        coarse: 'Tap the prompt at the top and type a section to jump there. `lang th` works there too.',
       },
       { text: 'The QR on the label opens the CV. `?boot=1` on the address replays the boot.' },
     ] as Step[],
@@ -116,7 +116,7 @@ const en = {
     label: 'personal',
     title1: 'This is where',
     title2: 'it gets personal.',
-    hint: 'click a card to open its album',
+    hint: 'drag the print, or pick one below',
   },
   ending: {
     label: 'contact',
@@ -143,7 +143,7 @@ const en = {
     based: 'Thailand based',
     rendered: 'rendered in ASCII',
   },
-  nav: { noSuch: 'no such section', hint: 'theme light | dark | system · lang en | th' },
+  nav: { noSuch: 'no such section', hint: 'lang en | th' },
 }
 
 export type UI = typeof en
@@ -186,13 +186,13 @@ const th: UI = {
         fine: 'ขยับเมาส์ ลูกแก้ว เป็ด และทอรัสจะเอียงตาม',
         coarse: 'เอียงโทรศัพท์ ลูกแก้ว เป็ด และทอรัสจะเอียงตาม แตะลูกแก้วแล้วลากจะเกิดคลื่น',
       },
-      { text: 'เทอร์มินัลรับคำสั่ง `help`, `sop`, `resume` พิมพ์เอง หรือแตะปุ่มก็ได้', to: 'about' },
+      { text: 'เทอร์มินัลรับคำสั่ง `help`, `sop`, `resume` พิมพ์เอง หรือแตะปุ่มก็ได้ ส่วน `boot` จะบูต Linux จริง ๆ ในแท็บ', to: 'about' },
       { text: 'เลือกทักษะเพื่อดูระดับ และโปรเจกต์ที่ใช้ทักษะนั้น', to: 'skills' },
       { text: 'เปิดใบประกาศดูได้ ในคลังมีครบทั้ง {n} ใบ', to: 'certificates' },
       { fine: 'เลื่อนล้อเมาส์บนฟิล์มเพื่อเปลี่ยนโปรเจกต์', coarse: 'ปัดบนฟิล์มเพื่อเปลี่ยนโปรเจกต์', to: 'projects' },
       {
-        fine: 'กด `Ctrl` `K` แล้วพิมพ์ชื่อส่วนเพื่อกระโดดไป `theme dark` และ `lang en` ก็ใช้ตรงนั้นได้',
-        coarse: 'แตะช่องพิมพ์ด้านบน แล้วพิมพ์ชื่อส่วนเพื่อกระโดดไป `theme dark` และ `lang en` ก็ใช้ตรงนั้นได้',
+        fine: 'กด `Ctrl` `K` แล้วพิมพ์ชื่อส่วนเพื่อกระโดดไป `lang en` ก็ใช้ตรงนั้นได้',
+        coarse: 'แตะช่องพิมพ์ด้านบน แล้วพิมพ์ชื่อส่วนเพื่อกระโดดไป `lang en` ก็ใช้ตรงนั้นได้',
       },
       { text: 'สแกน QR บนฉลากเพื่อเปิด CV ใส่ `?boot=1` ท้ายที่อยู่เว็บเพื่อดูหน้าบูตอีกครั้ง' },
     ] as Step[],
@@ -247,12 +247,12 @@ const th: UI = {
     label: 'ส่วนตัว',
     title1: 'ตรงนี้คือ',
     title2: 'เรื่องส่วนตัวล้วน ๆ',
-    hint: 'แตะการ์ดเพื่อเปิดอัลบั้ม',
+    hint: 'ลากรูป หรือเลือกจากด้านล่าง',
   },
   ending: {
     label: 'ติดต่อ',
     title1: 'คุณมาถึงตอนจบแล้ว',
-    title2: 'หรืออาจเป็นจุดเริ่มต้น',
+    title2: 'หรืออาจเป็นจุดเริ่มต้น !?',
     mail: 'ส่งเมลหาผม',
     meet: 'เจอกันได้ที่',
     find: 'หรือตามหาผมได้ที่',
@@ -274,7 +274,7 @@ const th: UI = {
     based: 'อยู่ประเทศไทย',
     rendered: 'เรนเดอร์ด้วย ASCII',
   },
-  nav: { noSuch: 'ไม่พบส่วนนี้', hint: 'theme light | dark | system · lang en | th' },
+  nav: { noSuch: 'ไม่พบส่วนนี้', hint: 'lang en | th' },
 }
 
 export const ui: Record<Lang, UI> = { en, th }

@@ -7,10 +7,9 @@ import { onLean } from '@/lib/lean'
 
 /**
  * The ZaruTech duck, Sky's mascot. Each pose is its own drawing (the sources
- * are in assets/duck), split by scripts/duck-split.sh into a dark and a
- * light composite in public/duck. The two are both in the tree and
- * globals.css shows one per data-theme, so no script has to know which
- * theme is on and the drawing is right on the first paint.
+ * are in assets/duck), turned into the composite in public/duck by
+ * scripts/duck-split.sh. The `-light` in the file names is left over from
+ * when the site had two themes and shipped a drawing for each.
  *
  *   hero     saying hello, at the left of the hero
  *   wave     the plain wave, kept for later
@@ -94,18 +93,6 @@ export default function Duck({
     }
   }, [parallax, reduce, px, py])
 
-  const img = (theme: 'dark' | 'light') => (
-    <Image
-      src={`/duck/${p.src}-${theme}.png`}
-      alt=""
-      width={p.w}
-      height={p.h}
-      priority={priority}
-      draggable={false}
-      sizes={`${Math.round(width * 1.4)}px`}
-      className={`duck-${theme} h-auto w-full select-none`}
-    />
-  )
 
   return (
     <motion.div
@@ -117,9 +104,16 @@ export default function Duck({
       style={{ width: `${width / 16}rem`, x, y, willChange: parallax ? 'transform' : undefined }}
       className={`pointer-events-none relative shrink-0 ${p.className ?? ''} ${className}`}
     >
-      {/* both themes are in the tree; globals.css shows one per data-theme */}
-      {img('dark')}
-      {img('light')}
+      <Image
+        src={`/duck/${p.src}-light.png`}
+        alt=""
+        width={p.w}
+        height={p.h}
+        priority={priority}
+        draggable={false}
+        sizes={`${Math.round(width * 1.4)}px`}
+        className="h-auto w-full select-none"
+      />
     </motion.div>
   )
 }

@@ -5,7 +5,9 @@ import nextTs from 'eslint-config-next/typescript'
 export default defineConfig([
   ...nextVitals,
   ...nextTs,
-  globalIgnores(['.next/**', 'out/**', 'next-env.d.ts']),
+  // public/vm holds vendored binaries and the emulator's own generated
+  // loader; linting a 359KB machine-written file says nothing useful
+  globalIgnores(['.next/**', 'out/**', 'next-env.d.ts', 'public/vm/**']),
   {
     rules: {
       // The mounted-flag pattern (setState in an effect so the server and the

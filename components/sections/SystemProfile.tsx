@@ -28,7 +28,10 @@ export default function SystemProfile() {
       revealAmount="some"
       panel={false}
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start lg:gap-12 xl:gap-16">
+      {/* items-center, not items-start: the label runs about 740px and the
+            prose about 290, so top-aligning them left the whole lower right
+            of the section empty and the text reading as something left over */}
+      <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-center lg:gap-12 xl:gap-16">
         <SpecLabel />
         {/* the leaflet arrives once the label has printed */}
         <QuickStart delay={1.1} />

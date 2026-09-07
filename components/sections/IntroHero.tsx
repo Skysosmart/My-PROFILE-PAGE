@@ -1,8 +1,10 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import RoleTicker from '@/components/RoleTicker'
 import { motion, useReducedMotion } from 'motion/react'
 import SkyOrb from '@/components/SkyOrb'
+import InkBubble from '@/components/ui/InkBubble'
 import Duck from '@/components/duck/Duck'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
@@ -17,6 +19,22 @@ import { useLang } from '@/lib/use-lang'
 export default function IntroHero() {
   const t = ui[useLang()].hero
   const reduce = useReducedMotion()
+
+  // The scroll cue is pinned to the bottom of the screen below lg. The hero
+  // is taller than a phone - 1053px against 780 on a 360 screen in Thai,
+  // more with the taller Thai leading - so in the flow the cue sits below
+  // the fold on every phone size, and the one thing whose job is to say
+  // "there is more" is the thing nobody sees. Pinned, it is an affordance
+  // rather than content, and it goes when the hero does.
+  const heroRef = useRef<HTMLElement>(null)
+  const [inHero, setInHero] = useState(true)
+  useEffect(() => {
+    const el = heroRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => setInHero(e.isIntersecting), { threshold: 0.15 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
   const rise = (delay: number) => ({
     initial: reduce ? { opacity: 0 } : { opacity: 0, y: 14 },
     animate: { opacity: 1, y: 0 },
@@ -29,7 +47,7 @@ export default function IntroHero() {
     // the duck reaches past its block, and on a phone in Thai that put it
     // past the screen's edge - a page wider than the phone, which the phone
     // then zoomed out to fit
-    <header className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-x-clip px-4 pb-24 pt-32 text-center sm:pb-28 md:pt-24">
+    <header ref={heroRef} className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-x-clip px-4 pb-24 pt-32 text-center sm:pb-28 md:pt-24">
       {/* lives here, not in the page shell, so it scrolls away with the hero */}
       <RoleTicker />
 
@@ -55,9 +73,9 @@ export default function IntroHero() {
               phone the size follows the width, so the widest Thai line still
               fits a 360px screen */}
           <div className="flex flex-col items-center gap-1 pb-2 text-center [text-shadow:0_0_10px_var(--glow),0_0_42px_var(--glow-far)] sm:items-start sm:pb-8 sm:text-left">
-            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line1}</span>
-            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line2}</span>
-            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] text-duck sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line3}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] th:leading-[1.3] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line1}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] th:leading-[1.3] text-fg sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line2}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2rem,10.5vw,3rem)] leading-[0.95] th:leading-[1.3] text-duck sm:text-[clamp(2rem,6.5vw,3rem)] md:text-[clamp(3rem,7vw,3.75rem)] lg:text-5xl xl:text-7xl">{t.line3}</span>
           </div>
         </motion.div>
 
@@ -71,26 +89,39 @@ export default function IntroHero() {
           >
             ◇ {t.loaded}
           </motion.p>
-          <div className="relative">
-            <SkyOrb />
-            {/* the answer to the duck's hello: a bubble off the orb's shoulder */}
+          {/* the answer to the duck's hello. Inside <SkyOrb/>, not beside it,
+              so it travels with the orb's drift; centred over the crown so the
+              tail points at the face in either language, instead of being
+              pinned a fixed distance from an edge that moves when the text
+              gets longer.
+
+              The gap above the crown is not slack: the disc scales 1.06 on
+              hover about its own centre, so the rim climbs - 8px at 1440,
+              10px at 1920 - while the bubble, a sibling of the disc rather
+              than a child, stays put. With the tail resting on the crown the
+              rim swallowed it. sm and up buys that back (and SkyOrb's mt
+              grows to match, so the eyebrow keeps its clearance); a phone
+              has no pointer to hover with and keeps the tighter gap. */}
+          <SkyOrb>
             <motion.span
               {...rise(1.0)}
-              className="absolute -right-6 top-6 whitespace-nowrap rounded-2xl rounded-bl-sm border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[0.75rem] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))] sm:-right-10"
+              className="absolute -top-16 left-1/2 -translate-x-1/2 whitespace-nowrap text-fg"
             >
-              {t.bubble}
-              {/* the tail */}
-              <span
-                aria-hidden
-                className="absolute -bottom-[0.4375rem] left-3 h-3 w-3 rotate-45 border-b border-r border-fg/40 bg-bg"
-              />
+              <InkBubble className="font-sans text-[0.75rem] font-semibold">{t.bubble}</InkBubble>
             </motion.span>
-          </div>
+          </SkyOrb>
+          {/* pinned to the screen below lg, back in the orb's column from lg.
+              pointer-events-none: it is a sign, never a target. No ancestor
+              below lg carries a transform (the column's -translate-y-10 is
+              lg-only), which `fixed` would otherwise resolve against. The
+              gradient is not decoration: pinned to the bottom it lands on
+              the orb on every phone size, and dim ink on the grey portrait
+              is unreadable without something to sit on. */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-            className="mt-2 flex flex-col items-center gap-1.5 font-mono text-[0.6875rem] text-fg-dim"
+            animate={{ opacity: inHero ? 1 : 0 }}
+            transition={{ delay: inHero ? 1.2 : 0, duration: reduce ? 0 : 0.3 }}
+            className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-1.5 bg-linear-to-t from-bg via-bg/90 to-transparent pb-5 pt-10 font-mono text-[0.6875rem] text-fg-dim lg:static lg:z-auto lg:mt-2 lg:bg-none lg:pt-0 lg:pb-0"
           >
             <span className="uppercase tracking-[0.2em]">{t.scroll}</span>
             <span className="animate-blink text-fg">▼</span>

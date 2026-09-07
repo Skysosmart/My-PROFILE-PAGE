@@ -51,10 +51,10 @@ export const profile = {
   school: 'Assumption College Thonburi',
   status: 'Open to opportunities',
   mbti: {
-    type: 'ENFJ',
-    name: 'The Protagonist',
+    type: 'ENTJ',
+    name: 'The Commander',
     description:
-      'Reads a room, then gets it moving. The part of me that presents, leads the team and talks people into building the thing.',
+      'Sees the whole board, then puts people on it. The part of me that sets the plan, drives the team and ships the thing on the deadline.',
   },
   stack: ['Next.js', 'TypeScript', 'Python', 'Supabase', 'Three.js', 'Tailwind', 'Fusion 360', 'Burp Suite', 'Linux'],
 }
@@ -431,7 +431,7 @@ export const projects: Project[] = [
     tags: ['Next.js', 'TypeScript', 'WebGL', 'Design'],
     image: '/projects/portfolio.jpg',
     contribution: 'Sole author \u00b7 51 commits',
-    demo: 'https://nonthanaphong.vercel.app',
+    demo: 'https://zarutech.dev',
     repo: 'https://github.com/Skysosmart/My-PROFILE-PAGE',
   },
 ]

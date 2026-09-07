@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { currentTheme, inkColors, onThemeChange } from '@/lib/theme'
+import { inkColors } from '@/lib/ink'
 import { onLean } from '@/lib/lean'
 
 /**
@@ -46,8 +46,7 @@ const MIN_FONT = 5 // px, desktop: ~18k cells on a 1600x1000 host
 // meant 35k of them - twice the desktop count on a quarter of the CPU
 const MIN_FONT_PHONE = 10 // ~9k cells
 const GLYPH_W = 0.6 // JetBrains Mono advance width as a share of font-size
-const OPACITY = 0.55 // ink alpha on the dark theme
-const OPACITY_LIGHT = 0.4 // no hatching now, so the light theme can afford more
+const OPACITY = 0.4 // ink alpha; no hatching, so the paper can afford this much
 const OPACITY_PHONE = 0.32 // it sits behind the text there, not beside it
 const CAMERA_Z = 4
 const CAMERA_Z_PHONE = 5.6 // a smaller knot on a screen it would otherwise fill
@@ -145,8 +144,7 @@ export default function Ascii3D() {
       const lines: string[] = [] // the current frame, one string per row
       const drawn: string[] = [] // what is on the canvas, per row
 
-      const ink = () =>
-        inkColors().fg(phone() ? OPACITY_PHONE : currentTheme() === 'light' ? OPACITY_LIGHT : OPACITY)
+      const ink = () => inkColors().fg(phone() ? OPACITY_PHONE : OPACITY)
 
       // the pen: the mono font at the cell size, the ink colour, and the
       // baseline that centres a glyph in its row the way a line box does.
@@ -277,7 +275,6 @@ export default function Ascii3D() {
         ctx.clearRect(0, 0, cv.width, cv.height)
         if (lines.length) blit()
       }
-      const offTheme = onThemeChange(repaint)
       // the mono font is normally in by now (the header uses it); if not, the
       // picture is redrawn once it lands
       document.fonts?.ready.then(() => {
@@ -340,7 +337,6 @@ export default function Ascii3D() {
         if (raf) cancelAnimationFrame(raf)
         raf = 0
         io.disconnect()
-        offTheme()
         document.removeEventListener('visibilitychange', wake)
         window.removeEventListener('resize', onResize)
         offLean()

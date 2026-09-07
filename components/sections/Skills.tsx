@@ -122,7 +122,7 @@ export default function Skills() {
                   <span className={`font-mono text-[0.625rem] uppercase tracking-[0.3em] ${on ? 'text-bg/60' : 'text-fg-dim'}`}>
                     {String(gi + 1).padStart(2, '0')} / {g.skills.length}
                   </span>
-                  <span className="font-sans text-[0.875rem] font-bold leading-tight sm:truncate sm:text-[0.9375rem]">{g.label}</span>
+                  <span className="font-sans text-[0.875rem] font-bold leading-tight th:leading-[1.4] sm:truncate sm:text-[0.9375rem]">{g.label}</span>
                 </span>
                 <span aria-hidden className={`shrink-0 font-mono text-sm ${on ? 'text-duck' : 'text-fg/30'}`}>
                   {on ? '▶' : '▷'}

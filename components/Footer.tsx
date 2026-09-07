@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import ThemeToggle from '@/components/ThemeToggle'
 import LangToggle from '@/components/LangToggle'
 import { player } from '@/data/portfolio'
 import { ui } from '@/data/ui'
@@ -42,7 +41,6 @@ export default function Footer() {
           </span>
           <span className="flex items-center gap-2 normal-case tracking-normal">
             <LangToggle />
-            <ThemeToggle />
           </span>
         </div>
       </div>

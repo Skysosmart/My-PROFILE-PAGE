@@ -48,7 +48,8 @@ export default function QuickStart({ delay = 0 }: { delay?: number }) {
       whileInView="show"
       viewport={{ once: true, amount: 0.3 }}
       variants={{ show: { transition: { delayChildren: reduce ? 0 : delay, staggerChildren: reduce ? 0 : 0.1 } } }}
-      className="lg:pt-2"
+      // the rule gives the column an edge to start from beside the bordered label
+      className="lg:border-t lg:border-fg/15 lg:pt-6"
     >
       <motion.span
         variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }}
@@ -56,7 +57,7 @@ export default function QuickStart({ delay = 0 }: { delay?: number }) {
       >
         {t.quickStart}
       </motion.span>
-      <ol className="space-y-3.5 font-sans text-[0.9375rem] leading-relaxed text-fg/85">
+      <ol className="space-y-3.5 font-sans text-[0.9375rem] leading-relaxed text-fg/85 lg:space-y-4 lg:text-[1.0625rem] lg:leading-[1.72]">
         {t.steps.map((s, i) => (
           <motion.li
             key={i}

@@ -13,6 +13,7 @@ import Deferred from '@/components/ui/Deferred'
 import Footer from '@/components/Footer'
 import WriteupsTeaser from '@/components/sections/WriteupsTeaser'
 import Cursor from '@/components/effects/Cursor'
+import SmoothScroll from '@/components/effects/SmoothScroll'
 import type { WriteupMeta } from '@/lib/writeups'
 
 // Each section is its own chunk, fetched when Deferred mounts it. ssr: false
@@ -88,6 +89,7 @@ export default function Portfolio({
       {started && (
         <>
           <Cursor />
+          <SmoothScroll />
           <Header />
           <NameTag />
           <motion.main

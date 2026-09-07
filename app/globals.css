@@ -287,7 +287,10 @@
      rem so it follows. A 1920 display gets the layout of a 1371 one, scaled,
      which is how Sky likes it: it is the browser at 140%, built in. */
     font-size: clamp(100%, 1.1675vw, 140%);
-    scroll-behavior: smooth;
+    /* auto, not smooth: the page's easing comes from lib/smooth-scroll.ts,
+       and a browser smooth scroll underneath it would pull the other way.
+       Reduced motion runs without it, and auto is what that wants anyway. */
+    scroll-behavior: auto;
     /* nav offsets are handled per-section via scroll-margin (scroll-mt-*) */
   }
 

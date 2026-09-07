@@ -10,6 +10,7 @@ import { applyPref, currentTheme } from '@/lib/theme'
 import { applyLang, currentLang, isLang } from '@/lib/lang'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
+import { getLenis } from '@/lib/smooth-scroll'
 
 /**
  * The navigation IS a command line.
@@ -67,7 +68,15 @@ export default function Header() {
         router.push(`/#${id}`)
         return
       }
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const el = document.getElementById(id)
+      if (!el) return
+      const lenis = getLenis()
+      // no offset: lenis.scrollTo already subtracts the target's
+      // scroll-margin-top, the same thing scrollIntoView honours, so the
+      // sections keep clearing the header. Passing it again lands every
+      // flight one header-height short.
+      if (lenis) lenis.scrollTo(el)
+      else el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     },
     [pathname, router],
   )

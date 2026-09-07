@@ -229,7 +229,7 @@ export default function AboutMe() {
 
           {/* FIXED-SIZE terminal screen - output scrolls inside, the window
               never stretches the section as lines print */}
-          <div ref={bodyRef} className="h-[48svh] overflow-y-auto p-4 sm:h-[54svh] sm:p-6">
+          <div ref={bodyRef} data-lenis-prevent className="h-[48svh] overflow-y-auto p-4 sm:h-[54svh] sm:p-6">
             {/* banner + boot (hidden by `clear`, restored by `banner`) */}
             <div className={showBoot ? '' : 'hidden'}>
               {/* cowsay bubble */}

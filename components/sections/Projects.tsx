@@ -7,6 +7,7 @@ import ProjectWall from '@/components/effects/ProjectWall'
 import { figletFor } from '@/data/figlets'
 import { projects, type Project } from '@/data/portfolio'
 import { useContent } from '@/lib/use-content'
+import { claimWheel } from '@/lib/smooth-scroll'
 import Duck from '@/components/duck/Duck'
 
 /**
@@ -206,6 +207,9 @@ export default function Projects() {
       // would fight its overflow container, so it keeps native scrolling
       return vh > 520 && r.top <= 1 && r.bottom >= vh - 1
     }
+    // the page's inertia stands down for as long as the stage is pinned:
+    // one gesture is one project in here, which is the opposite of coasting
+    const releaseWheel = claimWheel(pinned)
     let lastStep = 0
     let target = 0
     // mid-animation the live index lags the slot we are easing toward, so a
@@ -293,6 +297,7 @@ export default function Projects() {
     el.addEventListener('touchend', onTouchEnd, { passive: true })
     el.addEventListener('touchcancel', onTouchCancel, { passive: true })
     return () => {
+      releaseWheel()
       el.removeEventListener('wheel', onWheel)
       el.removeEventListener('touchstart', onTouchStart)
       el.removeEventListener('touchmove', onTouchMove)

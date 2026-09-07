@@ -94,7 +94,7 @@ export default function CertLightbox({
                 className="max-h-[42dvh] w-auto max-w-full object-contain drop-shadow-xl lg:max-h-[calc(100dvh-4.5rem)]"
               />
             </div>
-            <div className="flex min-h-0 flex-col overflow-y-auto overscroll-contain p-5 sm:p-6">
+            <div data-lenis-prevent className="flex min-h-0 flex-col overflow-y-auto overscroll-contain p-5 sm:p-6">
               <div className="flex items-start justify-between gap-3">
                 <span
                   className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[0.6875rem] font-semibold ${catMeta(categorize(cert)).chip}`}

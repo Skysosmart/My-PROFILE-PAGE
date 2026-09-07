@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import RoleTicker from '@/components/RoleTicker'
 import { motion, useReducedMotion } from 'motion/react'
 import SkyOrb from '@/components/SkyOrb'
+import InkBubble from '@/components/ui/InkBubble'
 import Duck from '@/components/duck/Duck'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
@@ -104,14 +105,9 @@ export default function IntroHero() {
           <SkyOrb>
             <motion.span
               {...rise(1.0)}
-              className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-2xl border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[0.75rem] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))]"
+              className="absolute -top-16 left-1/2 -translate-x-1/2 whitespace-nowrap text-fg"
             >
-              {t.bubble}
-              {/* the tail, on the bubble's centre line and so on the orb's */}
-              <span
-                aria-hidden
-                className="absolute -bottom-1 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-b border-r border-fg/40 bg-bg"
-              />
+              <InkBubble className="font-sans text-[0.75rem] font-semibold">{t.bubble}</InkBubble>
             </motion.span>
           </SkyOrb>
           {/* pinned to the screen below lg, back in the orb's column from lg.

@@ -314,7 +314,7 @@ export default function SkyOrb({ children }: { children?: ReactNode }) {
   return (
     // will-change: the drift is a transform on every pointer move, and without
     // its own layer the whole orb re-rastered each time
-    <motion.div style={{ x: ox, y: oy, willChange: 'transform' }} className="relative my-10 mt-12 sm:mt-14">
+    <motion.div style={{ x: ox, y: oy, willChange: 'transform' }} className="relative my-10 mt-18">
       {/* the outer glow, on a still circle behind the morphing rim: a shadow
           on the rim itself was re-rastered on every frame of the morph */}
       <span aria-hidden className="orb-glow pointer-events-none absolute inset-0 rounded-full" />

@@ -42,6 +42,33 @@ wraps around it. The MBTI itself is `profile.mbti` (+ `profileTh.mbti`); the
 serial under the barcode is built from it, so it follows along on its own -
 only the handle and the site url are baked into the codes.
 
+## Scrolling: `lib/smooth-scroll.ts`
+
+The page has weight: Lenis eases the window toward where a gesture asked for
+instead of jumping, and coasts to a stop. `lerp` is the dial - 0.075, below
+the library's 0.1 default, so it takes its time. It drives the real window
+scroll, which is why the film's sticky stage, `useScroll` and every
+`getBoundingClientRect` on the page are unaware of it.
+
+Touch is left alone (`syncTouch` off): a phone already has momentum.
+Reduced motion never starts it. `/certificates` is its own route and is not
+covered - only the one-pager mounts it.
+
+Two things to know before changing any of this:
+
+- **The film keeps the wheel.** While its stage is pinned, Projects turns one
+  gesture into one project and eats the inertia tail, the exact opposite of
+  coasting, so it claims the wheel with `claimWheel(pinned)` and Lenis stands
+  down. Standing down is `virtualScroll` returning false, *never* `stop()` -
+  a stopped Lenis calls `preventDefault` on the wheel, which would seal the
+  reader inside the film, and the film deliberately leaves both edges open.
+- **Do not pass an offset to `lenis.scrollTo`.** It already subtracts the
+  target's `scroll-margin-top`, the same thing `scrollIntoView` honours, so
+  the `scroll-mt-*` on each section still clears the header. Passing it again
+  lands every flight one header short.
+- A pane that scrolls inside the page needs `data-lenis-prevent`; the cert
+  lightbox and the About terminal have it.
+
 ## Phones and tablets
 
 Everything that leans with the reader (the ducks, the orb's drift, the

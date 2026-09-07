@@ -24,8 +24,9 @@ export default function IntroHero() {
   })
 
   return (
-    // pt clears the header pill and, on a phone, the name tag that sits under it
-    <header className="relative isolate flex min-h-[100svh] flex-col items-center justify-center px-4 pb-24 pt-36 text-center sm:pb-28 md:pt-24">
+    // pt clears the header pill and, on a phone, the name tag and the role
+    // ticker that share the row under it
+    <header className="relative isolate flex min-h-[100svh] flex-col items-center justify-center px-4 pb-24 pt-32 text-center sm:pb-28 md:pt-24">
       {/* lives here, not in the page shell, so it scrolls away with the hero */}
       <RoleTicker />
 

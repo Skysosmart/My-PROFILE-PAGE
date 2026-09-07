@@ -86,15 +86,14 @@ layout: `lib/viewport.ts` pins the viewport to 1024 (portrait) or 1280
 Copy `_template.mdx` to `<slug>.mdx`; the file name is the URL. Frontmatter:
 `title`, `date`, `event`, `category`, `difficulty`, `tags`, `summary`, `draft`.
 A draft shows locally and on Vercel previews, never in production. Code
-blocks are highlighted in both themes. Files starting with `_` never publish.
+blocks are highlighted (one shiki theme). Files starting with `_` never publish.
 
 ## The duck: `public/duck/`
 
 Every pose is its own drawing in `assets/duck/<pose>-source.png` (black lines
 and a few flat colours on cream). `scripts/duck-split.sh <pose> <pose>-source.png`
-turns one into the two composites the site loads, `public/duck/<pose>-dark.png`
-(near-black body, white lines) and `<pose>-light.png` (paper body, black
-lines); coloured parts keep their colour in both. Pass `cutout` as the third
+turns one into the composite the site loads, `public/duck/<pose>-light.png`
+(paper body, black lines); coloured parts keep their colour. Pass `cutout` as the third
 argument for a drawing that carries its own scene (hacker mode) to keep it
 as drawn and only drop the background. Pass `print` for the spec label's
 treatment instead: the drawing is brought to 480px wide (`PRINT_W` overrides)
@@ -111,14 +110,20 @@ share card (`public/og.png`) are the standing duck.
 
 ## Theme and colours
 
-Dark is the design; light is the same terminal on warm paper. Tokens are the
-`--bg`, `--fg`, `--panel` RGB triplets at the top of `app/globals.css`, with
-the Tailwind names (`fg`, `bg`, `panel`, `fg-dim`, `fg-muted`, `duck`) in the
-`@theme` block right after. The duck's yellow (`--color-duck`) is the only
-colour in the palette; use it sparingly.
+One palette: the terminal on warm paper. Tokens are the `--bg`, `--fg`,
+`--panel` RGB triplets at the top of `app/globals.css`, with the Tailwind
+names (`fg`, `bg`, `panel`, `fg-dim`, `fg-muted`, `duck`) in the `@theme`
+block right after. The duck's yellow (`--color-duck`) is the only colour in
+the palette; use it sparingly.
 
-`theme` and `lang` are remembered in localStorage and applied before first
-paint by the two inline scripts in `app/layout.tsx`.
+There was a dark theme beside this one, with a toggle, a `theme` command and
+a drawing of every duck pose in each. It was dropped; the history has all of
+it if it is ever wanted back. What is left of it is the `-light` in the duck
+file names and `lib/ink.ts`, which is only the two colour readers the orb and
+the ASCII hand need.
+
+`lang` is remembered in localStorage and applied before first paint by the
+inline script in `app/layout.tsx`.
 
 ## Run it
 

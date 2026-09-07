@@ -6,7 +6,6 @@ import './globals.css'
 import { assets, contact, player, projects } from '@/data/portfolio'
 import { certStats } from '@/lib/certs'
 import { SITE } from '@/lib/site'
-import { THEME_BOOT } from '@/lib/theme'
 import { LANG_BOOT } from '@/lib/lang'
 import { VIEWPORT_BOOT } from '@/lib/viewport'
 
@@ -99,7 +98,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    // suppressHydrationWarning: the boot script below stamps data-theme on the
+    // suppressHydrationWarning: the boot script below stamps data-lang on the
     // server-rendered <html> before React hydrates it, on purpose
     <html
       lang="en"
@@ -108,10 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable} ${thai.variable}`}
     >
       <body>
-        {/* runs before first paint, so a returning light-theme visitor never
-            sees a dark flash; reads the saved choice, else the OS setting */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
-        {/* same idea for the language: stamps <html lang> before first paint */}
+        {/* runs before first paint: stamps <html lang> for the language */}
         <script dangerouslySetInnerHTML={{ __html: LANG_BOOT }} />
         {/* and for tablets: pins the viewport to a desktop width, so an iPad
             gets the computer's layout (see lib/viewport.ts) */}

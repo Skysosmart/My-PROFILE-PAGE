@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import ThemeToggle from '@/components/ThemeToggle'
 import Duck from '@/components/duck/Duck'
 import { player } from '@/data/portfolio'
 
@@ -40,9 +39,6 @@ export default function NotFound() {
         </span>
         <span className="select-none text-fg-muted">cd</span>
         <span className="min-w-0 truncate text-fg">{path}</span>
-        <span className="ml-auto shrink-0">
-          <ThemeToggle />
-        </span>
       </div>
 
       <p className="mt-2 font-mono text-[0.75rem] text-red-400">

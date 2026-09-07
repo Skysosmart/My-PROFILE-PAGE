@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Split a line-art duck drawing into the two theme composites the site loads.
+# Turn a line-art duck drawing into the composite the site loads.
 #
 #   scripts/duck-split.sh <name> <source.png> [ink|cutout|print]
 #
-# Reads assets/duck/<source>, writes public/duck/<name>-dark.png and
-# public/duck/<name>-light.png. Needs ImageMagick 7 (`magick`).
+# Reads assets/duck/<source>, writes public/duck/<name>-light.png. (The site
+# had a dark theme once and this wrote a composite for each; the -light in the
+# name is what is left of that.) Needs ImageMagick 7 (`magick`).
 #
 # The drawings arrive as black lines and a few flat colours on a cream
 # background, with the body the same cream as the paper. Colour alone cannot
@@ -12,10 +13,9 @@
 # outline is thickened until every gap closes, the outside is flood-filled
 # from a corner, and the result is thinned back to the outline's outer edge.
 #
-#   ink      the site's monochrome treatment: the body becomes the panel
-#            colour, the lines the ink colour, and every coloured part
-#            (beak, feet, blanket, laptop) keeps its colour. Dark gets white
-#            lines on a near-black body; light gets black lines on paper.
+#   ink      the site's monochrome treatment: the body becomes the paper
+#            colour and the lines the ink, while every coloured part (beak,
+#            feet, blanket, laptop) keeps its colour.
 #   cutout   keeps the drawing exactly as drawn and only removes the
 #            background, for illustrations that carry their own scene.
 #   print    the spec label's treatment: the light composite taken to one
@@ -83,10 +83,8 @@ magick "$tmp/mask.png" -morphology Dilate Disk:3 "$tmp/mask3.png"
 if [[ $mode == cutout ]]; then
   # keep the pixels, drop the background
   magick "$tmp/mask3.png" "$tmp/lines-soft.png" -compose Lighten -composite "$tmp/alpha.png"
-  for theme in dark light; do
-    magick "$src" -alpha off "$tmp/alpha.png" -compose CopyOpacity -composite -trim +repage "$out/$name-$theme.png"
-  done
-  echo "wrote $out/$name-{dark,light}.png (cutout, $(magick identify -format '%wx%h' "$out/$name-dark.png"))"
+  magick "$src" -alpha off "$tmp/alpha.png" -compose CopyOpacity -composite -trim +repage "$out/$name-light.png"
+  echo "wrote $out/$name-light.png (cutout, $(magick identify -format '%wx%h' "$out/$name-light.png"))"
   exit 0
 fi
 
@@ -115,7 +113,6 @@ if [[ $mode == print ]]; then
   exit 0
 fi
 
-# dark: near-black body, white lines. light: paper body, black lines.
-magick "$tmp/fill.png" -fill '#0d0d0f' -colorize 100 "$tmp/colour.png" -composite \( "$tmp/lines.png" -fill white -colorize 100 \) -composite -trim +repage "$out/$name-dark.png"
+# paper body, black lines
 magick "$tmp/fill.png" -fill '#f3f0e8' -colorize 100 "$tmp/colour.png" -composite "$tmp/lines.png" -composite -trim +repage "$out/$name-light.png"
-echo "wrote $out/$name-{dark,light}.png (ink, $(magick identify -format '%wx%h' "$out/$name-dark.png"))"
+echo "wrote $out/$name-light.png (ink, $(magick identify -format '%wx%h' "$out/$name-light.png"))"

@@ -117,7 +117,7 @@ const en = {
     based: 'Thailand based',
     rendered: 'rendered in ASCII',
   },
-  nav: { noSuch: 'no such section', hint: 'theme light | dark | system · lang en | th' },
+  nav: { noSuch: 'no such section', hint: 'lang en | th' },
 }
 
 export type UI = typeof en
@@ -232,7 +232,7 @@ const th: UI = {
     based: 'อยู่ประเทศไทย',
     rendered: 'เรนเดอร์ด้วย ASCII',
   },
-  nav: { noSuch: 'ไม่พบส่วนนี้', hint: 'theme light | dark | system · lang en | th' },
+  nav: { noSuch: 'ไม่พบส่วนนี้', hint: 'lang en | th' },
 }
 
 export const ui: Record<Lang, UI> = { en, th }

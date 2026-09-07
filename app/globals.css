@@ -1,7 +1,5 @@
 @import 'tailwindcss';
 
-/* dark: follows the site's own theme switch (lib/theme.ts), not the OS */
-@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 /* thai: the script stacks a vowel above the consonant and a tone mark above
    that, so a line box tuned for Latin crops it. Used to lift only the tight
@@ -235,46 +233,31 @@
    ========================================================================== */
 
   /* --------------------------------------------------------------------------
-   Theme tokens. Dark is the site as designed; light is the same terminal
-   printed on warm paper. RGB triplets so Tailwind can add its own alpha.
+   The palette: the terminal printed on warm paper. RGB triplets so Tailwind
+   can add its own alpha. There was a dark theme beside this one until it was
+   dropped; the history has it if it is ever wanted back.
    -------------------------------------------------------------------------- */
   :root {
-    color-scheme: dark;
-    --bg: 5 5 5; /* the page */
-    --fg: 255 255 255; /* the ink */
-    --panel: 13 13 15; /* glass fill */
-    --fg-dim: rgb(var(--fg) / 0.4); /* labels, eyebrows, counts */
-    --fg-muted: rgb(var(--fg) / 0.58); /* secondary copy */
-    --glow: rgb(var(--fg) / 0.5); /* txt-glow: phosphor bleed */
-    --glow-far: rgb(var(--fg) / 0.18);
-    --grid: rgb(var(--fg) / 0.05);
-    --vignette: rgb(var(--fg) / 0.07);
-    --thumb-a: #ffffff; /* scrollbar */
-    --thumb-b: #888888;
-    --void: rgb(var(--bg));
-    --phosphor: rgb(var(--fg));
-    --cyan: #cfcfcf;
-    --lime: rgb(var(--fg));
-    --scanline: rgba(0, 0, 0, 0.28);
-    --shade: 0.75; /* drop-shadow strength: ink on black */
-  }
-  [data-theme='light'] {
     color-scheme: light;
     --bg: 243 240 232; /* warm paper */
-    --fg: 17 17 17; /* ink */
-    --panel: 255 255 255;
-    /* the same ramp reads lighter on paper, so the two label greys are darker
-     than a raw 40% / 58% would be: both clear 4.5:1 on the paper */
-    --fg-dim: rgba(17, 17, 17, 0.6);
-    --fg-muted: rgba(17, 17, 17, 0.72);
-    --glow: rgba(17, 17, 17, 0.22); /* ink bleed, not light */
+    --fg: 17 17 17; /* the ink */
+    --panel: 255 255 255; /* glass fill */
+    /* the two label greys are darker than a raw 40% / 58% would be: both
+     clear 4.5:1 on the paper */
+    --fg-dim: rgba(17, 17, 17, 0.6); /* labels, eyebrows, counts */
+    --fg-muted: rgba(17, 17, 17, 0.72); /* secondary copy */
+    --glow: rgba(17, 17, 17, 0.22); /* txt-glow: ink bleed, not light */
     --glow-far: rgba(17, 17, 17, 0.08);
     --grid: rgba(0, 0, 0, 0.06);
     --vignette: rgba(0, 0, 0, 0.05);
-    --thumb-a: #111111;
+    --thumb-a: #111111; /* scrollbar */
     --thumb-b: #777777;
+    --void: rgb(var(--bg));
+    --phosphor: rgb(var(--fg));
     --cyan: #444444;
-    --shade: 0.18; /* the same shadows read as smudges on paper */
+    --lime: rgb(var(--fg));
+    --scanline: rgba(0, 0, 0, 0.28);
+    --shade: 0.18; /* drop-shadow strength: hard shadows read as smudges here */
   }
 
   * {
@@ -554,28 +537,14 @@
   padding: 0.375rem 1rem 0;
 }
 .writeup-prose [data-highlighted-line] { background: rgb(var(--fg) / 0.07); margin: 0 -16px; padding: 0 16px; }
-/* the two-theme token colours */
-.writeup-prose pre span[style*="--shiki"], .writeup-prose pre code { color: var(--shiki-light); }
-[data-theme='dark'] .writeup-prose pre span[style*="--shiki"], [data-theme='dark'] .writeup-prose pre code { color: var(--shiki-dark); }
+/* no token-colour rule: with one shiki theme the highlighter writes the
+   colours inline, and a var(--shiki-light) that no longer exists would
+   only unset them */
 
-/* --------------------------------------------------------------------------
-   The duck ships in both themes; the theme shows one. Under data-theme the
-   swap is pure CSS, so the drawing is right on the first paint.
-   -------------------------------------------------------------------------- */
-.duck-light { display: none; }
-[data-theme='light'] .duck-dark { display: none; }
-[data-theme='light'] .duck-light { display: block; }
-
-/* the profile's spec label: a cream sticker on both themes. On the dark
-   page it floats on a soft shadow; on paper, where the page is the same
-   cream, it is stuck on with a hard one */
+/* the profile's spec label: a cream sticker on the same cream page, so it is
+   stuck on with a hard shadow rather than floated on a soft one */
 .spec-label {
   border: 1px solid rgba(17, 17, 17, 0.45);
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.12),
-    0 26px 50px -22px rgba(0, 0, 0, 0.6);
-}
-[data-theme='light'] .spec-label {
   box-shadow: 6px 6px 0 #111;
 }
 

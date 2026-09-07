@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
-import { inkColors, onThemeChange } from '@/lib/theme'
+import { inkColors } from '@/lib/ink'
 import { assets } from '@/data/portfolio'
 import { onLean } from '@/lib/lean'
 
@@ -140,8 +140,7 @@ export default function SkyOrb() {
       skyCanvas.height = SKY_PX
       const c2 = skyCanvas.getContext('2d')!
       // the face in the site's grey, on the page colour, with a faint
-      // scanline so it belongs to the terminal; repainted on a theme flip
-      // because the page colour under it changes
+      // scanline so it belongs to the terminal
       const paintSky = () => {
         const ink = inkColors()
         c2.fillStyle = ink.bg()
@@ -154,12 +153,11 @@ export default function SkyOrb() {
         c2.drawImage(portrait, (SKY_PX - w) / 2, -(h - SKY_PX) * 0.12, w, h)
         const px = c2.getImageData(0, 0, SKY_PX, SKY_PX)
         const d = px.data
-        const light = document.documentElement.dataset.theme === 'light'
         for (let i = 0; i < d.length; i += 4) {
           let g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]
           // a touch more contrast, and a scanline every third row
           g = 128 + (g - 128) * 1.15
-          if (((i >> 2) / SKY_PX) % 3 < 1) g *= light ? 1.06 : 0.86
+          if (((i >> 2) / SKY_PX) % 3 < 1) g *= 1.06 // the scanline lifts on paper
           const v = Math.max(0, Math.min(255, g))
           d[i] = d[i + 1] = d[i + 2] = v
         }
@@ -185,10 +183,6 @@ export default function SkyOrb() {
         image: skyCanvas,
         wrapS: gl.CLAMP_TO_EDGE,
         wrapT: gl.CLAMP_TO_EDGE,
-      })
-      const offTheme = onThemeChange(() => {
-        paintSky()
-        texture.needsUpdate = true
       })
 
       // a plain array, not a Float32Array: ogl decides an array uniform is
@@ -294,7 +288,6 @@ export default function SkyOrb() {
 
       cleanup = () => {
         io.disconnect()
-        offTheme()
         cancelAnimationFrame(raf)
         window.removeEventListener('resize', resize)
         canvas.removeEventListener('pointermove', onMove)

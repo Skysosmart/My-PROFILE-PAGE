@@ -4,9 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'motion/react'
 import { player, nav } from '@/data/portfolio'
-import ThemeToggle from '@/components/ThemeToggle'
 import LangToggle from '@/components/LangToggle'
-import { applyPref, currentTheme } from '@/lib/theme'
 import { applyLang, currentLang, isLang } from '@/lib/lang'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
@@ -115,17 +113,8 @@ export default function Header() {
       setCursor((c) => (c - 1 + matches.length) % Math.max(matches.length, 1))
     } else if (e.key === 'Enter') {
       e.preventDefault()
-      // the prompt is a command line, so `theme light|dark|system` is a real
-      // command; bare `theme` flips whatever is on
-      const [cmd, arg] = query.trim().toLowerCase().split(/\s+/)
-      if (cmd === 'theme') {
-        applyPref(arg === 'light' || arg === 'dark' || arg === 'system' ? arg : currentTheme() === 'dark' ? 'light' : 'dark')
-        setOpen(false)
-        setQuery('')
-        inputRef.current?.blur()
-        return
-      }
       // `lang th|en`, bare `lang` flips
+      const [cmd, arg] = query.trim().toLowerCase().split(/\s+/)
       if (cmd === 'lang') {
         applyLang(isLang(arg) ? arg : currentLang() === 'th' ? 'en' : 'th')
         setOpen(false)
@@ -188,7 +177,6 @@ export default function Header() {
             {time || '--:--:--'}
           </span>
           <LangToggle />
-          <ThemeToggle />
         </div>
 
         {/* the sections, as paths */}
@@ -203,7 +191,7 @@ export default function Header() {
           >
             {matches.length === 0 && (
               <li className="px-3 py-2 text-fg-dim sm:px-4">
-                {/^(theme|lang)/.test(query.trim().toLowerCase())
+                {/^lang/.test(query.trim().toLowerCase())
                   ? ui[lang].nav.hint
                   : `${ui[lang].nav.noSuch}: ${query}`}
               </li>

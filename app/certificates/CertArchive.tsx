@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { motion } from 'motion/react'
 import CertCard from '@/components/ui/CertCard'
 import CertLightbox from '@/components/ui/CertLightbox'
-import ThemeToggle from '@/components/ThemeToggle'
 import { CATS, byNewest, certMatches, certSpan, certStats, groupByCategory } from '@/lib/certs'
 import { player, type Certificate } from '@/data/portfolio'
 
@@ -89,7 +88,6 @@ export default function CertArchive() {
           <span className="hidden shrink-0 select-none tabular-nums tracking-widest text-fg/25 sm:inline">
             {time || '--:--:--'}
           </span>
-          <ThemeToggle />
         </div>
 
         <h1 className="mt-3 font-crt text-6xl leading-[0.85] tracking-[0.06em] text-fg txt-glow sm:text-7xl lg:text-8xl">

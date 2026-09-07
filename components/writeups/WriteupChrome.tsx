@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import ThemeToggle from '@/components/ThemeToggle'
 import LangToggle from '@/components/LangToggle'
 import { player } from '@/data/portfolio'
 import { ui } from '@/data/ui'
@@ -45,7 +44,6 @@ export default function WriteupChrome({ path }: { path: string }) {
           {time || '--:--:--'}
         </span>
         <LangToggle />
-        <ThemeToggle />
       </span>
     </div>
   )

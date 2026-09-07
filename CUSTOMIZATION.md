@@ -42,6 +42,37 @@ wraps around it. The MBTI itself is `profile.mbti` (+ `profileTh.mbti`); the
 serial under the barcode is built from it, so it follows along on its own -
 only the handle and the site url are baked into the codes.
 
+## The About terminal, and the Linux behind it
+
+The terminal answers a fixed set of commands (`sop`, `inspiration`, `contact`,
+`resume`, `whoami`, `ls`, `banner`, `help`, `clear`) out of the same content
+the rest of the page uses. `boot` is the odd one: it hands the prompt to a
+real Linux running in the reader's tab.
+
+That is v86, an x86 emulator compiled to wasm, booting the Buildroot image
+the v86 project publishes - a 2.6 kernel and BusyBox 1.21. Typing `ls` after
+`boot` runs BusyBox's ls on an emulated CPU on the reader's own machine.
+**Nothing is executed on a server, and nothing should ever be**: an endpoint
+that shells out would give every visitor a shell on the deployment.
+
+`lib/vm.ts` owns the machine. Two things in it are not obvious:
+
+- It resolves when the guest reaches a **shell prompt**, not when the
+  emulator is constructed. Constructing takes milliseconds and the kernel
+  then boots and asks for a login, so a promise that resolves early feeds
+  the reader's first command to `login:` as a username. That bug happened
+  twice while this was built.
+- It answers that login itself (`root`, no password) and strips the ANSI
+  colour BusyBox emits, because the scrollback renders plain text.
+
+The pieces live in `public/vm` and total about 7.8MB. **None of it is
+fetched unless somebody types `boot`** - keep it that way; it is more than
+the rest of the site put together. `npm run vm:assets` puts them there:
+two are copied from the `v86` package and must be re-copied when it is
+upgraded, three are downloaded once and committed. Licences are in the
+script's header - the image is GPL software, and the source it is built
+from is at github.com/copy/images.
+
 ## Scrolling: `lib/smooth-scroll.ts`
 
 The page has weight: Lenis eases the window toward where a gesture asked for

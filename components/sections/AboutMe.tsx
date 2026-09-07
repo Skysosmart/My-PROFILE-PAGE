@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { assets } from '@/data/portfolio'
 import { DUCK_ASCII } from '@/data/duck-ascii'
 import { useContent } from '@/lib/use-content'
+import { bootLinux, type Vm } from '@/lib/vm'
 
 /**
  * ABOUT ME - an INTERACTIVE hacker-terminal (cowsay bubble, rainbow eyes,
@@ -17,6 +18,12 @@ import { useContent } from '@/lib/use-content'
  * After the boot sequence, the terminal takes commands - type them or tap the
  * chips: `sop` prints the Statement of Purpose, `inspiration` the principles,
  * plus `help`, `whoami`, `clear`.
+ *
+ * `boot` hands the prompt to a real Linux (lib/vm.ts): an x86 emulator in
+ * wasm running BusyBox off a 5.5MB image, entirely in the reader's tab.
+ * From then on every line typed goes to that machine's serial port and its
+ * output comes back here, until `exit` shuts it down. None of those 7.8MB
+ * is fetched unless somebody asks for them.
  */
 
 // cowsay-style speech bubble (static, printed instantly like real cowsay)
@@ -41,7 +48,7 @@ const EYES_COLORS = [
   'text-emerald-300',
 ]
 
-const COMMANDS = ['sop', 'inspiration', 'contact', 'resume', 'help', 'clear'] as const
+const COMMANDS = ['sop', 'inspiration', 'contact', 'resume', 'boot', 'help', 'clear'] as const
 
 type Out = {
   prefix?: { text: string; className?: string }
@@ -64,6 +71,9 @@ export default function AboutMe() {
   const inputRef = useRef<HTMLInputElement>(null)
   const history = useRef<string[]>([])
   const histIdx = useRef(-1)
+  // the emulated machine, once somebody has asked for it
+  const vm = useRef<Vm | null>(null)
+  const [vmState, setVmState] = useState<'off' | 'starting' | 'on'>('off')
 
   // Load the "Sky" figlet logo for the boot banner.
   useEffect(() => {
@@ -117,8 +127,47 @@ export default function AboutMe() {
     },
   ]
 
+  const say = (...lines: Out[]) => setLog((l) => [...l, ...lines])
+
+  /** Hand the prompt to a real machine. */
+  const boot = async () => {
+    setVmState('starting')
+    say({ text: 'fetching a machine (~7.8MB, once)…', className: 'text-fg-muted' })
+    try {
+      vm.current = await bootLinux({
+        onStatus: (msg) => say({ text: `${msg}…`, className: 'text-fg-muted' }),
+        onLine: (line) => say({ text: line, className: 'text-fg/85' }),
+      })
+      setVmState('on')
+      say({ text: "linux is up. type `exit` to come back.", className: 'text-green-400' })
+    } catch (err) {
+      setVmState('off')
+      vm.current = null
+      say({ text: `could not start it: ${err instanceof Error ? err.message : String(err)}`, className: 'text-red-400' })
+    }
+  }
+
   /** Run a terminal command and append its output to the scrollback. */
   const run = (raw: string) => {
+    // while the machine is up this is not a command menu any more: the line
+    // goes to its serial port verbatim, whitespace, case and all
+    if (vmState === 'on' && vm.current) {
+      const line = raw
+      history.current.push(line)
+      histIdx.current = -1
+      // no echo here: the guest's own tty echoes what it is sent, so
+      // printing it too showed every command twice
+      if (line.trim() === 'exit') {
+        say({ prefix: { text: '/root% ', className: 'text-green-400' }, text: line, className: 'text-fg' })
+        vm.current.destroy()
+        vm.current = null
+        setVmState('off')
+        say({ text: 'machine halted.', className: 'text-fg-muted' })
+        return
+      }
+      vm.current.send(`${line}\n`)
+      return
+    }
     const cmd = raw.trim().toLowerCase()
     if (!cmd) return
     history.current.push(cmd)
@@ -157,6 +206,13 @@ export default function AboutMe() {
       out.push({ text: 'sop.md  inspiration.md  contact.txt  resume.pdf  portrait.jpg  certificates/', className: 'text-sky-300/90' })
     } else if (cmd === 'whoami') {
       out.push({ text: `${player.name} - ${player.role}`, className: 'text-green-400' })
+    } else if (cmd === 'boot') {
+      if (vmState === 'starting') out.push({ text: 'already starting…', className: 'text-fg-muted' })
+      else {
+        setLog((l) => [...l, ...out])
+        void boot()
+        return
+      }
     } else if (cmd === 'banner') {
       setShowBoot(true)
     } else if (cmd === 'sudo' || cmd.startsWith('sudo ')) {
@@ -168,6 +224,7 @@ export default function AboutMe() {
         { text: '  inspiration  what drives me', className: 'text-sky-300/90' },
         { text: '  contact      how to reach me', className: 'text-sky-300/90' },
         { text: '  resume       one-page CV as a PDF', className: 'text-sky-300/90' },
+        { text: '  boot         start a real linux in this tab (~7.8MB)', className: 'text-yellow-300' },
         { text: '  whoami · ls · banner · clear', className: 'text-sky-300/90' },
       )
     } else {

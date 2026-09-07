@@ -50,3 +50,9 @@ bun.lock*
 .env.*
 !.env.example
 .eslintcache
+
+# copied from the v86 package by scripts/vm-assets.sh (npm prebuild), so they
+# always match the installed version. The ISO and the BIOS pair beside them
+# are vendored, since they come from elsewhere and never change.
+/public/vm/libv86.mjs
+/public/vm/v86.wasm

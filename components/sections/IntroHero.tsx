@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import RoleTicker from '@/components/RoleTicker'
 import { motion, useReducedMotion } from 'motion/react'
 import SkyOrb from '@/components/SkyOrb'
@@ -17,6 +18,22 @@ import { useLang } from '@/lib/use-lang'
 export default function IntroHero() {
   const t = ui[useLang()].hero
   const reduce = useReducedMotion()
+
+  // The scroll cue is pinned to the bottom of the screen below lg. The hero
+  // is taller than a phone - 1053px against 780 on a 360 screen in Thai,
+  // more with the taller Thai leading - so in the flow the cue sits below
+  // the fold on every phone size, and the one thing whose job is to say
+  // "there is more" is the thing nobody sees. Pinned, it is an affordance
+  // rather than content, and it goes when the hero does.
+  const heroRef = useRef<HTMLElement>(null)
+  const [inHero, setInHero] = useState(true)
+  useEffect(() => {
+    const el = heroRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => setInHero(e.isIntersecting), { threshold: 0.15 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
   const rise = (delay: number) => ({
     initial: reduce ? { opacity: 0 } : { opacity: 0, y: 14 },
     animate: { opacity: 1, y: 0 },
@@ -29,7 +46,7 @@ export default function IntroHero() {
     // the duck reaches past its block, and on a phone in Thai that put it
     // past the screen's edge - a page wider than the phone, which the phone
     // then zoomed out to fit
-    <header className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-x-clip px-4 pb-24 pt-32 text-center sm:pb-28 md:pt-24">
+    <header ref={heroRef} className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-x-clip px-4 pb-24 pt-32 text-center sm:pb-28 md:pt-24">
       {/* lives here, not in the page shell, so it scrolls away with the hero */}
       <RoleTicker />
 
@@ -89,11 +106,18 @@ export default function IntroHero() {
               />
             </motion.span>
           </SkyOrb>
+          {/* pinned to the screen below lg, back in the orb's column from lg.
+              pointer-events-none: it is a sign, never a target. No ancestor
+              below lg carries a transform (the column's -translate-y-10 is
+              lg-only), which `fixed` would otherwise resolve against. The
+              gradient is not decoration: pinned to the bottom it lands on
+              the orb on every phone size, and dim ink on the grey portrait
+              is unreadable without something to sit on. */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-            className="mt-2 flex flex-col items-center gap-1.5 font-mono text-[0.6875rem] text-fg-dim"
+            animate={{ opacity: inHero ? 1 : 0 }}
+            transition={{ delay: inHero ? 1.2 : 0, duration: reduce ? 0 : 0.3 }}
+            className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-1.5 bg-linear-to-t from-bg via-bg/90 to-transparent pb-5 pt-10 font-mono text-[0.6875rem] text-fg-dim lg:static lg:z-auto lg:mt-2 lg:bg-none lg:pt-0 lg:pb-0"
           >
             <span className="uppercase tracking-[0.2em]">{t.scroll}</span>
             <span className="animate-blink text-fg">▼</span>

@@ -92,17 +92,25 @@ export default function IntroHero() {
               so it travels with the orb's drift; centred over the crown so the
               tail points at the face in either language, instead of being
               pinned a fixed distance from an edge that moves when the text
-              gets longer */}
+              gets longer.
+
+              The gap above the crown is not slack: the disc scales 1.06 on
+              hover about its own centre, so the rim climbs - 8px at 1440,
+              10px at 1920 - while the bubble, a sibling of the disc rather
+              than a child, stays put. With the tail resting on the crown the
+              rim swallowed it. sm and up buys that back (and SkyOrb's mt
+              grows to match, so the eyebrow keeps its clearance); a phone
+              has no pointer to hover with and keeps the tighter gap. */}
           <SkyOrb>
             <motion.span
               {...rise(1.0)}
-              className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-2xl border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[0.75rem] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))]"
+              className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-2xl border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[0.75rem] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))]"
             >
               {t.bubble}
               {/* the tail, on the bubble's centre line and so on the orb's */}
               <span
                 aria-hidden
-                className="absolute -bottom-[0.4375rem] left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-b border-r border-fg/40 bg-bg"
+                className="absolute -bottom-1 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-b border-r border-fg/40 bg-bg"
               />
             </motion.span>
           </SkyOrb>

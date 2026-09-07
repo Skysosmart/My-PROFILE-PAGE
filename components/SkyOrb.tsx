@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
 import { inkColors } from '@/lib/ink'
 import { assets } from '@/data/portfolio'
@@ -87,7 +87,7 @@ const fragment = /* glsl */ `
   }
 `
 
-export default function SkyOrb() {
+export default function SkyOrb({ children }: { children?: ReactNode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // bumped when a lost WebGL context is restored, to rebuild the scene
   const [epoch, setEpoch] = useState(0)
@@ -342,6 +342,12 @@ export default function SkyOrb() {
           ◇ sky
         </span>
       </motion.div>
+
+      {/* anything the hero hangs off the orb - the speech bubble - goes here
+          rather than beside <SkyOrb/>, so it rides the same drift. Outside
+          this element the orb slides out from under it on every pointer
+          move, which is what happened to the bubble's tail. */}
+      {children}
     </motion.div>
   )
 }

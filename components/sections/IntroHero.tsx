@@ -71,21 +71,24 @@ export default function IntroHero() {
           >
             ◇ {t.loaded}
           </motion.p>
-          <div className="relative">
-            <SkyOrb />
-            {/* the answer to the duck's hello: a bubble off the orb's shoulder */}
+          {/* the answer to the duck's hello. Inside <SkyOrb/>, not beside it,
+              so it travels with the orb's drift; centred over the crown so the
+              tail points at the face in either language, instead of being
+              pinned a fixed distance from an edge that moves when the text
+              gets longer */}
+          <SkyOrb>
             <motion.span
               {...rise(1.0)}
-              className="absolute right-0 top-6 whitespace-nowrap rounded-2xl rounded-bl-sm border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[0.75rem] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))] sm:right-2"
+              className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-2xl border border-fg/40 bg-bg px-3 py-1.5 font-sans text-[0.75rem] font-semibold text-fg shadow-[0_8px_24px_rgba(0,0,0,var(--shade))]"
             >
               {t.bubble}
-              {/* the tail */}
+              {/* the tail, on the bubble's centre line and so on the orb's */}
               <span
                 aria-hidden
-                className="absolute -bottom-[0.4375rem] left-3 h-3 w-3 rotate-45 border-b border-r border-fg/40 bg-bg"
+                className="absolute -bottom-[0.4375rem] left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-b border-r border-fg/40 bg-bg"
               />
             </motion.span>
-          </div>
+          </SkyOrb>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

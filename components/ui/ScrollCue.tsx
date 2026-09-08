@@ -24,7 +24,7 @@ import { useLang } from '@/lib/use-lang'
  */
 export type CueVariant = 'a' | 'b' | 'c' | 'd'
 
-const DEFAULT: CueVariant = 'a'
+const DEFAULT: CueVariant = 'b' // settled: the ink arrow
 const VARIANTS: readonly CueVariant[] = ['a', 'b', 'c', 'd']
 
 /**

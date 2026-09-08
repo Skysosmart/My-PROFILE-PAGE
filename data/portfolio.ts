@@ -427,6 +427,19 @@ export const projects: Project[] = [
     demo: 'https://pranakorn.dev',
   },
   {
+    title: 'Pranakorn POS - Terminal & ERP Back-Office',
+    period: '2026',
+    role: 'Developer / Manual & Design',
+    status: 'In Progress',
+    description:
+      'One Next.js app carrying both halves of a restaurant system: the POS terminal with its kitchen display, and the ERP back-office behind it for finance, inventory, orders and suppliers. Mine are device activation against a signed device token, a QC pass over permissions, cart, shifts, payments and seats, quick-add with a permissions check, error boundaries that recover from a chunk load failure, and the production stack. I also wrote the user manual, built the presentation, and did the graphic design.',
+    // Pranakorn-Group/pos-system is private, so no repo link - a card that
+    // points at a 404 is worse than one that points nowhere. No image: the
+    // screenshots would be someone else's product behind a login.
+    tags: ['Next.js', 'TypeScript', 'TanStack Query', 'Radix UI'],
+    contribution: 'The manual, the deck and the design, and 9 of 369 commits',
+  },
+  {
     title: 'MakeX Challenger Competition Robot',
     period: '2025',
     role: 'Structural Designer',

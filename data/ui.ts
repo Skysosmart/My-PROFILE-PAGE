@@ -20,8 +20,14 @@ export type Step = {
 
 const en = {
   hero: {
-    loaded: 'Player Loaded',
     scroll: 'Scroll to explore',
+    // The prompt cue prints as `$ scroll <this> ▋`. The verb is a binary name
+    // and stays latin in IntroHero; this is the long option it runs with, and
+    // it is the half that carries the meaning - so it is the half that
+    // translates. `scroll` above stays the whole sentence regardless: the
+    // other cues set it, and the prompt reads it out to a screen reader,
+    // which gains nothing from a sigil and a half-block.
+    scrollOpt: '--explore',
     line1: 'I build it.',
     line2: 'I break it.',
     line3: 'Then I ship it.',
@@ -151,8 +157,10 @@ export type UI = typeof en
 // TODO(th-review): every string below is a draft for Sky to proofread
 const th: UI = {
   hero: {
-    loaded: 'โหลดผู้เล่นแล้ว',
     scroll: 'เลื่อนลงเพื่อสำรวจ',
+    // a Thai option on a latin command: no real shell takes one, but this
+    // shell is Sky's, and a Thai reader should not be left with only `scroll`
+    scrollOpt: '--สำรวจ',
     line1: 'ผมสร้างมันขึ้นมา',
     line2: 'แล้วลองเจาะมันดู',
     line3: 'ก่อนจะปล่อยของจริง',

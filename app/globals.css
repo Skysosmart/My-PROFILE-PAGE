@@ -59,6 +59,11 @@
   --animate-marquee: marquee 70s linear infinite;
   --animate-foil: foil 5.5s ease-in-out infinite;
   --animate-pulse-glow: pulse-glow 2.6s ease-in-out infinite;
+  /* the hero's rail scroll cue. Slow on purpose, and it rests: the last
+     third of the cycle is a hold at the far end, so the rail is empty more
+     often than it is busy. A cue that ticks without pause is a metronome,
+     and the eye stops reading it as an instruction and starts resenting it. */
+  --animate-rail-drop: rail-drop 3.6s cubic-bezier(0.55, 0, 0.25, 1) infinite;
 
   @keyframes blink {
     0%,
@@ -129,6 +134,33 @@
     55%,
     100% {
       transform: translateX(320%) skewX(-18deg);
+    }
+  }
+  /* The mark that runs down the hairline rail in the hero. It is drawn as a
+     background on a full-height box rather than a translated child, so the
+     travel is expressed against the rail's own height: 100% here already
+     means "image sitting on the foot", and the extra 1.25rem - one image
+     height - carries it clear of the end. One keyframe therefore serves both
+     rails, the compact 40px one pinned to a phone and the 56px one in the
+     orb's column, with the same speed and the same rest at either size.
+
+     opacity is pinned to 1 at every step and never interpolated. The rail's
+     mask is what makes the mark appear and vanish, so the animation has no
+     business fading it; what the declaration buys is the fallback. The
+     element's own class sets opacity 0, and animations outrank plain
+     declarations, so the mark is visible only while this is actually
+     running - which is precisely what the reduced-motion block further down
+     this file wants, since it ends every animation after 0.001ms and would
+     otherwise leave a bright stub parked at the top of the rail. */
+  @keyframes rail-drop {
+    0% {
+      background-position: 50% -1.25rem;
+      opacity: 1;
+    }
+    62%,
+    100% {
+      background-position: 50% calc(100% + 1.25rem);
+      opacity: 1;
     }
   }
   @keyframes pulse-glow {

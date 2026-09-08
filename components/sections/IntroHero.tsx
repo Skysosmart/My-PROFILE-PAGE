@@ -5,6 +5,7 @@ import RoleTicker from '@/components/RoleTicker'
 import { motion, useReducedMotion } from 'motion/react'
 import SkyOrb from '@/components/SkyOrb'
 import InkBubble from '@/components/ui/InkBubble'
+import ScrollCue from '@/components/ui/ScrollCue'
 import Duck from '@/components/duck/Duck'
 import { ui } from '@/data/ui'
 import { useLang } from '@/lib/use-lang'
@@ -79,16 +80,13 @@ export default function IntroHero() {
           </div>
         </motion.div>
 
-        {/* right: the face in the orb, with its own word */}
+        {/* right: the face in the orb, with its own word. The eyebrow that
+            used to head this column is gone; the cue at its foot is taller
+            than the ▼ it replaced by about what that line occupied, so the
+            column's height - and with it the lg stagger against the duck's
+            +10 - lands within a couple of pixels of where it was and needs
+            no counterweight. */}
         <div className="flex flex-col items-center lg:-translate-y-10 lg:justify-self-end lg:pr-6">
-          <motion.p
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="font-mono text-[0.6875rem] uppercase tracking-[0.45em] text-fg-muted"
-          >
-            ◇ {t.loaded}
-          </motion.p>
           {/* the answer to the duck's hello. Inside <SkyOrb/>, not beside it,
               so it travels with the orb's drift; centred over the crown so the
               tail points at the face in either language, instead of being
@@ -99,9 +97,10 @@ export default function IntroHero() {
               hover about its own centre, so the rim climbs - 8px at 1440,
               10px at 1920 - while the bubble, a sibling of the disc rather
               than a child, stays put. With the tail resting on the crown the
-              rim swallowed it. sm and up buys that back (and SkyOrb's mt
-              grows to match, so the eyebrow keeps its clearance); a phone
-              has no pointer to hover with and keeps the tighter gap. */}
+              rim swallowed it. sm and up buys that back; SkyOrb's own mt is
+              what holds that room open now the eyebrow above it is gone, and
+              a phone has no pointer to hover with, so it keeps the tighter
+              gap. */}
           <SkyOrb>
             <motion.span
               {...rise(1.0)}
@@ -110,22 +109,12 @@ export default function IntroHero() {
               <InkBubble className="font-sans text-[0.75rem] font-semibold">{t.bubble}</InkBubble>
             </motion.span>
           </SkyOrb>
-          {/* pinned to the screen below lg, back in the orb's column from lg.
-              pointer-events-none: it is a sign, never a target. No ancestor
-              below lg carries a transform (the column's -translate-y-10 is
-              lg-only), which `fixed` would otherwise resolve against. The
-              gradient is not decoration: pinned to the bottom it lands on
-              the orb on every phone size, and dim ink on the grey portrait
-              is unreadable without something to sit on. */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: inHero ? 1 : 0 }}
-            transition={{ delay: inHero ? 1.2 : 0, duration: reduce ? 0 : 0.3 }}
-            className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-1.5 bg-linear-to-t from-bg via-bg/90 to-transparent pb-5 pt-10 font-mono text-[0.6875rem] text-fg-dim lg:static lg:z-auto lg:mt-2 lg:bg-none lg:pt-0 lg:pb-0"
-          >
-            <span className="uppercase tracking-[0.2em]">{t.scroll}</span>
-            <span className="animate-blink text-fg">▼</span>
-          </motion.div>
+          {/* Four designs for this sign were built against one brief and none
+              was obviously wrong, so all four live in <ScrollCue/> and
+              ?cue=a|b|c|d picks between them on the real hero. The pinning,
+              the gradient and the inHero fade are the component's; only the
+              observer that drives it stays here. */}
+          <ScrollCue inHero={inHero} />
         </div>
       </div>
     </header>

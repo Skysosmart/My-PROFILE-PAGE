@@ -45,6 +45,10 @@ data/Certificates/
 # only npm is used (Vercel runs npm ci)
 bun.lock*
 
+# Claude Code's scratch space inside the repo - agent git worktrees land in
+# .claude/worktrees/, each a full checkout, and they are throwaway by design
+/.claude/
+
 # env
 .env
 .env.*

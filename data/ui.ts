@@ -66,6 +66,11 @@ const en = {
       { text: 'Open a certificate. The archive holds all {n}.', to: 'certificates' },
       { fine: 'Scroll over the film to change project.', coarse: 'Swipe across the film to change project.', to: 'projects' },
       {
+        fine: 'Pick a print up off the desk and turn it over. The back says what the day was.',
+        coarse: 'Flick through the pile of prints, and tap one to turn it over.',
+        to: 'personal',
+      },
+      {
         fine: 'Press `Ctrl` `K` and type a section to jump there. `lang th` works there too.',
         coarse: 'Tap the prompt at the top and type a section to jump there. `lang th` works there too.',
       },
@@ -122,7 +127,15 @@ const en = {
     label: 'personal',
     title1: 'This is where',
     title2: 'it gets personal.',
-    hint: 'drag the print, or pick one below',
+    // the hint describes the interaction, so it has to change with it
+    hint: 'pick a print up, turn it over',
+    hintCoarse: 'flick the pile, tap to turn a print over',
+    turn: 'turn over',
+    turnBack: 'turn back',
+    photos: 'photos',
+    seeAll: 'see all {n}',
+    earned: 'earned',
+    next: 'next print',
   },
   ending: {
     label: 'contact',
@@ -199,6 +212,11 @@ const th: UI = {
       { text: 'เปิดใบประกาศดูได้ ในคลังมีครบทั้ง {n} ใบ', to: 'certificates' },
       { fine: 'เลื่อนล้อเมาส์บนฟิล์มเพื่อเปลี่ยนโปรเจกต์', coarse: 'ปัดบนฟิล์มเพื่อเปลี่ยนโปรเจกต์', to: 'projects' },
       {
+        fine: 'หยิบรูปขึ้นมาจากโต๊ะแล้วพลิกดูด้านหลัง ด้านหลังเขียนไว้ว่าวันนั้นเป็นยังไง',
+        coarse: 'ปัดดูกองรูป แล้วแตะเพื่อพลิกดูด้านหลัง',
+        to: 'personal',
+      },
+      {
         fine: 'กด `Ctrl` `K` แล้วพิมพ์ชื่อส่วนเพื่อกระโดดไป `lang en` ก็ใช้ตรงนั้นได้',
         coarse: 'แตะช่องพิมพ์ด้านบน แล้วพิมพ์ชื่อส่วนเพื่อกระโดดไป `lang en` ก็ใช้ตรงนั้นได้',
       },
@@ -255,7 +273,14 @@ const th: UI = {
     label: 'ส่วนตัว',
     title1: 'ตรงนี้คือ',
     title2: 'เรื่องส่วนตัวล้วน ๆ',
-    hint: 'ลากรูป หรือเลือกจากด้านล่าง',
+    hint: 'หยิบรูปขึ้นมา แล้วพลิกดูด้านหลัง',
+    hintCoarse: 'ปัดกองรูป แตะเพื่อพลิกดูด้านหลัง',
+    turn: 'พลิกดู',
+    turnBack: 'พลิกกลับ',
+    photos: 'รูป',
+    seeAll: 'ดูทั้ง {n} รูป',
+    earned: 'ได้รับ',
+    next: 'รูปถัดไป',
   },
   ending: {
     label: 'ติดต่อ',

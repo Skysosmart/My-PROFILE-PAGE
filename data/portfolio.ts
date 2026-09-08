@@ -40,6 +40,7 @@ export const nav = [
   { label: 'PROJECTS', id: 'projects' },
   // its own route (server-rendered MDX), so it carries an href
   { label: 'WRITEUPS', id: 'writeups', href: '/writeups' },
+  { label: 'PERSONAL', id: 'personal' },
   { label: 'CONTACT', id: 'contact' },
 ] as const
 
@@ -175,8 +176,18 @@ export const skills: SkillGroup[] = [
       { name: 'TypeScript', level: 4, tags: ['TypeScript', 'Next.js'], note: 'Types first, so a refactor is a compiler error and not a bug report.' },
       { name: 'React', level: 4, tags: ['Next.js', 'React Three Fiber', 'Frontend'], note: 'Components, hooks, and the discipline of keeping state where it belongs.' },
       { name: 'Tailwind CSS', level: 4, tags: ['Tailwind', 'Responsive', 'UI Design'], note: 'Layouts that survive a phone. Every page here is one.' },
+      // level read off this repo: every page here is JS by the time it runs.
+      // Same tags as TypeScript on purpose - it is the same shipped code.
+      { name: 'JavaScript', level: 4, tags: ['TypeScript', 'Next.js', 'Frontend'], note: 'What the types come off to reach the browser: the language every page here actually runs.' },
       { name: 'Supabase & Prisma', level: 3, tags: ['Supabase', 'Prisma', 'Neon'], note: 'Postgres behind a good API: readings for PDLite, records for Doodee Future.' },
       { name: 'Astro & Cloudflare', level: 2, tags: ['Astro', 'Cloudflare'], note: 'Static-first sites at the edge, for Nebula and Seluna.' },
+      // TODO(sky): both parked at 2 and neither has a project tag, so the card
+      // reads "not on a project yet" - which is honest but thin. C# is sourced
+      // only to the "Trying everything" chapter (game development, tried for a
+      // while); Go has no source anywhere in this file. Set the numbers, say
+      // where, or cut the rows.
+      { name: 'C#', level: 2, note: 'From the game-development stretch, one of the things tried before security became the line.' },
+      { name: 'Go', level: 2, note: 'Small services and tools, where the whole deploy is one binary.' },
     ],
   },
   {
@@ -187,6 +198,20 @@ export const skills: SkillGroup[] = [
       { name: 'Networking', level: 3, note: 'The other CTF role: packets, protocols, what a service says when nobody is asking.' },
       { name: 'Burp Suite', level: 3, note: 'Proxy, repeater, intruder: where the web target gets taken apart.' },
       { name: 'Linux', level: 4, note: 'Daily driver. The shell is where the site and the exploits both get written.' },
+      // These two sit here only because none of the four groups is a systems
+      // group and Security is the nearest thing - it already holds Linux and
+      // the tradecraft.
+      //
+      // TODO(sky): read this one before it ships. Sitting under Security they
+      // imply pwn and reverse engineering, and nothing here supports that -
+      // the two CTF roles above are web exploitation and networking, and the
+      // MakeX entry has you as Structural Designer in Fusion 360, not on the
+      // firmware. The only source in this file is the "Trying everything"
+      // chapter, where electronics is something tried for a while. The notes
+      // say that rather than the stronger thing. If C really is pwn, say so
+      // and raise the level; if it is Arduino, these belong somewhere else.
+      { name: 'C', level: 2, note: 'From the electronics stretch: registers, pins, and no runtime to hide behind.' },
+      { name: 'C++', level: 2, note: 'The other half of that stretch, and what most of the things worth taking apart are written in.' },
       { name: 'Defense & ethics', level: 3, note: 'Network Defense and Ethical Hacking Essentials, from the RTARF Cyber Bootcamp.' },
     ],
   },
@@ -443,60 +468,86 @@ export const projects: Project[] = [
  *  one campaign, and the pictures belong to the campaign.
  *  Files live in /public/moments/<key>/NN.jpg with a 520px thumb alongside.
  * ------------------------------------------------------------------------- */
-export type Moment = { label: string; photos: string[] }
+export type Moment = {
+  label: string
+  photos: string[]
+  /**
+   * One line about the day, for the back of the print. Sky's own words - the
+   * thing that makes this section personal instead of a gallery. Empty is
+   * fine and handled: the back then carries the label, the photo count and
+   * the certificate the event earned, and closes up around the gap.
+   *
+   * TODO(sky): thirteen of these to write, then the same again in Thai in
+   * data/portfolio.th.ts `momentsTh`.
+   */
+  line?: string
+}
 
 export const moments: Record<string, Moment> = {
   'act-brand-ambassador': {
     label: 'ACT Brand Ambassador 2025',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg'],
+    line: '',
   },
   'click-camp': {
     label: 'Click Camp #15, Mahidol',
     photos: ['01.jpg', '02.jpg'],
+    line: '',
   },
   'codekit': {
     label: 'CODEKIT Website Competition 2026',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg'],
+    line: '',
   },
   'cyber-bootcamp': {
     label: 'RTARF Cyber Bootcamp 2025',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg', '08.jpg', '09.jpg'],
+    line: '',
   },
   'inewgen': {
     label: 'I-New Gen Inventors Award 2026',
     photos: ['01.jpg', '02.jpg', '03.jpg'],
+    line: '',
   },
   'khan-knot': {
     label: 'KhanKnot #24, Mahidol Engineering',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg'],
+    line: '',
   },
   'makex': {
     label: 'MakeX Thailand 2025',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'],
+    line: '',
   },
   'outstanding-student': {
     label: 'Outstanding Student Award',
     photos: ['01.jpg', '02.jpg', '03.jpg'],
+    line: '',
   },
   'siit-insight-camp': {
     label: 'SIIT Insight Camp 2025',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'],
+    line: '',
   },
   'swu-day-camp': {
     label: 'SWU International Engineering Day Camp',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg'],
+    line: '',
   },
   'swu-research-day': {
     label: 'SWU Researcher Day 2026',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg'],
+    line: '',
   },
   'heart-charity': {
     label: 'Heart Charity, Vichaivej Hospital',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg'],
+    line: '',
   },
   'vajira-volunteer': {
     label: 'Vajira Hospital Volunteer',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg', '08.jpg', '09.jpg', '10.jpg', '11.jpg', '12.jpg', '13.jpg', '14.jpg'],
+    line: '',
   },
 }
 

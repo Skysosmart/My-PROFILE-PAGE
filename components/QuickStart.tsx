@@ -25,13 +25,18 @@ import { useLang } from '@/lib/use-lang'
  * machine" where a rule only said "this text is deliberate".
  */
 
-// The steps are split by index, not regrouped: contiguous runs so 01-07 still
-// reads straight down the column across the breaks, and no string moves out of
-// data/ui.ts. Each note starts its own <ol start> so the numbering survives.
+// The steps are split by index, not regrouped: contiguous runs so the numbers
+// still read straight down the column across the breaks, and no string moves
+// out of data/ui.ts. Each note starts its own <ol start> so the numbering
+// survives.
+//
+// These indices are hand-kept and they are a trap: add a step to data/ui.ts
+// without widening a run here and the new step is silently sliced away. The
+// assertion below is what turns that into a loud failure instead.
 const NOTES: readonly { from: number; count: number }[] = [
-  { from: 0, count: 2 },
-  { from: 2, count: 3 },
-  { from: 5, count: 2 },
+  { from: 0, count: 3 },
+  { from: 3, count: 3 },
+  { from: 6, count: 2 },
 ]
 
 /* Per-note tilt and offset. Under 1.5deg, alternating, with a little
@@ -55,11 +60,17 @@ function keyed(s: string): ReactNode {
   )
 }
 
+/** every step must land in exactly one note, or one of them disappears */
+const COVERED = NOTES.reduce((n, note) => n + note.count, 0)
+
 export default function QuickStart({ delay = 0 }: { delay?: number }) {
   const lang = useLang()
   const t = ui[lang].profile
   const reduce = useReducedMotion()
   const vars = { n: certStats.total }
+  if (process.env.NODE_ENV !== 'production' && COVERED !== t.steps.length) {
+    console.warn(`QuickStart: NOTES covers ${COVERED} steps but data/ui.ts has ${t.steps.length}`)
+  }
   const jump = (id: string) => (e: React.MouseEvent) => {
     const el = document.getElementById(id)
     if (!el) return

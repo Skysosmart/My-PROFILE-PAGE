@@ -202,6 +202,36 @@ export const educationTh: {
   },
 ]
 
+/**
+ * The moments, keyed by the album key in data/portfolio.ts `moments`.
+ *
+ * `label` is optional and most entries do not carry one: these are proper
+ * nouns - ACT, RTARF, SWU, SIIT, MakeX, CODEKIT - and a Thai reader reads
+ * them as they are written. Only the labels with a describable half get
+ * translated, and the half that is a name stays Latin.
+ *
+ * `line` is the sentence on the back of the print. An empty one falls back
+ * to the English line rather than leaving the back blank.
+ *
+ * TODO(sky): the thirteen lines, once the English ones in data/portfolio.ts
+ * are written.
+ */
+export const momentsTh: Record<string, { label?: string; line?: string }> = {
+  'act-brand-ambassador': { line: '' },
+  'click-camp': { label: 'Click Camp #15 มหิดล', line: '' },
+  codekit: { label: 'CODEKIT แข่งขันเว็บไซต์ 2026', line: '' },
+  'cyber-bootcamp': { line: '' },
+  inewgen: { label: 'รางวัลนักประดิษฐ์ I-New Gen 2026', line: '' },
+  'khan-knot': { label: 'KhanKnot #24 วิศวฯ มหิดล', line: '' },
+  makex: { line: '' },
+  'outstanding-student': { label: 'รางวัลนักเรียนดีเด่น', line: '' },
+  'siit-insight-camp': { line: '' },
+  'swu-day-camp': { label: 'ค่ายวิศวกรรมนานาชาติ SWU', line: '' },
+  'swu-research-day': { label: 'วันนักวิจัย SWU 2026', line: '' },
+  'heart-charity': { label: 'Heart Charity โรงพยาบาลวิชัยเวช', line: '' },
+  'vajira-volunteer': { label: 'จิตอาสา โรงพยาบาลวชิรพยาบาล', line: '' },
+}
+
 /** the skill groups' labels and each skill's note, keyed by the English name */
 export const skillsTh: { labels: Record<string, string>; notes: Record<string, string> } = {
   labels: {
@@ -215,12 +245,17 @@ export const skillsTh: { labels: Record<string, string>; notes: Record<string, s
     TypeScript: 'ใส่ type ก่อน เพื่อให้การรีแฟกเตอร์เป็น error ของคอมไพเลอร์ ไม่ใช่รายงานบั๊ก',
     React: 'คอมโพเนนต์ ฮุก และวินัยในการเก็บ state ไว้ให้ถูกที่',
     'Tailwind CSS': 'เลย์เอาต์ที่รอดบนมือถือ ทุกหน้าในนี้เป็นแบบนั้น',
+    JavaScript: 'สิ่งที่เหลือเมื่อถอด type ออกเพื่อไปถึงเบราว์เซอร์: ภาษาที่ทุกหน้าในนี้รันจริง ๆ',
     'Supabase & Prisma': 'Postgres หลัง API ที่ดี: ค่าที่วัดได้ของ PDLite, ข้อมูลของ Doodee Future',
     'Astro & Cloudflare': 'เว็บสแตติกที่ขอบเครือข่าย สำหรับ Nebula และ Seluna',
+    'C#': 'จากช่วงที่ลองทำเกม หนึ่งในสิ่งที่ลองก่อนจะมาลงตัวที่ความปลอดภัย',
+    Go: 'เซอร์วิสและเครื่องมือเล็ก ๆ ที่ deploy ทั้งตัวคือไบนารีเดียว',
     'Web exploitation': 'บทบาทของผมใน CTF: injection, ช่องโหว่ auth, SSRF และการอ่านแอปในแบบที่มันไม่ได้ตั้งใจให้อ่าน',
     Networking: 'อีกบทบาทใน CTF: แพ็กเก็ต โปรโตคอล และสิ่งที่เซอร์วิสบอกตอนไม่มีใครถาม',
     'Burp Suite': 'Proxy, repeater, intruder: ที่ที่เป้าหมายเว็บถูกแยกชิ้น',
     Linux: 'ใช้ทุกวัน เชลล์คือที่ที่ทั้งเว็บนี้และ exploit ถูกเขียน',
+    C: 'จากช่วงที่เล่นอิเล็กทรอนิกส์: รีจิสเตอร์ ขา และไม่มี runtime ให้หลบ',
+    'C++': 'อีกครึ่งของช่วงนั้น และเป็นภาษาของสิ่งที่น่าแกะดูเสียส่วนใหญ่',
     'Defense & ethics': 'Network Defense และ Ethical Hacking Essentials จาก RTARF Cyber Bootcamp',
     Python: 'สคริปต์ ไปป์ไลน์ เครื่องมือ และโค้ด exploit ส่วนใหญ่',
     'OCR & NER pipelines': 'แปลงบัญชีทรัพย์สินที่สแกนมาเป็นข้อมูลที่ค้นได้ สำหรับงาน Hackathon Digitize',

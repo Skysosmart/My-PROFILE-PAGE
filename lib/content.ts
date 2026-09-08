@@ -1,6 +1,6 @@
 import type { Lang } from '@/lib/lang'
-import { about, contact, education, inspiration, player, profile, projects, skills, sop } from '@/data/portfolio'
-import { aboutTh, contactTh, educationTh, inspirationTh, playerTh, profileTh, projectsTh, skillsTh, sopTh } from '@/data/portfolio.th'
+import { about, contact, education, inspiration, moments, player, profile, projects, skills, sop } from '@/data/portfolio'
+import { aboutTh, contactTh, educationTh, inspirationTh, momentsTh, playerTh, profileTh, projectsTh, skillsTh, sopTh } from '@/data/portfolio.th'
 
 /**
  * The site's prose in one language. English is data/portfolio.ts as it is;
@@ -10,7 +10,7 @@ import { aboutTh, contactTh, educationTh, inspirationTh, playerTh, profileTh, pr
  * directly and never sees this.
  */
 export function localize(lang: Lang) {
-  if (lang !== 'th') return { player, about, sop, inspiration, projects, contact, profile, education, skills }
+  if (lang !== 'th') return { player, about, sop, inspiration, projects, contact, profile, education, skills, moments }
   return {
     player: { ...player, ...playerTh },
     about: {
@@ -34,6 +34,16 @@ export function localize(lang: Lang) {
       label: skillsTh.labels[g.key] ?? g.label,
       skills: g.skills.map((sk) => ({ ...sk, note: skillsTh.notes[sk.name] ?? sk.note })),
     })),
+    // `||`, not `??`: most Thai entries carry an empty `line` as a slot to be
+    // filled, and an empty one should fall through to the English sentence
+    // rather than leave the back of the print blank. `label` uses `??`
+    // because most albums are proper nouns and deliberately have no Thai.
+    moments: Object.fromEntries(
+      Object.entries(moments).map(([key, m]) => [
+        key,
+        { ...m, label: momentsTh[key]?.label ?? m.label, line: momentsTh[key]?.line || m.line },
+      ]),
+    ) as typeof moments,
   }
 }
 

@@ -129,10 +129,16 @@ export default function QuickStart({ delay = 0 }: { delay?: number }) {
               <PaperClip side="back" />
             </span>
 
-            {/* The sheet. panel over the page's paper with a hairline edge,
-                and a shadow scaled by --shade, the token the palette sets to
-                0.18 because hard shadows read as smudges on this paper. */}
-            <div className="relative z-10 rounded-[3px] border border-fg/12 bg-panel/85 px-5 pb-4 pt-7 shadow-[0_10px_22px_rgb(0_0_0/var(--shade))] print:border-fg/25 print:bg-transparent print:shadow-none">
+            {/* The sheet is the spec label's stock: the same #f3f0e8 paper,
+                the same 1px rgba(17,17,17,0.45) edge and the same hard
+                6px 6px 0 offset shadow that `.spec-label` sets in
+                globals.css. Not a soft --shade drop - two different shadows
+                across one row read as two different materials, and these are
+                meant to be the same paper as the card they sit beside, just
+                cut smaller. The hex is hardcoded for the same reason the
+                label hardcodes it: it is printed stock, not themed surface.
+                Change one, change the other. */}
+            <div className="relative z-10 rounded-[3px] border border-[#111]/45 bg-[#f3f0e8] px-5 pb-4 pt-7 shadow-[6px_6px_0_#111] print:shadow-none">
               <ol
                 start={note.from + 1}
                 className="space-y-3.5 font-sans text-[0.9375rem] leading-relaxed text-fg/85 lg:space-y-4 lg:text-[1.0625rem] lg:leading-[1.72]"

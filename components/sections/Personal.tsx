@@ -6,8 +6,9 @@ import CertLightbox from '@/components/ui/CertLightbox'
 import Desk from '@/components/personal/Desk'
 import Stack from '@/components/personal/Stack'
 import type { Album } from '@/components/personal/PrintCard'
-import { certificates, type Certificate } from '@/data/portfolio'
+import { type Certificate } from '@/data/portfolio'
 import { ui } from '@/data/ui'
+import { bestCertForMoment, certsForMoment } from '@/lib/certs'
 import { useContent } from '@/lib/use-content'
 import { useLang } from '@/lib/use-lang'
 import { useTint } from '@/lib/tint'
@@ -70,7 +71,12 @@ export default function Personal() {
     () =>
       Object.entries(moments)
         .filter(([, album]) => album.photos.length > 0)
-        .map(([key, album]) => ({ key, album, cert: certificates.find((c) => c.moment === key) ?? null })),
+        .map(([key, album]) => ({
+          key,
+          album,
+          cert: bestCertForMoment(key),
+          certCount: certsForMoment(key).length,
+        })),
     [moments],
   )
   const n = albums.length
@@ -82,7 +88,16 @@ export default function Personal() {
     [],
   )
 
-  const faces = { turn: t.turn, turnBack: t.turnBack, photos: t.photos, seeAll: t.seeAll, earned: t.earned }
+  const faces = {
+    turn: t.turn,
+    turnBack: t.turnBack,
+    photos: t.photos,
+    seeAll: t.seeAll,
+    earned: t.earned,
+    // '+{n} more' already exists for the certificate wall; one phrasing for
+    // "there are others" across the site
+    more: ui[lang].certs.more,
+  }
 
   return (
     <section

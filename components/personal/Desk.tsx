@@ -191,8 +191,13 @@ export default function Desk({
       {/* the two cells the prints do not fill. He is not content - he is
           aria-hidden inside Duck - so an empty corner is exactly where he
           belongs */}
-      <div className="pointer-events-none absolute bottom-[2%] right-[1%] w-[20%]">
-        <Duck pose="sleep" width={240} parallax={6} className="w-full" />
+      {/* No width on the wrapper: Duck sets its own in rem inline, which beats
+          a class, so a w-[20%] here only ever anchored it - and anchored it
+          badly, since the drawing then overflowed the box to the right and off
+          the desk. Pinned bottom-right and left to shrink-wrap, it grows up
+          and to the left into the two cells the prints do not fill. */}
+      <div className="pointer-events-none absolute bottom-[1%] right-[1%]">
+        <Duck pose="sleep" width={380} parallax={6} />
       </div>
     </div>
   )

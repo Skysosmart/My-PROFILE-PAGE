@@ -91,6 +91,24 @@ export function certStamp(c: Certificate): number {
 export const byNewest = (list: Certificate[]) =>
   [...list].sort((a, b) => certStamp(b) - certStamp(a))
 
+/**
+ * Every certificate that came out of one event.
+ *
+ * `moments` is keyed by event and not by certificate - the data file says so
+ * itself: "MakeX alone has seven certificates but one campaign, and the
+ * pictures belong to the campaign". So a `find` here shows one and silently
+ * hides the other six. MakeX earned seven, the cyber bootcamp three, the SWU
+ * day camp two.
+ */
+export const certsForMoment = (key: string) => certificates.filter((c) => c.moment === key)
+
+/** The one worth naming: the featured entry if the event has one, else the newest. */
+export function bestCertForMoment(key: string): Certificate | null {
+  const all = certsForMoment(key)
+  if (!all.length) return null
+  return all.find((c) => c.featured) ?? byNewest(all)[0]
+}
+
 /** Free-text match across everything a person might type. */
 export function certMatches(c: Certificate, q: string) {
   if (!q) return true

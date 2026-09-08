@@ -5,7 +5,14 @@ import { motion, useReducedMotion } from 'motion/react'
 import type { Certificate, Moment } from '@/data/portfolio'
 import { fmt } from '@/data/ui'
 
-export type Album = { key: string; album: Moment; cert: Certificate | null }
+export type Album = {
+  key: string
+  album: Moment
+  /** the one certificate worth naming on the back */
+  cert: Certificate | null
+  /** how many the event earned in total - MakeX earned seven from one campaign */
+  certCount: number
+}
 
 /** the album's cover thumb; the full-size file is only fetched by the lightbox */
 export const cover = (key: string, file: string) => `/moments/${key}/thumbs/${file}`
@@ -16,6 +23,7 @@ type Labels = {
   photos: string
   seeAll: string
   earned: string
+  more: string
 }
 
 /**
@@ -57,7 +65,7 @@ export default function PrintCard({
   priority?: boolean
 }) {
   const reduce = useReducedMotion()
-  const { key, album, cert } = entry
+  const { key, album, cert, certCount } = entry
   const face = 'absolute inset-0 [backface-visibility:hidden]'
   // the stock, in one place: change it here and both faces follow
   const stock =
@@ -124,9 +132,13 @@ export default function PrintCard({
           ) : null}
 
           <div className="mt-auto flex flex-col gap-2">
+            {/* one title, then the count of the rest: an event can earn more
+                than one certificate, and naming only the first would hide six
+                of MakeX's seven */}
             {cert && (
               <p className="font-mono text-[0.5625rem] uppercase leading-[1.4] th:leading-[1.7] tracking-[0.12em] th:tracking-[0.03em] text-[#111]/55">
                 {t.earned} · {cert.title}
+                {certCount > 1 && <span className="text-[#111]/45"> · {fmt(t.more, { n: certCount - 1 })}</span>}
               </p>
             )}
             <div className="flex items-center gap-2">

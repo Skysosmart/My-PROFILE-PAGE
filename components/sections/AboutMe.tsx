@@ -1,263 +1,84 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import GlassSection from '@/components/ui/GlassSection'
-import TerminalLog, { type Line } from '@/components/ui/TerminalLog'
-import Ascii3D from '@/components/effects/Ascii3D'
+import { useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
 import Image from 'next/image'
+import GlassSection from '@/components/ui/GlassSection'
+import Ascii3D from '@/components/effects/Ascii3D'
 import { assets } from '@/data/portfolio'
-import { DUCK_ASCII } from '@/data/duck-ascii'
+import { ZARU_MARK } from '@/data/zaru-mark'
+import { ui } from '@/data/ui'
 import { useContent } from '@/lib/use-content'
-import { bootLinux, type Vm } from '@/lib/vm'
+import { useLang } from '@/lib/use-lang'
 
 /**
- * ABOUT ME - an INTERACTIVE hacker-terminal (cowsay bubble, rainbow eyes,
- * "sky" figlet, [SYSTEM] boot lines) on the left, portrait window on the
- * right, with an ASCII-rendered 3D torus knot behind the screen.
+ * ABOUT ME - a printed terminal on the left, the portrait window on the
+ * right, the ASCII torus knot behind. Ink on the site's paper, the duck's
+ * orange as the only colour.
  *
- * After the boot sequence, the terminal takes commands - type them or tap the
- * chips: `sop` prints the Statement of Purpose, `inspiration` the principles,
- * plus `help`, `whoami`, `clear`.
+ * It used to be an interactive terminal (commands, a real Linux behind
+ * `boot`). It reads like one still - each block is headed by the command
+ * that would print it - but everything is on the page: the intro, the
+ * facts, the story behind a "Read more", the principles. Nothing has to be
+ * typed to be found.
  *
- * `boot` hands the prompt to a real Linux (lib/vm.ts): an x86 emulator in
- * wasm running BusyBox off a 5.5MB image, entirely in the reader's tab.
- * From then on every line typed goes to that machine's serial port and its
- * output comes back here, until `exit` shuts it down. None of those 7.8MB
- * is fetched unless somebody asks for them.
+ * The ZaruTech lettering at the top is the one on the duck's chest, the same
+ * one the opening film writes; it writes itself on here too.
  */
 
-// cowsay-style speech bubble (static, printed instantly like real cowsay)
-const COWSAY = ` _____
-< sky >
- -----
-    \\
-     \\`
+const EASE = [0.16, 1, 0.3, 1] as const
 
-// ducksay: the ZaruTech duck where cowsay's cow would stand, rainbow-colored
-// per line (lolcat style)
-const EYES: string[] = DUCK_ASCII.split('\n')
-const EYES_COLORS = [
-  'text-sky-400',
-  'text-pink-500',
-  'text-red-400',
-  'text-fuchsia-400',
-  'text-violet-400',
-  'text-blue-400',
-  'text-teal-300',
-  'text-green-400',
-  'text-emerald-300',
-]
+/** a line as the terminal would show the command: `$ cat story.md` */
+function Prompt({ children }: { children: string }) {
+  return (
+    <p className="mb-3 font-mono text-[0.8125rem] text-fg-dim">
+      <span className="mr-2 text-duck">$</span>
+      <span className="text-fg">{children}</span>
+    </p>
+  )
+}
 
-const COMMANDS = ['sop', 'inspiration', 'contact', 'resume', 'boot', 'help', 'clear'] as const
-
-type Out = {
-  prefix?: { text: string; className?: string }
-  text: string
-  className?: string
-  /** the line is a link (opens in a new tab) */
-  href?: string
+/** the chest lettering, revealed left to right like the pen that wrote it */
+function Lettering() {
+  const reduce = useReducedMotion()
+  // the wrapper watches the viewport, not the svg: a fully clipped element
+  // never counts as in view, so it would wait for itself forever
+  return (
+    <motion.div
+      initial={reduce ? 'shown' : 'hidden'}
+      whileInView="shown"
+      viewport={{ once: true, amount: 0.5 }}
+      className="w-[min(17rem,70%)]"
+    >
+      <motion.svg
+        viewBox={ZARU_MARK.viewBox}
+        role="img"
+        aria-label="ZaruTech"
+        className="block h-auto w-full text-fg"
+        variants={{
+          // the same units on both ends, or the inset cannot be interpolated
+          hidden: { clipPath: 'inset(0% 100% 0% 0%)' },
+          shown: { clipPath: 'inset(0% 0% 0% 0%)', transition: { duration: 1.1, ease: EASE } },
+        }}
+      >
+        <g transform={ZARU_MARK.transform} fill="currentColor">
+          {ZARU_MARK.letters.map((d, i) => (
+            <path key={i} d={d} />
+          ))}
+          <path d={ZARU_MARK.swoosh} />
+        </g>
+      </motion.svg>
+    </motion.div>
+  )
 }
 
 export default function AboutMe() {
-  // the prose in the language that is on; the scrollback keeps whatever
-  // language it was typed in, like a real terminal would
-  const { about, sop, inspiration, contact, player } = useContent()
-  const [figlet, setFiglet] = useState('')
-  const [ready, setReady] = useState(false) // boot sequence finished
-  const [showBoot, setShowBoot] = useState(true) // banner+boot visible (cleared by `clear`)
-  const [log, setLog] = useState<Out[]>([])
-  const [value, setValue] = useState('')
-  const bodyRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const history = useRef<string[]>([])
-  const histIdx = useRef(-1)
-  // the emulated machine, once somebody has asked for it
-  const vm = useRef<Vm | null>(null)
-  const [vmState, setVmState] = useState<'off' | 'starting' | 'on'>('off')
-
-  // Load the "Sky" figlet logo for the boot banner.
-  useEffect(() => {
-    let alive = true
-    fetch(assets.skyLogoText)
-      .then((r) => (r.ok ? r.text() : ''))
-      .then((t) => alive && setFiglet(t.replace(/\r/g, '')))
-      .catch(() => {})
-    return () => {
-      alive = false
-    }
-  }, [])
-
-  // Keep the newest output in view (after commands)…
-  useEffect(() => {
-    const el = bodyRef.current
-    if (el) el.scrollTop = el.scrollHeight
-  }, [log, ready])
-
-  // …and follow the boot typing inside the fixed window.
-  useEffect(() => {
-    if (ready) return
-    const id = window.setInterval(() => {
-      const el = bodyRef.current
-      if (el) el.scrollTop = el.scrollHeight
-    }, 150)
-    return () => clearInterval(id)
-  }, [ready])
-
-  // Boot script: [SYSTEM] lines → whoami → profile → command hint.
-  const bootLines: Line[] = [
-    {
-      prefix: { text: '[SYSTEM]', className: 'text-red-500' },
-      text: ` Welcome user! We are glad to see you.`,
-      className: 'text-green-400',
-    },
-    {
-      prefix: { text: '[SYSTEM]', className: 'text-red-500' },
-      text: ` You are viewing ${player.handle} - the portfolio of ${player.name}.`,
-      className: 'text-green-400',
-    },
-    { text: '' },
-    { prompt: '$', text: 'whoami' },
-    // the command is typed; what it prints is not
-    ...about.paragraphs.map((p) => ({ text: p, instant: true })),
-    { text: '' },
-    {
-      prefix: { text: '[SYSTEM]', className: 'text-red-500' },
-      text: ` To read my story, type the command: `,
-      className: 'text-green-400',
-    },
-  ]
-
-  const say = (...lines: Out[]) => setLog((l) => [...l, ...lines])
-
-  /** Hand the prompt to a real machine. */
-  const boot = async () => {
-    setVmState('starting')
-    say({ text: 'fetching a machine (~7.8MB, once)…', className: 'text-fg-muted' })
-    try {
-      vm.current = await bootLinux({
-        onStatus: (msg) => say({ text: `${msg}…`, className: 'text-fg-muted' }),
-        onLine: (line) => say({ text: line, className: 'text-fg/85' }),
-      })
-      setVmState('on')
-      say({ text: "linux is up. type `exit` to come back.", className: 'text-green-400' })
-    } catch (err) {
-      setVmState('off')
-      vm.current = null
-      say({ text: `could not start it: ${err instanceof Error ? err.message : String(err)}`, className: 'text-red-400' })
-    }
-  }
-
-  /** Run a terminal command and append its output to the scrollback. */
-  const run = (raw: string) => {
-    // while the machine is up this is not a command menu any more: the line
-    // goes to its serial port verbatim, whitespace, case and all
-    if (vmState === 'on' && vm.current) {
-      const line = raw
-      history.current.push(line)
-      histIdx.current = -1
-      // no echo here: the guest's own tty echoes what it is sent, so
-      // printing it too showed every command twice
-      if (line.trim() === 'exit') {
-        say({ prefix: { text: '/root% ', className: 'text-green-400' }, text: line, className: 'text-fg' })
-        vm.current.destroy()
-        vm.current = null
-        setVmState('off')
-        say({ text: 'machine halted.', className: 'text-fg-muted' })
-        return
-      }
-      vm.current.send(`${line}\n`)
-      return
-    }
-    const cmd = raw.trim().toLowerCase()
-    if (!cmd) return
-    history.current.push(cmd)
-    histIdx.current = -1
-    const echo: Out = { prefix: { text: '→ ~ ', className: 'text-green-400' }, text: cmd, className: 'text-fg' }
-
-    if (cmd === 'clear') {
-      // wipe the whole screen, banner included - like a real terminal
-      setShowBoot(false)
-      setLog([])
-      return
-    }
-    const out: Out[] = [echo]
-    if (cmd === 'sop') {
-      out.push({ prefix: { text: '[SOP]', className: 'text-sky-400' }, text: ' Statement of Purpose - my story:', className: 'text-fg/80' })
-      sop.paragraphs.forEach((p) => out.push({ text: p, className: 'text-fg/85' }))
-    } else if (cmd === 'inspiration') {
-      out.push({ prefix: { text: '[INSPIRATION]', className: 'text-fuchsia-400' }, text: ' What drives me:', className: 'text-fg/80' })
-      inspiration.forEach((i) =>
-        out.push(
-          { text: `◆ ${i.title}`, className: 'text-yellow-300' },
-          { text: `  ${i.description}`, className: 'text-fg/75' },
-        ),
-      )
-    } else if (cmd === 'contact') {
-      out.push({ prefix: { text: '[CONTACT]', className: 'text-orange-400' }, text: ' reach me at:', className: 'text-fg/80' })
-      contact.channels.forEach((c) =>
-        out.push({ text: `  ${c.key.padEnd(9)} : ${c.value}`, className: 'text-sky-300/90' }),
-      )
-    } else if (cmd === 'resume') {
-      out.push(
-        { prefix: { text: '[RESUME]', className: 'text-yellow-300' }, text: ' one page, built from the same data as this site:', className: 'text-fg/80' },
-        { text: '  ↗ /resume.pdf', className: 'text-sky-300/90', href: '/resume.pdf' },
-      )
-    } else if (cmd === 'ls') {
-      out.push({ text: 'sop.md  inspiration.md  contact.txt  resume.pdf  portrait.jpg  certificates/', className: 'text-sky-300/90' })
-    } else if (cmd === 'whoami') {
-      out.push({ text: `${player.name} - ${player.role}`, className: 'text-green-400' })
-    } else if (cmd === 'boot') {
-      if (vmState === 'starting') out.push({ text: 'already starting…', className: 'text-fg-muted' })
-      else {
-        setLog((l) => [...l, ...out])
-        void boot()
-        return
-      }
-    } else if (cmd === 'banner') {
-      setShowBoot(true)
-    } else if (cmd === 'sudo' || cmd.startsWith('sudo ')) {
-      out.push({ text: `${player.firstName.toLowerCase()} is not in the sudoers file. This incident will be reported.`, className: 'text-red-400' })
-    } else if (cmd === 'help') {
-      out.push(
-        { text: 'available commands:', className: 'text-fg-muted' },
-        { text: '  sop          read my Statement of Purpose', className: 'text-sky-300/90' },
-        { text: '  inspiration  what drives me', className: 'text-sky-300/90' },
-        { text: '  contact      how to reach me', className: 'text-sky-300/90' },
-        { text: '  resume       one-page CV as a PDF', className: 'text-sky-300/90' },
-        { text: '  boot         start a real linux in this tab (~7.8MB)', className: 'text-yellow-300' },
-        { text: '  whoami · ls · banner · clear', className: 'text-sky-300/90' },
-      )
-    } else {
-      out.push({ text: `command not found: ${cmd} - try 'help'`, className: 'text-red-400' })
-    }
-    setLog((l) => [...l, ...out])
-  }
-
-  const submit = () => {
-    run(value)
-    setValue('')
-  }
-
-  /** ArrowUp / ArrowDown → walk the command history, like a real shell. */
-  const onKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') submit()
-    else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      const h = history.current
-      if (!h.length) return
-      histIdx.current = histIdx.current === -1 ? h.length - 1 : Math.max(0, histIdx.current - 1)
-      setValue(h[histIdx.current])
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      const h = history.current
-      if (histIdx.current === -1) return
-      histIdx.current += 1
-      if (histIdx.current >= h.length) {
-        histIdx.current = -1
-        setValue('')
-      } else setValue(h[histIdx.current])
-    }
-  }
+  const lang = useLang()
+  const t = ui[lang].about
+  // the prose in the language that is on
+  const { about, sop, inspiration, player } = useContent()
+  const [more, setMore] = useState(false)
+  const story = more ? sop.paragraphs : sop.paragraphs.slice(0, sop.shortCount)
 
   return (
     <GlassSection
@@ -270,119 +91,95 @@ export default function AboutMe() {
       tone="light"
       panel={false}
     >
-      <div className="flex flex-1 flex-col gap-4 md:flex-row">
-        {/* interactive terminal (left) */}
-        <div
-          className="flex flex-1 flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:bg-bg/35"
-          onClick={() => ready && inputRef.current?.focus()}
-        >
-          {/* terminal title bar */}
+      <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-start">
+        {/* the printed terminal (left) */}
+        <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/90 md:bg-bg/85">
           <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/3 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
-            <span className="ml-2 font-mono text-[0.6875rem] text-fg-dim">~/about - interactive</span>
+            <span className="ml-2 font-mono text-[0.6875rem] text-fg-dim">~/about</span>
           </div>
 
-          {/* FIXED-SIZE terminal screen - output scrolls inside, the window
-              never stretches the section as lines print */}
-          <div ref={bodyRef} data-lenis-prevent className="h-[48svh] overflow-y-auto p-4 sm:h-[54svh] sm:p-6">
-            {/* banner + boot (hidden by `clear`, restored by `banner`) */}
-            <div className={showBoot ? '' : 'hidden'}>
-              {/* cowsay bubble */}
-              <pre className="m-0 font-mono text-sm leading-snug text-orange-400 sm:text-[0.9375rem]">
-                {COWSAY}
-              </pre>
+          <div className="flex flex-col gap-9 p-5 sm:p-8">
+            <Lettering />
 
-              {/* the eyes (cowsay -f eyes), rainbow like lolcat */}
-              <pre className="m-0 font-mono text-[0.625rem] leading-snug sm:text-xs">
-                {EYES.map((line, i) => (
-                  <div key={i} className={EYES_COLORS[i % EYES_COLORS.length]}>
-                    {line}
+            <section>
+              <Prompt>whoami</Prompt>
+              <div className="space-y-3 font-sans text-[0.9375rem] leading-relaxed text-fg-muted sm:text-base">
+                {about.paragraphs.map((p, i) => (
+                  <p key={i} className={i === 0 ? 'text-fg' : undefined}>
+                    {p}
+                  </p>
+                ))}
+              </div>
+              {/* the facts, as the spec label prints them */}
+              <dl className="mt-5 grid grid-cols-1 border-t border-fg/12 font-mono text-[0.75rem] sm:grid-cols-2">
+                {about.facts.map((f) => (
+                  <div key={f.key} className="flex gap-3 border-b border-fg/12 py-2 sm:odd:pr-4">
+                    <dt className="w-20 shrink-0 uppercase tracking-[0.2em] text-fg-dim">{f.key}</dt>
+                    <dd className="text-fg">{f.value}</dd>
                   </div>
                 ))}
-              </pre>
+              </dl>
+            </section>
 
-              {/* "Sky" figlet logo */}
-              {figlet && (
-                <pre className="m-0 mt-2 font-mono text-xs leading-snug text-violet-400 sm:text-sm">
-                  {figlet}
-                </pre>
-              )}
-
-              <TerminalLog
-                lines={bootLines}
-                speed={8}
-                linePause={130}
-                endCaret={false}
-                onDone={() => setReady(true)}
-                className="mt-3 text-sm sm:text-[0.9375rem]"
-              />
-            </div>
-
-            {/* command output log */}
-            <div className="font-mono text-sm sm:text-[0.9375rem]">
-              {log.map((o, i) => (
-                <div key={i} className="whitespace-pre-wrap leading-relaxed">
-                  {o.prefix && <span className={o.prefix.className}>{o.prefix.text}</span>}
-                  {o.href ? (
-                    <a
-                      href={o.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className={`underline decoration-dotted underline-offset-4 hover:decoration-solid ${o.className ?? 'text-fg/85'}`}
-                    >
-                      {o.text}
-                    </a>
-                  ) : (
-                    <span className={o.className ?? 'text-fg/85'}>{o.text}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* prompt + input (appears when boot completes) */}
-            {ready && (
-              <div className="mt-1 flex items-center gap-2 font-mono text-sm sm:text-[0.9375rem]">
-                <span className="text-green-400">→</span>
-                <span className="text-teal-300">~</span>
-                <input
-                  ref={inputRef}
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                  onKeyDown={onKey}
-                  spellCheck={false}
-                  autoComplete="off"
-                  aria-label="Terminal command input"
-                  placeholder="type a command… (help)"
-                  className="min-w-0 flex-1 border-none bg-transparent font-mono text-fg caret-fg outline-hidden placeholder:text-fg/25"
-                />
+            <section>
+              <Prompt>cat story.md</Prompt>
+              <div className="space-y-3 font-sans text-[0.9375rem] leading-relaxed text-fg-muted sm:text-base">
+                {story.map((p, i) => (
+                  <motion.p
+                    key={i}
+                    initial={i >= sop.shortCount ? { opacity: 0, y: 8 } : false}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.45, ease: EASE, delay: i >= sop.shortCount ? (i - sop.shortCount) * 0.05 : 0 }}
+                  >
+                    {p}
+                  </motion.p>
+                ))}
               </div>
-            )}
-          </div>
-
-          {/* selectable command chips */}
-          {ready && (
-            <div className="flex flex-wrap gap-2 border-t border-fg/10 bg-fg/2 px-4 py-3">
-              {COMMANDS.map((c) => (
+              {sop.paragraphs.length > sop.shortCount && (
                 <button
-                  key={c}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    run(c)
-                  }}
-                  className="rounded-sm border border-fg/20 bg-bg/40 px-3 py-1 font-mono text-xs text-green-400 transition-colors hover:border-green-400/60 hover:bg-green-400/10"
+                  type="button"
+                  onClick={() => setMore((m) => !m)}
+                  aria-expanded={more}
+                  className="mt-4 inline-flex items-center gap-2 rounded-sm border border-fg/25 px-3 py-1.5 font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg transition-colors hover:border-fg hover:bg-fg hover:text-bg"
                 >
-                  {c}
+                  {more ? t.readLess : t.readMore}
+                  <span aria-hidden className={`transition-transform ${more ? 'rotate-180' : ''}`}>
+                    ↓
+                  </span>
                 </button>
-              ))}
-            </div>
-          )}
+              )}
+            </section>
+
+            <section>
+              <Prompt>ls principles/</Prompt>
+              <ul className="grid gap-3 sm:grid-cols-2">
+                {inspiration.map((p, i) => (
+                  <motion.li
+                    key={p.title}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.4 }}
+                    transition={{ duration: 0.5, ease: EASE, delay: i * 0.06 }}
+                    className="rounded-lg border border-fg/12 bg-bg/70 p-4"
+                  >
+                    <p className="mb-1.5 flex items-center gap-2 font-sans text-[0.9375rem] font-semibold text-fg">
+                      <span aria-hidden className="h-2.5 w-2.5 shrink-0 bg-duck" />
+                      {p.title}
+                    </p>
+                    <p className="font-sans text-sm leading-relaxed text-fg-muted">{p.description}</p>
+                  </motion.li>
+                ))}
+              </ul>
+            </section>
+          </div>
         </div>
 
-        {/* portrait (right) - same window chrome as the terminal */}
-        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:bg-bg/40 md:w-[20rem] lg:w-[22.5rem]">
+        {/* portrait (right) - same window chrome; pinned beside the longer
+            column on a wide screen */}
+        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:sticky md:top-24 md:w-[20rem] md:bg-bg/40 lg:w-[22.5rem]">
           <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/3 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
@@ -395,7 +192,7 @@ export default function AboutMe() {
             width={900}
             height={1398}
             sizes="(min-width: 1024px) 360px, (min-width: 768px) 320px, 100vw"
-            className="h-64 w-full flex-1 object-cover object-top grayscale transition-all duration-500 group-hover:grayscale-0 md:h-auto"
+            className="h-80 w-full object-cover object-top grayscale transition-all duration-500 group-hover:grayscale-0 md:h-[34rem]"
           />
           <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[0.625rem] uppercase tracking-widest text-fg-dim">
             {player.name} · {player.role}

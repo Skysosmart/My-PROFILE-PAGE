@@ -21,13 +21,6 @@ export type Step = {
 const en = {
   hero: {
     scroll: 'Scroll to explore',
-    // The prompt cue prints as `$ scroll <this> ▋`. The verb is a binary name
-    // and stays latin in IntroHero; this is the long option it runs with, and
-    // it is the half that carries the meaning - so it is the half that
-    // translates. `scroll` above stays the whole sentence regardless: the
-    // other cues set it, and the prompt reads it out to a screen reader,
-    // which gains nothing from a sigil and a half-block.
-    scrollOpt: '--explore',
     line1: 'I build it.',
     line2: 'I break it.',
     line3: 'Then I ship it.',
@@ -61,7 +54,7 @@ const en = {
         fine: 'Move the cursor. The orb, the duck and the torus lean after it.',
         coarse: 'Tilt the phone. The orb, the duck and the torus lean with it; a finger on the orb makes ripples.',
       },
-      { text: 'The terminal takes commands: `help`, `sop`, `resume`. Type them, or tap the chips. `boot` starts a real Linux in the tab.', to: 'about' },
+      { text: 'About reads like a terminal: `whoami`, then the story behind `cat story.md`, then the principles I work by.', to: 'about' },
       { text: 'Pick a skill for its level and the projects it shipped on.', to: 'skills' },
       { text: 'Open a certificate. The archive holds all {n}.', to: 'certificates' },
       { fine: 'Scroll over the film to change project.', coarse: 'Swipe across the film to change project.', to: 'projects' },
@@ -171,9 +164,6 @@ export type UI = typeof en
 const th: UI = {
   hero: {
     scroll: 'เลื่อนลงเพื่อสำรวจ',
-    // a Thai option on a latin command: no real shell takes one, but this
-    // shell is Sky's, and a Thai reader should not be left with only `scroll`
-    scrollOpt: '--สำรวจ',
     line1: 'ผมสร้างมันขึ้นมา',
     line2: 'แล้วลองเจาะมันดู',
     line3: 'ก่อนจะปล่อยของจริง',
@@ -207,7 +197,7 @@ const th: UI = {
         fine: 'ขยับเมาส์ ลูกแก้ว เป็ด และทอรัสจะเอียงตาม',
         coarse: 'เอียงโทรศัพท์ ลูกแก้ว เป็ด และทอรัสจะเอียงตาม แตะลูกแก้วแล้วลากจะเกิดคลื่น',
       },
-      { text: 'เทอร์มินัลรับคำสั่ง `help`, `sop`, `resume` พิมพ์เอง หรือแตะปุ่มก็ได้ ส่วน `boot` จะบูต Linux จริง ๆ ในแท็บ', to: 'about' },
+      { text: 'หน้า About อ่านเหมือนเทอร์มินัล: `whoami` ตามด้วยเรื่องราวใน `cat story.md` และหลักที่ผมยึดในการทำงาน', to: 'about' },
       { text: 'เลือกทักษะเพื่อดูระดับ และโปรเจกต์ที่ใช้ทักษะนั้น', to: 'skills' },
       { text: 'เปิดใบประกาศดูได้ ในคลังมีครบทั้ง {n} ใบ', to: 'certificates' },
       { fine: 'เลื่อนล้อเมาส์บนฟิล์มเพื่อเปลี่ยนโปรเจกต์', coarse: 'ปัดบนฟิล์มเพื่อเปลี่ยนโปรเจกต์', to: 'projects' },

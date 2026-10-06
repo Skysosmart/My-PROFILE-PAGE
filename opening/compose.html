@@ -1,0 +1,681 @@
+<!doctype html>
+<!--
+  The ZaruTech opening, at any size (render.mjs picks the device: desktop, iPad either way, phone). Pure function of time: window.render(t) draws the frame at t seconds, so
+  render.mjs can step it frame by frame. Open it in a browser and it plays itself (?t=7.4 freezes one frame).
+
+  One continuous move: the boot cursor -> a point -> traces that route out to the systems Sky builds with
+  (browser, code, a chip, a torus, the site's own prompt) -> prints of the real projects, each wired back to the
+  system it came from -> the prints line up and implode into the point -> the point writes the ZaruTech
+  lettering -> the lettering lands on the duck's chest and the real homepage hero builds around it.
+
+  Everything visual comes from the site: the paper, the 44px grid, the ink, the one orange, VT323 / JetBrains Mono /
+  Space Grotesk, the duck, the project shots, the hero itself (captured layer by layer by capture.mjs).
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>ZaruTech opening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&family=VT323&display=block" rel="stylesheet">
+<style>
+  html, body { margin: 0; overflow: hidden; background: rgb(243 240 232); }
+  svg { display: block; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .sans { font-family: 'Space Grotesk', sans-serif; }
+  .crt { font-family: 'VT323', monospace; }
+</style>
+</head>
+<body>
+<svg id="svg" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- the site's grid mask: ellipse 80% 70% at 50% 40%, #000 30% -> transparent 85% -->
+    <radialGradient id="gridFade" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1">
+      <stop offset="0.30" stop-color="#fff"/><stop offset="0.85" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="gridMask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%"><rect id="gridMaskRect" fill="url(#gridFade)"/></mask>
+    <linearGradient id="feather" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <filter id="mono" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="linear" slope="1.08" intercept="-0.03"/><feFuncG type="linear" slope="1.08" intercept="-0.03"/><feFuncB type="linear" slope="1.08" intercept="-0.03"/></feComponentTransfer></filter>
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.16"/></filter>
+    <filter id="inkGlow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="0" stdDeviation="9" flood-color="#111" flood-opacity="0.18"/></filter>
+    <mask id="wipeLetters" maskUnits="userSpaceOnUse" x="-400" y="-400" width="1200" height="1000"><g id="wipeL"><rect x="-400" y="-400" width="0" height="1000" fill="#fff"/><rect x="0" y="-400" width="26" height="1000" fill="url(#feather)"/></g></mask>
+    <mask id="wipeSwoosh" maskUnits="userSpaceOnUse" x="-400" y="-400" width="1200" height="1000"><g id="wipeS"><rect x="-400" y="-400" width="0" height="1000" fill="#fff"/><rect x="0" y="-400" width="26" height="1000" fill="url(#feather)"/></g></mask>
+    <mask id="duckDraw" maskUnits="userSpaceOnUse" x="-20" y="-20" width="760" height="1060"><g id="duckDrawPaths" fill="none" stroke="#fff" stroke-width="26" stroke-linecap="round"></g></mask>
+  </defs>
+
+  <image id="paper" data-src="paper-nogrid.png"/>
+  <g mask="url(#gridMask)" opacity="0.5"><path id="grid" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1" shape-rendering="crispEdges"/></g>
+
+  <!-- the world: everything the camera moves over -->
+  <g id="cam">
+    <g id="implode">
+      <g id="traces" fill="none" stroke="#111" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="objects"></g>
+      <g id="links" fill="none" stroke="#111" stroke-dasharray="5 6"></g>
+      <g id="cards"></g>
+    </g>
+    <g id="cursor"><rect id="caret" x="-10" y="-19" width="20" height="38" fill="#111"/></g>
+    <circle id="shock" r="0" fill="none" stroke="#111"/>
+  </g>
+
+  <!-- the hero, in screen space -->
+  <g id="hero">
+    <image id="h-wash" data-src="wash.png" opacity="0"/>
+    <g id="duckGroup">
+      <image id="h-duckInk" href="out/duck-ink.png" width="701" height="1006" mask="url(#duckDraw)" opacity="0"/>
+    </g>
+    <image id="h-duck" data-src="duck.png" opacity="0"/>
+    <image id="h-line1" data-src="line1.png" opacity="0"/>
+    <image id="h-line2" data-src="line2.png" opacity="0"/>
+    <image id="h-line3" data-src="line3.png" opacity="0"/>
+    <image id="h-orb" data-src="orb.png" opacity="0"/>
+    <image id="h-bubble" data-src="bubble.png" opacity="0"/>
+    <image id="h-cue" data-src="cue.png" opacity="0"/>
+    <image id="h-ticker" data-src="ticker.png" opacity="0"/>
+    <image id="h-name" data-src="name.png" opacity="0"/>
+    <image id="h-prompt" data-src="prompt.png" opacity="0"/>
+  </g>
+
+  <!-- the lettering and its address, in screen space above everything -->
+  <g id="mark">
+    <g id="markLetters" mask="url(#wipeLetters)" fill="#111"></g>
+    <g id="markSwoosh" mask="url(#wipeSwoosh)" fill="#111"></g>
+  </g>
+  <text id="url" class="mono" text-anchor="middle" fill="rgba(17,17,17,0.72)"></text>
+  <circle id="nib" r="0" fill="#111"/>
+  <image id="full" data-src="full.png" opacity="0"/>
+</svg>
+
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const $ = id => document.getElementById(id);
+const el = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+const set = (e, attrs) => { for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); };
+
+// ---------- the variant: which device this render is for ----------
+// render.mjs injects window.VARIANT (size + the hero capture's layout.json). Opened by hand, it is the desktop.
+const V = window.VARIANT ?? { name: 'desktop', w: 1920, h: 1080, hero: 'out/hero', layout: {
+  duck: [64, 283.5, 420, 602.7], orb: [1486.4, 288.7, 336, 336], pill: [489.6, 22.4, 940.8, 49.6] } };
+const W = V.w, H = V.h, PORTRAIT = H > W;
+document.body.style.width = W + 'px'; document.body.style.height = H + 'px';
+set($('svg'), { width: W, height: H, viewBox: `0 0 ${W} ${H}` });
+// the site's grid mask: ellipse 80% 70% at 50% 40%
+set($('gridFade'), { gradientTransform: `translate(${W / 2} ${H * 0.4}) scale(${W * 0.8} ${H * 0.7})` });
+set($('gridMaskRect'), { width: W, height: H });
+for (const im of document.querySelectorAll('image[data-src]')) set(im, { href: `${V.hero}/${im.dataset.src}`, width: W, height: H });
+
+// ---------- time ----------
+const DURATION = 10.8;
+const clamp01 = v => Math.min(1, Math.max(0, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const seg = (t, a, b) => clamp01((t - a) / (b - a));
+const E = {
+  outExpo: x => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x)),
+  inExpo: x => (x <= 0 ? 0 : Math.pow(2, 10 * x - 10)),
+  outCubic: x => 1 - Math.pow(1 - x, 3),
+  inCubic: x => x * x * x,
+  inOutCubic: x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
+  inOutQuint: x => (x < 0.5 ? 16 * x ** 5 : 1 - Math.pow(-2 * x + 2, 5) / 2),
+  outBack: x => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  inOutSine: x => -(Math.cos(Math.PI * x) - 1) / 2,
+};
+// the site's own ease, cubic-bezier(0.16, 1, 0.3, 1)
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = u => ((ax * u + bx) * u + cx) * u, sy = u => ((ay * u + by) * u + cy) * u;
+  const dx = u => (3 * ax * u + 2 * bx) * u + cx;
+  return x => { let u = x; for (let i = 0; i < 8; i++) { const d = dx(u); if (Math.abs(d) < 1e-6) break; u -= (sx(u) - x) / d; } return sy(clamp01(u)); };
+}
+E.site = bezier(0.16, 1, 0.3, 1);
+
+// ---------- polylines that draw themselves ----------
+const lenOf = pts => pts.slice(1).reduce((n, p, i) => n + Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]), 0);
+function partial(pts, p) {
+  const L = lenOf(pts) * clamp01(p);
+  if (L <= 0) return { d: '', end: pts[0] };
+  let d = `M${pts[0][0]} ${pts[0][1]}`, acc = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const [ax, ay] = pts[i - 1], [bx, by] = pts[i], s = Math.hypot(bx - ax, by - ay);
+    if (acc + s >= L) { const k = (L - acc) / s, ex = ax + (bx - ax) * k, ey = ay + (by - ay) * k; return { d: d + `L${ex} ${ey}`, end: [ex, ey] }; }
+    d += `L${bx} ${by}`; acc += s;
+  }
+  return { d, end: pts[pts.length - 1] };
+}
+const rectPts = (x, y, w, h) => [[x + w / 2, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y], [x + w / 2, y]];
+
+// ---------- the world ----------
+// Two arrangements of the same world, both around the point at (960, 540): spread sideways for a landscape screen,
+// stacked for a portrait one. Traces are PCB-style routing off the point (orthogonal runs, 45° chamfers), each
+// ending at a system.
+const LANDSCAPE = {
+  browser: { x: 120, y: 214 }, code: { x: 1310, y: 196 }, chip: { cx: 430, cy: 760 }, torus: { cx: 1530, cy: 760 }, term: { x: 690, y: 798 },
+  traces: [
+  { pts: [[960, 540], [1180, 540]], t: [1.12, 1.5], w: 1 },                                              // the first line, right
+  { pts: [[960, 540], [740, 540]], t: [1.3, 1.66], w: 1 },                                               // and left
+  { pts: [[1180, 540], [1180, 430], [1268, 342], [1310, 342]], t: [1.5, 1.95], via: 1, to: 'code' },
+  { pts: [[1180, 540], [1180, 650], [1268, 738], [1352, 738]], t: [1.55, 2.0], via: 1, to: 'torus' },
+  { pts: [[740, 540], [740, 450], [660, 370], [642, 370]], t: [1.66, 2.08], via: 1, to: 'browser' },
+  { pts: [[740, 540], [740, 640], [640, 740], [582, 740]], t: [1.7, 2.12], via: 1, to: 'chip' },
+  { pts: [[960, 540], [960, 798]], t: [1.85, 2.2], via: 1, to: 'term' },
+  // short stubs that end in vias: the board around the routes
+  { pts: [[1180, 600], [1112, 668], [1080, 668]], t: [1.95, 2.25], end: 'via' },
+  { pts: [[740, 480], [808, 412], [858, 412]], t: [2.0, 2.3], end: 'via' },
+  { pts: [[960, 620], [1036, 620], [1066, 590]], t: [2.05, 2.35], end: 'via' },
+  { pts: [[1180, 470], [1250, 470]], t: [2.1, 2.32], end: 'via' },
+  { pts: [[740, 600], [676, 600]], t: [2.12, 2.36], end: 'via' },
+  { pts: [[880, 540], [880, 470], [850, 440]], t: [2.18, 2.42], end: 'via' },
+  ],
+  anchor: { chip: [430, 760], torus: [1530, 760], term: [960, 830], code: [1545, 342], browser: [381, 370] },
+  cards: [[-150, 470], [2090, 330], [-120, 1010], [960, 1150], [1560, -110], [2080, 1010], [380, -120], [960, -150], [-210, 40]],
+  sheet: [390, 312],
+  // camera keys: [t, zoom at 1920x1080, cx, cy, rotDeg] -> turned into regions of the world to fit
+  cam: [[0, 3.1, 960, 540, -3], [1.0, 2.75, 960, 540, -2.2], [1.6, 1.9, 990, 545, -1.2], [2.4, 1.18, 960, 552, -0.4],
+    [3.3, 0.95, 960, 560, 0], [4.3, 0.76, 930, 540, 0.8], [5.2, 0.64, 960, 520, -0.3], [5.95, 0.585, 960, 545, -0.6],
+    [6.5, 0.62, 960, 540, 0]].map(([t, z, cx, cy, r]) => [t, 1920 / z, 1080 / z, cx, cy, r]),
+};
+const STACKED = {
+  browser: { x: 699, y: -360 }, chip: { cx: 770, cy: 200 }, torus: { cx: 1150, cy: 220 }, term: { x: 690, y: 690 }, code: { x: 725, y: 860 },
+  traces: [
+    { pts: [[960, 540], [960, 400]], t: [1.12, 1.5], w: 1 },                                             // the first line, up
+    { pts: [[960, 540], [960, 640]], t: [1.3, 1.66], w: 1 },                                             // and down
+    { pts: [[960, 400], [960, -48]], t: [1.5, 1.95], via: 1, to: 'browser' },
+    { pts: [[960, 330], [862, 232]], t: [1.55, 1.95], via: 1, to: 'chip' },
+    { pts: [[960, 370], [990, 340], [990, 300]], t: [1.6, 2.0], via: 1, to: 'torus' },
+    { pts: [[960, 640], [960, 690]], t: [1.66, 1.9], via: 1, to: 'term' },
+    { pts: [[960, 600], [1262, 600], [1282, 620], [1282, 1006], [1196, 1006]], t: [1.7, 2.3], via: 1, to: 'code' },
+    { pts: [[960, 470], [1030, 470], [1060, 440]], t: [1.95, 2.25], end: 'via' },
+    { pts: [[960, 580], [880, 580], [860, 560]], t: [2.0, 2.3], end: 'via' },
+    { pts: [[960, 500], [1040, 500]], t: [2.05, 2.32], end: 'via' },
+    { pts: [[960, 450], [900, 450]], t: [2.1, 2.34], end: 'via' },
+    { pts: [[960, 620], [900, 620], [880, 640]], t: [2.15, 2.4], end: 'via' },
+  ],
+  anchor: { chip: [770, 200], torus: [1150, 220], term: [960, 722], code: [960, 1006], browser: [960, -204] },
+  cards: [[460, 170], [1470, 260], [450, 560], [460, 960], [1460, 1030], [1470, 640], [470, -250], [1450, -230], [960, -580]],
+  sheet: [380, 300],
+  cam: [[0, 190, 400, 960, 540, -3], [1.0, 210, 450, 960, 530, -2.2], [1.6, 420, 900, 960, 470, -1.2], [2.4, 640, 1350, 990, 420, -0.4],
+    [3.3, 700, 1620, 990, 396, 0], [4.3, 1050, 2000, 975, 330, 0.8], [5.2, 1350, 2250, 975, 260, -0.3], [5.95, 1450, 2400, 975, 230, -0.6],
+    [6.5, 1250, 1050, 960, 540, 0]],
+};
+const L = PORTRAIT ? STACKED : LANDSCAPE;
+const TRACES = L.traces;
+const traceEls = TRACES.map(tr => {
+  const g = el('g', {}, $('traces'));
+  // a trace is two strokes: a soft wide copper bed and the ink line on top
+  return { tr, bed: el('path', { 'stroke-opacity': 0.08, class: 'bed' }, g), ink: el('path', {}, g),
+    via: tr.end === 'via' || tr.via ? el('circle', { r: 0, fill: 'rgb(243 240 232)', stroke: '#111' }, g) : null,
+    head: el('circle', { r: 0, fill: '#111' }, g) };
+});
+
+// --- the systems ---
+const OBJ = {};
+// browser window: the site's frame language (three dots, an address pill), with a wireframe of the hero inside
+{
+  const { x, y } = L.browser, w = 522, h = 312;
+  const g = el('g', {}, $('objects'));
+  const frame = el('path', { fill: 'none', stroke: '#111' }, g);
+  const fill = el('rect', { x, y, width: w, height: h, rx: 10, fill: 'rgb(255 255 255)', opacity: 0 }, g);
+  g.insertBefore(fill, frame);
+  const bar = el('path', { stroke: '#111', 'stroke-opacity': 0.5 }, g);
+  const dots = [0, 1, 2].map(i => el('circle', { cx: x + 22 + i * 18, cy: y + 18, r: 0, fill: 'none', stroke: '#111' }, g));
+  const pill = el('rect', { x: x + 92, y: y + 8, width: 0, height: 20, rx: 10, fill: 'none', stroke: '#111', 'stroke-opacity': 0.35 }, g);
+  const url = el('text', { x: x + 106, y: y + 23, class: 'mono', 'font-size': 12.5, fill: '#111' }, g);
+  // the hero, as a wireframe: duck block, three lines (the third in the duck's orange), the orb
+  const wf = el('g', { opacity: 0 }, g);
+  el('rect', { x: x + 34, y: y + 92, width: 84, height: 150, rx: 6, fill: 'none', stroke: '#111', 'stroke-dasharray': '4 4' }, wf);
+  el('path', { d: `M${x + 50} ${y + 120} q 30 -30 52 0 q -6 70 -26 90`, fill: 'none', stroke: '#111', 'stroke-opacity': 0.6 }, wf);
+  const bars = [[136, 158, 116], [136, 186, 116], [136, 214, 150]].map(([bx, by, bw], i) =>
+    el('rect', { x: x + bx, y: y + by, width: 0, height: 14, rx: 2, fill: i === 2 ? 'rgb(245 190 91)' : '#111', 'data-w': bw }, g));
+  el('circle', { cx: x + 430, cy: y + 150, r: 52, fill: 'none', stroke: '#111' }, wf);
+  el('circle', { cx: x + 430, cy: y + 150, r: 40, fill: '#111', 'fill-opacity': 0.08 }, wf);
+  el('path', { d: `M${x + 400} ${y + 78} h 60 v 22 h -26 l -4 7 l -4 -7 h -26 z`, fill: 'none', stroke: '#111' }, wf);
+  OBJ.browser = { g, x, y, w, h, frame, fill, bar, dots, pill, url, wf, bars, at: 2.05 };
+}
+// code: the hero's own source, from components/sections/IntroHero.tsx
+{
+  const { x, y } = L.code, w = 470, h = 292;
+  const g = el('g', {}, $('objects'));
+  const fill = el('rect', { x, y, width: w, height: h, rx: 8, fill: 'rgb(255 255 255)', opacity: 0 }, g);
+  const frame = el('path', { fill: 'none', stroke: '#111' }, g);
+  const label = el('text', { x: x + 18, y: y + 26, class: 'mono', 'font-size': 12, fill: 'rgba(17,17,17,0.6)', 'letter-spacing': 0.5 }, g);
+  const rule = el('path', { stroke: '#111', 'stroke-opacity': 0.25 }, g);
+  const SRC = [
+    [12, [['export default function ', 0], ['IntroHero', 2], ['() {', 0]]],
+    [13, [['  const t = ui[useLang()].hero', 0]]],
+    [14, [['  const reduce = ', 0], ['useReducedMotion', 2], ['()', 0]]],
+    [15, [['  return (', 0]]],
+    [16, [['    <', 0], ['Duck', 2], [' pose=', 0], ['"hero"', 3], [' priority />', 0]]],
+    [17, [['    <', 0], ['RoleTicker', 2], [' />', 0]]],
+    [18, [['    <', 0], ['SkyOrb', 2], ['>{t.bubble}</', 0], ['SkyOrb', 2], ['>', 0]]],
+    [19, [['  )', 0]]],
+  ];
+  const lines = SRC.map(([n, parts], i) => {
+    const ty = y + 66 + i * 26;
+    const num = el('text', { x: x + 18, y: ty, class: 'mono', 'font-size': 13.5, fill: 'rgba(17,17,17,0.3)', opacity: 0 }, g);
+    num.textContent = String(n);
+    const tx = el('text', { x: x + 52, y: ty, class: 'mono', 'font-size': 13.5, fill: '#111', 'xml:space': 'preserve' }, g);
+    const spans = parts.map(([s, k]) => {
+      const sp = el('tspan', k === 2 ? { 'font-weight': 700 } : k === 3 ? { fill: 'rgb(222 150 40)' } : {}, tx);
+      return { s, sp };
+    });
+    return { spans, num, n: parts.reduce((m, [s]) => m + s.length, 0), text: tx };
+  });
+  OBJ.code = { g, x, y, w, h, fill, frame, label, rule, lines, at: 1.95 };
+}
+// chip: a QFP footprint with its fan-out, U1 on the silkscreen
+{
+  const { cx, cy } = L.chip, s = 150;
+  const g = el('g', {}, $('objects'));
+  const pins = [];
+  for (let side = 0; side < 4; side++) for (let k = 0; k < 8; k++) {
+    const o = -s / 2 + 15 + k * ((s - 30) / 7);
+    const [ux, uy, nx, ny] = [[1, 0, 0, -1], [0, 1, 1, 0], [-1, 0, 0, 1], [0, -1, -1, 0]][side];
+    const bx = cx + ux * o + nx * (s / 2), by = cy + uy * o + ny * (s / 2);
+    const long = (k % 3 === 1) ? 46 + (k * 7) % 22 : 0;
+    pins.push({ a: [bx, by], b: [bx + nx * 14, by + ny * 14], c: long ? [bx + nx * (14 + long), by + ny * (14 + long)] : null, el: el('path', { stroke: '#111', 'stroke-width': 4.2, 'stroke-linecap': 'butt' }, g),
+      fan: long ? el('path', { stroke: '#111', fill: 'none' }, g) : null, pad: long ? el('circle', { r: 0, fill: 'rgb(243 240 232)', stroke: '#111' }, g) : null, k: side * 8 + k });
+  }
+  const body = el('rect', { x: cx - s / 2, y: cy - s / 2, width: s, height: s, rx: 6, fill: '#111', opacity: 0 }, g);
+  const outline = el('path', { fill: 'none', stroke: '#111' }, g);
+  const dot = el('circle', { cx: cx - s / 2 + 18, cy: cy - s / 2 + 18, r: 0, fill: 'rgb(243 240 232)' }, g);
+  const ref = el('text', { x: cx, y: cy + 8, 'text-anchor': 'middle', class: 'mono', 'font-size': 20, 'font-weight': 700, fill: 'rgb(243 240 232)', opacity: 0 }, g);
+  ref.textContent = 'U1';
+  const silk = el('text', { x: cx - s / 2 - 4, y: cy - s / 2 - 34, class: 'mono', 'font-size': 11, fill: 'rgba(17,17,17,0.6)', 'letter-spacing': 1, opacity: 0 }, g);
+  silk.textContent = 'QFP-32 · 0.8mm';
+  OBJ.chip = { g, cx, cy, s, pins, body, outline, dot, ref, silk, at: 2.12 };
+}
+// torus: the wireframe the site's hero used to float (Three.js), orthographic, turning
+{
+  const { cx, cy } = L.torus;
+  const g = el('g', { fill: 'none', stroke: '#111' }, $('objects'));
+  const rings = Array.from({ length: 22 }, () => el('path', {}, g));
+  const tubes = Array.from({ length: 9 }, () => el('path', {}, g));
+  const axis = el('path', { 'stroke-dasharray': '3 5', 'stroke-opacity': 0.4 }, g);
+  OBJ.torus = { g, cx, cy, R: 118, r: 46, rings, tubes, axis, at: 2.0 };
+}
+// terminal: the site's own prompt pill, taking a command
+{
+  const { x, y } = L.term, w = 540, h = 64;
+  const g = el('g', {}, $('objects'));
+  const fill = el('rect', { x, y, width: w, height: h, rx: 6, fill: 'rgb(243 240 232)', opacity: 0 }, g);
+  const frame = el('path', { fill: 'none', stroke: '#111', 'stroke-opacity': 0.7 }, g);
+  const txt = el('text', { x: x + 24, y: y + 40, class: 'mono', 'font-size': 19, 'xml:space': 'preserve' }, g);
+  const user = el('tspan', { fill: 'rgba(17,17,17,0.7)' }, txt), at_ = el('tspan', { fill: 'rgba(17,17,17,0.25)' }, txt),
+    path_ = el('tspan', { fill: 'rgba(17,17,17,0.6)' }, txt), cmd = el('tspan', { fill: '#111' }, txt);
+  const caret = el('rect', { y: y + 22, width: 11, height: 24, fill: '#111' }, g);
+  const ok = el('text', { x: x + w - 22, y: y + 40, 'text-anchor': 'end', class: 'mono', 'font-size': 14, fill: 'rgb(222 150 40)', 'letter-spacing': 2, opacity: 0 }, g);
+  ok.textContent = '[ OK ]';
+  OBJ.term = { g, x, y, w, h, fill, frame, txt, user, at_, path_, cmd, caret, ok, at: 2.2 };
+}
+
+// --- the prints: real project shots, each wired back to the system it came out of ---
+const CARDS = [
+  { img: 'pdlite', label: 'EMBEDDED + WEB', idx: '01', rot: -3, link: 'chip', t: 3.5 },
+  { img: 'seluna', label: '3D · MOTION', idx: '02', rot: 2.2, link: 'torus', t: 3.85 },
+  { img: 'makex', label: 'ROBOTICS', idx: '03', rot: 2.6, link: 'chip', t: 4.2 },
+  { img: 'digitize', label: 'DATA · OCR / NER', idx: '04', rot: -1.8, link: 'term', t: 4.55 },
+  { img: null, label: 'SECURITY', idx: '05', rot: 1.8, link: 'code', t: 4.9 },
+  { img: 'nebula', label: 'WEBGL', idx: '06', rot: -2.4, link: 'torus', t: 5.15 },
+  { img: 'doodee', label: 'PRODUCT', idx: '07', rot: -2, link: 'browser', t: 5.35 },
+  { img: 'nexus', label: 'FULL-STACK', idx: '08', rot: 1.4, link: 'code', t: 5.52 },
+  { img: 'tgoda', label: 'UI DESIGN', idx: '09', rot: 1.2, link: 'browser', t: 5.66 },
+];
+CARDS.forEach((c, i) => { c.pos = L.cards[i]; });
+const CW = 340, CH = 268, IH = 200;   // a print: 16:10 shot over a caption strip
+// where each system "hands off" to its print
+const ANCHOR = L.anchor;
+// the grid the prints settle into before the implosion: a contact sheet, 3 x 3
+const SHEET = CARDS.map((_, i) => [960 + ((i % 3) - 1) * L.sheet[0], 540 + (Math.floor(i / 3) - 1) * L.sheet[1]]);
+CARDS.forEach((c, i) => {
+  const g = el('g', { opacity: 0 }, $('cards'));
+  const inner = el('g', {}, g);
+  el('rect', { x: -CW / 2, y: -CH / 2, width: CW, height: CH, rx: 4, fill: '#fff', stroke: '#111', 'stroke-width': 1.2, filter: 'url(#cardShadow)' }, inner);
+  const ix = -CW / 2 + 10, iy = -CH / 2 + 10, iw = CW - 20;
+  if (c.img) {
+    el('clipPath', { id: `clip${i}` }, inner).appendChild(el('rect', { x: ix, y: iy, width: iw, height: IH - 10 }));
+    el('image', { href: `../public/projects/${c.img}.jpg`, x: ix, y: iy, width: iw, height: IH - 10, preserveAspectRatio: 'xMidYMid slice', 'clip-path': `url(#clip${i})`, filter: 'url(#mono)' }, inner);
+  } else {
+    // no screenshot for this one: a request pane, the place a web target gets taken apart
+    el('rect', { x: ix, y: iy, width: iw, height: IH - 10, fill: '#111' }, inner);
+    const req = [['GET /api/profile?', 'id=1', ' HTTP/1.1'], ['Host: ctf.local', '', ''], ['Cookie: session=7f3c…', '', ''], ['', '', ''], ['HTTP/1.1 200 OK', '', ''], ['{"role":"', 'admin', '"}']];
+    req.forEach(([a, b, c2], k) => {
+      const tx = el('text', { x: ix + 16, y: iy + 30 + k * 25, class: 'mono', 'font-size': 13, fill: 'rgb(243 240 232)', 'xml:space': 'preserve' }, inner);
+      el('tspan', {}, tx).textContent = a;
+      if (b) el('tspan', { fill: 'rgb(245 190 91)', 'text-decoration': 'underline' }, tx).textContent = b;
+      if (c2) el('tspan', {}, tx).textContent = c2;
+    });
+  }
+  el('text', { x: -CW / 2 + 12, y: CH / 2 - 24, class: 'mono', 'font-size': 11, fill: 'rgba(17,17,17,0.6)', 'letter-spacing': 2 }, inner).textContent = c.idx + ' /';
+  el('text', { x: -CW / 2 + 48, y: CH / 2 - 21, class: 'sans', 'font-size': 21, 'font-weight': 700, fill: '#111', 'letter-spacing': 0.6 }, inner).textContent = c.label;
+  el('rect', { x: CW / 2 - 24, y: CH / 2 - 36, width: 12, height: 12, fill: 'rgb(245 190 91)' }, inner);
+  // corner ticks, the site's glass-panel brackets
+  for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+    const px = sx * (CW / 2 + 9), py = sy * (CH / 2 + 9);
+    el('path', { d: `M${px} ${py - sy * 12}V${py}H${px - sx * 12}`, fill: 'none', stroke: '#111', 'stroke-width': 1, 'stroke-opacity': 0.55 }, g);
+  }
+  const flash = el('rect', { x: -CW / 2, y: -CH / 2, width: CW, height: CH, rx: 4, fill: '#fff', opacity: 0 }, g);
+  const link = el('path', {}, $('links'));
+  Object.assign(c, { g, inner, flash, linkEl: link });
+});
+
+// --- the lettering: the duck's chest "ZaruTech", traced (prep.sh) ---
+let MARK, TRACE;
+const MC = [152, 112];        // the lettering's middle, in crop pixels
+const DUCK = { x: V.layout.duck[0], y: V.layout.duck[1], s: V.layout.duck[2] / 701 };   // where the hero puts hello-light.png
+const LAND = { x: DUCK.x + (180 + MC[0]) * DUCK.s, y: DUCK.y + (460 + MC[1]) * DUCK.s, rot: 0, sc: DUCK.s };
+// the lockup: about 43% of a wide screen across, more of a narrow one
+const ASPECT = W / H;
+const LOCK = { x: W / 2, y: H * (PORTRAIT ? 0.44 : 0.418), rot: 15, sc: (W * (ASPECT > 1.3 ? 0.433 : ASPECT > 0.6 ? 0.6 : 0.78)) / 241 };
+const URL_FONT = Math.max(14, 30 * LOCK.sc / 3.45), URL_Y = LOCK.y + 72 * LOCK.sc;
+set($('url'), { x: W / 2, y: URL_Y, 'font-size': URL_FONT, 'letter-spacing': URL_FONT * 0.3 });
+const PILL = [V.layout.pill[0] + V.layout.pill[2] / 2, V.layout.pill[1] + V.layout.pill[3] / 2];
+const ORB = [V.layout.orb[0] + V.layout.orb[2] / 2, V.layout.orb[1] + V.layout.orb[3] / 2];
+const BASE = -22;             // the lettering's own slant, degrees
+
+async function load() {
+  // render.mjs hands these in (file:// pages cannot fetch); served over http, the page fetches them itself
+  [MARK, TRACE] = window.ASSETS ?? await Promise.all(['out/mark.json', 'out/duck-trace.json'].map(u => fetch(u).then(r => r.json())));
+  const lg = el('g', { transform: MARK.transform }, $('markLetters'));
+  MARK.letters.forEach(d => el('path', { d }, lg));
+  el('path', { d: MARK.swoosh }, el('g', { transform: MARK.transform }, $('markSwoosh')));
+  const dg = el('g', { transform: TRACE.transform }, $('duckDrawPaths'));
+  TRACE.els = TRACE.paths.flatMap(d => d.split(/(?=M)/)).map(d => el('path', { d }, dg));
+  TRACE.lens = TRACE.els.map(p => p.getTotalLength() * 0.1);   // the group scales by 0.1
+  TRACE.total = TRACE.lens.reduce((a, b) => a + b, 0);
+  set($('duckGroup'), { transform: `translate(${DUCK.x} ${DUCK.y}) scale(${DUCK.s})` });
+  await Promise.all(['JetBrains Mono', 'Space Grotesk', 'VT323'].flatMap(f => [400, 700].map(w => document.fonts.load(`${w} 20px "${f}"`))));
+  await document.fonts.ready;
+  await Promise.all([...document.querySelectorAll('image')].map(im => new Promise(res => {
+    const i = new Image(); i.onload = i.onerror = res; i.src = im.getAttribute('href');
+  })));
+}
+
+// ---------- camera ----------
+// keyframes: [t, zoom, cx, cy, rotDeg]; Catmull-Rom between them, so the move never stops dead between keys
+// each key frames a region of the world [t, width, height, cx, cy, rotDeg]; the zoom is whatever fits it on this
+// screen. From 7.0 the camera is the identity: the world's (960, 540) at the screen's middle, 1:1.
+const CAM = [...L.cam.map(([t, rw, rh, cx, cy, r]) => [t, Math.min(W / rw, H / rh), cx, cy, r]),
+  [7.0, 1, 960, 540, 0], [99, 1, 960, 540, 0]];
+function camAt(t) {
+  let i = CAM.findIndex((k, j) => t >= k[0] && t < CAM[j + 1][0]);
+  if (i < 0) i = CAM.length - 2;
+  const k0 = CAM[Math.max(0, i - 1)], k1 = CAM[i], k2 = CAM[i + 1], k3 = CAM[Math.min(CAM.length - 1, i + 2)];
+  let u = (t - k1[0]) / (k2[0] - k1[0]);
+  // the last approach (6.5 -> 7.0) is the implosion's push-in: accelerate into it instead of gliding
+  if (k1[0] === 6.5) u = E.inCubic(u);
+  const cr = (a, b, c, d) => 0.5 * (2 * b + (-a + c) * u + (2 * a - 5 * b + 4 * c - d) * u * u + (-a + 3 * b - 3 * c + d) * u * u * u);
+  const out = [1, 2, 3, 4].map(j => (k1[0] === 6.5 || k1[0] >= 7) ? lerp(k1[j], k2[j], u) : cr(k0[j], k1[j], k2[j], k3[j]));
+  // a hand-held breath: tiny, slow, never on the hand-off
+  const breath = 1 - seg(t, 6.4, 7.0);
+  out[1] += Math.sin(t * 1.3) * 3 * breath; out[2] += Math.cos(t * 1.1) * 2 * breath;
+  return { zoom: out[0], cx: out[1], cy: out[2], rot: out[3] };
+}
+const camTransform = c => `translate(${W / 2} ${H / 2}) rotate(${c.rot}) scale(${c.zoom}) translate(${-c.cx} ${-c.cy})`;
+// world -> screen through a camera
+const camPoint = (c, x, y) => { const r = c.rot * Math.PI / 180, dx = (x - c.cx) * c.zoom, dy = (y - c.cy) * c.zoom;
+  return [W / 2 + dx * Math.cos(r) - dy * Math.sin(r), H / 2 + dx * Math.sin(r) + dy * Math.cos(r)]; };
+// grid phase: world lines sit where, at the identity camera, they land on the site's screen multiples of 44
+const GX = (((960 - W / 2) % 44) + 44) % 44, GY = (((540 - H / 2) % 44) + 44) % 44;
+
+function drawGrid(c) {
+  // grid lines live at world multiples of 44 (identical to the site's at the identity camera)
+  const span = 0.75 * Math.max(W, H) / c.zoom, k0 = Math.floor((c.cx - span) / 44), k1 = Math.ceil((c.cx + span) / 44);
+  const j0 = Math.floor((c.cy - span) / 44), j1 = Math.ceil((c.cy + span) / 44);
+  const P = (x, y) => camPoint(c, x, y);
+  let d = '';
+  const f = v => v.toFixed(2);
+  for (let k = k0; k <= k1; k++) { const a = P(k * 44 + GX + 0.5, c.cy - span), b = P(k * 44 + GX + 0.5, c.cy + span); d += `M${f(a[0])} ${f(a[1])}L${f(b[0])} ${f(b[1])}`; }
+  for (let j = j0; j <= j1; j++) { const a = P(c.cx - span, j * 44 + GY + 0.5), b = P(c.cx + span, j * 44 + GY + 0.5); d += `M${f(a[0])} ${f(a[1])}L${f(b[0])} ${f(b[1])}`; }
+  set($('grid'), { d, 'shape-rendering': Math.abs(c.zoom - 1) < 1e-3 && !c.rot ? 'crispEdges' : 'geometricPrecision', 'stroke-width': Math.max(1, Math.min(1.6, c.zoom)) });
+}
+
+// ---------- the frame ----------
+function render(t) {
+  const c = camAt(t);
+  set($('cam'), { transform: camTransform(c) });
+  drawGrid(c);
+  // line weight: lets the zoom thicken the ink a little, not all the way (a 3x push would make 5px lines)
+  const lw = 1.7 / Math.pow(c.zoom, 0.55);
+
+  // --- 0 · the cursor, then the point ---
+  const caretOn = t >= 0.22 && t < 0.98 && !((t > 0.47 && t < 0.62) || (t > 0.8 && t < 0.92));
+  const squash = seg(t, 0.92, 1.08);
+  const caretVis = t >= 0.22 && t < 1.08;
+  const cw = 20 * lerp(1, 0.55, E.inCubic(squash)), chh = 38 * lerp(1, 0.3, E.inCubic(squash));
+  set($('caret'), { x: 960 - cw / 2, y: 540 - chh / 2, width: cw, height: chh, opacity: caretVis && (caretOn || squash > 0) ? 1 : 0, rx: squash * 5 });
+  // the point: born out of the caret, and the pen at the end
+  const pointR = t < 1.08 ? 0 : t < 6.62 ? 6.5 * E.outBack(seg(t, 1.05, 1.25)) : 0;
+
+  // --- 1 · traces ---
+  const collapse = seg(t, 6.55, 7.0);
+  for (const { tr, bed, ink, via, head } of traceEls) {
+    const p = E.outCubic(seg(t, tr.t[0], tr.t[1]));
+    const retract = E.inCubic(seg(t, 6.0, 6.55));
+    const { d, end } = partial(tr.pts, p);
+    set(ink, { d, 'stroke-width': lw * (tr.w ? 1.25 : 1) });
+    set(bed, { d, 'stroke-width': lw * 7 });
+    const drawing = p > 0 && p < 1;
+    set(head, { cx: end[0], cy: end[1], r: drawing ? 3.4 / Math.sqrt(c.zoom) : 0 });
+    if (via) {
+      const v = E.outBack(seg(t, tr.t[1] - 0.02, tr.t[1] + 0.2));
+      set(via, { cx: tr.pts.at(-1)[0], cy: tr.pts.at(-1)[1], r: v * (tr.to ? 5 : 6), 'stroke-width': lw * 1.1 });
+    }
+    // traces fade to a whisper while the prints take over, then go with the implosion
+    const keep = 1 - 0.55 * E.inOutCubic(seg(t, 3.6, 5.6)) - 0.45 * retract;
+    ink.setAttribute('stroke-opacity', keep); bed.setAttribute('stroke-opacity', 0.08 * keep);
+  }
+
+  // --- 1 · the systems ---
+  {
+    const o = OBJ.browser, p = E.inOutCubic(seg(t, o.at, o.at + 0.5));
+    set(o.frame, { d: partial(rectPts(o.x, o.y, o.w, o.h), p).d, 'stroke-width': lw * 1.15 });
+    o.fill.setAttribute('opacity', 0.55 * seg(t, o.at + 0.35, o.at + 0.7));
+    set(o.bar, { d: partial([[o.x, o.y + 36], [o.x + o.w, o.y + 36]], E.outCubic(seg(t, o.at + 0.3, o.at + 0.6))).d, 'stroke-width': lw });
+    o.dots.forEach((dt, i) => set(dt, { r: 5 * E.outBack(seg(t, o.at + 0.35 + i * 0.05, o.at + 0.55 + i * 0.05)), 'stroke-width': lw }));
+    o.pill.setAttribute('width', 260 * E.outCubic(seg(t, o.at + 0.45, o.at + 0.75)));
+    o.url.textContent = 'zarutech.dev'.slice(0, Math.floor(12 * seg(t, o.at + 0.6, o.at + 1.0)));
+    o.wf.setAttribute('opacity', 0.75 * seg(t, o.at + 0.7, o.at + 1.0));
+    o.bars.forEach((b, i) => b.setAttribute('width', +b.getAttribute('data-w') * E.outExpo(seg(t, o.at + 0.85 + i * 0.12, o.at + 1.2 + i * 0.12))));
+  }
+  {
+    const o = OBJ.code, p = E.inOutCubic(seg(t, o.at, o.at + 0.5));
+    set(o.frame, { d: partial(rectPts(o.x, o.y, o.w, o.h), p).d, 'stroke-width': lw * 1.15 });
+    o.fill.setAttribute('opacity', 0.6 * seg(t, o.at + 0.3, o.at + 0.6));
+    o.label.textContent = 'components/sections/IntroHero.tsx'.slice(0, Math.floor(34 * seg(t, o.at + 0.3, o.at + 0.6)));
+    set(o.rule, { d: partial([[o.x, o.y + 40], [o.x + o.w, o.y + 40]], seg(t, o.at + 0.35, o.at + 0.6)).d, 'stroke-width': lw });
+    // typed at ~110 characters a second, a line at a time
+    let budget = Math.max(0, (t - (o.at + 0.5)) * 140);
+    for (const ln of o.lines) {
+      ln.num.setAttribute('opacity', budget > 0 ? 1 : 0);
+      let left = Math.min(budget, ln.n); budget -= ln.n;
+      for (const { s, sp } of ln.spans) { const k = Math.max(0, Math.min(s.length, left)); sp.textContent = s.slice(0, Math.floor(k)); left -= s.length; }
+    }
+  }
+  {
+    const o = OBJ.chip, p = seg(t, o.at, o.at + 0.6);
+    set(o.outline, { d: partial(rectPts(o.cx - o.s / 2, o.cy - o.s / 2, o.s, o.s), E.inOutCubic(p)).d, 'stroke-width': lw * 1.2 });
+    o.body.setAttribute('opacity', E.outCubic(seg(t, o.at + 0.45, o.at + 0.75)));
+    o.dot.setAttribute('r', 5 * E.outBack(seg(t, o.at + 0.7, o.at + 0.9)));
+    o.ref.setAttribute('opacity', seg(t, o.at + 0.7, o.at + 0.9));
+    o.silk.setAttribute('opacity', seg(t, o.at + 0.8, o.at + 1.0));
+    for (const pin of o.pins) {
+      const q = E.outCubic(seg(t, o.at + 0.3 + pin.k * 0.012, o.at + 0.5 + pin.k * 0.012));
+      set(pin.el, { d: partial([pin.a, pin.b], q).d });
+      if (pin.fan) {
+        set(pin.fan, { d: partial([pin.b, pin.c], E.outCubic(seg(t, o.at + 0.6 + pin.k * 0.01, o.at + 0.95 + pin.k * 0.01))).d, 'stroke-width': lw });
+        set(pin.pad, { cx: pin.c[0], cy: pin.c[1], r: 4 * E.outBack(seg(t, o.at + 0.9 + pin.k * 0.01, o.at + 1.05 + pin.k * 0.01)), 'stroke-width': lw });
+      }
+    }
+  }
+  {
+    const o = OBJ.torus, p = E.outCubic(seg(t, o.at, o.at + 0.9));
+    // rotation keeps going all the way to the implosion: the one thing in the frame that is always moving
+    const a = 0.9 + t * 0.55, b = 0.35 + t * 0.32, ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b);
+    const proj = (u, v) => {
+      const x = (o.R + o.r * Math.cos(v)) * Math.cos(u), y = (o.R + o.r * Math.cos(v)) * Math.sin(u), z = o.r * Math.sin(v);
+      const y1 = y * ca - z * sa, z1 = y * sa + z * ca;     // about x
+      const x2 = x * cb + z1 * sb, z2 = -x * sb + z1 * cb;  // about y
+      return [o.cx + x2, o.cy + y1, z2];
+    };
+    const ringN = o.rings.length, tubeN = o.tubes.length;
+    o.rings.forEach((pe, i) => {
+      const u = (i / ringN) * Math.PI * 2, pts = Array.from({ length: 25 }, (_, k) => proj(u, (k / 24) * Math.PI * 2));
+      const z = pts.reduce((m, q) => m + q[2], 0) / pts.length;
+      const show = seg(p, i / ringN * 0.6, i / ringN * 0.6 + 0.4);
+      set(pe, { d: partial(pts, show).d, 'stroke-width': lw * 0.85, 'stroke-opacity': lerp(0.25, 0.95, (z + o.R) / (2 * o.R)) });
+    });
+    o.tubes.forEach((pe, i) => {
+      const v = (i / tubeN) * Math.PI * 2, pts = Array.from({ length: 49 }, (_, k) => proj((k / 48) * Math.PI * 2, v));
+      set(pe, { d: partial(pts, seg(p, 0.2, 1)).d, 'stroke-width': lw * 0.85, 'stroke-opacity': 0.55 });
+    });
+    set(o.axis, { d: partial([[o.cx, o.cy - 190], [o.cx, o.cy + 190]], seg(t, o.at + 0.2, o.at + 0.8)).d, 'stroke-width': lw });
+  }
+  {
+    const o = OBJ.term, p = E.inOutCubic(seg(t, o.at, o.at + 0.45));
+    set(o.frame, { d: partial(rectPts(o.x, o.y, o.w, o.h), p).d, 'stroke-width': lw });
+    o.fill.setAttribute('opacity', seg(t, o.at + 0.2, o.at + 0.5));
+    const show = t > o.at + 0.35;
+    o.user.textContent = show ? 'nonthanaphong' : ''; o.at_.textContent = show ? '@exe' : ''; o.path_.textContent = show ? ':~$ ' : '';
+    o.txt.setAttribute('opacity', seg(t, o.at + 0.35, o.at + 0.5));
+    const cmd = 'cd projects/'; o.cmd.textContent = cmd.slice(0, Math.floor(cmd.length * seg(t, o.at + 0.7, o.at + 1.15)));
+    let w = 0; try { w = o.txt.getComputedTextLength(); } catch {}
+    const blink = t < o.at + 0.7 || t > o.at + 1.15 ? (Math.floor(t * 2.6) % 2 === 0) : true;
+    set(o.caret, { x: o.x + 26 + w, opacity: show && blink ? 1 : 0 });
+    o.ok.setAttribute('opacity', seg(t, o.at + 1.25, o.at + 1.3));
+  }
+  // the systems step back once the prints arrive, and leave with the implosion
+  $('objects').setAttribute('opacity', 1 - 0.35 * E.inOutCubic(seg(t, 3.8, 5.6)) - 0.35 * seg(t, 6.0, 6.5));
+
+  // --- 2 · the prints ---
+  const sheet = E.inOutQuint(seg(t, 6.0, 6.5));
+  CARDS.forEach((cd, i) => {
+    const a = seg(t, cd.t, cd.t + 0.42);
+    if (a <= 0) { cd.g.setAttribute('opacity', 0); cd.linkEl.setAttribute('d', ''); return; }
+    const drop = E.outBack(a), land = E.outExpo(a);
+    // a print drops in from a little above the desk: bigger, tilted further, then settles
+    const [sx, sy] = SHEET[i];
+    const x = lerp(cd.pos[0], sx, sheet), y = lerp(cd.pos[1] - 40 * (1 - land), sy, sheet);
+    const rot = lerp(cd.rot + (1 - land) * cd.rot * 3, 0, sheet), sc = lerp(1.18, 1, drop) * lerp(1, 0.94, sheet);
+    set(cd.g, { transform: `translate(${x} ${y}) rotate(${rot}) scale(${sc})`, opacity: Math.min(1, a * 5) });
+    cd.flash.setAttribute('opacity', 0.85 * (1 - seg(t, cd.t, cd.t + 0.16)));
+    // the wire back to its system, drawn after the print lands
+    const an = ANCHOR[cd.link], lp = E.outCubic(seg(t, cd.t + 0.12, cd.t + 0.5)) * (1 - seg(t, 5.95, 6.15));
+    const mid = [(an[0] + x) / 2, an[1]];
+    set(cd.linkEl, { d: partial([an, mid, [x, y]], lp).d, 'stroke-width': lw * 0.9, 'stroke-opacity': 0.55 });
+  });
+
+  // --- 3 · implosion into the point ---
+  const imp = E.inExpo(collapse);
+  set($('implode'), { transform: `translate(960 540) rotate(${imp * 10}) scale(${1 - imp}) translate(-960 -540)`, opacity: 1 - seg(t, 6.88, 7.0) });
+  // the point lives in world space until 7.0 (the camera is the identity from there)
+  const nibBeforeLock = pointR * (1 + 0.6 * E.inCubic(collapse));
+  set($('cursor'), {});
+  const shockP = seg(t, 6.98, 7.55);
+  set($('shock'), { cx: 960, cy: 540, r: 20 + 520 * Math.max(W, H) / 1920 * E.outExpo(shockP), 'stroke-width': 2.2 * (1 - shockP), 'stroke-opacity': shockP > 0 ? 0.6 * (1 - shockP) : 0 });
+
+  // --- 4 · the lettering ---
+  // its transform runs from the lockup to the duck's chest; the pen writes it in between
+  const fly = E.inOutCubic(seg(t, 8.32, 9.08));
+  const rise = E.outCubic(seg(t, 7.0, 8.3));   // a slow push while it is written
+  const lsc = Math.exp(lerp(Math.log(LOCK.sc * (0.965 + 0.035 * rise)), Math.log(LAND.sc), fly));
+  // an arc, not a straight line: it lifts before it drops onto the chest
+  const fx = lerp(LOCK.x, LAND.x, fly), fy = lerp(LOCK.y, LAND.y, fly) - Math.sin(fly * Math.PI) * 70;
+  const frot = lerp(LOCK.rot, LAND.rot, E.inOutSine(seg(t, 8.32, 9.08)));
+  set($('mark'), { transform: `translate(${fx} ${fy}) rotate(${frot}) scale(${lsc}) translate(${-MC[0] - 180 + 180} ${-MC[1]})`, opacity: t < 6.98 ? 0 : 1 });
+  // the wipe runs along the lettering's slant; positions in crop pixels, in the slant's rotated frame
+  const wl = E.inOutSine(seg(t, 7.04, 7.72)), ws = E.inOutCubic(seg(t, 7.66, 7.98));
+  const WL0 = 10, WL1 = 300, WS0 = 30, WS1 = 280;
+  const ex = lerp(WL0, WL1, wl), sx_ = lerp(WS0, WS1, ws);
+  set($('wipeL'), { transform: `rotate(${BASE} ${MC[0]} ${MC[1]})` });
+  set($('wipeL').children[0], { width: ex + 400 - 26 }); set($('wipeL').children[1], { x: ex - 26 });
+  set($('wipeS'), { transform: `rotate(${BASE - 2} ${MC[0]} ${MC[1]})` });
+  set($('wipeS').children[0], { width: sx_ + 400 - 26 }); set($('wipeS').children[1], { x: sx_ - 26 });
+
+  // the pen: the point that started it, riding the wipe's edge
+  const toScreen = (u, v) => {   // crop px (unrotated) -> screen, with the lettering's current transform
+    const r = frot * Math.PI / 180, dx = (u - MC[0]) * lsc, dy = (v - MC[1]) * lsc;
+    return [fx + dx * Math.cos(r) - dy * Math.sin(r), fy + dx * Math.sin(r) + dy * Math.cos(r)];
+  };
+  const unslant = (x, y, deg) => { const r = deg * Math.PI / 180, dx = x - MC[0], dy = y - MC[1]; return [MC[0] + dx * Math.cos(r) - dy * Math.sin(r), MC[1] + dx * Math.sin(r) + dy * Math.cos(r)]; };
+  let nib = null, nibR = 0;
+  if (t < 7.0) { nib = [960, 540]; nibR = nibBeforeLock * (t < 6.62 ? 1 : 1 - seg(t, 6.85, 7.0) * 0) ; }
+  if (t >= 6.62 && t < 7.0) { nibR = 6.5 * (1 + 0.8 * E.inCubic(collapse)); }
+  if (t >= 7.0 && t < 7.66) {
+    // a pen moves in a little scribble on the way across: up and down with the letter heights
+    const wob = Math.sin(wl * Math.PI * 9) * 14 + Math.sin(wl * Math.PI * 23) * 5;
+    const p0 = unslant(ex - 6, 104 + wob, BASE);
+    nib = toScreen(...p0); nibR = 7 * (t < 7.06 ? E.outCubic(seg(t, 7.0, 7.06)) : 1);
+    // from the centre to the start of the stroke, before the wipe has moved
+    if (t < 7.12) { const k = E.inOutCubic(seg(t, 7.0, 7.12)); nib = [lerp(W / 2, nib[0], k), lerp(H / 2, nib[1], k)]; }
+  } else if (t >= 7.66 && t < 8.04) {
+    // the swoosh runs from its tail (67,185) to its tip (242,106), crop px; find where the wipe's edge crosses it
+    const th = (BASE - 2) * Math.PI / 180, xr = ([u, v]) => MC[0] + (u - MC[0]) * Math.cos(th) + (v - MC[1]) * Math.sin(th);
+    const A = [67, 185], B = [242, 106], k = clamp01((sx_ - 8 - xr(A)) / (xr(B) - xr(A)));
+    nib = toScreen(lerp(A[0], B[0], k), lerp(A[1], B[1], k)); nibR = 7 * (1 - seg(t, 7.96, 8.04));
+  }
+  // the point itself (world-space until 7.0, screen-space afterwards — identical then)
+  if (nib) {
+    const [nx, ny] = t < 7.0 ? (() => { const r = c.rot * Math.PI / 180; return [960, 540].map((v, i) => v); })() : nib;
+    if (t < 7.0) {
+      // in world space at the centre; the camera may be rotated/zoomed, so place it through the camera
+      const [px, py] = camPoint(c, 960, 540);
+      set($('nib'), { cx: px, cy: py, r: nibR * Math.sqrt(c.zoom) });
+    } else set($('nib'), { cx: nx, cy: ny, r: nibR });
+  } else set($('nib'), { r: 0 });
+
+  // the address, typed under the lettering, then carried up into the site's prompt
+  const urlP = seg(t, 7.98, 8.3);
+  const url = 'zarutech.dev';
+  const typed = url.slice(0, Math.ceil(url.length * urlP));
+  const caretOnU = t > 7.98 && t < 8.55 && Math.floor(t * 5) % 2 === 0;
+  $('url').textContent = typed + (caretOnU ? '▍' : '');
+  const up = E.inOutCubic(seg(t, 8.32, 8.95));
+  const urlTo = Math.min(1, 16 / URL_FONT);
+  set($('url'), { transform: `translate(${lerp(0, PILL[0] - W / 2, up)} ${lerp(0, PILL[1] + 6 - URL_Y, up)}) translate(${W / 2} ${URL_Y}) scale(${lerp(1, urlTo, up)}) translate(${-W / 2} ${-URL_Y})`, opacity: t < 7.98 ? 0 : 1 - seg(t, 8.8, 9.05) });
+
+  // --- 5 · the hero, built around the lettering ---
+  // the duck's ink draws in, contour by contour, as the lettering lands
+  if (TRACE) {
+    const dp = E.inOutSine(seg(t, 8.7, 9.42));
+    let acc = 0;
+    TRACE.els.forEach((pe, i) => {
+      const L = TRACE.lens[i] * 10;   // in the path's own (0.1-scaled) units
+      const startAt = acc / TRACE.total * 0.55; acc += TRACE.lens[i];
+      const q = seg(dp, startAt, startAt + 0.45);
+      set(pe, { 'stroke-dasharray': `${L} ${L}`, 'stroke-dashoffset': L * (1 - q), 'stroke-width': 260 });
+    });
+  }
+  $('h-duckInk').setAttribute('opacity', t < 8.7 ? 0 : 1 - seg(t, 9.5, 9.7));
+  $('h-duck').setAttribute('opacity', E.outCubic(seg(t, 9.28, 9.6)));
+  $('mark').style.opacity = t < 6.98 ? 0 : 1 - seg(t, 9.45, 9.6);
+  $('h-wash').setAttribute('opacity', E.inOutSine(seg(t, 9.1, 10.0)));
+  const riseIn = (id, at) => { const k = E.site(seg(t, at, at + 0.6)); set($(id), { opacity: k, transform: `translate(0 ${14 * (1 - k)})` }); };
+  riseIn('h-line1', 9.32); riseIn('h-line2', 9.56); riseIn('h-line3', 9.8);
+  const orbK = E.site(seg(t, 9.5, 10.15));
+  set($('h-orb'), { opacity: orbK, transform: `translate(${ORB[0]} ${ORB[1]}) scale(${lerp(0.9, 1, orbK)}) translate(${-ORB[0]} ${-ORB[1]})` });
+  riseIn('h-bubble', 9.95);
+  riseIn('h-ticker', 9.62); riseIn('h-name', 9.62);
+  $('h-prompt').setAttribute('opacity', E.outCubic(seg(t, 8.82, 9.1)));
+  riseIn('h-cue', 10.0);
+  // the last few frames hand over to the captured page itself, so the cut to the live site is exact
+  $('full').setAttribute('opacity', seg(t, 10.45, 10.62));
+}
+
+window.DURATION = DURATION;
+window.ready = load().then(() => { window.render = render; render(0); return true; });
+// played in a browser: loop the opening in real time, or freeze one frame with ?t=
+window.ready.then(() => {
+  const q = new URLSearchParams(location.search);
+  if (q.has('t')) return render(+q.get('t'));
+  if (q.has('still')) return;
+  const t0 = performance.now();
+  const tick = () => { render(((performance.now() - t0) / 1000) % (DURATION + 0.8)); requestAnimationFrame(tick); };
+  if (!navigator.webdriver) requestAnimationFrame(tick);
+});
+</script>
+</body>
+</html>

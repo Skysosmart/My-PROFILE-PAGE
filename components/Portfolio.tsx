@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 
 import BootScreen from '@/components/BootScreen'
+import OpeningFilm from '@/components/OpeningFilm'
 import Header from '@/components/Header'
 import NameTag from '@/components/NameTag'
 
@@ -57,15 +58,21 @@ export default function Portfolio({
   formEnabled?: boolean
 }) {
   // 'unknown' until the client has looked at sessionStorage: a visitor who
-  // already sat through the boot this session lands on the site directly,
-  // and ?boot=1 replays it on purpose
-  const [phase, setPhase] = useState<'unknown' | 'boot' | 'site'>('unknown')
+  // already sat through the opening this session lands on the site directly,
+  // and ?boot=1 replays it on purpose. The opening is the film; the terminal
+  // boot log it replaced is still here, at ?boot=terminal.
+  const [phase, setPhase] = useState<'unknown' | 'film' | 'boot' | 'site'>('unknown')
+  // the film mounts the site behind itself before it ends: see OpeningFilm
+  const [revealed, setRevealed] = useState(false)
   useEffect(() => {
     let seen = false
+    let terminal = false
     try {
-      seen = sessionStorage.getItem('booted') === '1' && !new URLSearchParams(location.search).has('boot')
+      const q = new URLSearchParams(location.search)
+      seen = sessionStorage.getItem('booted') === '1' && !q.has('boot')
+      terminal = q.get('boot') === 'terminal'
     } catch {}
-    setPhase(seen ? 'site' : 'boot')
+    setPhase(seen ? 'site' : terminal ? 'boot' : 'film')
   }, [])
   // stable identity so BootScreen's timers are never reset by a new prop
   const start = useCallback(() => {
@@ -74,7 +81,8 @@ export default function Portfolio({
     } catch {}
     setPhase('site')
   }, [])
-  const started = phase === 'site'
+  const reveal = useCallback(() => setRevealed(true), [])
+  const started = phase === 'site' || revealed
 
   return (
     <>
@@ -84,6 +92,7 @@ export default function Portfolio({
           the boot screen was to click it. BootScreen fades itself out and then
           calls onStart, so a plain conditional is both simpler and reliable. */}
       {phase === 'boot' && <BootScreen onStart={start} />}
+      {phase === 'film' && <OpeningFilm onReveal={reveal} onDone={start} />}
 
       {/* Site */}
       {started && (

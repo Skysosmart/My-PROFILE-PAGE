@@ -1,5 +1,6 @@
 'use client'
 
+import { useSyncExternalStore } from 'react'
 import { certificates, assets } from '@/data/portfolio'
 
 const thumb = (file: string) => assets.certDir + 'thumbs/' + encodeURIComponent(file)
@@ -14,10 +15,26 @@ const thumb = (file: string) => assets.certDir + 'thumbs/' + encodeURIComponent(
  * marquee is seamless. Pure CSS transform animation (GPU-cheap); the global
  * prefers-reduced-motion rule freezes it. Absolute (not fixed) - scrolls away
  * with the section.
+ *
+ * Not on a phone. The wall is masked across the whole section, which on a
+ * phone is ~9000px tall, and a mask over running animations has to be
+ * composited at that full size: ~130MB at 3x, on top of the rest of the
+ * page. That was enough for iOS Safari to kill the tab partway down and
+ * reload it at the hero. At 16% opacity behind the gallery a phone loses
+ * little, and it no longer fetches the 112 thumbnails either.
  */
 const ROWS = 3
+const WIDE = '(min-width: 768px)'
+const subscribe = (cb: () => void) => {
+  const mq = window.matchMedia(WIDE)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
 
 export default function CertWall() {
+  // false on the server and the first client paint, so hydration agrees
+  const wide = useSyncExternalStore(subscribe, () => window.matchMedia(WIDE).matches, () => false)
+  if (!wide) return null
   // Split all certs across the rows.
   const per = Math.ceil(certificates.length / ROWS)
   const rows = Array.from({ length: ROWS }, (_, r) =>

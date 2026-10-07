@@ -106,7 +106,7 @@ export default function CertArchive() {
       <div className="z-30 mt-5 border-y border-fg/10 bg-bg/85 backdrop-blur-xl lg:sticky lg:top-0">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="flex min-w-0 flex-1 basis-56 items-center gap-2 rounded-full border border-fg/15 bg-fg/4 px-4 py-2 transition-colors focus-within:border-fg/45 sm:max-w-xs">
+            <label className="flex min-w-0 flex-1 basis-56 items-center gap-2 rounded-[3px] border border-fg/20 bg-white/60 px-4 py-2 transition-colors focus-within:border-fg/45 sm:max-w-xs">
               <span aria-hidden className="shrink-0 text-fg-dim">
                 &#9906;
               </span>
@@ -148,21 +148,21 @@ export default function CertArchive() {
                   key={c.key}
                   onClick={() => setCat(c.key)}
                   aria-pressed={on}
-                  className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
-                    on ? 'text-bg' : 'text-fg/70 hover:text-fg'
+                  className={`relative rounded-[3px] border border-fg/20 px-3.5 py-1.5 font-mono text-[0.8125rem] font-medium transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
+                    on ? 'border-[#111] text-[#111]' : 'text-fg/75 hover:border-fg/50 hover:text-fg'
                   }`}
                 >
                   {on && (
                     <motion.span
                       layoutId="cert-pill-archive"
                       transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                      className="absolute inset-0 rounded-full bg-fg shadow-lg"
+                      className="absolute inset-0 rounded-[2px] bg-accent"
                     />
                   )}
                   <span className="relative flex items-center gap-2">
                     <span className={`h-1.5 w-1.5 rounded-full ${c.dot}`} />
                     {c.label}
-                    <span className={on ? 'text-bg/60' : 'text-fg-dim'}>
+                    <span className={on ? 'text-[#111]/60' : 'text-fg-dim'}>
                       {(byCat.get(c.key) ?? []).length}
                     </span>
                   </span>
@@ -183,7 +183,7 @@ export default function CertArchive() {
                 setQuery('')
                 setCat('all')
               }}
-              className="mt-4 rounded-full border border-fg/25 px-4 py-1.5 font-sans text-sm text-fg/80 transition-colors hover:border-fg/60 hover:text-fg"
+              className="mt-4 rounded-[3px] border border-fg/30 px-4 py-1.5 font-sans text-sm text-fg/80 transition-colors hover:border-fg/60 hover:text-fg"
             >
               Show all {certStats.total}
             </button>

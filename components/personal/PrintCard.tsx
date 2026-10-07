@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { motion, useReducedMotion } from 'motion/react'
 import type { Certificate, Moment } from '@/data/portfolio'
 import { fmt } from '@/data/ui'
+import { coverOf } from '@/lib/certs'
 
 export type Album = {
   key: string
@@ -29,7 +30,7 @@ type Labels = {
 /**
  * One photograph, as a print you can turn over.
  *
- * The front is the picture on the site's printed stock - the same #f3f0e8,
+ * The front is the picture on the site's printed stock - the same white card,
  * the same 1px rgba(17,17,17,0.45) edge and the same hard offset shadow the
  * spec label and the quick-start notes use. The back is the same card with
  * no picture: what the day was, in Sky's words, and the certificate it
@@ -69,7 +70,7 @@ export default function PrintCard({
   const face = 'absolute inset-0 [backface-visibility:hidden]'
   // the stock, in one place: change it here and both faces follow
   const stock =
-    'rounded-[0.1875rem] border border-[#111]/45 bg-[#f3f0e8] text-[#111] shadow-[5px_5px_0_rgba(17,17,17,0.9)]'
+    'rounded-[0.1875rem] border border-[#111]/45 bg-white text-[#111] shadow-[5px_5px_0_rgba(17,17,17,0.9)]'
 
   return (
     // perspective on the outer box, never on the rotating element itself -
@@ -92,7 +93,7 @@ export default function PrintCard({
         >
           <span className="relative block min-h-0 flex-1 overflow-hidden bg-neutral-200">
             <Image
-              src={cover(key, album.photos[0])}
+              src={cover(key, coverOf(album))}
               alt=""
               fill
               draggable={false}
@@ -106,7 +107,7 @@ export default function PrintCard({
             />
           </span>
           {/* the white lip under a photo print, where a hand writes the date */}
-          <span className="mt-2 block truncate font-mono text-[0.5625rem] uppercase tracking-[0.14em] th:tracking-[0.04em] text-[#111]/60">
+          <span className="mt-2 block truncate font-mono text-[0.6875rem] uppercase tracking-[0.14em] th:tracking-[0.04em] text-[#111]/60">
             {album.label}
           </span>
         </button>
@@ -116,7 +117,7 @@ export default function PrintCard({
           inert={!flipped}
           className={`${face} ${stock} [transform:rotateY(180deg)] flex flex-col gap-3 p-4`}
         >
-          <p className="font-mono text-[0.625rem] uppercase leading-[1.3] th:leading-[1.7] tracking-[0.16em] th:tracking-[0.04em] text-[#111]/70">
+          <p className="font-mono text-[0.75rem] uppercase leading-[1.3] th:leading-[1.7] tracking-[0.16em] th:tracking-[0.04em] text-[#111]/70">
             {album.label}
           </p>
 
@@ -136,7 +137,7 @@ export default function PrintCard({
                 than one certificate, and naming only the first would hide six
                 of MakeX's seven */}
             {cert && (
-              <p className="font-mono text-[0.5625rem] uppercase leading-[1.4] th:leading-[1.7] tracking-[0.12em] th:tracking-[0.03em] text-[#111]/55">
+              <p className="font-mono text-[0.6875rem] uppercase leading-[1.4] th:leading-[1.7] tracking-[0.12em] th:tracking-[0.03em] text-[#111]/55">
                 {t.earned} · {cert.title}
                 {certCount > 1 && <span className="text-[#111]/45"> · {fmt(t.more, { n: certCount - 1 })}</span>}
               </p>
@@ -146,14 +147,14 @@ export default function PrintCard({
                 type="button"
                 onClick={onOpen}
                 data-cursor-label="open album"
-                className="rounded-xs border border-[#111]/40 px-2 py-1 font-mono text-[0.5625rem] uppercase tracking-[0.12em] th:tracking-[0.03em] transition-colors hover:bg-[#111] hover:text-[#f3f0e8] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+                className="rounded-xs border border-[#111]/40 px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.12em] th:tracking-[0.03em] transition-colors hover:bg-[#111] hover:text-[#f3f0e8] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
               >
                 {fmt(t.seeAll, { n: album.photos.length })}
               </button>
               <button
                 type="button"
                 onClick={onFlip}
-                className="font-mono text-[0.5625rem] uppercase tracking-[0.12em] th:tracking-[0.03em] text-[#111]/55 underline-offset-4 transition-colors hover:text-[#111] hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+                className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] th:tracking-[0.03em] text-[#111]/55 underline-offset-4 transition-colors hover:text-[#111] hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
               >
                 {t.turnBack}
               </button>

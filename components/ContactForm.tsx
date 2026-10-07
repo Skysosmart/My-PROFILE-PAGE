@@ -58,12 +58,12 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-fg px-5 font-mono text-[0.6875rem] uppercase tracking-[0.15em] text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-fg px-5 font-mono text-[0.8125rem] uppercase tracking-[0.15em] text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {pending ? t.form.sending : t.form.send} →
         </button>
         {state && !state.ok && (
-          <p role="alert" className="flex items-center gap-2 font-mono text-[0.6875rem] text-red-400">
+          <p role="alert" className="flex items-center gap-2 font-mono text-[0.8125rem] text-red-400">
             <Emote name={FACE[state.code]} size={36} />
             {t.form[state.code]}
           </p>

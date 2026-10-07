@@ -219,7 +219,7 @@ export default function Header() {
                   </li>
                 )
               })}
-            <li className="flex items-center gap-3 border-t border-fg/10 px-3 py-1.5 text-[0.625rem] uppercase tracking-wider text-fg/25 sm:px-4">
+            <li className="flex items-center gap-3 border-t border-fg/10 px-3 py-1.5 text-[0.75rem] uppercase tracking-wider text-fg/25 sm:px-4">
                 <span>&#8593;&#8595; move</span>
                 <span>&#8629; open</span>
                 <span>esc close</span>

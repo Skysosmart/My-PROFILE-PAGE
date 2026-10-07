@@ -4,7 +4,7 @@
 //   url defaults to https://www.zarutech.dev/; a local `next start` works too
 // Writes out/hero[-variant]/*.png and layout.json (each layer's box in CSS px, plus the viewport).
 import { chromium } from "playwright-core";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { VARIANTS } from "./variants.mjs";
@@ -31,14 +31,16 @@ const LAYERS = {
   line1: `${hero} span.font-crt >> nth=0`,
   line2: `${hero} span.font-crt >> nth=1`,
   line3: `${hero} span.font-crt >> nth=2`,
-  orb: `${hero} .liquid-orb >> xpath=..`,
-  bubble: `${hero} .liquid-orb >> xpath=../span[contains(@class,'-top-16')]`,
+  note: `${hero} [data-hero-note]`,
   cue: `${hero} svg >> xpath=ancestor::div[contains(@class,'fixed')][1]`,
   ticker: `${hero} > div.absolute`,
   prompt: `body > header`,
   pill: `body > header > div`,
   name: `body > div.absolute`,
 };
+// next dev's corner badge lives in its own element; a dev-server capture must not carry it into the film
+await p.addStyleTag({ content: `nextjs-portal { display: none !important }` });
+await p.waitForTimeout(300);
 await p.screenshot({ path: join(OUT, "full.png") });
 // the paper alone: everything else hidden
 await p.addStyleTag({ content: `body > header, body > div.absolute, main, body > div.fixed:not(.page-tint) { visibility: hidden !important }` });
@@ -54,6 +56,8 @@ await p.addStyleTag({ content: `
 const layout = {};
 for (const [name, sel] of Object.entries(LAYERS)) {
   const el = p.locator(sel).first();
+  // a layer the hero no longer has (the note, the orb) is skipped; compose.html treats it as optional
+  if (!(await p.locator(sel).count())) { layout[name] = null; rmSync(join(OUT, `${name}.png`), { force: true }); continue; }
   await el.evaluate(e => e.setAttribute("data-layer", ""));
   const bb = await el.boundingBox();
   layout[name] = bb && [bb.x, bb.y, bb.width, bb.height].map(v => Math.round(v * 10) / 10);

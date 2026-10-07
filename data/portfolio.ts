@@ -61,6 +61,22 @@ export const profile = {
 }
 
 /* ---------------------------------------------------------------------------
+ *  SETUP - the work environment under the system profile. Every picture is a
+ *  real one from this site's own folders; a print with no picture is left
+ *  out, never faked.
+ * ------------------------------------------------------------------------- */
+export const setup: { desk: string | null; prints: { key: string; src: string }[] } = {
+  // the team's three trophies, CODEKIT website competition 2026 (3rd place)
+  desk: '/setup/codekit-trophies.jpg',
+  prints: [
+    { key: 'code', src: '/moments/codekit/02.jpg' }, // the CODEKIT website competition
+    { key: 'design', src: '/projects/posters/pdlite.jpg' }, // the PDLite poster
+    { key: 'build', src: '/moments/makex/04.jpg' }, // the MakeX robot on the bench
+    { key: 'test', src: '/moments/cyber-bootcamp/07.jpg' }, // the RTARF cyber bootcamp
+  ],
+}
+
+/* ---------------------------------------------------------------------------
  *  EDUCATION - the timeline, one chapter per school stage, oldest first.
  *  `from`/`to` are the years the chapter spans (to open = still there); the
  *  section counts the certificates dated inside them, so that number is
@@ -84,6 +100,8 @@ export type Chapter = {
   pillars: { label: string; text: string }[]
   /** one line to remember the chapter by */
   quote?: string
+  /** a real photograph from that stretch, with what it shows (no photo, no print) */
+  photo?: { src: string; alt: string }
 }
 
 export const education: Chapter[] = [
@@ -113,6 +131,8 @@ export const education: Chapter[] = [
     stage: 'Junior high',
     school: 'Watkhemapirataram School',
     logo: '/education/watkhemapirataram.png',
+    // the school's own photo of its building, from kma.ac.th (credited in the alt)
+    photo: { src: '/education/watkhemapirataram-campus.jpg', alt: 'Watkhemapirataram School building, Nonthaburi (photo: kma.ac.th)' },
     title: 'Trying everything',
     summary:
       'Coding for real: plugins, then back ends. Game development, robotics and electronics one after another, and none of them quite the one, until cyber security and CTF.',
@@ -132,6 +152,7 @@ export const education: Chapter[] = [
     school: 'Assumption College Thonburi',
     logo: '/education/act.png',
     href: 'https://www.act.ac.th',
+    photo: { src: '/moments/act-brand-ambassador/01.jpg', alt: 'ACT Content Creator 2025, ACT Brand Ambassador' },
     title: 'Build it, break it',
     summary:
       'Cyber security turned out to be the thing worth waking up for. Competitions and camps on the weekends, a device that won gold, and an ambassador year that taught how to explain any of it to a room.',
@@ -188,6 +209,8 @@ export const skills: SkillGroup[] = [
       // where, or cut the rows.
       { name: 'C#', level: 2, note: 'From the game-development stretch, one of the things tried before security became the line.' },
       { name: 'Go', level: 2, note: 'Small services and tools, where the whole deploy is one binary.' },
+      { name: 'Docker', level: 5, note: 'Everything I deploy ships as an image: built on GHCR, run as containers on the server.' },
+      { name: 'Rust', level: 3, note: 'Systems code where the compiler, not luck, keeps the memory safe.' },
     ],
   },
   {
@@ -220,6 +243,7 @@ export const skills: SkillGroup[] = [
     label: 'Python, data & AI',
     skills: [
       { name: 'Python', level: 4, tags: ['Python'], note: 'Scripts, pipelines, tooling, and most of the exploit code.' },
+      { name: 'R', level: 4, note: 'Statistics and data analysis: cleaning a dataset, modelling it, and plotting what it says.' },
       { name: 'OCR & NER pipelines', level: 3, tags: ['OCR', 'NER', 'Data Pipeline'], note: 'Scanned asset declarations into queryable records, for the Hackathon Digitize entry.' },
       { name: 'AI & ML', level: 2, note: 'Courses and camps so far: prompt engineering, data analytics, CiRA CORE.' },
     ],
@@ -232,6 +256,10 @@ export const skills: SkillGroup[] = [
       { name: 'Three.js & WebGL', level: 3, tags: ['React Three Fiber', '3D Hero', 'WebGL'], note: 'The orb, the torus, the Seluna moon, the Nebula dome.' },
       { name: 'Motion', level: 3, tags: ['GSAP'], note: 'GSAP and Motion: the reveals, the film, the water.' },
       { name: 'Graphic design', level: 4, tags: ['UI Design', 'Design'], note: 'Layout, type and colour, on screen and in print.' },
+      { name: 'Figma', level: 3, note: 'Interfaces before code: wireframes, components and the layout a page is built from.' },
+      { name: 'Blender', level: 4, note: 'Modelling, materials and renders, for the 3D that is shown rather than printed.' },
+      { name: 'Photoshop', level: 4, note: 'Photo editing and compositing: retouching, cut-outs and the graphics that go to print.' },
+      { name: 'Premiere Pro', level: 3, note: 'Video editing: cutting, pacing, titles and sound.' },
     ],
   },
 ]
@@ -322,11 +350,23 @@ export type Project = {
   contribution?: string
   demo?: string
   repo?: string
+  /** A screen recording of the project in use; plays in the workbench window in place of the screenshot. */
+  video?: string
+  /** The project's printed poster (portrait), pinned beside its screenshot on the workbench. */
+  poster?: string
+  /** One short label for the projects table: what kind of thing it is. */
+  category?: string
+  /**
+   * The engineering notes behind it - problems hit, what was iterated, how it
+   * was built. Shown as the `build.log` tab of the workbench; no log, no tab.
+   */
+  buildLog?: string
 }
 
 export const projects: Project[] = [
   {
     title: 'PDLite - Parkinson\u2019s Risk Screening Device',
+    category: 'DEVICE + WEB',
     period: '2026',
     role: 'Web & Database / Device Design',
     status: 'Completed',
@@ -334,12 +374,15 @@ export const projects: Project[] = [
       'A handheld device that gives a preliminary Parkinson\u2019s risk assessment. I built the Next.js and Supabase app that records the readings and charts them back, and designed the enclosure and its mechanism in Fusion 360 for 3D printing.',
     tags: ['Next.js', 'Supabase', 'Chart.js', 'Fusion 360'],
     image: '/projects/pdlite.jpg',
+    poster: '/projects/posters/pdlite.jpg',
+    video: '/projects/videos/pdlite.mp4',
     contribution: 'Sole author \u00b7 30 commits \u00b7 gold at NRCT I-New Gen 2026 and SWU Researcher Day 2026',
     demo: 'https://p-dlite.vercel.app',
     repo: 'https://github.com/Skysosmart/PDlite',
   },
   {
     title: 'Seluna Cloud - Landing Site',
+    category: '3D · MOTION',
     period: '2026',
     role: 'Frontend Developer',
     status: 'Live',
@@ -347,11 +390,13 @@ export const projects: Project[] = [
       'The public site for Seluna Cloud, a commerce platform in production. Mine are the 3D moon hero and its iris transition, the site-wide motion pass, the grouped navbar, and a startup rework that gates the splash per session and paints the hero before hydration.',
     tags: ['Next.js', 'Cloudflare', 'GSAP', '3D Hero'],
     image: '/projects/seluna.jpg',
+    video: '/projects/videos/seluna.mp4',
     contribution: 'Largest contributor \u00b7 43 of 122 commits',
     demo: 'https://seluna.cloud',
   },
   {
     title: 'Nebula - Deep-Space Observatory Site',
+    category: '3D WEB',
     period: '2026',
     role: 'Contributor \u00b7 3D',
     status: 'Live',
@@ -364,6 +409,7 @@ export const projects: Project[] = [
   },
   {
     title: 'T-GODA - Accommodation Booking Platform',
+    category: 'FRONTEND',
     period: '2026',
     role: 'Frontend Developer',
     status: 'Completed',
@@ -377,6 +423,7 @@ export const projects: Project[] = [
   },
   {
     title: 'Nexus - Chat Web Application',
+    category: 'WEB APP',
     period: '2026',
     role: 'Frontend Developer',
     status: 'Completed',
@@ -390,6 +437,7 @@ export const projects: Project[] = [
   },
   {
     title: 'Doodee Future Extension - TCASFolio Vault & Autofill',
+    category: 'EXTENSION',
     period: '2025-2026',
     role: 'Extension Author',
     status: 'Completed',
@@ -399,11 +447,14 @@ export const projects: Project[] = [
     // the extension itself - its popup, with the vault holding real entries -
     // rather than the platform's landing page
     image: '/projects/tcasfolio.jpg',
+    // the walkthrough: vault, autofill, the send to the platform (re-encoded 720p30 from the 1080p60 master)
+    video: '/projects/videos/tcasfolio.mp4',
     contribution: 'Its own repo \u00b7 58 of 61 commits',
     repo: 'https://github.com/Skysosmart/doodee-future-tcasfolie-extension',
   },
   {
     title: 'Doodee Future - University Admission Platform',
+    category: 'PLATFORM',
     period: '2025-2026',
     role: 'Contributor \u00b7 Pranakorn Group',
     status: 'Live',
@@ -411,11 +462,13 @@ export const projects: Project[] = [
       'The platform that puts Thai university admission planning in one place: TCAS countdowns, faculty matching, portfolio analysis from an uploaded PDF, mock exams and a student community. Built by the Pranakorn Group team. My commits are the extension\u2019s API endpoint on the platform side and a Thai-text repair layer for the PDF analyser, with its tests.',
     tags: ['Next.js', 'Prisma', 'PDF', 'Team Project'],
     image: '/projects/doodee.jpg',
+    video: '/projects/videos/doodee.mp4',
     contribution: '4 of 534 commits across 7 contributors \u00b7 extension endpoint, Thai PDF text repair',
     demo: 'https://doodee-future.com',
   },
   {
     title: 'Pranakorn.dev - Studio Site',
+    category: 'STUDIO SITE',
     period: '2026',
     role: 'Frontend Developer',
     status: 'Live',
@@ -428,6 +481,7 @@ export const projects: Project[] = [
   },
   {
     title: 'Pranakorn POS - Terminal & ERP Back-Office',
+    category: 'POS / ERP',
     period: '2026',
     role: 'Developer / Manual & Design',
     status: 'In Progress',
@@ -441,6 +495,7 @@ export const projects: Project[] = [
   },
   {
     title: 'MakeX Challenger Competition Robot',
+    category: 'ROBOTICS',
     period: '2025',
     role: 'Structural Designer',
     status: 'Completed',
@@ -452,15 +507,18 @@ export const projects: Project[] = [
   },
   {
     title: 'Hackathon Digitize - Asset Declaration Data',
+    category: 'DATA / OCR',
     period: '2025',
     role: 'Data Engineering',
     status: 'Completed',
     description:
       'Turned scanned NACC asset-declaration filings into structured, queryable records through a Python extraction pipeline using OCR, vision models and a trained NER model. An anti-corruption entry run by TIJ and the Anti-Corruption Organization of Thailand.',
     tags: ['Python', 'OCR', 'NER', 'Data Pipeline'],
+    image: '/projects/digitize.jpg',
   },
   {
     title: 'This Portfolio Site',
+    category: 'DESIGN + WEB',
     period: '2026',
     role: 'Designer / Developer',
     status: 'Live',
@@ -494,6 +552,12 @@ export type Moment = {
    * data/portfolio.th.ts `momentsTh`.
    */
   line?: string
+  /**
+   * The photo that stands for the event: one with Sky or the team in it.
+   * Several albums open on a scan of the certificate; without a cover the
+   * first photo is used. (`coverOf` in lib/certs.ts)
+   */
+  cover?: string
 }
 
 export const moments: Record<string, Moment> = {
@@ -504,62 +568,71 @@ export const moments: Record<string, Moment> = {
   },
   'click-camp': {
     label: 'Click Camp #15, Mahidol',
-    photos: ['01.jpg', '02.jpg'],
+    cover: '02.jpg',
+    photos: ['02.jpg'],
     line: '',
   },
   'codekit': {
     label: 'CODEKIT Website Competition 2026',
-    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg'],
+    photos: ['01.jpg', '02.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg'],
     line: '',
   },
   'cyber-bootcamp': {
     label: 'RTARF Cyber Bootcamp 2025',
-    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg', '08.jpg', '09.jpg'],
+    cover: '02.jpg',
+    photos: ['02.jpg', '05.jpg', '06.jpg', '07.jpg', '08.jpg'],
     line: '',
   },
   'inewgen': {
     label: 'I-New Gen Inventors Award 2026',
-    photos: ['01.jpg', '02.jpg', '03.jpg'],
+    cover: '02.jpg',
+    photos: ['02.jpg', '03.jpg'],
     line: '',
   },
   'khan-knot': {
     label: 'KhanKnot #24, Mahidol Engineering',
-    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg'],
+    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'],
     line: '',
   },
   'makex': {
     label: 'MakeX Thailand 2025',
-    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'],
+    cover: '02.jpg',
+    photos: ['02.jpg', '04.jpg', '05.jpg'],
     line: '',
   },
   'outstanding-student': {
     label: 'Outstanding Student Award',
+    cover: '02.jpg',
     photos: ['01.jpg', '02.jpg', '03.jpg'],
     line: '',
   },
   'siit-insight-camp': {
     label: 'SIIT Insight Camp 2025',
-    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'],
+    cover: '04.jpg',
+    photos: ['02.jpg', '03.jpg', '04.jpg', '05.jpg'],
     line: '',
   },
   'swu-day-camp': {
     label: 'SWU International Engineering Day Camp',
-    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg'],
+    cover: '04.jpg',
+    photos: ['03.jpg', '04.jpg'],
     line: '',
   },
   'swu-research-day': {
     label: 'SWU Researcher Day 2026',
-    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg'],
+    cover: '04.jpg',
+    photos: ['01.jpg', '02.jpg', '04.jpg'],
     line: '',
   },
   'heart-charity': {
     label: 'Heart Charity, Vichaivej Hospital',
-    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg'],
+    cover: '02.jpg',
+    photos: ['01.jpg', '02.jpg', '03.jpg'],
     line: '',
   },
   'vajira-volunteer': {
     label: 'Vajira Hospital Volunteer',
-    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg', '08.jpg', '09.jpg', '10.jpg', '11.jpg', '12.jpg', '13.jpg', '14.jpg'],
+    photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '07.jpg', '08.jpg', '09.jpg', '10.jpg', '11.jpg', '12.jpg', '13.jpg', '14.jpg'],
     line: '',
   },
 }

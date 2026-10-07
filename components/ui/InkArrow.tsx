@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 
 /**
@@ -31,6 +32,19 @@ export default function InkArrow({
   className?: string
 }) {
   const reduce = useReducedMotion()
+  // The pen is 2.8px on screen at any size. It is worked out from the drawn
+  // width rather than held with vector-effect: non-scaling-stroke, because
+  // the draw-in animates a dash, and a dash on a non-scaling stroke is
+  // measured in the wrong units - a big arrow drew as broken fragments.
+  const svgRef = useRef<SVGSVGElement>(null)
+  const [stroke, setStroke] = useState(2.8)
+  useEffect(() => {
+    const el = svgRef.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(([e]) => e.contentRect.width && setStroke((2.8 * 24) / e.contentRect.width))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   // The two strokes ink themselves in, shaft first - the pen being put down
   // rather than the arrow fading up with everything else - and the caller
@@ -45,11 +59,12 @@ export default function InkArrow({
 
   return (
     <motion.svg
+      ref={svgRef}
       aria-hidden
       viewBox="0 0 24 36"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2.8}
+      strokeWidth={stroke}
       strokeLinecap="round"
       strokeLinejoin="round"
       // A slow bob of three and a half pixels, held still for a beat between
@@ -67,13 +82,11 @@ export default function InkArrow({
       {/* the shaft */}
       <motion.path
         d="M10.8 2.4C13.3 7.8 10.4 12.4 11.4 17.6C12.2 22 13.2 26.6 12.6 31.4"
-        vectorEffect="non-scaling-stroke"
         {...ink(delay)}
       />
       {/* the head, one V across the shaft's end */}
       <motion.path
         d="M6.6 23.8C8.7 26.6 10.9 29.3 12.7 32.4C14.7 29.3 16.5 26.8 18.5 23.2"
-        vectorEffect="non-scaling-stroke"
         {...ink(delay + 0.4)}
       />
     </motion.svg>

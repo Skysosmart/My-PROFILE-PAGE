@@ -1,615 +1,501 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react'
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import AsciiImage from '@/components/effects/AsciiImage'
-import ProjectWall from '@/components/effects/ProjectWall'
-import { figletFor } from '@/data/figlets'
-import { projects, type Project } from '@/data/portfolio'
-import { useContent } from '@/lib/use-content'
-import { claimWheel } from '@/lib/smooth-scroll'
+import Barcode from '@/components/ui/Barcode'
+import InkBubble from '@/components/ui/InkBubble'
+import InkNote from '@/components/ui/InkNote'
+import SectionHeading from '@/components/ui/SectionHeading'
+import { lead, projectSlug, slugify, splitTitle } from '@/lib/projects'
+import ProjectTimeline from '@/components/projects/ProjectTimeline'
+import type { Project } from '@/data/portfolio'
+import { ui } from '@/data/ui'
+import { getLenis } from '@/lib/smooth-scroll'
 import { watchTint } from '@/lib/tint'
-import Duck from '@/components/duck/Duck'
+import { useContent } from '@/lib/use-content'
+import { useLang } from '@/lib/use-lang'
 
 /**
- * PROJECTS - a film of nine screens, and scroll is the only control.
+ * 05 · PROJECTS - the workbench. One project lies open on the desk: its real
+ * screenshot in a terminal window (developing from ASCII the moment it is
+ * picked), its case file on paper beside it, a BUILD SPEC label stuck over
+ * the corner, the laptop duck at the foot. Under the desk, the full story:
+ * every project open at once on one line that draws itself as the page
+ * scrolls (ProjectTimeline); any of them can be put on the bench.
  *
- * The section is one viewport tall per project. A stage stays pinned while
- * the page scrolls through it, and how far you have scrolled decides which
- * project is on the stage. No tabs, no arrows, nothing to learn: the reader
- * is already scrolling, so the projects simply arrive in turn, each with the
- * whole screen to itself - block-letter title, a screenshot big enough to
- * read, the verified contribution line - instead of a card's worth.
+ * Everything shown is read off the project data. Nothing is filled in where
+ * a project has nothing to say: no build.log tab without a `buildLog`, no
+ * screenshot for the POS (someone else's product behind a login), no live
+ * link without a demo, no spec row without its field. The window's render
+ * log runs in step with the ASCII developing, and VIEW CASE STUDY opens the
+ * project's own page (app/projects/[slug]).
  *
- * The filmstrip along the bottom is the table of contents the grid used to
- * be: all nine at once, so nobody scrolls blind wondering how many are left,
- * and a click on a thumb is nothing more than a scroll to that project's slot.
- *
- * Every arrival animates by REMOUNTING (key={index}) with initial/animate,
- * never framer's exit-animation wrapper: its exits do not settle in this
- * project and have twice left invisible elements over the page swallowing
- * clicks. A remount has no exit; the previous screen is simply gone.
- *
- * This replaced a grid of nine browser-window cards, which read as a wall at
- * a glance and turned every screenshot into a thumbnail.
+ * It replaced a scroll-pinned film (one project per screen of scrolling);
+ * git has that one.
  */
 
-// ---- dials -----------------------------------------------------------------
-const FIGLET_COLS = 46 // widest title in data/figlets.ts: one size for all nine
-const GLYPH_W = 0.6 // JetBrains Mono advance width as a share of font-size
-const FIGLET_MAX_PX = 18 // so the block letters never dwarf the title on a wide screen
-const MOBILE_TAGS = 4 // tags shown below lg
-const CLIP_HIDDEN = 'inset(0 100% 0 0)' // figlet wipe: covered from the right...
-const CLIP_SHOWN = 'inset(0 0% 0 0)' // ...to fully uncovered
-const SNAP_IDLE_MS = 140 // scroll silence that counts as "came to rest"
-const SNAP_NUDGE_MIN_PX = 24 // under this is jitter, not a deliberate hop
-const STEP_COOLDOWN_MS = 450 // paced stepping while one gesture keeps feeding
-const WHEEL_WINDOW_MS = 160 // wheel silence longer than this = a new gesture
-const TOUCH_STEP_PX = 50 // drag distance that commits a swipe's step
-const TOUCH_EXTRA_PX = 700 // each further step on one long continuous drag
-const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1]
-// -----------------------------------------------------------------------------
-
-const statusStyle: Record<string, string> = {
-  // Live reads brightest: a product anyone can open right now outranks one
-  // that is merely finished
-  Live: 'border-emerald-300/70 text-emerald-200',
-  Completed: 'border-fg/40 text-fg/80',
-  'In Progress': 'border-fg/25 text-fg-muted',
-  Upcoming: 'border-fg/15 text-fg-dim',
-}
-
-// the "nothing to render" panel for projects without a screenshot
-const DOTS = {
-  backgroundImage: 'radial-gradient(circle, rgb(var(--fg) / 0.10) 1px, transparent 1px)',
-  backgroundSize: '14px 14px',
-}
-
+const EASE = [0.16, 1, 0.3, 1] as const
 const pad = (n: number) => String(n).padStart(2, '0')
-const total = projects.length
+/** "PDLite - Parkinson's Risk Screening Device" -> name + the line after the dash */
+const split = splitTitle
+const slug = slugify
+
+type Tab = 'overview' | 'build' | 'outcome'
+const TABS: { id: Tab; file: string }[] = [
+  { id: 'overview', file: 'overview.md' },
+  { id: 'build', file: 'build.log' },
+  { id: 'outcome', file: 'outcome.txt' },
+]
+
+/** a status as the mockup marks it: a solid dot, green when live, grey otherwise, blue on the picked row */
+function StatusDot({ status, on = false }: { status: Project['status']; on?: boolean }) {
+  const tone = on ? 'bg-accent-text' : status === 'Live' ? 'bg-[#2ec27e]' : 'bg-fg/40'
+  return <span aria-hidden className={`inline-block h-2.5 w-2.5 shrink-0 rounded-full ${tone}`} />
+}
 
 export default function Projects() {
+  const lang = useLang()
+  const t = ui[lang].projects
+  const projects = useContent().projects
   const reduce = useReducedMotion()
-  const [still, setStill] = useState(false)
-  useEffect(() => setStill(!!reduce), [reduce])
-
-  const sectionRef = useRef<HTMLElement>(null)
   const [index, setIndex] = useState(0)
-
-  // The whole site mounts at once behind the boot screen, so without a gate
-  // project 0 would play its arrival while the section is still far below the
-  // fold and greet the reader already finished. Arm on first sight instead:
-  // the animated subtree is keyed on `armed`, so arming remounts it and the
-  // first arrival plays exactly when the section is reached.
-  const [armed, setArmed] = useState(false)
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setArmed(true)
-          io.disconnect()
-        }
-      },
-      { threshold: 0.15 },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-
-  // 0 when the section's top meets the viewport's top, 1 when its bottom
-  // meets the viewport's bottom: the (n - 1) viewports of travel during which
-  // the stage is pinned. Project i owns the slot centred on i / (n - 1).
-  const indexRef = useRef(0) // the live index, for handlers outside React
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
-  useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    const i = Math.min(total - 1, Math.max(0, Math.round(v * (total - 1))))
-    indexRef.current = i
-    // setState with an unchanged value bails out before rendering, so this
-    // re-renders once per project, not once per pixel
-    setIndex(i)
-  })
-
-  // Snap: when a scroll comes to rest inside the film, ease it onto a slot,
-  // so the reader always parks on a project - never straddling the boundary
-  // where the index flips. A short hop (a wheel notch, an arrow key) advances
-  // one whole slot in its direction; anything longer parks on the nearest.
-  //
-  // Deliberately JS-on-idle, not CSS scroll-snap-type. `mandatory` on the
-  // root scroller snaps to the NEAREST slot at every gesture end, so a wheel
-  // notch (120px against a viewport-tall slot) rubber-bands straight back and
-  // the film cannot be wheeled out of upward; it also grabbed the header's
-  // smooth flight to #contact and parked it on the last slot, footer half a
-  // pixel off screen. `proximity` has a dead band exactly where the index
-  // flips. This version interferes with nothing: a smooth scrollIntoView
-  // passing through emits scroll events continuously - so it is never idle -
-  // and ends outside the film, where the pinned check stands down; and a
-  // gesture during our own ease cancels it, because user input always cancels
-  // a programmatic smooth scroll.
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-    let timer = 0
-    let anchor = window.scrollY // where the previous scroll came to rest
-    const settle = () => {
-      const r = el.getBoundingClientRect()
-      const vh = document.documentElement.clientHeight
-      if (r.top > 1 || r.bottom < vh - 1) {
-        anchor = window.scrollY
-        return // the stage is not pinned: the film does not own this scroll
-      }
-      const top = r.top + window.scrollY
-      const slotPx = (el.offsetHeight - vh) / (total - 1) // travel per project
-      const frac = (window.scrollY - top) / slotPx
-      const d = window.scrollY - anchor
-      // deliberate but under half a slot -> next slot that way (the 0.04
-      // forgives our own ease landing a hair off); jitter or a long scroll
-      // -> nearest
-      const target =
-        Math.abs(d) >= SNAP_NUDGE_MIN_PX && Math.abs(d) < slotPx / 2
-          ? d > 0
-            ? Math.ceil(frac - 0.04)
-            : Math.floor(frac + 0.04)
-          : Math.round(frac)
-      const dest = top + Math.min(total - 1, Math.max(0, target)) * slotPx
-      anchor = dest
-      if (Math.abs(dest - window.scrollY) < 2) return
-      window.scrollTo({ top: dest, behavior: still ? 'auto' : 'smooth' })
-    }
-    const onScroll = () => {
-      window.clearTimeout(timer)
-      timer = window.setTimeout(settle, SNAP_IDLE_MS)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.clearTimeout(timer)
-    }
-  }, [still])
-
-  // a thumb click is a scroll to that project's slot. The slot is derived the
-  // same way useScroll derives progress - travel is section height minus the
-  // viewport, NOT height / total - so a click lands exactly where the index
-  // formula says that project lives, even when the browser chrome on a phone
-  // makes the viewport taller than 100svh.
-  const goTo = useCallback(
-    (i: number) => {
-      const el = sectionRef.current
-      if (!el) return
-      const top = el.getBoundingClientRect().top + window.scrollY
-      const travel = el.offsetHeight - document.documentElement.clientHeight
-      window.scrollTo({
-        top: top + (i / (total - 1)) * travel,
-        behavior: still ? 'auto' : 'smooth',
-      })
-    },
-    [still],
-  )
-
-  // No momentum inside the film: while the stage is pinned, a wheel push or a
-  // swipe is ONE project, not however far inertia happens to carry. Wheel and
-  // touch are intercepted and turned into goTo steps; the inertia tail of a
-  // gesture is swallowed. Telling a push from its own tail: a wheel event
-  // after WHEEL_WINDOW_MS of silence is a new gesture (a mouse notch always
-  // is), and within a stream, deltas that stopped growing are coasting, not
-  // pushing. Both edges of the film stay open - a deliberate push past the
-  // first or last project is left to scroll natively, only coasting is
-  // stopped - because the earlier CSS-snap attempt proved how easily this
-  // kind of interception becomes a trap. Keyboard and scrollbar scrolls are
-  // untouched; the idle-snap above catches those.
-  // the paper takes the film's tone while the stage is pinned
+  const [tab, setTab] = useState<Tab>('overview')
+  // the window's live view: off until asked for, and off again on every switch,
+  // so at most one whole website ever runs inside the page
+  const [live, setLive] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const benchRef = useRef<HTMLDivElement>(null)
   useEffect(() => watchTint(sectionRef.current, 'projects'), [])
 
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-    const pinned = () => {
-      const r = el.getBoundingClientRect()
-      const vh = document.documentElement.clientHeight
-      // the short-landscape layout scrolls INSIDE the stage; stepping there
-      // would fight its overflow container, so it keeps native scrolling
-      return vh > 520 && r.top <= 1 && r.bottom >= vh - 1
-    }
-    // the page's inertia stands down for as long as the stage is pinned:
-    // one gesture is one project in here, which is the opposite of coasting
-    const releaseWheel = claimWheel(pinned)
-    let lastStep = 0
-    let target = 0
-    // mid-animation the live index lags the slot we are easing toward, so a
-    // quick second push counts from the target, not from behind it
-    const base = () => (performance.now() - lastStep < 800 ? target : indexRef.current)
-    const commit = (next: number, at: number) => {
-      target = Math.min(total - 1, Math.max(0, next))
-      lastStep = at
-      goTo(target)
-    }
+  /** picked from the list below the bench: bring the bench back up to see what was picked */
+  const bringBench = () => {
+    const section = sectionRef.current
+    const bench = benchRef.current
+    if (!section || !bench) return
+    const top = bench.getBoundingClientRect().top
+    // already on screen with room above it (the phone's page dots sit right under the window)
+    if (top >= 64 && top < window.innerHeight * 0.45) return
+    const lenis = getLenis()
+    if (lenis) lenis.scrollTo(section, { immediate: !!reduce })
+    else section.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+  }
 
-    // Gesture times are event.timeStamp - when the INPUT happened - never
-    // performance.now() in the handler: a step's arrival animation janks the
-    // main thread, delayed events then arrive in bunches, and wall-clock gaps
-    // between bunches read as fresh gestures. That misread turned one fling
-    // into five steps under test.
-    let buf: { t: number; d: number }[] = []
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || !pinned()) return // ctrl+wheel is zoom
-      const ad = Math.abs(e.deltaY) * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1)
-      if (ad <= Math.abs(e.deltaX)) return // a horizontal drift is not ours
-      const now = e.timeStamp
-      buf = buf.filter((x) => now - x.t < WHEEL_WINDOW_MS)
-      const distinct = buf.length === 0
-      const pushing = !distinct && ad >= Math.max(...buf.map((x) => x.d)) * 0.95
-      buf.push({ t: now, d: ad })
-      const dir = e.deltaY > 0 ? 1 : -1
-      const next = base() + dir
-      if (next < 0 || next >= total) {
-        // at the film's edge: only the coasting tail is stopped
-        if (!distinct && !pushing) e.preventDefault()
-        return
+  const p = projects[index]
+  const { name, line } = split(p.title)
+  const tabs = TABS.filter((x) => x.id !== 'build' || p.buildLog)
+  // the lead is the description's first sentence; the overview tab picks up after it
+  const first = lead(p.description)
+  const overview = (first && p.description.slice(first.length).trim()) || p.description
+  // the recordings play as one reel: when one ends, the bench moves on to the
+  // next project that has a recording (wrapping round), and that one plays
+  const nextReel = () => {
+    for (let k = 1; k <= projects.length; k++) {
+      const j = (index + k) % projects.length
+      if (projects[j].video) return pick(j)
+    }
+  }
+  const pick = (i: number, fromList = false) => {
+    if (fromList) bringBench()
+    setIndex(i)
+    setLive(false)
+    setTab('overview') // a new project opens on its overview
+  }
+  // paper enters tilted one way or the other, alternating, and settles flat
+  const tilt = index % 2 ? 2.2 : -2.6
+  const arrive = reduce
+    ? { initial: false as const, animate: { opacity: 1 } }
+    : {
+        initial: { opacity: 0, y: 14, rotate: tilt },
+        animate: { opacity: 1, y: 0, rotate: 0 },
+        exit: { opacity: 0, y: 10, transition: { duration: 0.16 } },
+        transition: { duration: 0.55, ease: EASE },
       }
-      e.preventDefault()
-      if (ad < 4) return
-      if (!distinct && !pushing) return // coasting is swallowed, never a step
-      if (now - lastStep > (distinct ? 90 : STEP_COOLDOWN_MS)) commit(next, now)
-    }
+  const rise = (d = 0) =>
+    reduce
+      ? { initial: false as const }
+      : { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { delay: d, duration: 0.5, ease: EASE } }
 
-    // Touch queues its step and commits on release: stepping mid-drag starts
-    // a smooth scroll that the still-moving finger immediately cancels (a
-    // touch is user input even with its default prevented), which under test
-    // reduced a whole swipe to nothing.
-    let y0 = 0
-    let x0 = 0
-    let queued = 0
-    let tracking = false
-    const onTouchStart = (e: TouchEvent) => {
-      tracking = e.touches.length === 1
-      if (!tracking) return
-      y0 = e.touches[0].clientY
-      x0 = e.touches[0].clientX
-      queued = 0
-    }
-    const onTouchMove = (e: TouchEvent) => {
-      if (!tracking || e.touches.length !== 1 || !pinned()) return
-      const dy = y0 - e.touches[0].clientY // >0 = pushing the film forward
-      if (Math.abs(dy) <= Math.abs(x0 - e.touches[0].clientX)) return
-      const dir: 1 | -1 = dy > 0 ? 1 : -1
-      if (base() + dir < 0 || base() + dir >= total) {
-        queued = 0
-        return // swiping out: native, the film is over
-      }
-      e.preventDefault() // the finger paces the film; momentum never starts
-      queued =
-        Math.abs(dy) < TOUCH_STEP_PX
-          ? 0
-          : dir * (1 + Math.floor((Math.abs(dy) - TOUCH_STEP_PX) / TOUCH_EXTRA_PX))
-    }
-    const onTouchEnd = (e: TouchEvent) => {
-      tracking = false
-      if (!queued) return
-      const steps = queued
-      queued = 0
-      commit(base() + steps, e.timeStamp)
-    }
-    const onTouchCancel = () => {
-      tracking = false
-      queued = 0
-    }
-
-    el.addEventListener('wheel', onWheel, { passive: false })
-    el.addEventListener('touchstart', onTouchStart, { passive: true })
-    el.addEventListener('touchmove', onTouchMove, { passive: false })
-    el.addEventListener('touchend', onTouchEnd, { passive: true })
-    el.addEventListener('touchcancel', onTouchCancel, { passive: true })
-    return () => {
-      releaseWheel()
-      el.removeEventListener('wheel', onWheel)
-      el.removeEventListener('touchstart', onTouchStart)
-      el.removeEventListener('touchmove', onTouchMove)
-      el.removeEventListener('touchend', onTouchEnd)
-      el.removeEventListener('touchcancel', onTouchCancel)
-    }
-  }, [goTo])
-
-  // the figlet is FIGLET_COLS glyphs wide; size it so those columns fit the
-  // text column, whatever the viewport. Observed on the stable wrapper, not
-  // the remounting screen, so the observer survives every arrival.
-  const colRef = useRef<HTMLDivElement>(null)
-  const [figletPx, setFigletPx] = useState<number | null>(null)
-  useEffect(() => {
-    const col = colRef.current
-    if (!col) return
-    const ro = new ResizeObserver(([entry]) => {
-      setFigletPx(Math.min(FIGLET_MAX_PX, entry.contentRect.width / FIGLET_COLS / GLYPH_W))
-    })
-    ro.observe(col)
-    return () => ro.disconnect()
-  }, [])
-
-  // role and description follow the language; everything else is shared
-  const p = useContent().projects[index]
-
-  // initial={false} before arming and under reduced motion: framer renders
-  // the animate state outright, so the screen is complete on its first frame
-  const animate = armed && !still
-  const arrivalKey = `${armed}:${index}`
-  const fade = {
-    initial: animate ? { opacity: 0, y: 8 } : false,
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.35, ease: EASE_OUT },
-  } as const
-  const wipe = {
-    initial: animate ? { clipPath: CLIP_HIDDEN } : false,
-    animate: { clipPath: CLIP_SHOWN },
-    transition: { duration: 0.5, ease: EASE_OUT },
-  } as const
+  // the spec rows: only the fields this project has
+  const specRows: [string, string][] = (
+    [
+      [t.type, p.category],
+      [t.role, p.role],
+      [t.builtWith, p.tags.slice(0, 3).join(' / ')],
+      [t.status, t.statuses[p.status]],
+      [t.year, p.period],
+    ] as [string, string | undefined][]
+  ).filter((r): r is [string, string] => Boolean(r[1]))
 
   return (
-    <section
-      ref={sectionRef}
-      id="projects"
-      // scroll-mt-0: the header's scrollIntoView must land on the section's
-      // very top, which is project 0
-      className="relative scroll-mt-0"
-      style={{ height: `${total * 100}svh` }}
-    >
-      {/* the stage: pinned for the whole section. pt clears the fixed header;
-          isolate keeps the wall's -z-10 inside the stage */}
-      <div className="sticky top-0 isolate flex h-svh flex-col overflow-hidden px-4 pt-20 sm:px-6 lg:pt-24">
-        <ProjectWall />
+    <section ref={sectionRef} id="projects" className="relative isolate scroll-mt-0 overflow-x-clip px-[clamp(20px,4vw,64px)] py-16 sm:py-24">
+      <div className="mx-auto w-full max-w-[92.5rem]">
+        {/* ── header, top-left, with room around it ──────────────────── */}
+        <SectionHeading index="05" label="Projects" command={t.command} subtitle={t.subtitle}>
+          {/* the note in the upper middle, its arrow curling down at the featured project */}
+          <InkNote arrow="down-left" arrowWidth="w-16" arrowClassName="-bottom-14 -left-14" delay={0.3} className="absolute left-[46%] top-2 hidden lg:block">
+            {t.noteHeader}
+          </InkNote>
+        </SectionHeading>
 
-        {/* header: the GlassSection markup verbatim, so this matches every
-            other section even though it cannot be one */}
-        <span className="mb-2 block font-mono text-[0.6875rem] uppercase tracking-[0.35em] text-fg-dim">
-          [ 05 · PROJECTS ]
-        </span>
-        <div className="relative mb-7 flex items-baseline gap-3 pb-4">
-          <motion.span
-            initial={reduce ? { opacity: 0 } : { opacity: 0, x: -8 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="font-mono text-xs text-fg-dim"
-          >
-            05
-          </motion.span>
-          <motion.h2
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5, delay: 0.22 }}
-            className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-fg txt-glow sm:text-xl"
-          >
-            Projects
-          </motion.h2>
-          {/* underline grows in */}
-          <motion.span
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-x-0 bottom-0 h-px origin-left bg-fg/10"
-          />
-        </div>
-
-        {/* a room-sized index numeral behind everything: depth, and you always
-            know where you are in the film even between glances at the rail */}
-        <motion.span
-          key={`ghost:${arrivalKey}`}
-          aria-hidden
-          initial={animate ? { opacity: 0 } : false}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, ease: EASE_OUT }}
-          className="pointer-events-none absolute bottom-[6vh] left-[-1vw] -z-10 select-none font-mono text-[38vh] font-bold leading-none text-fg/5"
-        >
-          {pad(index + 1)}
-        </motion.span>
-
-        {/* the screen: image over text on a phone, text beside image from lg.
-            min-h-0 + overflow-hidden so a tall screen can never push the rail
-            off the stage; "safe center" keeps a too-tall column top-aligned
-            instead of clipping its head under the header */}
-        <div className="grid min-h-0 flex-1 grid-cols-1 content-start gap-3 overflow-hidden [@media(max-height:520px)]:grid-cols-2 [@media(max-height:520px)]:items-start [@media(max-height:520px)]:gap-5 [@media(max-height:520px)]:overflow-y-auto lg:grid-cols-2 lg:content-stretch lg:gap-10 lg:items-center-safe">
-          {/* text LEFT, screenshot RIGHT from lg; the image leads on a phone
-              held upright. A rotated phone is short but WIDE, so it gets the
-              two-column layout too - stacked, nothing fit above the fold */}
-          <div className="order-first mx-auto w-full max-w-[34svh] [@media(max-height:520px)]:order-last [@media(max-height:520px)]:max-w-[62svh] lg:order-last lg:ml-0 lg:max-w-[64svh]">
-            <Screen key={arrivalKey} p={p} />
-          </div>
-
-          <div ref={colRef} className="min-w-0">
-            <motion.div key={arrivalKey} {...fade}>
-              {/* block letters: the short word, wiped in left to right. The
-                  h3 below carries the full title, so this is decoration */}
-              <motion.pre
-                key={arrivalKey}
-                aria-hidden
-                {...wipe}
-                style={{
-                  ...(figletPx ? { fontSize: figletPx } : null),
-                  textShadow: '0 0 14px rgb(var(--fg) / 0.3), 0 0 34px rgb(var(--fg) / 0.12)',
-                }}
-                className="m-0 whitespace-pre font-mono text-[0.8125rem] leading-[1.1] text-fg lg:text-[1.125rem]"
-              >
-                {figletFor(p.title)}
-              </motion.pre>
-
-              <h3 className="mt-3 font-sans text-[0.9375rem] font-semibold leading-snug text-fg lg:mt-4 lg:text-xl">
-                {p.title}
-              </h3>
-              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                <p className="font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim lg:text-[0.6875rem]">
-                  {p.role} · {p.period}
-                </p>
-                <span
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[0.5625rem] uppercase tracking-wider ${
-                    statusStyle[p.status] ?? statusStyle.Upcoming
-                  }`}
-                >
-                  {p.status === 'Live' && (
-                    <span aria-hidden className="relative flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60 motion-reduce:hidden" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                    </span>
+        {/* ── the featured project: preview 55 / paper 45, the paper tucked under the window's edge ── */}
+        <div ref={benchRef} className="relative grid gap-10 lg:grid-cols-[minmax(0,55fr)_minmax(0,45fr)] lg:gap-0 lg:pb-40">
+          {/* left: the preview, on top */}
+          <div className="relative z-10 min-w-0">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.figure key={p.title} {...arrive} className="m-0 overflow-hidden rounded-[4px] border border-[#111] bg-white shadow-[0_14px_28px_-16px_rgba(17,17,17,0.45)]">
+                <div className="flex items-center gap-2 px-3.5 py-2.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57] opacity-75" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e] opacity-75" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#28c840] opacity-75" />
+                  <span className="ml-3 min-w-0 flex-1 truncate font-mono text-[0.875rem] text-fg">~/projects/{slug(name)}</span>
+                  {p.demo && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setLive((v) => !v)}
+                        aria-pressed={live}
+                        className="hidden shrink-0 items-center gap-1.5 rounded-[2px] border border-fg/25 px-2 py-0.5 font-mono text-[0.8125rem] text-fg transition-colors hover:border-fg/70 md:inline-flex"
+                      >
+                        {live ? (
+                          <>■ {t.backToShot}</>
+                        ) : (
+                          <>
+                            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" /> {t.goLive}
+                          </>
+                        )}
+                      </button>
+                      <a
+                        href={p.demo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="shrink-0 font-mono text-[0.8125rem] text-fg underline-offset-2 hover:underline md:hidden"
+                      >
+                        {t.openLive} ↗
+                      </a>
+                    </>
                   )}
-                  {p.status}
-                </span>
-              </div>
-
-              {/* sans, not mono: a paragraph, and the meta around it already
-                  carries the terminal voice. Clamped on a phone, where the
-                  stage has 700px to spend on everything */}
-              <p className="mt-2 line-clamp-3 font-sans text-[0.8125rem] leading-normal text-fg/70 lg:mt-3 lg:line-clamp-none lg:text-[0.875rem] lg:leading-relaxed">
-                {p.description}
-              </p>
-
-              <div className="mt-2 flex flex-wrap gap-1.5 lg:mt-4">
-                {p.tags.map((t, i) => (
-                  <span
-                    key={t}
-                    className={`rounded border border-fg/12 px-1.5 py-0.5 font-mono text-[0.625rem] text-fg-muted ${
-                      i >= MOBILE_TAGS ? 'hidden lg:inline-block' : ''
-                    }`}
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              {/* counted off GitHub, not asserted - it sits with the source
-                  link because it is the same kind of claim: checkable.
-                  Desktop only; the phone stage has no room for it */}
-              {p.contribution && (
-                <p className="mt-3 hidden font-mono text-[0.625rem] leading-relaxed text-fg-muted lg:block">
-                  {p.contribution}
-                </p>
-              )}
-
-              {(p.demo || p.repo) && (
-                <div className="mt-2 flex flex-wrap items-center gap-x-4 lg:mt-4">
-                  {p.demo && <Link href={p.demo} label="Live demo" />}
-                  {p.repo && <Link href={p.repo} label="Source" />}
                 </div>
-              )}
-            </motion.div>
+                <div className="border-t border-[#111]/15">
+                {live && p.demo ? (
+                  <LiveFrame src={p.demo} title={name} fallback={p.image} connecting={t.connecting} className="aspect-[16/10]" />
+                ) : p.video ? (
+                  // the project in use, recorded: muted and looping in the window; the
+                  // controls are there to unmute it, scrub, or take it full screen
+                  <video
+                    key={p.video}
+                    // React sets `muted` as a property, not an attribute, so the browser's
+                    // autoplay rule still sees an unmuted video; mute and start it by hand
+                    ref={(v) => {
+                      if (!v) return
+                      v.muted = true
+                      if (!reduce) v.play().catch(() => {})
+                    }}
+                    src={p.video}
+                    poster={p.image}
+                    muted
+                    playsInline
+                    // it runs like a live screen: no controls, and if anything pauses
+                    // it (a tap, the OS) it picks straight back up. When it ends, the
+                    // next project with a recording takes the bench and plays on;
+                    // with only one recording it simply starts again
+                    onPause={(e) => {
+                      if (!reduce && !e.currentTarget.ended) e.currentTarget.play().catch(() => {})
+                    }}
+                    onEnded={(e) => {
+                      if (reduce) return
+                      const v = e.currentTarget
+                      if (projects.filter((q) => q.video).length < 2) {
+                        v.currentTime = 0
+                        v.play().catch(() => {})
+                      } else nextReel()
+                    }}
+                    disablePictureInPicture
+                    disableRemotePlayback
+                    preload="metadata"
+                    aria-label={`${name} - screen recording`}
+                    className="pointer-events-none block aspect-video h-auto w-full bg-[#111] object-contain"
+                  />
+                ) : p.image ? (
+                  <AsciiImage
+                    src={p.image}
+                    alt={`${name} screenshot`}
+                    reveal="wipe"
+                    holdMs={380}
+                    durationMs={700}
+                    className="aspect-[16/10] w-full bg-[rgb(var(--bg))]"
+                  />
+                ) : (
+                  <div className="flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-[3px] bg-[rgb(var(--bg))]">
+                    <span className="font-mono text-[0.8125rem] uppercase tracking-[0.25em] text-fg-dim">{p.tags.slice(0, 3).join(' / ')}</span>
+                    <span className="font-mono text-[0.75rem] text-fg-dim">{t.noImage}</span>
+                  </div>
+                )}
+                </div>
+                {/* the render log, run in step with the ASCII developing into the
+                    screenshot: [3/3] lands as the image finishes */}
+                {!live && (
+                  <ol aria-hidden className="m-0 list-none border-t border-[#111]/15 px-3.5 py-2.5 font-mono text-[0.75rem] leading-[1.6] text-fg-muted">
+                    {t.render.map((line, i) => (
+                      <motion.li
+                        key={`${p.title}-${i}`}
+                        initial={reduce ? false : { opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: reduce ? 0 : [0.05, 0.2, 0.45, 1.1][i], duration: 0.2 }}
+                        className={i === 0 ? 'text-fg' : i === t.render.length - 1 ? 'text-accent-text' : undefined}
+                      >
+                        {i === 0 ? `$ ${line} --project ${slug(name)}` : line}
+                      </motion.li>
+                    ))}
+                  </ol>
+                )}
+              </motion.figure>
+            </AnimatePresence>
+            {/* near the preview's lower left, its arrow pointing up into the ASCII half */}
+            <InkNote arrow="up-right" arrowWidth="w-16" arrowClassName="-top-[3.75rem] left-32" delay={0.9} className="absolute left-2 top-full mt-12 hidden lg:block">
+              {t.noteAscii}
+            </InkNote>
           </div>
-        </div>
 
-        {/* what just arrived, for ears instead of eyes: the stage swaps by
-            remount, which announces nothing on its own */}
-        <div aria-live="polite" className="sr-only">
-          Project {index + 1} of {total}: {p.title}
-        </div>
+          {/* right: the project paper, starting just under the window's edge; the BUILD SPEC
+              above its top-right, the duck on the desk at its lower right */}
+          <div className="relative min-w-0 lg:-ml-6 lg:pt-10">
+            <div className="lg:w-[84%]">
+              <AnimatePresence mode="wait" initial={false}>
+              <motion.article
+                key={p.title}
+                {...arrive}
+                className="relative rounded-[2px] border border-[#111]/60 bg-white p-6 shadow-[6px_6px_0_#111] sm:p-8 lg:p-10"
+              >
+                <motion.p {...rise(0.05)} className="break-words font-mono text-2xl font-bold uppercase tracking-wide text-fg sm:text-[1.875rem] lg:pr-[9rem]">
+                  {pad(index + 1)} / {name}
+                </motion.p>
+                {line && (
+                  <motion.p {...rise(0.1)} className="mt-3 font-mono text-base font-bold leading-snug text-fg">
+                    {line}
+                  </motion.p>
+                )}
+                {first && (
+                  <motion.p {...rise(0.14)} className="mt-1 max-w-[60ch] font-mono text-[0.875rem] leading-relaxed text-fg">
+                    {first}
+                  </motion.p>
+                )}
 
-        {/* the rail: where you are, and the whole film at a glance. On a phone
-            the filmstrip wraps onto its own line under the counter */}
-        <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-fg/10 pb-3 pt-2 lg:pb-6 lg:pt-4">
-          <span className="font-mono text-[0.6875rem] tabular-nums text-fg-muted">
-            {pad(index + 1)}/{pad(total)}
-          </span>
-
-          <div aria-hidden className="flex flex-1 gap-1 lg:w-28 lg:flex-none">
-            {projects.map((_, i) => (
-              <span
-                key={i}
-                className={`h-[0.1875rem] flex-1 rounded-xs transition-colors ${i <= index ? 'bg-fg/80' : 'bg-fg/15'}`}
-              />
-            ))}
-          </div>
-
-          {/* invisible rather than hidden on the last project, so the rail
-              does not reflow when the hint goes */}
-          <span
-            aria-hidden
-            className={`font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim lg:order-last ${
-              index === total - 1 ? 'invisible' : ''
-            }`}
-          >
-            &#8595; scroll
-          </span>
-
-          <div
-            role="group"
-            aria-label="Project filmstrip"
-            className="flex basis-full gap-1 lg:basis-auto lg:flex-1 lg:justify-center lg:gap-1.5"
-          >
-            {/* the duck at its laptop, at the head of the strip (desktop) */}
-            <div aria-hidden className="mr-3 hidden shrink-0 self-end lg:block">
-              <Duck pose="laptop" width={64} parallax={3} />
-            </div>
-            {projects.map((q, i) => {
-              const on = i === index
-              return (
-                <button
-                  key={q.title}
-                  type="button"
-                  onClick={() => goTo(i)}
-                  data-cursor-label={`jump ${pad(i + 1)}`}
-                  aria-label={`${pad(i + 1)} ${q.title}`}
-                  aria-current={on ? 'true' : undefined}
-                  className={`group/t relative h-10 min-w-0 flex-1 overflow-hidden rounded-[0.1875rem] border border-fg/10 bg-bg/60 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg lg:aspect-16/10 lg:h-auto lg:w-[4.5rem] lg:flex-none ${
-                    on ? 'ring-1 ring-fg' : ''
-                  }`}
-                >
-                  {/* the dimming lives on the picture, not the button: an
-                      outline is painted inside the element's own opacity
-                      layer, and a 40% focus ring is no focus ring */}
-                  {q.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={q.image}
-                      alt=""
-                      loading="lazy"
-                      draggable={false}
-                      className={`h-full w-full object-cover object-top transition-opacity ${
-                        on ? '' : 'opacity-40 group-hover/t:opacity-75'
+                {/* the documents: small terminal controls, not buttons */}
+                <div role="tablist" className="mt-5 flex flex-wrap gap-2">
+                  {tabs.map((x) => (
+                    <button
+                      key={x.id}
+                      role="tab"
+                      aria-selected={tab === x.id}
+                      onClick={() => setTab(x.id)}
+                      className={`rounded-[3px] border-[1.5px] px-3 py-1.5 font-mono text-[0.8125rem] transition-colors ${
+                        tab === x.id
+                          ? 'border-accent-text bg-white/70 text-accent-text'
+                          : 'border-transparent bg-fg/[0.06] text-fg hover:bg-fg/[0.1]'
                       }`}
-                    />
-                  ) : (
-                    <span
-                      className={`block h-full w-full transition-opacity ${on ? '' : 'opacity-40 group-hover/t:opacity-75'}`}
-                      style={{ ...DOTS, backgroundSize: '6px 6px' }}
-                    />
+                    >
+                      $ cat {x.file}
+                    </button>
+                  ))}
+                </div>
+                <div role="tabpanel" className="mt-4 min-h-[6.5rem]">
+                  {tab === 'overview' && (
+                    <p className="max-w-[60ch] font-sans text-[0.9375rem] leading-relaxed text-fg th:leading-[1.8]">{overview}</p>
                   )}
-                </button>
-              )
-            })}
+                  {tab === 'build' && p.buildLog && (
+                    <pre className="m-0 whitespace-pre-wrap font-mono text-[0.8125rem] leading-relaxed text-fg">{p.buildLog}</pre>
+                  )}
+                  {tab === 'outcome' && (
+                    <dl className="m-0 grid gap-2 font-mono text-[0.8125rem] leading-relaxed">
+                      <div className="flex items-center gap-3">
+                        <dt className="w-20 shrink-0 text-[0.8125rem] uppercase tracking-[0.2em] text-fg-dim">{t.status}</dt>
+                        <dd className="m-0 flex items-center gap-2 text-fg">
+                          <StatusDot status={p.status} /> {t.statuses[p.status]}
+                        </dd>
+                      </div>
+                      {p.contribution && (
+                        <div className="flex gap-3">
+                          <dt className="w-20 shrink-0 pt-0.5 text-[0.8125rem] uppercase tracking-[0.2em] text-fg-dim">{t.credit}</dt>
+                          <dd className="m-0 text-fg">{p.contribution}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  )}
+                </div>
+
+                {/* metadata: plain and technical */}
+                <dl className="mt-5 grid gap-3 font-mono text-[0.8125rem]">
+                  <div>
+                    <dt className="text-[0.8125rem] font-bold uppercase tracking-[0.05em] text-fg">{t.role}</dt>
+                    <dd className="m-0 text-[0.875rem] text-fg">{p.role}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[0.8125rem] font-bold uppercase tracking-[0.05em] text-fg">{t.builtWith}</dt>
+                    <dd className="m-0 text-[0.875rem] text-fg">{p.tags.join(' · ')}</dd>
+                  </div>
+                </dl>
+
+                <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+                  <Link
+                    href={`/projects/${projectSlug(p)}`}
+                    data-cursor-label="case study"
+                    className="inline-flex w-[65%] min-w-[14rem] items-center gap-4 rounded-[3px] border border-[#111] bg-[#111] px-5 py-3 font-mono text-[0.875rem] uppercase tracking-[0.12em] text-[rgb(var(--bg))] transition-[background-color,color,transform] duration-200 hover:translate-y-0.5 hover:bg-white hover:text-[#111] th:tracking-normal"
+                  >
+                    <span aria-hidden className="text-lg leading-none">→</span> {t.viewCase}
+                  </Link>
+                  {p.demo && (
+                    <a
+                      href={p.demo}
+                      target="_blank"
+                      rel="noreferrer"
+                      data-cursor-label={`${t.viewLive} ↗`}
+                      className="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg underline-offset-4 hover:underline th:tracking-normal"
+                    >
+                      {t.viewLive} ↗
+                    </a>
+                  )}
+                  {p.repo && (
+                    <a
+                      href={p.repo}
+                      target="_blank"
+                      rel="noreferrer"
+                      data-cursor-label={`${t.source} ↗`}
+                      className="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg-muted underline-offset-4 hover:text-fg hover:underline th:tracking-normal"
+                    >
+                      {t.source} ↗
+                    </a>
+                  )}
+                </div>
+              </motion.article>
+              </AnimatePresence>
+            </div>
+
+            {/* BUILD SPEC: a small tilted print taped above the paper's top-right corner */}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={p.title}
+                initial={reduce ? false : { opacity: 0, y: -10, rotate: 5 }}
+                animate={{ opacity: 1, y: 0, rotate: 2.5 }}
+                exit={reduce ? undefined : { opacity: 0, transition: { duration: 0.12 } }}
+                transition={{ delay: reduce ? 0 : 0.18, duration: 0.5, ease: EASE }}
+                className="relative mx-auto mt-10 w-[min(15rem,90%)] lg:absolute lg:-top-40 lg:right-0 lg:mx-0 lg:mt-0 lg:w-[15rem]"
+              >
+              {/* a strip of tape across the top */}
+                <span aria-hidden className="absolute -top-2.5 left-1/2 z-10 h-5 w-16 -translate-x-1/2 -rotate-3 bg-[#d9cdb2]/85" />
+                <div className="rounded-[2px] border border-[#111]/60 bg-white px-5 py-4 font-mono text-[0.75rem] uppercase text-[#111] shadow-[6px_6px_0_#111]">
+                  <p className="border-b border-dashed border-[#111]/50 pb-2 text-base font-bold tracking-[0.05em]">{t.spec}</p>
+                  <dl className="m-0 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1.5 py-3">
+                    {specRows.map(([k, v]) => (
+                      <div key={k} className="contents">
+                        <dt className="tracking-[0.05em] text-[#111]">{k}</dt>
+                        <dd className="m-0 break-words">{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <div className="flex items-end justify-between border-t border-dashed border-[#111]/40 pt-2">
+                    <span className="text-[0.8125rem] font-bold tracking-[0.05em]">ZARUTECH</span>
+                    <Barcode className="h-8 w-auto" />
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* the hacker duck on the desk at the lower right, one line of commentary */}
+            <div className="pointer-events-none relative mx-auto mt-10 h-64 w-80 max-w-full lg:absolute lg:-bottom-36 lg:-right-10 lg:mx-0 lg:mt-0">
+              <span className="absolute right-0 top-0 text-fg">
+                <InkBubble className="font-hand text-[0.9375rem]">
+                  <span className="whitespace-pre-line leading-tight">{t.duck}</span>
+                </InkBubble>
+              </span>
+              {/* a star in the section's ink, a sparkle in the duck's orange */}
+              <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinejoin="round" className="absolute left-8 top-16 h-7 w-7 text-accent-text">
+                <path d="M12 2.8 14.6 9l6.6.5-5 4.3 1.6 6.5L12 16.8l-5.8 3.5 1.6-6.5-5-4.3L9.4 9Z" vectorEffect="non-scaling-stroke" />
+              </svg>
+              <svg aria-hidden viewBox="0 0 24 24" className="absolute right-6 top-28 h-6 w-6 text-duck">
+                <path d="M12 1.5C12.9 8.4 15.6 11.1 22.5 12 15.6 12.9 12.9 15.6 12 22.5 11.1 15.6 8.4 12.9 1.5 12 8.4 11.1 11.1 8.4 12 1.5Z" fill="currentColor" />
+              </svg>
+              {/* the hacker duck in its ink print, the same plate the spec label in System Profile uses */}
+              <div className="absolute bottom-1 left-12 [filter:drop-shadow(0_10px_8px_rgb(var(--fg)/0.25))]">
+                <Image src="/duck/hacker-print.png" alt="" width={480} height={454} sizes="12rem" className="block h-auto w-48" />
+              </div>
+              {/* the floor */}
+              <svg aria-hidden viewBox="0 0 288 12" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" className="absolute inset-x-0 bottom-0 h-3 w-full text-fg">
+                <path d="M4 8C60 6.5 120 7.4 180 6.2C220 5.4 255 6 284 5" vectorEffect="non-scaling-stroke" />
+              </svg>
+            </div>
           </div>
         </div>
+
+        {/* phone: where in the folder you are */}
+        <div className="mt-6 flex flex-wrap justify-center gap-1.5 lg:hidden" role="tablist" aria-label={t.pick}>
+          {projects.map((q, i) => (
+            <button
+              key={q.title}
+              role="tab"
+              aria-selected={i === index}
+              aria-label={split(q.title).name}
+              onClick={() => pick(i)}
+              className={`h-2 rounded-full transition-all ${i === index ? 'w-5 bg-accent-text' : 'w-2 bg-fg/25'}`}
+            />
+          ))}
+        </div>
+
+        {/* ── the full story: every project, open, on one line ───────── */}
+        <ProjectTimeline projects={projects} selected={index} onPick={(i) => pick(i, true)} t={t} />
       </div>
+
     </section>
   )
 }
 
-/** The screenshot, developing out of ASCII on arrival - or the dotted panel. */
-function Screen({ p }: { p: Project }) {
-  const frame =
-    'aspect-16/10 w-full overflow-hidden rounded-xl border border-fg/12 bg-bg/60 shadow-[0_50px_140px_-50px_rgba(0,0,0,0.95),0_0_60px_-20px_rgb(var(--fg)/0.07)]'
-  if (!p.image) {
-    return (
-      <div className={`flex flex-col items-center justify-center gap-2 px-4 text-center ${frame}`} style={DOTS}>
-        <span className="font-mono text-[0.6875rem] uppercase tracking-[0.25em] text-fg-dim">
-          {p.tags.slice(0, 3).join(' / ')}
-        </span>
-        <span className="font-mono text-[0.625rem] text-fg/25">nothing to render</span>
-      </div>
-    )
-  }
-  // AsciiImage restarts its develop whenever src changes, which is exactly
-  // once per arrival: the index changes, the src changes
-  return <AsciiImage src={p.image} alt={`${p.title} screenshot`} className={frame} />
-}
-
-function Link({ href, label }: { href: string; label: string }) {
+/**
+ * The project's real site, running inside the window. It is laid out at a
+ * desktop width and scaled down to the window, so it reads as the site rather
+ * than its phone layout; the screenshot stays underneath until the site has
+ * painted. Sandboxed: scripts and forms run, the top page cannot be touched.
+ */
+const LIVE_W = 1440
+function LiveFrame({ src, title, fallback, connecting, className = '' }: { src: string; title: string; fallback?: string; connecting: string; className?: string }) {
+  const box = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(0)
+  const [boxH, setBoxH] = useState(0)
+  const [loaded, setLoaded] = useState(false)
+  useEffect(() => {
+    const el = box.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(([e]) => {
+      setScale(e.contentRect.width / LIVE_W)
+      setBoxH(e.contentRect.height)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  const host = new URL(src).host
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      data-cursor-label={`${label} ↗`}
-      className="group/l inline-flex min-h-[2rem] items-center font-mono text-[0.625rem] uppercase tracking-wider text-fg-muted transition-colors hover:text-fg lg:text-[0.6875rem]"
-    >
-      <span aria-hidden>&#8599;</span>{' '}
-      <span className="underline-offset-2 group-hover/l:underline">{label}</span>
-    </a>
+    <div ref={box} data-lenis-prevent className={`relative w-full overflow-hidden rounded-[3px] bg-[rgb(var(--bg))] ${className}`}>
+      {fallback && !loaded && (
+        <Image src={fallback} alt="" fill sizes="(min-width: 768px) 55vw, 100vw" className="object-cover object-top opacity-40" />
+      )}
+      {!loaded && (
+        <span className="absolute inset-x-0 bottom-3 text-center font-mono text-[0.8125rem] text-fg-muted">
+          {connecting.replace('{host}', host)}
+        </span>
+      )}
+      {scale > 0 && (
+        <iframe
+          src={src}
+          title={`${title} - live`}
+          onLoad={() => setLoaded(true)}
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+          referrerPolicy="strict-origin-when-cross-origin"
+          className="absolute left-0 top-0 origin-top-left border-0 bg-white"
+          style={{ width: LIVE_W, height: boxH && scale ? boxH / scale : (LIVE_W * 9) / 16, transform: `scale(${scale})`, opacity: loaded ? 1 : 0, transition: 'opacity 300ms' }}
+        />
+      )}
+    </div>
   )
 }
+

@@ -13,8 +13,8 @@ import { useLang } from '@/lib/use-lang'
 
 /**
  * ABOUT ME - a printed terminal on the left, the portrait window on the
- * right, the ASCII torus knot behind. Ink on the site's paper, the duck's
- * orange as the only colour.
+ * right, the ASCII torus knot behind. Ink on the site's paper, the section's
+ * accent (tangerine) for the marks.
  *
  * It used to be an interactive terminal (commands, a real Linux behind
  * `boot`). It reads like one still - each block is headed by the command
@@ -32,7 +32,7 @@ const EASE = [0.16, 1, 0.3, 1] as const
 function Prompt({ children }: { children: string }) {
   return (
     <p className="mb-3 font-mono text-[0.8125rem] text-fg-dim">
-      <span className="mr-2 text-duck">$</span>
+      <span className="mr-2 text-accent-text">$</span>
       <span className="text-fg">{children}</span>
     </p>
   )
@@ -84,7 +84,8 @@ export default function AboutMe() {
     <GlassSection
       id="about"
       index="01"
-      title="About Me"
+      title="About me"
+      command="cat story.md"
       variant="blur"
       background={<Ascii3D />}
       fullScreen
@@ -93,12 +94,12 @@ export default function AboutMe() {
     >
       <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-start">
         {/* the printed terminal (left) */}
-        <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/90 md:bg-bg/85">
+        <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-fg/12 bg-white">
           <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/3 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
-            <span className="ml-2 font-mono text-[0.6875rem] text-fg-dim">~/about</span>
+            <span className="ml-2 font-mono text-[0.8125rem] text-fg-dim">~/about</span>
           </div>
 
           <div className="flex flex-col gap-9 p-5 sm:p-8">
@@ -163,10 +164,10 @@ export default function AboutMe() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.4 }}
                     transition={{ duration: 0.5, ease: EASE, delay: i * 0.06 }}
-                    className="rounded-lg border border-fg/12 bg-bg/70 p-4"
+                    className="rounded-lg border border-fg/12 bg-white p-4"
                   >
                     <p className="mb-1.5 flex items-center gap-2 font-sans text-[0.9375rem] font-semibold text-fg">
-                      <span aria-hidden className="h-2.5 w-2.5 shrink-0 bg-duck" />
+                      <span aria-hidden className="h-2.5 w-2.5 shrink-0 bg-accent" />
                       {p.title}
                     </p>
                     <p className="font-sans text-sm leading-relaxed text-fg-muted">{p.description}</p>
@@ -179,12 +180,12 @@ export default function AboutMe() {
 
         {/* portrait (right) - same window chrome; pinned beside the longer
             column on a wide screen */}
-        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/12 bg-bg/80 md:sticky md:top-24 md:w-[20rem] md:bg-bg/40 lg:w-[22.5rem]">
+        <figure className="group flex flex-col overflow-hidden rounded-xl border border-fg/12 bg-white md:sticky md:top-24 md:w-[20rem] lg:w-[22.5rem]">
           <div className="flex items-center gap-2 border-b border-fg/10 bg-fg/3 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full border border-fg/25" />
             <span className="h-2.5 w-2.5 rounded-full bg-fg/60" />
-            <span className="ml-2 font-mono text-[0.6875rem] text-fg-dim">~/portrait - me.jpg</span>
+            <span className="ml-2 font-mono text-[0.8125rem] text-fg-dim">~/portrait - me.jpg</span>
           </div>
           <Image
             src={assets.portrait}
@@ -192,9 +193,9 @@ export default function AboutMe() {
             width={900}
             height={1398}
             sizes="(min-width: 1024px) 360px, (min-width: 768px) 320px, 100vw"
-            className="h-80 w-full object-cover object-top grayscale transition-all duration-500 group-hover:grayscale-0 md:h-[34rem]"
+            className="h-80 w-full object-cover object-top transition-all duration-500 md:h-[34rem]"
           />
-          <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[0.625rem] uppercase tracking-widest text-fg-dim">
+          <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[0.75rem] uppercase tracking-widest text-fg-dim">
             {player.name} · {player.role}
           </figcaption>
         </figure>

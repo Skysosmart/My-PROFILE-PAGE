@@ -4,11 +4,12 @@ import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import CertLightbox from '@/components/ui/CertLightbox'
 import Desk from '@/components/personal/Desk'
+import SectionHeading from '@/components/ui/SectionHeading'
 import Stack from '@/components/personal/Stack'
 import type { Album } from '@/components/personal/PrintCard'
 import { type Certificate } from '@/data/portfolio'
 import { ui } from '@/data/ui'
-import { bestCertForMoment, certsForMoment } from '@/lib/certs'
+import { bestCertForMoment, certsForMoment, coverOf } from '@/lib/certs'
 import { useContent } from '@/lib/use-content'
 import { useLang } from '@/lib/use-lang'
 import { useTint } from '@/lib/tint'
@@ -84,7 +85,7 @@ export default function Personal() {
 
   const flip = useCallback((key: string) => setFlipped((f) => (f === key ? null : key)), [])
   const openAlbum = useCallback(
-    (entry: Album) => setOpen({ cert: entry.cert, albumKey: entry.key, photo: entry.album.photos[0] }),
+    (entry: Album) => setOpen({ cert: entry.cert, albumKey: entry.key, photo: coverOf(entry.album) }),
     [],
   )
 
@@ -103,7 +104,7 @@ export default function Personal() {
     <section
       ref={ref}
       id="personal"
-      className="relative isolate scroll-mt-28 overflow-x-clip px-4 py-16 sm:px-6 sm:py-24"
+      className="relative isolate scroll-mt-28 overflow-x-clip px-[clamp(16px,4vw,64px)] py-16 sm:py-24"
       // Escape turns the open print back over, wherever focus is inside the
       // section. A flipped card is a state the reader got into by pressing
       // something, so there has to be a key that gets them out of it.
@@ -130,25 +131,30 @@ export default function Personal() {
         whileInView="show"
         viewport={{ once: true, amount: 'some' }}
         variants={{ show: { transition: { staggerChildren: reduce ? 0 : 0.045 } } }}
-        className="mx-auto flex w-full max-w-6xl flex-col gap-8"
+        className="mx-auto flex w-full max-w-[92.5rem] flex-col gap-8"
       >
         <motion.div
           variants={{ hidden: reduce ? { opacity: 0 } : { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col gap-4"
         >
-          <span className="font-mono text-[0.6875rem] uppercase tracking-[0.35em] text-fg-dim">[ 07 · {t.label} ]</span>
-          <h2 className="font-crt text-5xl leading-[0.95] th:leading-[1.25] text-fg txt-glow sm:text-6xl">
-            {t.title1}
-            <br />
-            {t.title2}
-          </h2>
-          <p className="font-mono text-[0.75rem] text-fg-muted">
-            {n} albums · {photos} photos ·{' '}
-            {/* the hint has to describe the gesture the reader actually has */}
-            <span className="pointer-coarse:hidden">{t.hint}</span>
-            <span className="hidden pointer-coarse:inline">{t.hintCoarse}</span>
-          </p>
+          <SectionHeading
+            index="07"
+            label={t.label}
+            command="ls ~/photos"
+            className="!mb-0"
+            subtitle={
+              <>
+                {t.title1} {t.title2}{' '}
+                <span className="text-fg-muted">
+                  {n} albums · {photos} photos ·{' '}
+                  {/* the hint has to describe the gesture the reader actually has */}
+                  <span className="pointer-coarse:hidden">{t.hint}</span>
+                  <span className="hidden pointer-coarse:inline">{t.hintCoarse}</span>
+                </span>
+              </>
+            }
+          />
         </motion.div>
 
         {wide ? (

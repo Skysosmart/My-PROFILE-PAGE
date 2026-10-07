@@ -11,6 +11,15 @@
   button:not(:disabled) { cursor: pointer; }
 }
 
+/* inline, not plain @theme: a plain theme variable is resolved once on
+   :root, so a section's own --accent would never reach the utilities.
+   Inlined, `bg-accent` writes rgb(var(--accent)) into the rule and the
+   element's nearest section decides. */
+@theme inline {
+  --color-accent: rgb(var(--accent));
+  --color-accent-text: rgb(var(--accent-text));
+}
+
 @theme {
   --color-void: rgb(var(--bg));
   --color-ink: rgb(var(--panel));
@@ -34,6 +43,9 @@
 
   /* the duck's beak and feet: the one colour in the palette, used sparingly */
   --color-duck: rgb(245 190 91);
+  /* the duck's orange deepened until it reads as text: 4.0:1 on the paper
+     (the duck itself is 1.5:1, fine for a beak, not for a headline) */
+  --color-duck-deep: rgb(184 92 0);
 
   /* next/font injects --font-jetbrains etc. on <html>; the theme names
      (--font-mono ...) are what the utilities read, so they cannot be the
@@ -42,6 +54,7 @@
   --font-pixel: var(--font-press-start), var(--font-jetbrains), var(--font-thai), monospace;
   --font-crt: var(--font-vt323), var(--font-thai), var(--font-jetbrains), monospace;
   --font-sans: var(--font-grotesk), var(--font-thai), system-ui, sans-serif;
+  --font-hand: var(--font-sriracha), var(--font-thai), cursive;
 
   --shadow-glow-sm: 0 0 8px rgba(255, 255, 255, 0.3);
   --shadow-glow:
@@ -59,11 +72,6 @@
   --animate-marquee: marquee 70s linear infinite;
   --animate-foil: foil 5.5s ease-in-out infinite;
   --animate-pulse-glow: pulse-glow 2.6s ease-in-out infinite;
-  /* the hero's rail scroll cue. Slow on purpose, and it rests: the last
-     third of the cycle is a hold at the far end, so the rail is empty more
-     often than it is busy. A cue that ticks without pause is a metronome,
-     and the eye stops reading it as an instruction and starts resenting it. */
-  --animate-rail-drop: rail-drop 3.6s cubic-bezier(0.55, 0, 0.25, 1) infinite;
 
   @keyframes blink {
     0%,
@@ -134,33 +142,6 @@
     55%,
     100% {
       transform: translateX(320%) skewX(-18deg);
-    }
-  }
-  /* The mark that runs down the hairline rail in the hero. It is drawn as a
-     background on a full-height box rather than a translated child, so the
-     travel is expressed against the rail's own height: 100% here already
-     means "image sitting on the foot", and the extra 1.25rem - one image
-     height - carries it clear of the end. One keyframe therefore serves both
-     rails, the compact 40px one pinned to a phone and the 56px one in the
-     orb's column, with the same speed and the same rest at either size.
-
-     opacity is pinned to 1 at every step and never interpolated. The rail's
-     mask is what makes the mark appear and vanish, so the animation has no
-     business fading it; what the declaration buys is the fallback. The
-     element's own class sets opacity 0, and animations outrank plain
-     declarations, so the mark is visible only while this is actually
-     running - which is precisely what the reduced-motion block further down
-     this file wants, since it ends every animation after 0.001ms and would
-     otherwise leave a bright stub parked at the top of the rail. */
-  @keyframes rail-drop {
-    0% {
-      background-position: 50% -1.25rem;
-      opacity: 1;
-    }
-    62%,
-    100% {
-      background-position: 50% calc(100% + 1.25rem);
-      opacity: 1;
     }
   }
   @keyframes pulse-glow {
@@ -290,16 +271,44 @@
     --lime: rgb(var(--fg));
     --scanline: rgba(0, 0, 0, 0.28);
     --shade: 0.18; /* drop-shadow strength: hard shadows read as smudges here */
-    /* the paper's stock per section (lib/tint.ts) */
-    --tint-profile: 231 237 241;
-    --tint-about: 231 240 233;
-    --tint-education: 246 238 224;
-    --tint-skills: 239 235 244;
-    --tint-certificates: 247 242 224;
-    --tint-projects: 233 236 241;
+    /* the paper's stock per section (lib/tint.ts): a 13% wash of the
+       section's accent into the paper. 13% is the most that keeps --fg-dim
+       above 4.5:1 on every one of them (the tightest, education, is 4.51) */
+    --tint-profile: 219 231 235;
+    --tint-about: 245 225 210;
+    --tint-education: 245 219 220;
+    --tint-skills: 232 223 235;
+    --tint-certificates: 245 235 210;
+    --tint-projects: 222 226 235;
     --tint-writeups: 236 236 234;
-    --tint-personal: 246 235 233;
+    --tint-personal: 217 234 218;
     --tint-contact: 243 240 232;
+
+    /* Section accents: one bright hue per section, the duck's orange for
+       the rest. Each comes as a fill and a text-safe darker cut: the fill
+       only ever carries ink (5.3:1 at worst, violet), and when the colour
+       itself has to be text it is the -text cut (4.95:1 at worst on the
+       paper, tangerine). The hand - bubbles, arrows, the clip, the duck's
+       line - stays in ink everywhere. */
+    --accent-duck: 245 190 91;
+    --accent-duck-text: 138 90 0;
+    --accent-sky: 58 168 255;
+    --accent-sky-text: 11 95 168;
+    --accent-tangerine: 255 122 61;
+    --accent-tangerine-text: 178 68 15;
+    --accent-pink: 255 79 139;
+    --accent-pink-text: 179 22 79;
+    --accent-violet: 155 107 255;
+    --accent-violet-text: 98 54 214;
+    --accent-sun: 255 201 60;
+    --accent-sun-text: 138 90 0;
+    --accent-blue: 79 134 255;
+    --accent-blue-text: 30 79 209;
+    --accent-green: 46 194 126;
+    --accent-green-text: 17 116 74;
+    /* outside any section: the duck */
+    --accent: var(--accent-duck);
+    --accent-text: var(--accent-duck-text);
   }
 
   * {
@@ -307,10 +316,12 @@
   }
 
   html {
-    /* The site grows with the screen: 16px up to a 1371px viewport, then
-     linearly to 22.4px (140%) at 1920px, and every size in the app is in
-     rem so it follows. A 1920 display gets the layout of a 1371 one, scaled,
-     which is how Sky likes it: it is the browser at 140%, built in. */
+    /* The type scales with the screen: 16px up to 1371px wide, then up
+       to 140% at 1920px, so a wide desk is used rather than stretched. It
+       was dropped once (it stacked with a scaled laptop display) and
+       restored with the 2026-10 rebuild, by the owner's choice. Every size is
+       in rem, so this one line sizes the whole site, and the visitor's own
+       browser zoom still works on top of it. */
     font-size: clamp(100%, 1.1675vw, 140%);
     /* auto, not smooth: the page's easing comes from lib/smooth-scroll.ts,
        and a browser smooth scroll underneath it would pull the other way.
@@ -354,6 +365,14 @@
     transition: background-color 1.2s ease;
     will-change: transform;
   }
+  /* each section carries its own accent; everything inside inherits it */
+  [id='profile'] { --accent: var(--accent-sky); --accent-text: var(--accent-sky-text); }
+  [id='about'] { --accent: var(--accent-tangerine); --accent-text: var(--accent-tangerine-text); }
+  [id='education'] { --accent: var(--accent-pink); --accent-text: var(--accent-pink-text); }
+  [id='skills'] { --accent: var(--accent-violet); --accent-text: var(--accent-violet-text); }
+  [id='certificates'] { --accent: var(--accent-sun); --accent-text: var(--accent-sun-text); }
+  [id='projects'] { --accent: var(--accent-blue); --accent-text: var(--accent-blue-text); }
+  [id='personal'] { --accent: var(--accent-green); --accent-text: var(--accent-green-text); }
   html[data-tint='profile'] { --tint: var(--tint-profile); }
   html[data-tint='about'] { --tint: var(--tint-about); }
   html[data-tint='education'] { --tint: var(--tint-education); }

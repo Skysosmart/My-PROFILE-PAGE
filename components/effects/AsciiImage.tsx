@@ -72,6 +72,12 @@ type Props = {
   charset?: string
   holdMs?: number
   durationMs?: number
+  /**
+   * How the photo takes over: `fade` dissolves it in over the ASCII (the
+   * default), `wipe` uncovers it left to right like a print developing in
+   * the tray, the ASCII going after the edge has crossed.
+   */
+  reveal?: 'fade' | 'wipe'
 }
 
 export default function AsciiImage({
@@ -82,6 +88,7 @@ export default function AsciiImage({
   charset = CHARSET,
   holdMs = 350,
   durationMs = 600,
+  reveal = 'fade',
 }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const [frame, setFrame] = useState<Frame | null>(null)
@@ -131,6 +138,27 @@ export default function AsciiImage({
 
   // Snap (no transition) when resetting to the ASCII state, ease when revealing.
   const fade = { transitionDuration: revealed ? `${durationMs}ms` : '0ms' }
+  const wipe = reveal === 'wipe'
+  // the photo's edge sweeps across on the site's ease; the ASCII under it
+  // only fades once the sweep is done, so it is never on top of the photo
+  // the edge is a soft band rather than a ruled line, like ink taking on paper: a
+  // gradient mask 2.5x the image's width slides from fully clear to fully inked
+  const photoStyle = wipe
+    ? {
+        maskImage: 'linear-gradient(90deg, #000 42%, transparent 58%)',
+        WebkitMaskImage: 'linear-gradient(90deg, #000 42%, transparent 58%)',
+        maskSize: '250% 100%',
+        WebkitMaskSize: '250% 100%',
+        maskRepeat: 'no-repeat',
+        WebkitMaskRepeat: 'no-repeat',
+        maskPosition: revealed ? '0% 0%' : '100% 0%',
+        WebkitMaskPosition: revealed ? '0% 0%' : '100% 0%',
+        transition: revealed ? `mask-position ${durationMs}ms cubic-bezier(0.16, 1, 0.3, 1), -webkit-mask-position ${durationMs}ms cubic-bezier(0.16, 1, 0.3, 1)` : 'none',
+      }
+    : fade
+  const asciiStyle = wipe
+    ? { transitionDuration: revealed ? '200ms' : '0ms', transitionDelay: revealed ? `${durationMs}ms` : '0ms' }
+    : fade
 
   return (
     <div ref={wrapRef} className={`relative overflow-hidden ${className}`}>
@@ -139,14 +167,14 @@ export default function AsciiImage({
         src={src}
         alt={alt}
         draggable={false}
-        className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity motion-reduce:opacity-100 motion-reduce:transition-none ${revealed ? 'opacity-100' : 'opacity-0'}`}
-        style={fade}
+        className={`absolute inset-0 h-full w-full object-cover object-top motion-reduce:opacity-100 motion-reduce:transition-none motion-reduce:[mask-image:none] ${wipe ? '' : `transition-opacity ${revealed ? 'opacity-100' : 'opacity-0'}`}`}
+        style={photoStyle}
       />
       <pre
         aria-hidden
         className={`pointer-events-none absolute inset-0 m-0 select-none overflow-hidden whitespace-pre font-mono leading-none text-fg/90 transition-opacity motion-reduce:hidden ${revealed ? 'opacity-0' : 'opacity-100'}`}
         style={{
-          ...fade,
+          ...asciiStyle,
           fontSize: box.w ? `${box.w / cols / GLYPH_W}px` : undefined,
           lineHeight: frame && box.h ? `${box.h / frame.rows}px` : undefined,
         }}

@@ -22,15 +22,18 @@ export function categorize(c: Certificate): string {
   return 'misc'
 }
 
+/* one ink for every category: the section's colour marks only the picked
+   filter, never a category (a rainbow of chips is exactly what the site's
+   ink-on-paper rule forbids) */
 export const CATS: { key: string; label: string; chip: string; dot: string }[] = [
-  { key: 'all', label: 'All', chip: 'bg-neutral-200 text-neutral-700', dot: 'bg-white' },
-  { key: 'featured', label: 'Featured', chip: 'bg-neutral-100 text-neutral-900', dot: 'bg-white' },
-  { key: 'innovation', label: 'Innovation', chip: 'bg-amber-100 text-amber-800', dot: 'bg-amber-400' },
-  { key: 'robotics', label: 'Robotics', chip: 'bg-orange-100 text-orange-800', dot: 'bg-orange-500' },
-  { key: 'security', label: 'Security', chip: 'bg-emerald-100 text-emerald-800', dot: 'bg-emerald-500' },
-  { key: 'ai-data', label: 'AI & Data', chip: 'bg-violet-100 text-violet-800', dot: 'bg-violet-500' },
-  { key: 'language', label: 'Language', chip: 'bg-sky-100 text-sky-800', dot: 'bg-sky-500' },
-  { key: 'misc', label: 'More', chip: 'bg-neutral-200 text-neutral-700', dot: 'bg-neutral-400' },
+  { key: 'all', label: 'All', chip: 'border border-[#111]/40 text-[#111]', dot: 'bg-[#111]/45' },
+  { key: 'featured', label: 'Featured', chip: 'border border-[#111]/40 text-[#111]', dot: 'bg-[#111]/45' },
+  { key: 'innovation', label: 'Innovation', chip: 'border border-[#111]/40 text-[#111]', dot: 'bg-[#111]/45' },
+  { key: 'robotics', label: 'Robotics', chip: 'border border-[#111]/40 text-[#111]', dot: 'bg-[#111]/45' },
+  { key: 'security', label: 'Security', chip: 'border border-[#111]/40 text-[#111]', dot: 'bg-[#111]/45' },
+  { key: 'ai-data', label: 'AI & Data', chip: 'border border-[#111]/40 text-[#111]', dot: 'bg-[#111]/45' },
+  { key: 'language', label: 'Language', chip: 'border border-[#111]/40 text-[#111]', dot: 'bg-[#111]/45' },
+  { key: 'misc', label: 'More', chip: 'border border-[#111]/40 text-[#111]', dot: 'bg-[#111]/45' },
 ]
 
 export const catMeta = (k: string) => CATS.find((c) => c.key === k) ?? CATS[CATS.length - 1]
@@ -122,3 +125,6 @@ export const certSpan = (() => {
   if (!st.length) return ''
   return `${Math.floor(Math.min(...st) / 100)}-${Math.floor(Math.max(...st) / 100)}`
 })()
+
+/** the photo that stands for an album: its chosen cover, else its first */
+export const coverOf = (album: { photos: string[]; cover?: string }) => album.cover ?? album.photos[0]

@@ -20,7 +20,7 @@ export default function NameTag() {
       <p className="text-base font-bold uppercase leading-none tracking-wide text-fg txt-glow sm:text-xl">
         {player.firstName}
       </p>
-      <p className="mt-1.5 text-[0.6875rem] uppercase tracking-[0.35em] text-fg-muted">
+      <p className="mt-1.5 text-[0.8125rem] uppercase tracking-[0.35em] text-fg-muted">
         {player.lastName}
       </p>
     </motion.div>

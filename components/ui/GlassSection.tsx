@@ -3,6 +3,7 @@
 import { type ReactNode } from 'react'
 import { motion, useReducedMotion, type Variants } from 'motion/react'
 import { useTint } from '@/lib/tint'
+import SectionHeading from '@/components/ui/SectionHeading'
 
 /**
  * A frosted-glass content panel with a monospace eyebrow label + title.
@@ -61,6 +62,8 @@ export default function GlassSection({
   revealAmount = 0.2,
   tone = 'dark',
   panel = true,
+  command,
+  subtitle,
   children,
 }: {
   id: string
@@ -86,6 +89,10 @@ export default function GlassSection({
   tone?: 'dark' | 'light'
   /** false = no floating glass card; content lays flat on the screen itself. */
   panel?: boolean
+  /** the terminal command the section answers, e.g. `ls certificates/`: renders the shared SectionHeading */
+  command?: string
+  /** the plain line under the command */
+  subtitle?: ReactNode
   children: ReactNode
 }) {
   const reduce = useReducedMotion()
@@ -101,7 +108,7 @@ export default function GlassSection({
       id={id}
       // overflow-x-clip: 3D reveal variants (flip) project a wider bounding box
       // in their hidden state, which would add horizontal page overflow.
-      className={`relative isolate overflow-x-clip px-4 sm:px-6 ${
+      className={`relative isolate overflow-x-clip px-[clamp(16px,4vw,64px)] ${
         fullScreen
           ? 'flex min-h-svh scroll-mt-0 flex-col justify-center py-16 sm:py-24'
           : 'scroll-mt-28 py-10 sm:py-14'
@@ -134,43 +141,51 @@ export default function GlassSection({
             ? `glass-panel mx-auto w-full max-w-5xl rounded-2xl p-6 sm:p-9 ${
                 tone === 'light' ? 'glass-panel--light' : ''
               }`
-            : 'flex w-full flex-1 flex-col' // flat: content IS the screen
+            : 'mx-auto flex w-full max-w-[92.5rem] flex-1 flex-col' // flat: content IS the screen
         }
       >
+        {command ? (
+          <SectionHeading index={index} label={title} command={command} subtitle={subtitle} />
+        ) : (
+          <>
         {label && (
-          <span className="mb-2 block font-mono text-[0.6875rem] uppercase tracking-[0.35em] text-fg-dim">
-            [ {label} ]
-          </span>
+            <span className="mb-2 block font-mono text-[0.8125rem] uppercase tracking-[0.35em] text-fg-dim">
+              [ {label} ]
+            </span>
+          )}
+          {/* header: index + title reveal with a growing underline. The index is
+              a tag in the section's accent (ink on the fill) and the underline
+              is the accent's text-safe cut: see the accents in globals.css */}
+          <div className="relative mb-7 flex items-baseline gap-3 pb-4">
+            <motion.span
+              initial={reduce ? { opacity: 0 } : { opacity: 0, x: -8 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: revealAmount }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="self-center rounded-[3px] bg-accent px-1.5 py-0.5 font-mono text-xs font-bold leading-none text-[#111]"
+            >
+              {index}
+            </motion.span>
+            <motion.h2
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: revealAmount }}
+              transition={{ duration: 0.5, delay: 0.22 }}
+              className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-fg txt-glow sm:text-xl"
+            >
+              {title}
+            </motion.h2>
+            {/* underline grows in */}
+            <motion.span
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, amount: revealAmount }}
+              transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-accent-text"
+            />
+          </div>
+          </>
         )}
-        {/* header: index + title reveal with a growing underline */}
-        <div className="relative mb-7 flex items-baseline gap-3 pb-4">
-          <motion.span
-            initial={reduce ? { opacity: 0 } : { opacity: 0, x: -8 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: revealAmount }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="font-mono text-xs text-fg-dim"
-          >
-            {index}
-          </motion.span>
-          <motion.h2
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: revealAmount }}
-            transition={{ duration: 0.5, delay: 0.22 }}
-            className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-fg txt-glow sm:text-xl"
-          >
-            {title}
-          </motion.h2>
-          {/* underline grows in */}
-          <motion.span
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true, amount: revealAmount }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-x-0 bottom-0 h-px origin-left bg-fg/10"
-          />
-        </div>
 
         {children}
       </motion.div>

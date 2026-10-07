@@ -64,7 +64,7 @@ export default function WriteupList({
               <span className="font-sans text-[0.9375rem] font-semibold text-fg group-hover:underline group-hover:underline-offset-4">
                 {w.title}
               </span>
-              <span className="truncate font-mono text-[0.625rem] uppercase tracking-[0.2em] text-fg-dim">
+              <span className="truncate font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg-dim">
                 {[w.event, w.date, w.category, fmt(t.writeups.minutes, { n: w.minutes })]
                   .filter(Boolean)
                   .join(' · ')}
@@ -74,12 +74,12 @@ export default function WriteupList({
               </span>
             </span>
             {w.draft && (
-              <span className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-fg-dim">
+              <span className="shrink-0 font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-fg-dim">
                 {t.writeups.draft}
               </span>
             )}
             {w.difficulty && (
-              <span className="shrink-0 rounded-sm border border-duck/70 px-2 py-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-duck">
+              <span className="shrink-0 rounded-sm border border-duck/70 px-2 py-0.5 font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-duck">
                 {w.difficulty}
               </span>
             )}

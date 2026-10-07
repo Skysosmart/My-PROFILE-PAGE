@@ -111,7 +111,7 @@ export default function CertLightbox({
               {cert && (
               <div className="flex items-start justify-between gap-3">
                 <span
-                  className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[0.6875rem] font-semibold ${catMeta(categorize(cert)).chip}`}
+                  className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[0.8125rem] font-semibold ${catMeta(categorize(cert)).chip}`}
                 >
                   {catMeta(categorize(cert)).label}
                 </span>
@@ -148,7 +148,7 @@ export default function CertLightbox({
               )}
               {shown && momentKey && shown.photos.length > 0 && (
                 <div className="mt-4 border-t border-fg/10 pt-4">
-                  <p className="mb-2 font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim">
+                  <p className="mb-2 font-mono text-[0.75rem] uppercase tracking-wider text-fg-dim">
                     {shown.photos.length} photo{shown.photos.length > 1 ? 's' : ''} from {shown.label}
                   </p>
                   <div className="flex flex-wrap gap-2">

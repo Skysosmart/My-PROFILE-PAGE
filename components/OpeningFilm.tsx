@@ -141,7 +141,7 @@ export default function OpeningFilm({ onReveal, onDone }: { onReveal: () => void
         <source src={`/film/${cut.file}.mp4`} type="video/mp4" />
         <source src={`/film/${cut.file}.webm`} type="video/webm" onError={leave} />
       </video>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 whitespace-nowrap px-5 pb-4 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-fg-dim sm:text-[0.6875rem] sm:tracking-[0.25em]">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 whitespace-nowrap px-5 pb-4 font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg-dim sm:text-[0.8125rem] sm:tracking-[0.25em]">
         <button
           type="button"
           onClick={toggleSound}

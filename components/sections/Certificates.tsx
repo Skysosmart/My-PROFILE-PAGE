@@ -150,7 +150,7 @@ export default function Certificates() {
       id="certificates"
       index="04"
       title="Certificates"
-      label="04 · CERTIFICATES"
+      command="ls certificates/"
       watermark="CERTS"
       // "rise" only offsets y by a fixed 44px. flip/zoom/blur displace by a
       // share of the element, which throws a tall section off its own
@@ -171,7 +171,7 @@ export default function Certificates() {
       revealAmount="some"
     >
       {/* stat rail */}
-      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-fg/12 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-fg-dim">
+      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-fg/12 py-2 font-mono text-[0.8125rem] uppercase tracking-[0.18em] text-fg-dim">
         <span>
           <Tally to={certStats.total} still={still} /> records
         </span>
@@ -195,7 +195,7 @@ export default function Certificates() {
               key={c.file}
               onClick={() => setActive(c)}
               data-cursor-label="open"
-              className={`group flex items-start gap-3 rounded-2xl border ${face.ring} bg-linear-to-b from-fg/6 to-transparent p-2.5 text-left transition-colors hover:from-fg/11 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70`}
+              className={`group flex items-start gap-3 rounded-[6px] border ${face.ring} bg-linear-to-b from-fg/6 to-transparent p-2.5 text-left transition-colors hover:from-fg/11 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70`}
             >
               <div className="w-16 shrink-0 overflow-hidden rounded-md bg-white shadow-[0_8px_22px_-10px_rgba(0,0,0,0.9)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -211,7 +211,7 @@ export default function Certificates() {
                 <h3 className="mt-1.5 line-clamp-2 font-sans text-[0.8125rem] font-semibold leading-snug text-fg">
                   {c.title}
                 </h3>
-                <p className="mt-1 truncate font-mono text-[0.5625rem] uppercase tracking-wider text-fg-dim">
+                <p className="mt-1 truncate font-mono text-[0.6875rem] uppercase tracking-wider text-fg-dim">
                   {c.issuer}
                 </p>
               </div>
@@ -222,12 +222,12 @@ export default function Certificates() {
 
       {/* 2. THE MAKEX ROUTE */}
       {route.length > 0 && (
-        <div className="mb-5 rounded-2xl border border-fg/10 bg-bg/25 p-3 sm:p-4">
+        <div className="mb-5 rounded-[6px] border border-[#111]/15 bg-white/50 p-3 sm:p-4">
           <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h3 className="font-sans text-sm font-semibold text-fg">
               MakeX Challenge - six months, one robot
             </h3>
-            <span className="font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim">
+            <span className="font-mono text-[0.75rem] uppercase tracking-wider text-fg-dim">
               Team Prometheus · Jun to Nov 2025
             </span>
           </div>
@@ -263,11 +263,11 @@ export default function Certificates() {
                     onClick={() => setActive(c)}
                     className="group mt-1.5 w-full px-1 text-center focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
                   >
-                    <span className="block font-mono text-[0.5625rem] uppercase tracking-wider text-fg-dim">
+                    <span className="block font-mono text-[0.6875rem] uppercase tracking-wider text-fg-dim">
                       {meta.when}
                     </span>
                     <span
-                      className={`mt-0.5 block font-sans text-[0.6875rem] font-medium leading-tight transition-colors group-hover:text-fg ${last ? 'text-fg' : 'text-fg/70'}`}
+                      className={`mt-0.5 block font-sans text-[0.8125rem] font-medium leading-tight transition-colors group-hover:text-fg ${last ? 'text-fg' : 'text-fg/70'}`}
                     >
                       {meta.what}
                     </span>
@@ -294,21 +294,21 @@ export default function Certificates() {
               key={c.key}
               onClick={() => setCat(c.key)}
               aria-pressed={on}
-              className={`relative rounded-full px-4 py-1.5 font-sans text-sm font-medium transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
-                on ? 'text-bg' : 'text-fg/70 hover:text-fg'
+              className={`relative rounded-[3px] border px-3.5 py-1.5 font-mono text-[0.8125rem] font-medium transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
+                on ? 'border-[#111] text-[#111]' : 'border-fg/20 text-fg/75 hover:border-fg/50 hover:text-fg'
               }`}
             >
               {on && (
                 <motion.span
                   layoutId="cert-pill"
                   transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                  className="absolute inset-0 rounded-full bg-fg shadow-lg"
+                  className="absolute inset-0 rounded-[2px] bg-accent"
                 />
               )}
               <span className="relative flex items-center gap-2">
                 <span className={`h-1.5 w-1.5 rounded-full ${c.dot}`} />
                 {c.label}
-                <span className={on ? 'text-bg/60' : 'text-fg-dim'}>{count}</span>
+                <span className={on ? 'text-[#111]/60' : 'text-fg-dim'}>{count}</span>
               </span>
             </button>
           )
@@ -342,7 +342,7 @@ export default function Certificates() {
         <div className="mt-6 flex justify-center">
           <Link
             href="/certificates"
-            className="group inline-flex items-center gap-2 rounded-full border border-fg/25 px-5 py-2.5 font-sans text-sm font-medium text-fg/80 transition-colors hover:border-fg/60 hover:text-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+            className="group inline-flex items-center gap-2 rounded-[3px] border border-fg/30 px-5 py-2.5 font-sans text-sm font-medium text-fg/80 transition-colors hover:border-fg/60 hover:text-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
           >
             Explore all {certStats.total} certificates
             <span className="font-mono text-fg-dim transition-colors group-hover:text-fg/80">

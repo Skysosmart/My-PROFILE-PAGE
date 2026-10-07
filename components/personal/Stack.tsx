@@ -109,7 +109,7 @@ export default function Stack({
       <button
         type="button"
         onClick={next}
-        className="self-start rounded-full border border-fg/25 px-4 py-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] th:tracking-[0.04em] text-fg-muted transition-colors hover:bg-fg hover:text-bg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        className="self-start rounded-full border border-fg/25 px-4 py-1.5 font-mono text-[0.8125rem] uppercase tracking-[0.14em] th:tracking-[0.04em] text-fg-muted transition-colors hover:bg-fg hover:text-bg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
       >
         {nextLabel} →
       </button>

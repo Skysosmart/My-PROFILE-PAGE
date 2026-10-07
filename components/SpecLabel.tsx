@@ -102,7 +102,7 @@ export default function SpecLabel() {
   ]
 
   return (
-    <div ref={ref} className="spec-label relative rounded-md bg-[#f3f0e8] p-4 text-[#111] sm:p-6">
+    <div ref={ref} className="spec-label relative rounded-md bg-white p-4 text-[#111] sm:p-6">
       {/* header: the mark, the model, the revision */}
       <div className="flex items-start justify-between gap-4 border-b border-[#111]/20 pb-4">
         <div className="flex min-w-0 items-center gap-3 sm:gap-4">
@@ -118,13 +118,13 @@ export default function SpecLabel() {
           />
           <div className="flex min-w-0 flex-col">
             <span className="font-pixel text-[0.5rem] tracking-[0.25em]">ZARUTECH</span>
-            <span className="mt-2 font-mono text-[0.5625rem] uppercase tracking-[0.3em] text-[#111]/50">{p.model}</span>
+            <span className="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.3em] text-[#111]/50">{p.model}</span>
             <span className="font-crt text-3xl leading-none sm:text-4xl">
               <Typed text={codes.handle} on={on} delay={start.get('model')} speed={36} />
             </span>
           </div>
         </div>
-        <div className="shrink-0 text-right font-mono text-[0.625rem] uppercase tracking-[0.2em]">
+        <div className="shrink-0 text-right font-mono text-[0.75rem] uppercase tracking-[0.2em]">
           <span className="block text-[#111]/50">{p.rev}</span>
           <span className="block font-semibold">
             <Typed text={rev} on={on} delay={start.get('rev')} speed={24} />
@@ -136,7 +136,7 @@ export default function SpecLabel() {
       <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2.5 font-mono text-[0.75rem] leading-snug sm:gap-x-6 sm:text-[0.8125rem]">
         {rows.map((r, k) => (
           <Fragment key={r.key}>
-            <dt className="pt-0.5 text-[0.5625rem] uppercase tracking-[0.3em] text-[#111]/50 sm:text-[0.625rem]">{r.key}</dt>
+            <dt className="pt-0.5 text-[0.6875rem] uppercase tracking-[0.3em] text-[#111]/50 sm:text-[0.75rem]">{r.key}</dt>
             <dd className="m-0 min-w-0">
               {/* a row that carries a drawing puts it beside the text rather
                   than floating it: Typed is an inline-block at full width, so
@@ -146,7 +146,7 @@ export default function SpecLabel() {
                   {r.dot && <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-duck align-middle" />}
                   <Typed text={r.value} on={on} delay={start.get(`v${k}`)} className="font-semibold" />
                   {r.sub && (
-                    <span className="mt-1 block text-[0.6875rem] leading-relaxed text-[#111]/65">
+                    <span className="mt-1 block text-[0.8125rem] leading-relaxed text-[#111]/65">
                       <Typed text={r.sub} on={on} delay={start.get(`s${k}`)} speed={SUB} caret={false} />
                     </span>
                   )}
@@ -170,7 +170,7 @@ export default function SpecLabel() {
       </dl>
 
       {/* the rating strip: the numbers, counted off the data */}
-      <span className="mt-5 block text-[0.5625rem] uppercase tracking-[0.3em] text-[#111]/50 sm:text-[0.625rem]">{p.rating}</span>
+      <span className="mt-5 block text-[0.6875rem] uppercase tracking-[0.3em] text-[#111]/50 sm:text-[0.75rem]">{p.rating}</span>
       <div className={`mt-1.5 grid border-y border-[#111]/20 py-3 ${rating.length > 4 ? 'grid-cols-5' : 'grid-cols-4'}`}>
         {rating.map((r, i) => (
           <div key={r.label} className={`flex flex-col items-center gap-1.5 px-1 ${i ? 'border-l border-[#111]/15' : ''}`}>
@@ -194,7 +194,7 @@ export default function SpecLabel() {
           >
             <Barcode className="block h-10 w-full sm:h-12" />
           </motion.div>
-          <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-x-4 font-mono text-[0.5625rem] tracking-[0.2em] text-[#111]/70 sm:text-[0.625rem]">
+          <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-x-4 font-mono text-[0.6875rem] tracking-[0.2em] text-[#111]/70 sm:text-[0.75rem]">
             <span>{codes.handle}</span>
             <span>
               <span className="text-[#111]/45">{p.serial} </span>
@@ -208,7 +208,7 @@ export default function SpecLabel() {
               <li
                 key={m.glyph}
                 title={m.title}
-                className="grid h-7 w-10 place-items-center border border-[#111]/45 font-mono text-[0.5625rem] font-bold tracking-[0.05em]"
+                className="grid h-7 w-10 place-items-center border border-[#111]/45 font-mono text-[0.6875rem] font-bold tracking-[0.05em]"
               >
                 {m.glyph}
               </li>
@@ -235,7 +235,7 @@ export default function SpecLabel() {
       </div>
 
       {/* the base line */}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-[#111]/20 pt-2 font-mono text-[0.5rem] uppercase tracking-[0.3em] text-[#111]/55 sm:text-[0.5625rem]">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-[#111]/20 pt-2 font-mono text-[0.5rem] uppercase tracking-[0.3em] text-[#111]/55 sm:text-[0.6875rem]">
         <span>{p.madeIn}</span>
         <span>ZaruTech © {rev.slice(0, 4)}</span>
       </div>

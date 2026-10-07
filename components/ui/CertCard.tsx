@@ -34,7 +34,7 @@ export default function CertCard({
       whileHover={still ? undefined : { y: -6 }}
       onClick={() => onOpen(c)}
       data-cursor-label="open"
-      className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-fg/10 bg-panel text-left shadow-[0_12px_40px_-14px_rgba(0,0,0,var(--shade))] transition-shadow hover:shadow-[0_28px_70px_-16px_rgba(0,0,0,var(--shade))] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+      className="group flex h-full w-full flex-col overflow-hidden rounded-[6px] border border-[#111]/45 bg-white text-left shadow-[3px_3px_0_#111] transition-shadow hover:shadow-[6px_6px_0_#111] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
     >
       <div className="relative aspect-4/3 w-full shrink-0 bg-white">
         <Image
@@ -47,20 +47,20 @@ export default function CertCard({
         />
         {c.medal && (
           <span
-            className={`absolute right-3 top-3 rounded-full px-2 py-0.5 font-sans text-[0.625rem] font-bold shadow-sm ${c.medal === 'gold' ? 'bg-white text-neutral-900' : 'border border-white/60 bg-neutral-900/85 text-white'}`}
+            className={`absolute right-3 top-3 rounded-full px-2 py-0.5 font-sans text-[0.75rem] font-bold shadow-sm ${c.medal === 'gold' ? 'bg-white text-neutral-900' : 'border border-white/60 bg-neutral-900/85 text-white'}`}
           >
             {c.medal === 'gold' ? 'GOLD' : '3RD'}
           </span>
         )}
         {c.level && !c.medal && (c.level === 'National' || c.level === 'International') && (
-          <span className="absolute right-3 top-3 rounded-sm bg-neutral-900/85 px-1.5 py-0.5 font-mono text-[0.5625rem] font-semibold tracking-wider text-white">
+          <span className="absolute right-3 top-3 rounded-sm bg-neutral-900/85 px-1.5 py-0.5 font-mono text-[0.6875rem] font-semibold tracking-wider text-white">
             {LEVEL_TAG[c.level]}
           </span>
         )}
       </div>
-      <div className="flex flex-1 flex-col border-t border-fg/10 p-4">
+      <div className="flex flex-1 flex-col border-t border-[#111]/15 p-4">
         <span
-          className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-[0.6875rem] font-semibold ${catMeta(categorize(c)).chip}`}
+          className={`inline-block self-start rounded-[3px] px-2 py-0.5 font-mono text-[0.75rem] font-semibold uppercase tracking-[0.06em] th:tracking-normal ${catMeta(categorize(c)).chip}`}
         >
           {catMeta(categorize(c)).label}
         </span>
@@ -69,7 +69,7 @@ export default function CertCard({
         </h3>
         {c.issuer && <p className="mt-1 truncate font-sans text-xs text-fg-muted">{c.issuer}</p>}
         {(c.result || c.date) && (
-          <p className="mt-auto truncate pt-2 font-mono text-[0.625rem] uppercase tracking-wider text-fg-dim">
+          <p className="mt-auto truncate pt-2 font-mono text-[0.75rem] uppercase tracking-wider text-fg-dim">
             {[c.result, c.date].filter(Boolean).join(' · ')}
           </p>
         )}

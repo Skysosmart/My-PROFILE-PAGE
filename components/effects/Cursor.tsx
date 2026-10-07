@@ -91,7 +91,7 @@ export default function Cursor() {
       className="pointer-events-none fixed left-0 top-0 z-[90]"
     >
       <span
-        className={`ml-4 mt-5 flex h-[1.375rem] items-center bg-fg px-2 font-mono text-[0.625rem] font-medium uppercase tracking-[0.12em] text-bg transition-opacity duration-150 ${
+        className={`ml-4 mt-5 flex h-[1.375rem] items-center bg-fg px-2 font-mono text-[0.75rem] font-medium uppercase tracking-[0.12em] text-bg transition-opacity duration-150 ${
           label ? 'opacity-100' : 'opacity-0'
         }`}
       >

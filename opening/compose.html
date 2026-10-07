@@ -67,9 +67,10 @@
     <image id="h-line1" data-src="line1.png" opacity="0"/>
     <image id="h-line2" data-src="line2.png" opacity="0"/>
     <image id="h-line3" data-src="line3.png" opacity="0"/>
-    <image id="h-orb" data-src="orb.png" opacity="0"/>
-    <image id="h-bubble" data-src="bubble.png" opacity="0"/>
-    <image id="h-cue" data-src="cue.png" opacity="0"/>
+    <image id="h-note" data-src="note.png" opacity="0"/>
+    <!-- the cue paints itself on top to bottom, like the brush arrow on the site -->
+    <clipPath id="cuePaint"><rect id="cuePaintRect" width="0" height="0"/></clipPath>
+    <image id="h-cue" data-src="cue.png" opacity="0" clip-path="url(#cuePaint)"/>
     <image id="h-ticker" data-src="ticker.png" opacity="0"/>
     <image id="h-name" data-src="name.png" opacity="0"/>
     <image id="h-prompt" data-src="prompt.png" opacity="0"/>
@@ -99,7 +100,7 @@ const set = (e, attrs) => { for (const [k, v] of Object.entries(attrs)) e.setAtt
 // ---------- the variant: which device this render is for ----------
 // render.mjs injects window.VARIANT (size + the hero capture's layout.json). Opened by hand, it is the desktop.
 const V = window.VARIANT ?? { name: 'desktop', w: 1920, h: 1080, hero: 'out/hero', layout: {
-  duck: [64, 283.5, 420, 602.7], orb: [1486.4, 288.7, 336, 336], pill: [489.6, 22.4, 940.8, 49.6] } };
+  duck: [64, 283.5, 420, 602.7], note: [1460, 300, 380, 140], cue: [1500, 470, 200, 160], pill: [489.6, 22.4, 940.8, 49.6] } };
 const W = V.w, H = V.h, PORTRAIT = H > W;
 document.body.style.width = W + 'px'; document.body.style.height = H + 'px';
 set($('svg'), { width: W, height: H, viewBox: `0 0 ${W} ${H}` });
@@ -224,15 +225,19 @@ const OBJ = {};
   const dots = [0, 1, 2].map(i => el('circle', { cx: x + 22 + i * 18, cy: y + 18, r: 0, fill: 'none', stroke: '#111' }, g));
   const pill = el('rect', { x: x + 92, y: y + 8, width: 0, height: 20, rx: 10, fill: 'none', stroke: '#111', 'stroke-opacity': 0.35 }, g);
   const url = el('text', { x: x + 106, y: y + 23, class: 'mono', 'font-size': 12.5, fill: '#111' }, g);
-  // the hero, as a wireframe: duck block, three lines (the third in the duck's orange), the orb
+  // the hero, as a wireframe: duck block, three lines (the third in the duck's orange), the clipped note and its arrow
   const wf = el('g', { opacity: 0 }, g);
   el('rect', { x: x + 34, y: y + 92, width: 84, height: 150, rx: 6, fill: 'none', stroke: '#111', 'stroke-dasharray': '4 4' }, wf);
   el('path', { d: `M${x + 50} ${y + 120} q 30 -30 52 0 q -6 70 -26 90`, fill: 'none', stroke: '#111', 'stroke-opacity': 0.6 }, wf);
   const bars = [[136, 158, 116], [136, 186, 116], [136, 214, 150]].map(([bx, by, bw], i) =>
     el('rect', { x: x + bx, y: y + by, width: 0, height: 14, rx: 2, fill: i === 2 ? 'rgb(245 190 91)' : '#111', 'data-w': bw }, g));
-  el('circle', { cx: x + 430, cy: y + 150, r: 52, fill: 'none', stroke: '#111' }, wf);
-  el('circle', { cx: x + 430, cy: y + 150, r: 40, fill: '#111', 'fill-opacity': 0.08 }, wf);
-  el('path', { d: `M${x + 400} ${y + 78} h 60 v 22 h -26 l -4 7 l -4 -7 h -26 z`, fill: 'none', stroke: '#111' }, wf);
+  const note = el('g', { transform: `rotate(-2 ${x + 425} ${y + 110})` }, wf);
+  el('rect', { x: x + 368, y: y + 84, width: 116, height: 52, rx: 2, fill: 'rgb(243 240 232)', stroke: '#111' }, note);
+  el('rect', { x: x + 376, y: y + 94, width: 30, height: 30, fill: '#111', 'fill-opacity': 0.12, stroke: '#111', 'stroke-opacity': 0.6 }, note);
+  el('rect', { x: x + 414, y: y + 98, width: 46, height: 6, rx: 1, fill: '#111' }, note);
+  el('rect', { x: x + 414, y: y + 110, width: 60, height: 4, rx: 1, fill: '#111', 'fill-opacity': 0.45 }, note);
+  el('rect', { x: x + 414, y: y + 118, width: 52, height: 4, rx: 1, fill: '#111', 'fill-opacity': 0.45 }, note);
+  el('path', { d: `M${x + 452} ${y + 146} C ${x + 453} ${y + 165} ${x + 452} ${y + 182} ${x + 452} ${y + 198} M${x + 443} ${y + 186} L ${x + 452} ${y + 200} L ${x + 460} ${y + 184}`, fill: 'none', stroke: '#111', 'stroke-width': 3.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, wf);
   OBJ.browser = { g, x, y, w, h, frame, fill, bar, dots, pill, url, wf, bars, at: 2.05 };
 }
 // code: the hero's own source, from components/sections/IntroHero.tsx
@@ -250,7 +255,7 @@ const OBJ = {};
     [15, [['  return (', 0]]],
     [16, [['    <', 0], ['Duck', 2], [' pose=', 0], ['"hero"', 3], [' priority />', 0]]],
     [17, [['    <', 0], ['RoleTicker', 2], [' />', 0]]],
-    [18, [['    <', 0], ['SkyOrb', 2], ['>{t.bubble}</', 0], ['SkyOrb', 2], ['>', 0]]],
+    [18, [['    <', 0], ['HeroNote', 2], [' delay={', 0], ['1.0', 3], ['} />', 0]]],
     [19, [['  )', 0]]],
   ];
   const lines = SRC.map(([n, parts], i) => {
@@ -373,7 +378,10 @@ const LOCK = { x: W / 2, y: H * (PORTRAIT ? 0.44 : 0.418), rot: 15, sc: (W * (AS
 const URL_FONT = Math.max(14, 30 * LOCK.sc / 3.45), URL_Y = LOCK.y + 72 * LOCK.sc;
 set($('url'), { x: W / 2, y: URL_Y, 'font-size': URL_FONT, 'letter-spacing': URL_FONT * 0.3 });
 const PILL = [V.layout.pill[0] + V.layout.pill[2] / 2, V.layout.pill[1] + V.layout.pill[3] / 2];
-const ORB = [V.layout.orb[0] + V.layout.orb[2] / 2, V.layout.orb[1] + V.layout.orb[3] / 2];
+// the hero's note, when it has one (it was removed in favour of the big arrow alone)
+const NOTE = V.layout.note ? [V.layout.note[0] + V.layout.note[2] / 2, V.layout.note[1] + V.layout.note[3] / 2] : null;
+if (!NOTE) $('h-note').remove();
+const CUE = V.layout.cue;
 const BASE = -22;             // the lettering's own slant, degrees
 
 async function load() {
@@ -655,12 +663,15 @@ function render(t) {
   $('h-wash').setAttribute('opacity', E.inOutSine(seg(t, 9.1, 10.0)));
   const riseIn = (id, at) => { const k = E.site(seg(t, at, at + 0.6)); set($(id), { opacity: k, transform: `translate(0 ${14 * (1 - k)})` }); };
   riseIn('h-line1', 9.32); riseIn('h-line2', 9.56); riseIn('h-line3', 9.8);
-  const orbK = E.site(seg(t, 9.5, 10.15));
-  set($('h-orb'), { opacity: orbK, transform: `translate(${ORB[0]} ${ORB[1]}) scale(${lerp(0.9, 1, orbK)}) translate(${-ORB[0]} ${-ORB[1]})` });
-  riseIn('h-bubble', 9.95);
+  // Sky's note drops in tilted and settles, the way it does on the site
+  const noteK = E.site(seg(t, 9.45, 10.15));
+  if (NOTE) set($('h-note'), { opacity: Math.min(1, noteK * 1.6), transform: `translate(${NOTE[0]} ${NOTE[1] + 18 * (1 - noteK)}) rotate(${-4 * (1 - noteK)}) translate(${-NOTE[0]} ${-NOTE[1]})` });
   riseIn('h-ticker', 9.62); riseIn('h-name', 9.62);
   $('h-prompt').setAttribute('opacity', E.outCubic(seg(t, 8.82, 9.1)));
-  riseIn('h-cue', 10.0);
+  // the arrow paints down from the note's corner (the label under it comes with it)
+  const paintK = E.inOutSine(seg(t, 9.9, 10.45));
+  $('h-cue').setAttribute('opacity', t < 9.9 ? 0 : 1);
+  set($('cuePaintRect'), { x: CUE[0] - 40, y: CUE[1] - 10, width: CUE[2] + 80, height: (CUE[3] + 20) * paintK });
   // the last few frames hand over to the captured page itself, so the cut to the live site is exact
   $('full').setAttribute('opacity', seg(t, 10.45, 10.62));
 }

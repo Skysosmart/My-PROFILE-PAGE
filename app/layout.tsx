@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, VT323, Press_Start_2P, Space_Grotesk, Noto_Sans_Thai_Looped } from 'next/font/google'
+import { JetBrains_Mono, VT323, Press_Start_2P, Space_Grotesk, Noto_Sans_Thai_Looped, Sriracha } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
@@ -48,6 +48,15 @@ const thai = Noto_Sans_Thai_Looped({
 })
 
 // counted, not typed, so it cannot go stale as the data grows
+// Handwriting: the blue notes pinned around the projects workbench. One face
+// that writes both English and Thai, so the TH page gets a real hand too
+const hand = Sriracha({
+  subsets: ['latin', 'thai'],
+  weight: '400',
+  variable: '--font-sriracha',
+  display: 'swap',
+})
+
 const DESCRIPTION = `${player.name} - ${player.role}. Academic portfolio: ${certStats.total} certificates including ${certStats.gold} gold medals and ${certStats.national} national-level awards, and ${projects.length} projects from a Parkinson's screening device to production web platforms.`
 
 const channel = (key: string) => contact.channels.find((c) => c.key === key)?.href
@@ -104,7 +113,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable} ${thai.variable}`}
+      className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable} ${thai.variable} ${hand.variable}`}
     >
       <body>
         {/* runs before first paint: stamps <html lang> for the language */}

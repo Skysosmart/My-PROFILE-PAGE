@@ -404,6 +404,8 @@ export const projects: Project[] = [
       'A curated directory of websites, built as an observatory dome looking out at a live emission nebula. Its colour comes from real nebula emission lines in OKLCH rather than the usual purple space gradient, and submitting a site ends in a cinematic 3D black-hole intake.',
     tags: ['Astro', 'React Three Fiber', 'Cloudflare', 'Neon'],
     image: '/projects/nebula.jpg',
+    // the product film (1280x720, 30fps) - the live site, scattered sites gathering into the map
+    video: '/projects/videos/nebula.mp4',
     contribution: '7 of 23 commits across 5 contributors',
     demo: 'https://nebula.pranakorn.co.th',
   },
@@ -476,6 +478,8 @@ export const projects: Project[] = [
       'The public site for Pranakorn Group, the web development studio I build with. I worked on the landing page and its responsive layout.',
     tags: ['Frontend', 'Responsive', 'Team Project'],
     image: '/projects/pranakorn.jpg',
+    // the Pranakorn Group brand film (1280x720, 30fps): idea to deployed products
+    video: '/projects/videos/pranakorn.mp4',
     contribution: '23 of 102 commits across 8 contributors',
     demo: 'https://pranakorn.dev',
   },
@@ -526,6 +530,8 @@ export const projects: Project[] = [
       'The site you are reading. A terminal-themed one-pager in Next.js with WebGL, holding the certificates, the projects and the writing.',
     tags: ['Next.js', 'TypeScript', 'WebGL', 'Design'],
     image: '/projects/portfolio.jpg',
+    // the showreel: the opening plus build, break and ship (1280x720, 30fps)
+    video: '/projects/videos/portfolio.mp4',
     contribution: 'Sole author \u00b7 51 commits',
     demo: 'https://zarutech.dev',
     repo: 'https://github.com/Skysosmart/My-PROFILE-PAGE',

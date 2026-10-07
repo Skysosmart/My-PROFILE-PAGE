@@ -558,80 +558,98 @@ export type Moment = {
    * first photo is used. (`coverOf` in lib/certs.ts)
    */
   cover?: string
+  /**
+   * The event's own logo, for the back of the print. Cropped from the
+   * event's certificate or poster, so it is the real mark, not a lookalike.
+   */
+  logo?: string
 }
 
 export const moments: Record<string, Moment> = {
   'act-brand-ambassador': {
     label: 'ACT Brand Ambassador 2025',
+    logo: '/moments/act-brand-ambassador/logo.png',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg'],
     line: '',
   },
   'click-camp': {
     label: 'Click Camp #15, Mahidol',
+    logo: '/moments/click-camp/logo.png',
     cover: '02.jpg',
     photos: ['02.jpg'],
     line: '',
   },
   'codekit': {
     label: 'CODEKIT Website Competition 2026',
+    logo: '/moments/codekit/logo.png',
     photos: ['01.jpg', '02.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg'],
     line: '',
   },
   'cyber-bootcamp': {
     label: 'RTARF Cyber Bootcamp 2025',
+    logo: '/moments/cyber-bootcamp/logo.png',
     cover: '02.jpg',
     photos: ['02.jpg', '05.jpg', '06.jpg', '07.jpg', '08.jpg'],
     line: '',
   },
   'inewgen': {
     label: 'I-New Gen Inventors Award 2026',
+    logo: '/moments/inewgen/logo.png',
     cover: '02.jpg',
     photos: ['02.jpg', '03.jpg'],
     line: '',
   },
   'khan-knot': {
     label: 'KhanKnot #24, Mahidol Engineering',
+    logo: '/moments/khan-knot/logo.png',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'],
     line: '',
   },
   'makex': {
     label: 'MakeX Thailand 2025',
+    logo: '/moments/makex/logo.png',
     cover: '02.jpg',
     photos: ['02.jpg', '04.jpg', '05.jpg'],
     line: '',
   },
   'outstanding-student': {
     label: 'Outstanding Student Award',
+    logo: '/education/act.png',
     cover: '02.jpg',
     photos: ['01.jpg', '02.jpg', '03.jpg'],
     line: '',
   },
   'siit-insight-camp': {
     label: 'SIIT Insight Camp 2025',
+    logo: '/moments/siit-insight-camp/logo.png',
     cover: '04.jpg',
     photos: ['02.jpg', '03.jpg', '04.jpg', '05.jpg'],
     line: '',
   },
   'swu-day-camp': {
     label: 'SWU International Engineering Day Camp',
+    logo: '/moments/swu-day-camp/logo.png',
     cover: '04.jpg',
     photos: ['03.jpg', '04.jpg'],
     line: '',
   },
   'swu-research-day': {
     label: 'SWU Researcher Day 2026',
+    logo: '/moments/swu-research-day/logo.png',
     cover: '04.jpg',
     photos: ['01.jpg', '02.jpg', '04.jpg'],
     line: '',
   },
   'heart-charity': {
     label: 'Heart Charity, Vichaivej Hospital',
+    logo: '/moments/heart-charity/logo.png',
     cover: '02.jpg',
     photos: ['01.jpg', '02.jpg', '03.jpg'],
     line: '',
   },
   'vajira-volunteer': {
     label: 'Vajira Hospital Volunteer',
+    logo: '/moments/vajira-volunteer/logo.png',
     photos: ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '07.jpg', '08.jpg', '09.jpg', '10.jpg', '11.jpg', '12.jpg', '13.jpg', '14.jpg'],
     line: '',
   },

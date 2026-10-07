@@ -33,8 +33,8 @@ type Labels = {
  * The front is the picture on the site's printed stock - the same white card,
  * the same 1px rgba(17,17,17,0.45) edge and the same hard offset shadow the
  * spec label and the quick-start notes use. The back is the same card with
- * no picture: what the day was, in Sky's words, and the certificate it
- * earned where there is one.
+ * no picture: what the day was, in Sky's words, the event's logo, and the
+ * certificate it earned where there is one.
  *
  * The flip is one `rotateY` on a preserve-3d container with BOTH faces
  * permanently mounted. That matters: this project forbids framer's exit
@@ -132,7 +132,22 @@ export default function PrintCard({
             <p className="font-sans text-[0.8125rem] leading-relaxed th:leading-[1.75] text-[#111]/85">{album.line}</p>
           ) : null}
 
-          <div className="mt-auto flex flex-col gap-2">
+          {/* the event's logo, stuck on the back like the sticker that came
+              in the welcome pack; it takes whatever room the words leave */}
+          {album.logo ? (
+            <div className="flex min-h-0 flex-1 items-center justify-center py-1">
+              {/* eslint-disable-next-line @next/next/no-img-element -- a small local crop, shown only on the turned face */}
+              <img
+                src={album.logo}
+                alt={`${album.label} logo`}
+                loading="lazy"
+                draggable={false}
+                className="max-h-full max-w-[82%] -rotate-[1.5deg] rounded-[2px] object-contain shadow-[2px_2px_0_rgba(17,17,17,0.18)]"
+              />
+            </div>
+          ) : null}
+
+          <div className={`${album.logo ? '' : 'mt-auto '}flex flex-col gap-2`}>
             {/* one title, then the count of the rest: an event can earn more
                 than one certificate, and naming only the first would hide six
                 of MakeX's seven */}

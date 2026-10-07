@@ -77,7 +77,7 @@ export default function EducationJourney({
   const root = useRef<HTMLDivElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
   const planeRef = useRef<HTMLDivElement>(null)
-  const trailRef = useRef<SVGPathElement>(null)
+  const trailRef = useRef<SVGSVGElement>(null)
   const dotRefs = useRef<(HTMLSpanElement | null)[]>([])
   const cardRefs = useRef<(HTMLElement | null)[]>([])
   const [geo, setGeo] = useState<Geo | null>(null)
@@ -215,7 +215,7 @@ export default function EducationJourney({
       // once landed it rests tipped a little, like paper put down
       const rot = landed ? -6 : clamp(ang - 90, -25, 25)
       plane.style.transform = `translate(${p.x - g.planeSize / 2}px, ${p.y - g.planeSize / 2}px) rotate(${rot}deg)`
-      if (trailRef.current) trailRef.current.style.strokeDashoffset = String(g.total - len)
+      if (trailRef.current) trailRef.current.style.clipPath = landed ? 'none' : `inset(0 -48px calc(100% - ${Math.max(0, p.y).toFixed(1)}px) -48px)`
       // arrivals: the furthest stop the plane has passed
       let n = -1
       g.stops.forEach((s, i) => {
@@ -251,20 +251,17 @@ export default function EducationJourney({
     <div ref={root} className="relative">
       {/* the route: drawn only as far as the plane has flown */}
       {geo && (
-        <svg aria-hidden className="pointer-events-none absolute inset-0 z-20 h-full w-full overflow-visible">
-          <defs>
-            <mask id="edu-trail-mask" maskUnits="userSpaceOnUse">
-              <path
-                ref={trailRef}
-                d={geo.d}
-                fill="none"
-                stroke="#fff"
-                strokeWidth={6}
-                strokeDasharray={`${geo.total} ${geo.total}`}
-                style={{ strokeDashoffset: reduce ? 0 : geo.total }}
-              />
-            </mask>
-          </defs>
+        // the trail is revealed by a clip that ends at the plane, not an SVG
+        // mask: WebKit paints a mask as a bitmap the size of the whole
+        // timeline (thousands of px tall at 3x on a phone), every frame, and
+        // iOS Safari kills the tab for it. The route only moves down, so
+        // clipping the drawing below the plane is the same picture.
+        <svg
+          ref={trailRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-20 h-full w-full overflow-visible"
+          style={{ clipPath: reduce ? 'none' : 'inset(0 -48px 100% -48px)' }}
+        >
           <path ref={pathRef} d={geo.d} fill="none" stroke="none" />
           <path
             d={geo.d}
@@ -273,7 +270,6 @@ export default function EducationJourney({
             strokeWidth={1.75}
             strokeLinecap="round"
             strokeDasharray="5 7"
-            mask="url(#edu-trail-mask)"
           />
         </svg>
       )}

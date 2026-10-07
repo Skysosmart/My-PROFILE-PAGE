@@ -276,9 +276,11 @@ export type UI = typeof en
 const th: UI = {
   hero: {
     scroll: 'เลื่อนลงเพื่อสำรวจ',
-    line1: 'ผมสร้างมันขึ้นมา',
-    line2: 'แล้วลองเจาะมันดู',
-    line3: 'ก่อนจะปล่อยของจริง',
+    // the hero's three lines stay in English in Thai too: they are the
+    // site's tagline, and the opening film (English only) ends on them
+    line1: en.hero.line1,
+    line2: en.hero.line2,
+    line3: en.hero.line3,
     bubble: 'สวัสดี ผมสกายเอง',
     note: 'เริ่มตรงนี้ได้เลย: โปรเจกต์ ใบประกาศ และโต๊ะของเจ้าเป็ด อยู่ข้างล่างนี้',
     role: 'บทบาท',

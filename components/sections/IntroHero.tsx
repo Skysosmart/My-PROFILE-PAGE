@@ -54,12 +54,12 @@ export default function IntroHero() {
             </div>
           </div>
           {/* sizes follow the room beside the duck: a row from sm, bigger from
-              lg and xl. On a phone the size follows the width, so the widest
-              Thai line still fits a 360px screen */}
-          <div className="flex flex-col items-center gap-1 pb-2 text-center [text-shadow:0_0_10px_var(--glow),0_0_42px_var(--glow-far)] sm:items-start sm:pb-8 sm:text-left">
-            <span className="whitespace-nowrap font-crt text-[clamp(2.25rem,11vw,3.5rem)] leading-[0.95] th:leading-[1.3] text-fg sm:text-[clamp(2.5rem,7vw,3.5rem)] md:text-[clamp(3.5rem,8vw,4.75rem)] lg:text-[5.5rem] xl:text-[7rem] th:sm:text-[2.125rem] th:md:text-[2.875rem] th:lg:text-[4rem] th:xl:text-[5.5rem]">{t.line1}</span>
-            <span className="whitespace-nowrap font-crt text-[clamp(2.25rem,11vw,3.5rem)] leading-[0.95] th:leading-[1.3] text-fg sm:text-[clamp(2.5rem,7vw,3.5rem)] md:text-[clamp(3.5rem,8vw,4.75rem)] lg:text-[5.5rem] xl:text-[7rem] th:sm:text-[2.125rem] th:md:text-[2.875rem] th:lg:text-[4rem] th:xl:text-[5.5rem]">{t.line2}</span>
-            <span className="whitespace-nowrap font-crt text-[clamp(2.25rem,11vw,3.5rem)] leading-[0.95] th:leading-[1.3] text-duck-deep sm:text-[clamp(2.5rem,7vw,3.5rem)] md:text-[clamp(3.5rem,8vw,4.75rem)] lg:text-[5.5rem] xl:text-[7rem] th:sm:text-[2.125rem] th:md:text-[2.875rem] th:lg:text-[4rem] th:xl:text-[5.5rem]">{t.line3}</span>
+              lg and xl. On a phone the size follows the width. The lines are
+              English in both languages (data/ui.ts), sized the same */}
+          <div lang="en" className="flex flex-col items-center gap-1 pb-2 text-center [text-shadow:0_0_10px_var(--glow),0_0_42px_var(--glow-far)] sm:items-start sm:pb-8 sm:text-left">
+            <span className="whitespace-nowrap font-crt text-[clamp(2.25rem,11vw,3.5rem)] leading-[0.95] text-fg sm:text-[clamp(2.5rem,7vw,3.5rem)] md:text-[clamp(3.5rem,8vw,4.75rem)] lg:text-[5.5rem] xl:text-[7rem]">{t.line1}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2.25rem,11vw,3.5rem)] leading-[0.95] text-fg sm:text-[clamp(2.5rem,7vw,3.5rem)] md:text-[clamp(3.5rem,8vw,4.75rem)] lg:text-[5.5rem] xl:text-[7rem]">{t.line2}</span>
+            <span className="whitespace-nowrap font-crt text-[clamp(2.25rem,11vw,3.5rem)] leading-[0.95] text-duck-deep sm:text-[clamp(2.5rem,7vw,3.5rem)] md:text-[clamp(3.5rem,8vw,4.75rem)] lg:text-[5.5rem] xl:text-[7rem]">{t.line3}</span>
           </div>
         </motion.div>
 

@@ -151,8 +151,8 @@ export default function PaperToBlueprint() {
 // each part draws in its own stretch of the scroll, the frame first
 const PART_RANGE: Record<string, [number, number]> = {
   frame: [0.55, 0.72],
-  'main-board': [0.6, 0.76],
-  'second-board': [0.63, 0.78],
+  mount: [0.6, 0.76],
+  novapi: [0.63, 0.78],
   xt30: [0.66, 0.8],
 }
 

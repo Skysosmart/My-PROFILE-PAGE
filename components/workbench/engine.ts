@@ -220,6 +220,19 @@ export class Bench {
         landed: false,
       })
     }
+    // parts stacked together (a board on its mount on its connectors) would
+    // all slide out the same way and land on each other. Sliding out
+    // sideways, each later one goes further, so the stack opens like a deck;
+    // rising (the small parts at the top of a tall model), a column would
+    // leave the frame, so they fan out to alternate sides instead
+    const moving = this.parts.filter((p) => p.out.lengthSq() > 0)
+    moving.forEach((p, i) => {
+      const dir = p.out.clone().normalize()
+      const k = moving.slice(0, i).filter((q) => q.out.clone().normalize().dot(dir) > 0.9).length
+      if (!k) return
+      if (Math.abs(dir.y) > 0.7) p.out.applyAxisAngle(new THREE.Vector3(0, 0, 1), (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 0.5).multiplyScalar(1 + 0.2 * k)
+      else p.out.multiplyScalar(1 + 0.8 * k)
+    })
     // the model's resting radius, with the parts laid out round it
     this.radius = Math.max(this.radius, ...this.parts.map((p) => p.center.clone().add(p.out).length() + this.radius * 0.25)) * 0.82
     this.resize()
@@ -422,7 +435,7 @@ export class Bench {
     // the model can fill it, and steps back again to make room to explode
     // (less on a narrow canvas: a phone has no width to grow into)
     const grow = this.width / this.height < 1.1 ? 0.1 : 0.38
-    const zoom = 1 + grow * ease(assemble) * (1 - 0.75 * this.explode.now)
+    const zoom = 1 + grow * ease(assemble) * (1 - this.explode.now) - 0.12 * this.explode.now
     if (Math.abs(this.camera.zoom - zoom) > 0.0005) {
       this.camera.zoom = zoom
       this.camera.updateProjectionMatrix()
@@ -458,6 +471,13 @@ export class Bench {
       ;(p.pencil.material as LineMaterial).opacity = 0.28 * pencilOut * dim
       p.pencil.visible = pencilOut > 0.01
     })
+    // keep the parts, wherever they are, centred in the frame: a tall model
+    // whose small parts all sit at one end would otherwise spread off it
+    if (n > 1) {
+      this.v.set(0, 0, 0)
+      for (const p of this.parts) this.v.add(p.group.position)
+      this.model.position.copy(this.v.multiplyScalar(-1 / n))
+    }
 
     this.renderer.render(this.scene, this.camera)
     this.place()

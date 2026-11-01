@@ -41,16 +41,33 @@ export const cadProjects: CadProject[] = [
   {
     slug: 'makex-board-holder',
     name: 'MakeX Board Holder',
-    blurb: 'One printed frame that carries both control boards and the XT30 power connectors, so the electronics lift out of the robot as a single block.',
+    blurb: 'A printed holder for the robot\'s NovaPi controller. The board sits in its own mount with the XT30 power connectors beside it, and the whole stack lifts out of the robot as one block.',
     tool: 'Fusion 360',
     year: '2025',
     kind: 'Competition robot',
     iterations: 3,
     parts: [
-      { key: 'frame', label: 'Frame', notes: ['Printed in one piece', 'Two arms bolt it to the chassis', 'Open sides for the wiring'] },
-      { key: 'main-board', label: 'Main board', notes: ['Stands in the frame on its own rails', 'Headers face out for the cables'] },
-      { key: 'second-board', label: 'Second board', notes: ['Stacked beside the main board', 'Same rails, same screws'] },
-      { key: 'xt30', label: 'XT30 connectors', notes: ['Battery power in', 'Held by the frame, not the boards'] },
+      { key: 'frame', label: 'Holder', notes: ['Printed in one piece', 'Bolts to the chassis', 'Open sides for the wiring'] },
+      { key: 'mount', label: 'NovaPi mount', notes: ['Printed tray the board sits in', 'Locates it in the holder'] },
+      // TODO(sky): the STEP names this assembly "NOVA PI BY EARN": credit Earn here if they modelled it
+      { key: 'novapi', label: 'NovaPi controller', notes: ['Makeblock\'s MakeX controller board', 'Screws down onto its mount'] },
+      { key: 'xt30', label: 'XT30 connectors', notes: ['Battery power in', 'Held by the mount, not the board'] },
+    ],
+  },
+  {
+    slug: 'robot-arm',
+    name: 'INOVEDEX Robot Arm',
+    blurb: 'The forearm and gripper of a pick-and-place arm that finds coloured cubes with a Pi camera. The rack-and-pinion jaws open 12 to 45 mm, and the arm folds to fit the 350 mm start frame.',
+    tool: 'Fusion 360',
+    year: '2026',
+    kind: 'Robot arm',
+    parts: [
+      { key: 'forearm', label: 'Forearm', notes: ['120 mm, elbow to wrist', 'Pockets for the DS3218MG and MG90S servos', 'Cable channel with zip-tie slots'] },
+      { key: 'gripper', label: 'Gripper body', notes: ['Palm and wrist clevis in one print', 'Wrist pivot held on both sides'] },
+      { key: 'pinion', label: 'Pinion', notes: ['Module 1, 24 teeth', 'Servo horn pressed into the back'] },
+      { key: 'finger-a', label: 'Finger A', notes: ['Upper rack on a dovetail rail', 'Jaws open 12 to 45 mm'] },
+      { key: 'finger-b', label: 'Finger B', notes: ['Lower rack, opposite finger A', 'Recess for a 1 mm TPU pad'] },
+      { key: 'camera-mount', label: 'Camera mount', notes: ['Pi Camera Module 3 ahead of the jaws', 'Tilts 0 to 45° on one M3 screw'] },
     ],
   },
   {

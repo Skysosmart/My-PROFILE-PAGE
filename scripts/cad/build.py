@@ -61,28 +61,47 @@ def step_parts(path: Path) -> list[tuple[str, trimesh.Trimesh]]:
 
 
 def makex() -> list[tuple[str, trimesh.Trimesh]]:
-    """The MakeX board holder: a printed frame, two boards and four XT30
-    power connectors (each a housing and its pins). The STEP groups them by
-    component: [0:1:1:9] is the frame, [0:1:1:5] the main board with its
-    headers, [0:1:1:8] the second board; the XT30 meshes are recognised by
-    their triangle counts, since two of them sit inside the board groups."""
+    """The MakeX board holder, as the STEP's own assembly tree has it:
+
+        makex_boardholder v3 v1          [0:1:1:9]  the printed holder
+        NOVA PI BY EARN v1
+          nova pi mount v1               [0:1:1:8]  the printed tray the board sits in
+          NOVA PI v3                     [0:1:1:5]  the Makeblock NovaPi controller
+          XT30 2+2 v1, XT30 2+2 v1 (1)              the power connectors
+
+    Copies of the XT30 housings (each under 16 mm) are also baked into the
+    mount's and the board's own bodies; they go with the connectors."""
     raw = step_parts(HOME / 'Documents/makex_boardholder v3 v1 v1.step')
-    xt30_faces = {2474, 6180, 5768, 8908}
-    groups: dict[str, list[trimesh.Trimesh]] = {'frame': [], 'main-board': [], 'second-board': [], 'xt30': []}
+    groups: dict[str, list[trimesh.Trimesh]] = {'frame': [], 'mount': [], 'novapi': [], 'xt30': []}
     for name, m in raw:
         m.apply_scale(1000)
-        if len(m.faces) in xt30_faces or 'XT30' in name:
+        if 'XT30' in name or max(m.extents) < 16:
             groups['xt30'].append(m)
         elif '[0:1:1:9]' in name:
             groups['frame'].append(m)
         elif '[0:1:1:8]' in name:
-            groups['second-board'].append(m)
+            groups['mount'].append(m)
         else:
-            groups['main-board'].append(m)
+            groups['novapi'].append(m)
     # each XT30 "2+2" mesh already holds a pair of housings, so the
     # connectors stay one part: they go in together, last
-    out = [(k, trimesh.util.concatenate(v)) for k, v in groups.items()]
-    return out
+    return [(k, trimesh.util.concatenate(v)) for k, v in groups.items()]
+
+
+def robot_arm() -> list[tuple[str, trimesh.Trimesh]]:
+    """The INOVEDEX arm's printed parts in their places, from the Fusion
+    world export (metres, z up), in the order they go together"""
+    raw = dict(step_parts(HOME / 'Documents/robot-arm/assembly_world.step'))
+    names = {k.split('|')[0]: m for k, m in raw.items()}
+    order = [('forearm', 'Forearm'), ('gripper', 'Gripper body'), ('pinion', 'Pinion'),
+             ('finger-a', 'Finger A'), ('finger-b', 'Finger B'), ('camera-mount', 'Camera mount')]
+    parts = []
+    for key, name in order:
+        m = names[name]
+        m.apply_scale(1000)
+        m.apply_transform(Z_UP)
+        parts.append((key, m))
+    return parts
 
 
 def dome() -> list[tuple[str, trimesh.Trimesh]]:
@@ -108,6 +127,7 @@ def stl(path: Path, key: str):
 
 PROJECTS = {
     'makex-board-holder': makex,
+    'robot-arm': robot_arm,
     'vented-dome': dome,
     'aero': stl(HOME / 'Documents/aero.stl', 'body'),
     'balm': stl(HOME / 'Documents/Balm.stl', 'body'),

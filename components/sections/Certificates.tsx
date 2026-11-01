@@ -1,149 +1,27 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { motion, useInView } from 'motion/react'
 import GlassSection from '@/components/ui/GlassSection'
-import Duck from '@/components/duck/Duck'
-import CertWall from '@/components/effects/CertWall'
-import CertCard from '@/components/ui/CertCard'
+import CertDesk from '@/components/certdesk/CertDesk'
 import CertLightbox from '@/components/ui/CertLightbox'
-import { certThumb, CATS, groupByCategory, certStats } from '@/lib/certs'
+import { certStats } from '@/lib/certs'
 import { certificates, type Certificate } from '@/data/portfolio'
 
 /**
- * CERTIFICATES - three tiers, because 56 documents are not 56 equal things.
+ * CERTIFICATES - the desk.
  *
- *   1. PODIUM   the four results that carry a rank
- *   2. ROUTE    MakeX was one six-month campaign, not seven loose certificates
- *   3. PREVIEW  three rows of the archive, with the rest on /certificates
+ * The featured certificates as sheets of paper put down on a desk
+ * (components/certdesk): the duck brings them in, and any one can be picked
+ * up and read with notes written round it. The rest of the pile - every
+ * certificate - is a page of its own, /certificates.
+ *
+ * The four with a rank come first, so they land in the middle row.
  */
-
-const PREVIEW_ROWS = 3
-
-const MAKEX_ROUTE = [
-  'MakeX Warmup.jpg',
-  'MakeX tournament 1.jpg',
-  'MakeX tournament 2.jpg',
-  'MakeX tournament 3.jpg',
-  'MakeX tournament 4.jpg',
-  'MakeX Qualification.jpg',
-  'MakeX Ultimate winner.jpg',
-]
-
-const ROUTE_LABEL: Record<string, { when: string; what: string }> = {
-  'MakeX Warmup.jpg': { when: 'Jun', what: 'Warm Up' },
-  'MakeX tournament 1.jpg': { when: 'Jun', what: 'Tour 1' },
-  'MakeX tournament 2.jpg': { when: 'Jul', what: 'Tour 2' },
-  'MakeX tournament 3.jpg': { when: 'Aug', what: 'Tour 3' },
-  'MakeX tournament 4.jpg': { when: 'Sep', what: 'Tour 4' },
-  'MakeX Qualification.jpg': { when: 'Oct', what: 'Qualifier' },
-  'MakeX Ultimate winner.jpg': { when: 'Nov', what: 'Nationals' },
-}
-
-const MEDAL_FACE: Record<string, { ring: string; text: string; fill: string }> = {
-  gold: {
-    ring: 'border-fg/45',
-    text: 'text-fg',
-    fill: 'radial-gradient(circle at 32% 28%, #F7E7A6 0%, #D9B441 38%, #A9821A 72%, #7A5D11 100%)',
-  },
-  bronze: {
-    ring: 'border-fg/20',
-    text: 'text-fg-muted',
-    fill: 'radial-gradient(circle at 32% 28%, #F0C9A0 0%, #C98A4F 38%, #9A5F2C 72%, #6E4220 100%)',
-  },
-}
-
-function Tally({ to, still }: { to: number; still: boolean }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  // Vertical margin only: '-40px' on every side also eats 40px off the left,
-  // and this span is only as wide as its digits.
-  const seen = useInView(ref, { once: true, margin: '-40px 0px' })
-  const [n, setN] = useState(still ? to : 0)
-  useEffect(() => {
-    if (still || !seen) return
-    let raf = 0
-    const t0 = performance.now()
-    const tick = (now: number) => {
-      const p = Math.min((now - t0) / 900, 1)
-      setN(Math.round((1 - Math.pow(1 - p, 3)) * to))
-      if (p < 1) raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [seen, to, still])
-  return (
-    <span ref={ref} className="tabular-nums text-fg">
-      {n}
-    </span>
-  )
-}
-
-/** Echoes the embossed foil seal physically present on the NRCT certificate. */
-function Seal({ medal, still, size = 44 }: { medal: string; still: boolean; size?: number }) {
-  const face = MEDAL_FACE[medal] ?? MEDAL_FACE.gold
-  return (
-    <span
-      aria-hidden
-      style={{ width: size, height: size, background: face.fill }}
-      className="relative grid shrink-0 place-items-center overflow-hidden rounded-full shadow-[0_2px_10px_-2px_rgba(0,0,0,0.6),inset_0_1px_0_rgb(var(--fg)/0.5)]"
-    >
-      <span className="font-pixel text-[0.375rem] leading-none text-black/55">
-        {medal === 'gold' ? 'GOLD' : '3RD'}
-      </span>
-      {!still && (
-        <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-foil bg-fg/45 blur-[0.125rem]" />
-      )}
-    </span>
-  )
-}
+const desk = [...certificates.filter((c) => c.featured)].sort((a, b) => (b.medal ? 1 : 0) - (a.medal ? 1 : 0))
 
 export default function Certificates() {
-  const [cat, setCat] = useState('all')
-  // the grid is 1/2/3/4 columns by breakpoint, so a row index computed from a
-  // fixed 4 would fade the wrong cards on anything narrower
-  const [cols, setCols] = useState(4)
-  const [active, setActive] = useState<Certificate | null>(null)
-  const [still, setStill] = useState(false)
-
-  useEffect(() => {
-    const measure = () => {
-      const w = window.innerWidth
-      setCols(w >= 1280 ? 4 : w >= 1024 ? 3 : w >= 640 ? 2 : 1)
-    }
-    measure()
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
-  }, [])
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const sync = () => setStill(mq.matches)
-    sync()
-    mq.addEventListener('change', sync)
-    return () => mq.removeEventListener('change', sync)
-  }, [])
-
-  const byFile = useMemo(() => new Map(certificates.map((c) => [c.file, c])), [])
-  const byCat = useMemo(() => groupByCategory(), [])
-
-  const podium = useMemo(
-    () =>
-      certificates
-        .filter((c) => c.medal)
-        .sort((a, b) => (b.medal === 'gold' ? 1 : 0) - (a.medal === 'gold' ? 1 : 0)),
-    [],
-  )
-  const route = useMemo(
-    () => MAKEX_ROUTE.map((f) => byFile.get(f)).filter(Boolean) as Certificate[],
-    [byFile],
-  )
-
-  const all = byCat.get(cat) ?? []
-  // three rows of however many columns the grid actually has: at one column
-  // a fixed twelve meant three readable cards and nine blurred ghosts
-  const shown = all.slice(0, PREVIEW_ROWS * cols)
-  const remaining = all.length - shown.length
+  const [scan, setScan] = useState<Certificate | null>(null)
 
   return (
     <GlassSection
@@ -151,211 +29,31 @@ export default function Certificates() {
       index="04"
       title="Certificates"
       command="ls certificates/"
+      subtitle="The ones off the desk. Pick one up."
       watermark="CERTS"
-      // "rise" only offsets y by a fixed 44px. flip/zoom/blur displace by a
-      // share of the element, which throws a tall section off its own
-      // viewport observer and leaves it hidden forever.
+      // "rise" only offsets y by a fixed 44px: safe for a tall section
       variant="rise"
-      background={
-        <>
-          <div className="pointer-events-none absolute inset-0 opacity-25">
-            <CertWall />
-          </div>
-          {/* the duck with the trophy, by the podium tier, desktop only */}
-          <div className="pointer-events-none absolute right-8 top-4 hidden xl:block">
-            <Duck pose="podium" width={150} parallax={6} />
-          </div>
-        </>
-      }
       panel={false}
       revealAmount="some"
     >
-      {/* stat rail */}
-      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-fg/12 py-2 font-mono text-[0.8125rem] uppercase tracking-[0.18em] text-fg-dim">
-        <span>
-          <Tally to={certStats.total} still={still} /> records
-        </span>
-        <span className="text-fg/70">
-          <Tally to={certStats.gold} still={still} /> gold
-        </span>
-        <span>
-          <Tally to={certStats.national} still={still} /> national
-        </span>
-        <span>
-          <Tally to={certStats.intl} still={still} /> international
-        </span>
+      <CertDesk certs={desk} onScan={setScan} />
+
+      <div className="mt-8 flex justify-center md:mt-4">
+        <Link
+          href="/certificates"
+          className="group inline-flex items-baseline gap-3 font-mono text-[0.8125rem] uppercase tracking-[0.16em] text-fg underline-offset-4 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg th:tracking-normal"
+        >
+          The rest of the pile
+          <span className="text-fg-dim">
+            {certStats.total} in the archive
+          </span>
+          <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+            →
+          </span>
+        </Link>
       </div>
 
-      {/* 1. PODIUM */}
-      <div className="mb-5 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
-        {podium.map((c) => {
-          const face = MEDAL_FACE[c.medal ?? 'gold']
-          return (
-            <button
-              key={c.file}
-              onClick={() => setActive(c)}
-              data-cursor-label="open"
-              className={`group flex items-start gap-3 rounded-[6px] border ${face.ring} bg-linear-to-b from-fg/6 to-transparent p-2.5 text-left transition-colors hover:from-fg/11 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70`}
-            >
-              <div className="w-16 shrink-0 overflow-hidden rounded-md bg-white shadow-[0_8px_22px_-10px_rgba(0,0,0,0.9)]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={certThumb(c.file)} alt="" loading="lazy" className="block h-auto w-full" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-2">
-                  <span className={`font-pixel text-[0.5rem] leading-none ${face.text}`}>
-                    {c.medal === 'gold' ? 'GOLD MEDAL' : '3RD PLACE'}
-                  </span>
-                  <Seal medal={c.medal ?? 'gold'} still={still} size={34} />
-                </div>
-                <h3 className="mt-1.5 line-clamp-2 font-sans text-[0.8125rem] font-semibold leading-snug text-fg">
-                  {c.title}
-                </h3>
-                <p className="mt-1 truncate font-mono text-[0.6875rem] uppercase tracking-wider text-fg-dim">
-                  {c.issuer}
-                </p>
-              </div>
-            </button>
-          )
-        })}
-      </div>
-
-      {/* 2. THE MAKEX ROUTE */}
-      {route.length > 0 && (
-        <div className="mb-5 rounded-[6px] border border-[#111]/15 bg-white/50 p-3 sm:p-4">
-          <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h3 className="font-sans text-sm font-semibold text-fg">
-              MakeX Challenge - six months, one robot
-            </h3>
-            <span className="font-mono text-[0.75rem] uppercase tracking-wider text-fg-dim">
-              Team Prometheus · Jun to Nov 2025
-            </span>
-          </div>
-          <ol className="flex gap-0 overflow-x-auto pb-1 scrollbar-thin">
-            {route.map((c, i) => {
-              const meta = ROUTE_LABEL[c.file] ?? { when: '', what: c.title }
-              const last = i === route.length - 1
-              return (
-                <li
-                  key={c.file}
-                  className="flex min-w-[5.75rem] flex-1 flex-col items-center sm:min-w-[6.5rem]"
-                >
-                  <div className="relative flex h-7 w-full items-center">
-                    <span
-                      className={`absolute left-0 h-px w-1/2 ${i === 0 ? 'bg-transparent' : 'bg-fg/20'}`}
-                    />
-                    <span
-                      className={`absolute right-0 h-px w-1/2 ${last ? 'bg-transparent' : 'bg-fg/20'}`}
-                    />
-                    <button
-                      onClick={() => setActive(c)}
-                      aria-label={`${meta.what} - ${c.title}`}
-                      className="relative mx-auto -my-3 rounded-full p-3 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
-                    >
-                      {last ? (
-                        <Seal medal="bronze" still={still} size={26} />
-                      ) : (
-                        <span className="block h-2.5 w-2.5 rounded-full border border-fg/40 bg-bg transition-colors hover:border-fg hover:bg-fg" />
-                      )}
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => setActive(c)}
-                    className="group mt-1.5 w-full px-1 text-center focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70"
-                  >
-                    <span className="block font-mono text-[0.6875rem] uppercase tracking-wider text-fg-dim">
-                      {meta.when}
-                    </span>
-                    <span
-                      className={`mt-0.5 block font-sans text-[0.8125rem] font-medium leading-tight transition-colors group-hover:text-fg ${last ? 'text-fg' : 'text-fg/70'}`}
-                    >
-                      {meta.what}
-                    </span>
-                    {last && (
-                      <span className="mt-0.5 block font-mono text-[0.5rem] uppercase leading-tight tracking-wider text-fg-muted">
-                        3rd + Best Alliance
-                      </span>
-                    )}
-                  </button>
-                </li>
-              )
-            })}
-          </ol>
-        </div>
-      )}
-
-      {/* 3. PREVIEW - three rows, the rest on its own page */}
-      <div className="mb-4 flex flex-wrap gap-2">
-        {CATS.map((c) => {
-          const on = c.key === cat
-          const count = (byCat.get(c.key) ?? []).length
-          return (
-            <button
-              key={c.key}
-              onClick={() => setCat(c.key)}
-              aria-pressed={on}
-              className={`relative rounded-[3px] border px-3.5 py-1.5 font-mono text-[0.8125rem] font-medium transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg/70 ${
-                on ? 'border-[#111] text-[#111]' : 'border-fg/20 text-fg/75 hover:border-fg/50 hover:text-fg'
-              }`}
-            >
-              {on && (
-                <motion.span
-                  layoutId="cert-pill"
-                  transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                  className="absolute inset-0 rounded-[2px] bg-accent"
-                />
-              )}
-              <span className="relative flex items-center gap-2">
-                <span className={`h-1.5 w-1.5 rounded-full ${c.dot}`} />
-                {c.label}
-                <span className={on ? 'text-[#111]/60' : 'text-fg-dim'}>{count}</span>
-              </span>
-            </button>
-          )
-        })}
-      </div>
-
-      <div
-        key={cat}
-        className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-      >
-        {shown.map((c, i) => {
-          // 100% / 50% / 25% down the rows: the grid recedes rather than
-          // stopping dead, which points at the Explore link below it.
-          // Hovering lifts a card back to full so nothing is unreadable.
-          const row = Math.floor(i / cols)
-          const fade = [1, 0.5, 0.25][row] ?? 0.25
-          const soften = [0, 1.5, 3][row] ?? 3
-          return (
-            <div
-              key={c.file}
-              style={{ opacity: fade, filter: soften ? `blur(${soften}px)` : undefined }}
-              className="group/fade transition-[opacity,filter] duration-300 hover:opacity-100! hover:blur-none! focus-within:opacity-100! focus-within:blur-none!"
-            >
-              <CertCard cert={c} index={i} still={still} onOpen={setActive} />
-            </div>
-          )
-        })}
-      </div>
-
-      {remaining > 0 && (
-        <div className="mt-6 flex justify-center">
-          <Link
-            href="/certificates"
-            className="group inline-flex items-center gap-2 rounded-[3px] border border-fg/30 px-5 py-2.5 font-sans text-sm font-medium text-fg/80 transition-colors hover:border-fg/60 hover:text-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
-          >
-            Explore all {certStats.total} certificates
-            <span className="font-mono text-fg-dim transition-colors group-hover:text-fg/80">
-              +{remaining} more
-            </span>
-            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-              →
-            </span>
-          </Link>
-        </div>
-      )}
-
-      <CertLightbox cert={active} onClose={() => setActive(null)} />
+      <CertLightbox cert={scan} onClose={() => setScan(null)} />
     </GlassSection>
   )
 }

@@ -29,7 +29,7 @@ export default function WriteupsTeaser({ items }: { items: WriteupMeta[] }) {
         LOGS
       </div>
       <div className="mx-auto w-full max-w-[92.5rem]">
-        <SectionHeading index="06" label={t.writeups.title} command="ls ~/writeups" subtitle={t.writeups.teaser}>
+        <SectionHeading index="07" label={t.writeups.title} command="ls ~/writeups" subtitle={t.writeups.teaser}>
           {/* hacker mode, the drawing with its own scene */}
           <div className="absolute bottom-0 right-0 hidden sm:block">
             <Duck pose="hacker" width={180} parallax={4} className="lg:!w-[13.75rem]" />

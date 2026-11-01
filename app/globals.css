@@ -279,6 +279,7 @@
     --tint-education: 245 219 220;
     --tint-skills: 232 223 235;
     --tint-certificates: 245 235 210;
+    --tint-workbench: 241 237 228; /* drafting paper: the duck's orange, barely */
     --tint-projects: 222 226 235;
     --tint-writeups: 236 236 234;
     --tint-personal: 217 234 218;
@@ -371,6 +372,7 @@
   [id='education'] { --accent: var(--accent-pink); --accent-text: var(--accent-pink-text); }
   [id='skills'] { --accent: var(--accent-violet); --accent-text: var(--accent-violet-text); }
   [id='certificates'] { --accent: var(--accent-sun); --accent-text: var(--accent-sun-text); }
+  [id='workbench'] { --accent: var(--accent-duck); --accent-text: var(--accent-duck-text); }
   [id='projects'] { --accent: var(--accent-blue); --accent-text: var(--accent-blue-text); }
   [id='personal'] { --accent: var(--accent-green); --accent-text: var(--accent-green-text); }
   html[data-tint='profile'] { --tint: var(--tint-profile); }
@@ -378,6 +380,7 @@
   html[data-tint='education'] { --tint: var(--tint-education); }
   html[data-tint='skills'] { --tint: var(--tint-skills); }
   html[data-tint='certificates'] { --tint: var(--tint-certificates); }
+  html[data-tint='workbench'] { --tint: var(--tint-workbench); }
   html[data-tint='projects'] { --tint: var(--tint-projects); }
   html[data-tint='writeups'] { --tint: var(--tint-writeups); }
   html[data-tint='personal'] { --tint: var(--tint-personal); }

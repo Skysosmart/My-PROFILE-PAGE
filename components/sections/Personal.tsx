@@ -139,7 +139,7 @@ export default function Personal() {
           className="flex flex-col gap-4"
         >
           <SectionHeading
-            index="07"
+            index="08"
             label={t.label}
             command="ls ~/photos"
             className="!mb-0"

@@ -133,7 +133,7 @@ export default function Projects() {
     <section ref={sectionRef} id="projects" className="relative isolate scroll-mt-0 overflow-x-clip px-[clamp(20px,4vw,64px)] py-16 sm:py-24">
       <div className="mx-auto w-full max-w-[92.5rem]">
         {/* ── header, top-left, with room around it ──────────────────── */}
-        <SectionHeading index="05" label="Projects" command={t.command} subtitle={t.subtitle}>
+        <SectionHeading index="06" label="Projects" command={t.command} subtitle={t.subtitle}>
           {/* the note in the upper middle, its arrow curling down at the featured project */}
           <InkNote arrow="down-left" arrowWidth="w-16" arrowClassName="-bottom-14 -left-14" delay={0.3} className="absolute left-[46%] top-2 hidden lg:block">
             {t.noteHeader}

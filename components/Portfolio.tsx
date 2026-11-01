@@ -37,6 +37,8 @@ const Personal = split(() => import('@/components/sections/Personal'))
 const Ending = split(() => import('@/components/sections/Ending'))
 const Certificates = split(() => import('@/components/sections/Certificates'))
 const Projects = split(() => import('@/components/sections/Projects'))
+const PaperToBlueprint = split(() => import('@/components/workbench/PaperToBlueprint'))
+const Workbench = split(() => import('@/components/sections/Workbench'))
 
 /**
  * Top-level client wrapper.
@@ -125,6 +127,13 @@ export default function Portfolio({
             </Deferred>
             <Deferred id="certificates">
               <Certificates />
+            </Deferred>
+            {/* one of the desk's sheets turns into the workbench's first drawing */}
+            <Deferred>
+              <PaperToBlueprint />
+            </Deferred>
+            <Deferred id="workbench">
+              <Workbench />
             </Deferred>
             <Deferred id="projects">
               <Projects />

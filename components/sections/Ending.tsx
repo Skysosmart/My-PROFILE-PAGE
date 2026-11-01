@@ -42,7 +42,7 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
         </div>
 
         <div className="flex flex-col gap-8">
-          <SectionHeading index="08" label={t.label} command="ping sky" subtitle={`${t.title1} ${t.title2}`} className="!mb-0" />
+          <SectionHeading index="09" label={t.label} command="ping sky" subtitle={`${t.title1} ${t.title2}`} className="!mb-0" />
 
           <dl className="grid gap-6 sm:grid-cols-3">
             <div className="flex flex-col gap-1.5">

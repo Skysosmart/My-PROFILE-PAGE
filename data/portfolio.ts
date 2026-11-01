@@ -37,6 +37,7 @@ export const nav = [
   { label: 'EDUCATION', id: 'education' },
   { label: 'SKILLS', id: 'skills' },
   { label: 'CERTIFICATES', id: 'certificates' },
+  { label: 'WORKBENCH', id: 'workbench' },
   { label: 'PROJECTS', id: 'projects' },
   // its own route (server-rendered MDX), so it carries an href
   { label: 'WRITEUPS', id: 'writeups', href: '/writeups' },
@@ -683,6 +684,20 @@ export type Certificate = {
   detail?: string
   /** key into `moments`: photographs from this event */
   moment?: string
+  /*
+   * The certificate desk (components/certdesk) writes these around a paper
+   * when it is picked up. Short on purpose: a few words each, not sentences.
+   * TODO(sky): drafted from `detail` and the titles; correct anything that
+   * is not how you would say it.
+   */
+  /** one line: what it was */
+  blurb?: string
+  /** what it taught, two to four short items */
+  learned?: string[]
+  /** skills it used or grew */
+  skills?: string[]
+  /** a handwritten aside on hover; only a few papers get one */
+  note?: string
 }
 
 export const certificates: Certificate[] = [
@@ -694,6 +709,10 @@ export const certificates: Certificate[] = [
     result: 'Gold Medal', medal: 'gold',
     detail:
       'Gold at the I-New Gen Award 2026, health & medical category, secondary level, for PDLite - a device giving a preliminary Parkinson’s disease risk assessment. A five-student team with a faculty advisor. I built the Next.js and Supabase web app that records readings and charts them, handled UX/UI and the database, and designed the enclosure and its mechanism in Fusion 360 for 3D printing.',
+    blurb: 'PDLite: a first-look Parkinson’s risk device, five of us and an advisor.',
+    learned: ['Taking a device from idea to judges', 'Enclosure design for 3D printing', 'Owning the web app end to end'],
+    skills: ['Next.js', 'Supabase', 'Fusion 360', 'UX/UI'],
+    note: 'worth it.',
   },
   {
     title: 'Invention & Innovation - Gold Medal',
@@ -702,6 +721,9 @@ export const certificates: Certificate[] = [
     result: 'Gold Medal', medal: 'gold',
     detail:
       'The second gold for PDLite, awarded at Srinakharinwirot University’s Researcher Day in the high-school invention and innovation contest. What this project taught me was less technical than procedural: a team needs a clear workflow and divided responsibilities, and the work that matters happens after the idea stops being exciting.',
+    blurb: 'The second gold for PDLite, at SWU Researcher Day.',
+    learned: ['A clear team workflow', 'Dividing the work', 'Keeping going after the idea stops being exciting'],
+    skills: ['Presenting', 'Teamwork'],
   },
   {
     title: 'Thailand Robot & Coding 2026 - Website Competition',
@@ -710,6 +732,10 @@ export const certificates: Certificate[] = [
     result: '3rd Place', medal: 'bronze',
     detail:
       'Third nationally in the CODEKIT web development competition, high-school level. Two builds against a brief: T-GODA, an Agoda-style booking platform, and Nexus, a Discord-style chat app. I owned the frontend on both - landing pages, responsive layout, navigation, the sign-up and login flow, and over twenty core functions on Nexus.',
+    blurb: 'Two builds against a brief: T-GODA and Nexus.',
+    learned: ['Shipping two apps against a deadline', 'Responsive frontends', 'Auth flows'],
+    skills: ['Frontend', 'React', 'UI'],
+    note: 'this one was fun.',
   },
   {
     title: 'MakeX Challenge - Best Favourite Alliance Team',
@@ -718,36 +744,55 @@ export const certificates: Certificate[] = [
     result: '3rd Place · Best Favourite Alliance Team', medal: 'bronze',
     detail:
       'Team Prometheus, at the 2025 MakeX Thailand National Championships. I designed the entire robot structure in Fusion 360 over six months, building for disc-shooting and block-gripping missions across five arenas. The lesson was composure - a dead control board or a wheel off mid-match, and an opponent who can disrupt you. In the game they are rivals; after it they are friends.',
+    blurb: 'Team Prometheus: one robot, six months, five arenas.',
+    learned: ['Robot structure in Fusion 360', 'Fixing things mid-match', 'Staying calm under pressure'],
+    skills: ['Fusion 360', '3D printing', 'Robotics'],
+    note: 'survived this somehow.',
   },
   {
     title: 'Pentesting Fundamentals',
     issuer: 'Crack The Lab',
     file: 'CrackTheLab-Pentesting fundamentals.jpg', featured: true, level: 'Online', date: 'Apr 2026',
     result: 'Completed', credential: 'CR-571C5C8AA4',
+    blurb: 'The basics of a penetration test, start to finish.',
+    learned: ['Recon and enumeration', 'Exploitation basics', 'Writing it up'],
+    skills: ['Pentesting', 'Linux'],
   },
   {
     title: 'IT CLASH - Cybersecurity Track, Finals',
     issuer: 'KMITL, Faculty of Information Technology',
     file: 'KMITL-IT CLASH cybersecurity final.jpg', featured: true, level: 'National', date: 'May 2026',
     result: 'Finalist',
+    blurb: 'Made the finals of the cybersecurity track.',
+    learned: ['Solving under a clock', 'CTF categories'],
+    skills: ['CTF', 'Security'],
   },
   {
     title: 'Network Defense Essentials (N|DE)',
     issuer: 'EC-Council',
     file: 'EC_Councils-NDE.jpg', featured: true, level: 'International', date: 'Mar 2025',
     result: 'Completed', credential: '398563',
+    blurb: 'EC-Council’s network defense essentials.',
+    learned: ['Network fundamentals', 'Defense in depth', 'Security controls'],
+    skills: ['Networking', 'Blue team'],
   },
   {
     title: 'Ethical Hacking Essentials (E|HE)',
     issuer: 'EC-Council',
     file: 'EC_Councils-EHE.jpg', featured: true, level: 'International', date: 'Mar 2025',
     result: 'Completed', credential: '397792',
+    blurb: 'EC-Council’s ethical hacking essentials.',
+    learned: ['The attack lifecycle', 'Common web and network attacks', 'Doing it legally'],
+    skills: ['Ethical hacking', 'Web security'],
   },
   {
     title: 'CTF Boot Camp',
     issuer: 'NCSA · Thailand National Cyber Academy',
     file: 'NCSA-CTF boot camp.jpg', moment: 'cyber-bootcamp', featured: true, level: 'National', date: 'May 2025',
     result: 'Completed',
+    blurb: 'The national cyber academy’s CTF boot camp.',
+    learned: ['CTF categories', 'Thinking like the challenge setter'],
+    skills: ['CTF', 'Security'],
   },
   {
     title: 'RTARF Cyber Bootcamp - N|DE & E|HE',
@@ -756,6 +801,10 @@ export const certificates: Certificate[] = [
     result: 'Completed',
     detail:
       'Two months of online training run by the Cyber Command of the Royal Thai Armed Forces, ending in the EC-Council Network Defense Essentials and Ethical Hacking Essentials certifications.',
+    blurb: 'Two months of online training with the RTARF Cyber Command.',
+    learned: ['Network defense', 'Ethical hacking', 'Two months of steady study'],
+    skills: ['Networking', 'Security'],
+    note: 'learned a lot here.',
   },
   {
     title: 'Hackathon Digitize - Anti-Corruption Innovation',
@@ -764,12 +813,18 @@ export const certificates: Certificate[] = [
     result: 'Participated',
     detail:
       'Run by the Thailand Institute of Justice with the Anti-Corruption Organization of Thailand, Security Pitch, WeVis and HAND Social Enterprise. We turned scanned NACC asset-declaration filings into structured, queryable records with a Python pipeline using OCR, vision models and a trained NER model.',
+    blurb: 'Scanned asset declarations, turned into records you can query.',
+    learned: ['OCR on messy scans', 'Vision models in a pipeline', 'Training an NER model'],
+    skills: ['Python', 'OCR', 'NER'],
   },
   {
     title: 'English for Semiconductor Industry',
     issuer: 'Chulalongkorn University, Dept. of Electrical Engineering',
     file: 'CU-English for semiconductor industry.jpg', featured: true, level: 'Online', date: 'Mar 2026',
     result: 'Completed',
+    blurb: 'Technical English for the chip industry.',
+    learned: ['Semiconductor vocabulary', 'Reading technical English'],
+    skills: ['English'],
   },
 
   // ----- Competitions & awards -----

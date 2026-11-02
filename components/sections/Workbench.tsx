@@ -1,11 +1,10 @@
 'use client'
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'motion/react'
+import { animate, motion, useInView, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform, type AnimationPlaybackControls } from 'motion/react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import Duck from '@/components/duck/Duck'
 import { useTint } from '@/lib/tint'
-import { getLenis } from '@/lib/smooth-scroll'
 import { cadGeometry, cadProjects } from '@/data/cad'
 import type { Bench, Placement } from '@/components/workbench/engine'
 
@@ -13,24 +12,26 @@ import type { Bench, Placement } from '@/components/workbench/engine'
  * THE ENGINEERING WORKBENCH - one CAD model at a time, and the model is the
  * point: it takes the middle of the screen, the words take the edges.
  *
- * Scrolling through the bench tells the model's story (engine.ts has the
- * stages): sketch, wireframe, surface, assembly, the finished model and -
- * where there is a photograph of the real thing - reality, the photo wiped
- * across the model from left to right along an ink line. The stage is a
- * sticky box inside a tall one; the page scrolls normally the whole time and
- * nothing is taken over. The rail of stage names above the model can be used
- * instead of scrolling, and with reduced motion it is the only way: the
- * stages then step, without the scroll.
+ * The model tells its own story (engine.ts has the stages): sketch,
+ * wireframe, surface, assembly, the finished model and - where there is a
+ * photograph of the real thing - reality, the photo wiped across the model
+ * from left to right along an ink line. It plays by itself once the bench is
+ * on screen; the scroll doesn't drive it (scrubbed by the scroll, the bench
+ * had to be a sticky box in a tall one, and on a phone that pinned the
+ * section under the finger). The rail of stage names jumps to a stage,
+ * "View process" plays it again, and with reduced motion the stages step
+ * instead of playing.
  *
  * Switching projects folds the current model back into nothing (its lines
- * undraw), loads the next and draws it back out, at whatever stage the
- * scroll is at.
+ * undraw), loads the next and builds it again from the sketch.
  *
  * Without WebGL, the bench shows the model's ink drawing instead, and the
  * parts as a list: the 3D is never the only way to the information.
  */
 const STAGES = ['Sketch', 'Wireframe', 'Surface', 'Assembly', 'Final', 'Reality'] as const
-const STORY = [0.04, 0.84] // the share of the scroll the story is told across
+// the story, played: each stage drawn over STEP seconds, then held for HOLD
+const STEP = 1.3
+const HOLD = 0.45
 // where the rail lands for each stage: that stage finished, not just begun
 // (the story's value runs 0..5; stage k is told between k and k + 1)
 const STAGE_AT = [0.95, 1.95, 2.95, 3.9, 4, 5]
@@ -40,7 +41,6 @@ type Sketch = { w: number; h: number; paths: { part: string; d: string }[] }
 export default function Workbench() {
   const reduce = !!useReducedMotion()
   const tintRef = useTint<HTMLElement>('workbench')
-  const storyRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const tabsRef = useRef<HTMLUListElement>(null)
@@ -62,9 +62,8 @@ export default function Workbench() {
   const maxStage = project.photo ? 5 : 4
   const several = project.parts.length > 1
 
-  /* ── the story: the scroll's progress through the tall box ─────────── */
-  const { scrollYProgress } = useScroll({ target: storyRef, offset: ['start start', 'end end'] })
-  const story = useTransform(scrollYProgress, STORY, [0, maxStage], { clamp: true })
+  /* ── the story: played through once the bench is on screen ────────── */
+  const story = useMotionValue(0)
   const reveal = useTransform(story, [4, 5], [0, 1], { clamp: true })
   const wipe = useTransform(reveal, (v) => `inset(0 ${(1 - v) * 100}% 0 0)`)
   const wipeAt = useTransform(reveal, (v) => `${v * 100}%`)
@@ -74,6 +73,39 @@ export default function Workbench() {
     const k = Math.min(maxStage, Math.floor(v + 0.02))
     setStage((s) => (s === k ? s : k))
   })
+  const playing = useRef<{ run: number; ctl: AnimationPlaybackControls | null }>({ run: 0, ctl: null })
+  const stop = useCallback(() => {
+    playing.current.run++
+    playing.current.ctl?.stop()
+    playing.current.ctl = null
+  }, [])
+  // from the sketch to the end, stage by stage, each one held a moment
+  const play = useCallback(
+    async (last: number) => {
+      stop()
+      const run = playing.current.run
+      story.set(0)
+      for (let k = 0; k <= last; k++) {
+        const ctl = animate(story, STAGE_AT[k], { duration: k === 4 ? 0.4 : k === 5 ? 1.6 : STEP, ease: 'easeInOut' })
+        playing.current.ctl = ctl
+        await ctl
+        if (run !== playing.current.run) return
+        await new Promise((r) => setTimeout(r, HOLD * 1000))
+        if (run !== playing.current.run) return
+      }
+      playing.current.ctl = null
+    },
+    [stop, story],
+  )
+  useEffect(() => stop, [stop])
+
+  const onScreen = useInView(stageRef, { amount: 0.5 })
+  const played = useRef(false)
+  useEffect(() => {
+    if (reduce || played.current || !onScreen || loading) return
+    played.current = true
+    play(maxStage)
+  }, [onScreen, loading, reduce, play, maxStage])
 
   /* ── the 3D: started once the bench is near, torn down when it goes ─── */
   const place = useCallback((ps: Placement[]) => {
@@ -182,14 +214,21 @@ export default function Workbench() {
         await load
         setLoading(true)
         setIndex(n)
+        stop()
+        if (!reduce) story.set(0)
         await b.load(`/cad/${next.slug}/model.glb`, cadGeometry[next.slug].view)
-        b.setStage(reduce ? Math.min(STAGE_AT[manual], 4) : Math.min(story.get(), 4))
+        b.setStage(reduce ? Math.min(STAGE_AT[manual], 4) : 0)
         b.emerge()
         setLoading(false)
+        // the new model builds itself from the sketch
+        if (!reduce) {
+          played.current = true
+          play(next.photo ? 5 : 4)
+        }
       } else setIndex(n)
       busy.current = false
     },
-    [index, manual, reduce, story],
+    [index, manual, reduce, story, stop, play],
   )
   const warm = (i: number) => {
     const n = (i + cadProjects.length) % cadProjects.length
@@ -214,15 +253,9 @@ export default function Workbench() {
       reveal.set(k >= 5 ? 1 : 0)
       return
     }
-    const el = storyRef.current
-    if (!el) return
-    const top = el.getBoundingClientRect().top + window.scrollY
-    const span = el.offsetHeight - window.innerHeight
-    const at = STORY[0] + (Math.min(STAGE_AT[k], maxStage) / maxStage) * (STORY[1] - STORY[0])
-    const y = top + span * at
-    const lenis = getLenis()
-    if (lenis) lenis.scrollTo(y, { duration: 1.1 })
-    else window.scrollTo({ top: y, behavior: 'smooth' })
+    stop()
+    played.current = true
+    playing.current.ctl = animate(story, Math.min(STAGE_AT[k], maxStage), { duration: 0.9, ease: 'easeInOut' })
   }
   useEffect(() => {
     if (reduce) {
@@ -278,8 +311,8 @@ export default function Workbench() {
         <SectionHeading index="05" label="Engineering Workbench" command="cd ~/workbench" subtitle="From sketch → constraint → CAD → something that actually exists." />
       </div>
 
-      <div ref={storyRef} className={reduce ? 'relative' : 'relative h-[300svh] md:h-[340svh]'}>
-        <div ref={stageRef} className={`${reduce ? 'relative' : 'sticky top-0'} flex h-svh min-h-[34rem] flex-col px-[clamp(16px,4vw,64px)] pb-5 pt-[4.75rem] sm:pb-7`}>
+      <div className="relative">
+        <div ref={stageRef} className="relative flex h-svh min-h-[34rem] flex-col px-[clamp(16px,4vw,64px)] pb-5 pt-[4.75rem] sm:pb-7">
           <div className="mx-auto flex w-full max-w-[92.5rem] min-h-0 flex-1 flex-col">
             {/* ── the top edge: which project, which stage ─────────── */}
             <div className="flex flex-col gap-2.5">
@@ -500,7 +533,7 @@ export default function Workbench() {
                 {hovered && <p className="sr-only" aria-live="polite">{`${hovered.label}: ${hovered.notes.join('. ')}`}</p>}
               </div>
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.75rem] uppercase tracking-[0.14em] th:tracking-normal">
-                <button type="button" onClick={() => goStage(0)} className="text-fg underline-offset-4 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg">
+                <button type="button" onClick={() => (reduce ? goStage(0) : play(maxStage))} className="text-fg underline-offset-4 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg">
                   View process
                 </button>
                 {several ? (

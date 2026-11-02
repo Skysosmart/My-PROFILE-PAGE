@@ -27,7 +27,8 @@ export type CadProject = {
   /** one or two lines: what it is and why it exists */
   blurb: string
   tool: string
-  year: string
+  /** omitted when unknown */
+  year?: string
   kind: string
   /** how many times it was redrawn; omitted when unknown */
   iterations?: number
@@ -55,19 +56,77 @@ export const cadProjects: CadProject[] = [
     ],
   },
   {
-    slug: 'robot-arm',
-    name: 'INOVEDEX Robot Arm',
-    blurb: 'The forearm and gripper of a pick-and-place arm that finds coloured cubes with a Pi camera. The rack-and-pinion jaws open 12 to 45 mm, and the arm folds to fit the 350 mm start frame.',
+    slug: 'inovedex',
+    name: 'INOVEDEX',
+    blurb: 'A pick-and-place robot arm on its own control base. A Pi camera ahead of the gripper finds the coloured cubes, and the rack-and-pinion jaws open 12 to 45 mm to lift them.',
     tool: 'Fusion 360',
     year: '2026',
     kind: 'Robot arm',
     parts: [
-      { key: 'forearm', label: 'Forearm', notes: ['120 mm, elbow to wrist', 'Pockets for the DS3218MG and MG90S servos', 'Cable channel with zip-tie slots'] },
-      { key: 'gripper', label: 'Gripper body', notes: ['Palm and wrist clevis in one print', 'Wrist pivot held on both sides'] },
-      { key: 'pinion', label: 'Pinion', notes: ['Module 1, 24 teeth', 'Servo horn pressed into the back'] },
-      { key: 'finger-a', label: 'Finger A', notes: ['Upper rack on a dovetail rail', 'Jaws open 12 to 45 mm'] },
-      { key: 'finger-b', label: 'Finger B', notes: ['Lower rack, opposite finger A', 'Recess for a 1 mm TPU pad'] },
-      { key: 'camera-mount', label: 'Camera mount', notes: ['Pi Camera Module 3 ahead of the jaws', 'Tilts 0 to 45° on one M3 screw'] },
+      { key: 'base', label: 'Base', notes: ['Holds the electronics', 'Turntable bearing set into the lid'] },
+      { key: 'shoulder', label: 'Turntable & column', notes: ['Turns the whole arm', 'Shoulder servo at the top'] },
+      { key: 'upper-arm', label: 'Upper arm', notes: ['Elbow servo at the far end', 'Lightening holes along its length'] },
+      { key: 'hand', label: 'Forearm & gripper', notes: ['Rack-and-pinion jaws, 12 to 45 mm', 'Pi Camera Module 3 ahead of the jaws'] },
+      { key: 'cubes', label: 'Cubes', notes: ['20 mm, one per colour', 'What the camera looks for'] },
+    ],
+  },
+  {
+    slug: 'prometeus',
+    name: 'PROMETEUS',
+    blurb: 'A competition robot on four mecanum wheels with a slide-rail lift: a carriage runs up the frame on rail sliders and carries the arm out over the field.',
+    tool: 'Fusion 360',
+    kind: 'Competition robot',
+    iterations: 3,
+    parts: [
+      { key: 'drive', label: 'Mecanum drive', notes: ['Four mecanum wheels on encoder motors', 'Drives sideways without turning'] },
+      { key: 'lift', label: 'Slide-rail lift', notes: ['Beam frame, 496 mm tall', 'Sliders ride the rails, pulled by a timing belt'] },
+      { key: 'arm', label: 'Arm', notes: ['Reaches out from the lift', 'Servo hubs at the joints'] },
+      { key: 'carriage', label: 'Top carriage', notes: ['Crossbeam over the lift', 'Timing pulleys for the belt'] },
+    ],
+  },
+  {
+    slug: 'rmrc',
+    name: 'RMRC Rescue Robot',
+    blurb: 'A tracked robot for the RoboCup Rapidly Manufactured Robot Challenge: four track pods carry it over rubble, and an arm out front reaches into the test lanes.',
+    tool: 'Fusion 360',
+    year: '2025',
+    kind: 'Rescue robot',
+    parts: [
+      { key: 'tracks', label: 'Track pods', notes: ['Four independent pods', 'Printed treads'] },
+      { key: 'chassis', label: 'Chassis', notes: ['Motors and drive shafts', 'Low, between the pods'] },
+      { key: 'body', label: 'Body', notes: ['Electronics deck', 'Camera mast at the back'] },
+      { key: 'arm', label: 'Arm', notes: ['Folds over the body', 'Two links'] },
+      { key: 'gripper', label: 'Gripper', notes: ['At the end of the arm', 'Servo-driven jaws'] },
+    ],
+  },
+  {
+    slug: 'pdlite',
+    name: 'P-DLite',
+    blurb: 'A desktop device for saliva-based Parkinson\'s pre-screening: it runs the sample through the reagents and reads the colour change with a camera, then shows the result on its own screen.',
+    tool: 'Fusion 360',
+    year: '2026',
+    kind: 'Medical device',
+    parts: [
+      { key: 'housing', label: 'Housing', notes: ['One sloped shell', 'P-DLite name cut into the front'] },
+      { key: 'dispenser', label: 'Dispenser', notes: ['Tower over the sample cup', 'Drives the reagent tubes'] },
+      { key: 'cup', label: 'Sample cup', notes: ['Saliva goes in here', 'Sits under the dispenser'] },
+      { key: 'tray', label: 'Tray', notes: ['Slides in on the slope', 'Holds the test card'] },
+      { key: 'screen', label: 'Screen', notes: ['Shows the result', 'Bezel printed separately'] },
+      { key: 'board', label: 'Electronics', notes: ['Controller board at the back', 'Wired to the screen and the camera'] },
+    ],
+  },
+  {
+    slug: 'aevur',
+    name: 'Aevur V1',
+    blurb: 'A handheld sensor box: a microcontroller board, a screen in the lid and a row of sensor modules, all in one printed case.',
+    tool: 'Fusion 360',
+    kind: 'Electronics enclosure',
+    parts: [
+      { key: 'case', label: 'Case', notes: ['Printed in one piece', 'Cut-outs for the ports'] },
+      { key: 'board', label: 'Main board', notes: ['The microcontroller', 'Headers for the modules'] },
+      { key: 'display', label: 'Display', notes: ['Sits under the lid', 'Read through a window'] },
+      { key: 'sensors', label: 'Sensors', notes: ['Gas sensor module', 'Second board beside it'] },
+      { key: 'lid', label: 'Lid details', notes: ['LED ring', 'Raised lettering'] },
     ],
   },
   {
@@ -84,6 +143,15 @@ export const cadProjects: CadProject[] = [
     ],
   },
   {
+    slug: 'desktop-locker',
+    name: 'Desktop Locker',
+    blurb: 'A hook-shaped latch drawn to print flat in one piece. This is the second version.',
+    tool: 'Fusion 360',
+    kind: '3D print',
+    iterations: 2,
+    parts: [{ key: 'body', label: 'Body', notes: ['189 mm long', 'Printed in one piece'] }],
+  },
+  {
     slug: 'aero',
     name: 'Aero',
     blurb: 'A tapered frame on four legs under a vented hood, drawn to print in one piece.',
@@ -91,6 +159,14 @@ export const cadProjects: CadProject[] = [
     year: '2025',
     kind: '3D print',
     parts: [{ key: 'body', label: 'Body', notes: ['One piece, no supports inside', 'Vent patterns on every face of the hood'] }],
+  },
+  {
+    slug: 'pacman',
+    name: 'Pac-Man',
+    blurb: 'A 100 mm Pac-Man, mouth open, drawn for fun and printed in two colours.',
+    tool: 'Fusion 360',
+    kind: '3D print',
+    parts: [{ key: 'body', label: 'Body', notes: ['100 mm across', 'Two-colour print'] }],
   },
   {
     slug: 'balm',

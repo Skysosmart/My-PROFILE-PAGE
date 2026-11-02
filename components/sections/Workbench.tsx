@@ -43,6 +43,7 @@ export default function Workbench() {
   const storyRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const tabsRef = useRef<HTMLUListElement>(null)
   const bench = useRef<Bench | null>(null)
   const labelRefs = useRef(new Map<string, HTMLDivElement>())
   const [index, setIndex] = useState(0)
@@ -195,6 +196,15 @@ export default function Workbench() {
     fetch(`/cad/${cadProjects[n].slug}/model.glb`).catch(() => {})
   }
 
+  // on a narrow screen the tabs scroll: keep the open project's in view
+  useEffect(() => {
+    const ul = tabsRef.current
+    const tab = ul?.children[index] as HTMLElement | undefined
+    if (!ul || !tab) return
+    const left = tab.offsetLeft - ul.offsetLeft
+    if (left < ul.scrollLeft || left + tab.offsetWidth > ul.scrollLeft + ul.clientWidth) ul.scrollTo({ left: left - 16, behavior: reduce ? 'auto' : 'smooth' })
+  }, [index, reduce])
+
   /* ── the rail: jump the story to a stage ────────────────────────────── */
   const goStage = (k: number) => {
     if (reduce) {
@@ -259,6 +269,8 @@ export default function Workbench() {
     project.year,
   ].filter(Boolean)
   const hovered = project.parts.find((p) => p.key === hover)
+  const prevProject = cadProjects[(index - 1 + cadProjects.length) % cadProjects.length]
+  const nextProject = cadProjects[(index + 1) % cadProjects.length]
 
   return (
     <section ref={tintRef} id="workbench" aria-labelledby="workbench-title" className="relative isolate overflow-x-clip">
@@ -270,53 +282,59 @@ export default function Workbench() {
         <div ref={stageRef} className={`${reduce ? 'relative' : 'sticky top-0'} flex h-svh min-h-[34rem] flex-col px-[clamp(16px,4vw,64px)] pb-5 pt-[4.75rem] sm:pb-7`}>
           <div className="mx-auto flex w-full max-w-[92.5rem] min-h-0 flex-1 flex-col">
             {/* ── the top edge: which project, which stage ─────────── */}
-            <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-              <div className="flex items-center gap-3">
-                <span id="workbench-title" className="font-mono text-[0.8125rem] tabular-nums tracking-[0.12em] text-fg">
-                  {String(index + 1).padStart(2, '0')} <span className="text-fg-dim">/ {String(cadProjects.length).padStart(2, '0')}</span>
-                </span>
-                <div className="flex items-center">
-                  <button type="button" onClick={() => go(index - 1)} onPointerEnter={() => warm(index - 1)} aria-label="Previous model" className="grid h-9 w-9 place-items-center font-mono text-fg-muted transition-colors hover:text-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg">
-                    ←
-                  </button>
-                  <button type="button" onClick={() => go(index + 1)} onPointerEnter={() => warm(index + 1)} aria-label="Next model" className="grid h-9 w-9 place-items-center font-mono text-fg-muted transition-colors hover:text-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg">
-                    →
-                  </button>
-                </div>
-                <ul className="m-0 hidden list-none gap-4 p-0 lg:flex">
-                  {cadProjects.map((p, i) => (
-                    <li key={p.slug}>
+            <div className="flex flex-col gap-2.5">
+              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
+                <p id="workbench-title" className="m-0 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-fg-muted th:tracking-normal">
+                  <span className="font-bold text-fg">{cadProjects.length} projects</span> on the bench · pick one
+                </p>
+              {/* the stages, as a rail */}
+                <ol className="m-0 flex list-none items-center gap-0 overflow-x-auto p-0 font-mono text-[0.6875rem] uppercase tracking-[0.16em] th:tracking-normal">
+                  {STAGES.slice(0, maxStage + 1).map((s, k) => (
+                    <li key={s} className="flex items-center">
+                      {k > 0 && <span aria-hidden className={`mx-1.5 h-px w-3 sm:w-5 ${k <= stage ? 'bg-fg' : 'bg-fg/20'}`} />}
+                      <button
+                        type="button"
+                        onClick={() => goStage(k)}
+                        aria-current={k === stage ? 'step' : undefined}
+                        className={`whitespace-nowrap py-1.5 transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg ${k === stage ? 'text-fg' : k < stage ? 'text-fg-muted' : 'text-fg-dim hover:text-fg-muted'}`}
+                      >
+                        {k === stage && <span aria-hidden className="mr-1 inline-block h-1.5 w-1.5 -translate-y-px rounded-full bg-accent-text" />}
+                        {s}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              {/* the projects, as tabs: each with its own drawing */}
+              <ul ref={tabsRef} aria-label="CAD projects" className="m-0 -mx-1 flex list-none gap-2 overflow-x-auto p-1 [scrollbar-width:none]">
+                {cadProjects.map((p, i) => {
+                  const on = i === index
+                  const thumb = `url(/cad/${p.slug}/thumb.svg)`
+                  return (
+                    <li key={p.slug} className="shrink-0">
                       <button
                         type="button"
                         onClick={() => go(i)}
                         onPointerEnter={() => warm(i)}
-                        aria-current={i === index}
-                        className={`font-mono text-[0.75rem] uppercase tracking-[0.14em] underline-offset-4 transition-colors th:tracking-normal ${i === index ? 'text-fg underline decoration-accent decoration-2' : 'text-fg-dim hover:text-fg'}`}
+                        aria-current={on ? 'true' : undefined}
+                        className={`relative flex items-center gap-2.5 rounded-[3px] border py-1.5 pl-1.5 pr-3.5 text-left transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${on ? 'border-fg bg-[#fbf9f3] text-fg' : 'border-fg/15 text-fg-muted hover:border-fg/45 hover:text-fg'}`}
                       >
-                        {p.name}
+                        <span
+                          aria-hidden
+                          className="h-9 w-11 shrink-0 bg-current"
+                          style={{ maskImage: thumb, WebkitMaskImage: thumb, maskSize: 'contain', WebkitMaskSize: 'contain', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}
+                        />
+                        <span className="flex flex-col leading-tight">
+                          <span className="font-mono text-[0.625rem] tabular-nums tracking-[0.14em] text-fg-dim">{String(i + 1).padStart(2, '0')}</span>
+                          <span className="whitespace-nowrap font-mono text-[0.75rem] font-bold uppercase tracking-[0.12em] th:tracking-normal">{p.name}</span>
+                        </span>
+                        {on && <span aria-hidden className="absolute inset-x-1.5 -bottom-px h-[3px] bg-accent" />}
                       </button>
                     </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* the stages, as a rail */}
-              <ol className="m-0 flex list-none items-center gap-0 overflow-x-auto p-0 font-mono text-[0.6875rem] uppercase tracking-[0.16em] th:tracking-normal">
-                {STAGES.slice(0, maxStage + 1).map((s, k) => (
-                  <li key={s} className="flex items-center">
-                    {k > 0 && <span aria-hidden className={`mx-1.5 h-px w-3 sm:w-5 ${k <= stage ? 'bg-fg' : 'bg-fg/20'}`} />}
-                    <button
-                      type="button"
-                      onClick={() => goStage(k)}
-                      aria-current={k === stage ? 'step' : undefined}
-                      className={`whitespace-nowrap py-1.5 transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg ${k === stage ? 'text-fg' : k < stage ? 'text-fg-muted' : 'text-fg-dim hover:text-fg-muted'}`}
-                    >
-                      {k === stage && <span aria-hidden className="mr-1 inline-block h-1.5 w-1.5 -translate-y-px rounded-full bg-accent-text" />}
-                      {s}
-                    </button>
-                  </li>
-                ))}
-              </ol>
+                  )
+                })}
+              </ul>
             </div>
 
             {/* ── the model ─────────────────────────────────────────── */}
@@ -327,6 +345,27 @@ export default function Workbench() {
                 role="img"
                 className={`absolute inset-0 h-full w-full ${touch ? 'touch-pan-y' : ''} ${webgl === false ? 'hidden' : 'cursor-grab active:cursor-grabbing'}`}
               />
+
+              {/* the next and the last project, at the bench's edges */}
+              <button
+                type="button"
+                onClick={() => go(index - 1)}
+                onPointerEnter={() => warm(index - 1)}
+                aria-label={`Previous project: ${prevProject.name}`}
+                className="absolute left-0 top-1/2 z-[8] grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-fg/25 bg-bg font-mono text-[1.125rem] text-fg transition-colors hover:border-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={() => go(index + 1)}
+                onPointerEnter={() => warm(index + 1)}
+                aria-label={`Next project: ${nextProject.name}`}
+                className="absolute right-0 top-1/2 z-[8] flex h-11 -translate-y-1/2 items-center gap-2 rounded-full border border-fg/25 bg-bg px-3.5 font-mono text-fg transition-colors hover:border-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg"
+              >
+                <span className="hidden text-[0.6875rem] uppercase tracking-[0.14em] text-fg-muted th:tracking-normal md:inline">next · {nextProject.name}</span>
+                <span className="text-[1.125rem]">→</span>
+              </button>
 
               {/* no WebGL: the drawing instead */}
               {webgl === false && sketch && (

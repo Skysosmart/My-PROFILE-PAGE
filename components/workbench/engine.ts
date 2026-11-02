@@ -53,6 +53,8 @@ type Part = {
   pencil: LineSegments2
   pencilCount: number
   center: THREE.Vector3
+  /** half its bounding box's diagonal */
+  half: number
   /** where it lies before assembly and how far it slides when exploded */
   out: THREE.Vector3
   landed: boolean
@@ -216,6 +218,7 @@ export class Bench {
         pencil,
         pencilCount: 12,
         center,
+        half: own / 2,
         out: single ? new THREE.Vector3(0, this.radius * 0.5, 0) : out,
         landed: false,
       })
@@ -233,8 +236,14 @@ export class Bench {
       if (Math.abs(dir.y) > 0.7) p.out.applyAxisAngle(new THREE.Vector3(0, 0, 1), (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 0.5).multiplyScalar(1 + 0.2 * k)
       else p.out.multiplyScalar(1 + 0.8 * k)
     })
-    // the model's resting radius, with the parts laid out round it
-    this.radius = Math.max(this.radius, ...this.parts.map((p) => p.center.clone().add(p.out).length() + this.radius * 0.25)) * 0.82
+    // the model's resting radius, with the parts laid out round it: as far
+    // as the furthest part reaches, its own size included (a metre-tall
+    // lift slid out by its centre alone would leave the frame)
+    const own = this.radius
+    this.radius = Math.max(this.radius, ...this.parts.map((p) => p.center.clone().add(p.out).length() + Math.max(p.half * 0.7, this.radius * 0.25))) * 0.82
+    // and never so tight that the model, assembled and zoomed in, leaves
+    // the frame: a single part has nothing laid out round it to widen it
+    this.radius = Math.max(this.radius, own * 1.5)
     this.resize()
     this.kick()
     return this.parts.map((p) => p.key)

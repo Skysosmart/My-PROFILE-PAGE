@@ -99,6 +99,8 @@ export class Bench {
   private visible = true
   private dragging = false
   private last = { x: 0, y: 0 }
+  /** a finger's gesture, until it shows which way it means to go */
+  private touch: { x: number; y: number } | null = null
   private ray = new THREE.Raycaster()
   private disposed = false
   private loader = new GLTFLoader()
@@ -339,14 +341,34 @@ export class Bench {
       this.handlers.push([type, fn as EventListener])
     }
     on('pointerdown', (e) => {
-      this.dragging = true
       this.last = { x: e.clientX, y: e.clientY }
+      // a finger on a phone is usually scrolling the page past the bench.
+      // Turning on its first few pixels made every swipe wobble the model
+      // from side to side (any sideways drift turned it) until the browser
+      // took the scroll: so a touch only turns it once it is plainly a
+      // sideways drag, and a gesture that starts upright is left alone
+      if (e.pointerType !== 'mouse') {
+        this.touch = { x: e.clientX, y: e.clientY }
+        return
+      }
+      this.dragging = true
       this.canvas.setPointerCapture(e.pointerId)
     })
     on('pointermove', (e) => {
       const r = this.canvas.getBoundingClientRect()
       const nx = ((e.clientX - r.left) / r.width) * 2 - 1
       const ny = -(((e.clientY - r.top) / r.height) * 2 - 1)
+      if (this.touch) {
+        const dx = Math.abs(e.clientX - this.touch.x)
+        const dy = Math.abs(e.clientY - this.touch.y)
+        if (dx < 10 && dy < 10) return // not decided yet
+        this.touch = null
+        if (dx < dy * 1.5) return // upright: it's the page's scroll
+        this.dragging = true
+        this.last = { x: e.clientX, y: e.clientY }
+        this.canvas.setPointerCapture(e.pointerId)
+        return
+      }
       if (this.dragging) {
         const dx = e.clientX - this.last.x
         const dy = e.clientY - this.last.y
@@ -367,6 +389,7 @@ export class Bench {
     })
     const up = (e: PointerEvent) => {
       this.dragging = false
+      this.touch = null
       if (this.canvas.hasPointerCapture?.(e.pointerId)) this.canvas.releasePointerCapture(e.pointerId)
     }
     on('pointerup', up)

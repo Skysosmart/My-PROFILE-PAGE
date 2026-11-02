@@ -1,4 +1,5 @@
 import Portfolio from '@/components/Portfolio'
+import PageSummary from '@/components/PageSummary'
 import { getWriteups } from '@/lib/writeups'
 
 /**
@@ -11,5 +12,10 @@ import { getWriteups } from '@/lib/writeups'
  */
 export default async function Home() {
   const writeups = (await getWriteups()).slice(0, 3)
-  return <Portfolio writeups={writeups} formEnabled={Boolean(process.env.RESEND_API_KEY)} />
+  return (
+    <>
+      <PageSummary />
+      <Portfolio writeups={writeups} formEnabled={Boolean(process.env.RESEND_API_KEY)} />
+    </>
+  )
 }

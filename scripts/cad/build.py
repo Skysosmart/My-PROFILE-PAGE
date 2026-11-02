@@ -148,7 +148,7 @@ def decimate(m: trimesh.Trimesh, target: int) -> trimesh.Trimesh:
     import fast_simplification
 
     v, f = fast_simplification.simplify(
-        m.vertices.astype(np.float32), m.faces.astype(np.int32), target_reduction=1 - target / len(m.faces)
+        m.vertices.astype(np.float32), m.faces.astype(np.int32), target_reduction=1 - target / len(m.faces), agg=3
     )
     m = trimesh.Trimesh(v, f)
     # extrusions drilled with a hole every few millimetres don't simplify:
@@ -194,12 +194,18 @@ def stl_assembly(path: Path, rules, budget=90_000, floor=0.2):
         # cut each solid down on its own: decimating a whole group at once
         # lets the simplifier fold thin walls of neighbouring solids together
         total = sum(len(m.faces) for v in groups.values() for m in v)
+        span = np.ptp(np.vstack([m.bounds for v in groups.values() for m in v]), axis=0).max()
+        big = lambda b: b.extents.max() > 0.15 * span
         keep = min(1.0, max(floor, budget / total))
         out = []
         for k, v in groups.items():
             if not v:
                 continue
-            m = trimesh.util.concatenate([decimate(b, max(200, int(len(b.faces) * keep))) for b in v])
+            # a big solid with few triangles is a simple shell (a case, a
+            # lid): cut further, its flat faces fold into shards you can see,
+            # so it keeps up to 8000 of its own. Small parts (pins, screws, chips)
+            # can go much lower; at the workbench's scale no one sees them
+            m = trimesh.util.concatenate([decimate(b, max(min(len(b.faces), 8000) if big(b) else 150, int(len(b.faces) * keep))) for b in v])
             m.apply_transform(Z_UP)
             out.append((k, m))
         return out

@@ -99,7 +99,7 @@ function Desk({ certs, onScan }: { certs: Certificate[]; onScan: (c: Certificate
     }
   }, [inView, reduce]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // left alone for a while, the duck falls asleep behind its sheet
+  // left alone for a while, the duck falls asleep on its sheet
   useEffect(() => {
     if (phase !== 'settled' || reduce) return
     let id = window.setTimeout(() => setAsleep(true), 22000)
@@ -206,15 +206,16 @@ function Desk({ certs, onScan }: { certs: Certificate[]; onScan: (c: Certificate
   const focusBox = focus !== null && ready ? focusSize(sheets[focus].c.file, desk) : null
   const focusRect = focusBox ? { x: desk.w / 2 - focusBox.w / 2, y: desk.h / 2 - focusBox.h / 2, ...focusBox } : null
 
-  // the duck: walks in, drops the stack, then hides behind the peek sheet
+  // the duck: walks in, drops the stack, then stands on the peek sheet
   const duckAt = (() => {
     const floor = desk.h - DUCK_H + 8
     if (phase === 'waiting') return { x: desk.w + 40, y: floor }
     if (phase === 'carry') return { x: desk.w * 0.5 - DUCK_W / 2, y: floor }
     if (phase === 'drop') return { x: desk.w * 0.5 - DUCK_W / 2, y: floor }
     if (!peek) return { x: desk.w - DUCK_W, y: floor }
-    // only the head shows over the top edge of its sheet
-    return { x: peek.cx + peek.size.w * 0.1 - DUCK_W / 2, y: peek.cy - peek.size.h / 2 - DUCK_H * 0.36 }
+    // standing on the top edge of its sheet, all of it in front: tucked
+    // behind the sheet, the duck read as covered up rather than peeking
+    return { x: peek.cx + peek.size.w * 0.18 - DUCK_W / 2, y: peek.cy - peek.size.h / 2 - DUCK_H * 0.93 }
   })()
   const stack = { x: duckAt.x + DUCK_W / 2, y: duckAt.y + DUCK_H * 0.42 }
   // it looks the way of the picked-up sheet
@@ -376,14 +377,14 @@ function Desk({ certs, onScan }: { certs: Certificate[]; onScan: (c: Certificate
                     ? { duration: 0.35, ease: 'easeOut' }
                     : { type: 'spring', stiffness: 120, damping: 18 }
             }
-            style={{ width: DUCK_W, zIndex: phase === 'settled' ? 20 : 30 }}
+            style={{ width: DUCK_W, zIndex: phase === 'settled' ? 22 : 30 }}
             className="absolute left-0 top-0"
             onPointerEnter={() => setNudge(true)}
             onPointerLeave={() => setNudge(false)}
           >
             <motion.div animate={{ scaleX: facing }} transition={{ duration: reduce ? 0 : 0.2 }}>
               {asleep ? (
-                <div className="translate-y-[38%]">
+                <div className="translate-y-[12%]">
                   <Duck pose="sleep" width={DUCK_W * 1.25} />
                 </div>
               ) : (

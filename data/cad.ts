@@ -75,6 +75,7 @@ export const cadProjects: CadProject[] = [
     name: 'PROMETEUS',
     blurb: 'A competition robot on four mecanum wheels with a slide-rail lift: a carriage runs up the frame on rail sliders and carries the arm out over the field.',
     tool: 'Fusion 360',
+    year: '2025',
     kind: 'Competition robot',
     iterations: 3,
     parts: [
@@ -120,6 +121,7 @@ export const cadProjects: CadProject[] = [
     name: 'Aevur V1',
     blurb: 'A handheld sensor box: a microcontroller board, a screen in the lid and a row of sensor modules, all in one printed case.',
     tool: 'Fusion 360',
+    year: '2026',
     kind: 'Electronics enclosure',
     parts: [
       { key: 'case', label: 'Case', notes: ['Printed in one piece', 'Cut-outs for the ports'] },

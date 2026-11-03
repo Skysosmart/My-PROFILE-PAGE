@@ -11,7 +11,6 @@ import NameTag from '@/components/NameTag'
 import dynamic from 'next/dynamic'
 import IntroHero from '@/components/sections/IntroHero'
 import Deferred from '@/components/ui/Deferred'
-import Footer from '@/components/Footer'
 import WriteupsTeaser from '@/components/sections/WriteupsTeaser'
 import Cursor from '@/components/effects/Cursor'
 import SmoothScroll from '@/components/effects/SmoothScroll'
@@ -145,7 +144,6 @@ export default function Portfolio({
             <Deferred id="contact" minHeight="70svh">
               <Ending formEnabled={formEnabled} />
             </Deferred>
-            <Footer />
           </motion.main>
         </>
       )}

@@ -262,11 +262,6 @@ const en = {
     tooMany: 'Too many messages from here for now. Try again later.',
     invalid: 'Fill in a name, a real email and a message.',
   },
-  footer: {
-    source: 'source',
-    based: 'Thailand based',
-    rendered: 'rendered in ASCII',
-  },
   nav: { noSuch: 'no such section', hint: 'lang en | th' },
 }
 
@@ -510,11 +505,6 @@ const th: UI = {
     tooFast: 'เร็วไปนิด รอสักครู่แล้วส่งอีกครั้ง',
     tooMany: 'ส่งข้อความจากที่นี่บ่อยเกินไป ลองใหม่ภายหลัง',
     invalid: 'กรอกชื่อ อีเมลจริง และข้อความให้ครบ',
-  },
-  footer: {
-    source: 'ซอร์สโค้ด',
-    based: 'อยู่ประเทศไทย',
-    rendered: 'เรนเดอร์ด้วย ASCII',
   },
   nav: { noSuch: 'ไม่พบส่วนนี้', hint: 'lang en | th' },
 }

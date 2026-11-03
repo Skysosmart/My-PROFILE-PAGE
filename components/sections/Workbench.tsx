@@ -235,13 +235,17 @@ export default function Workbench() {
     fetch(`/cad/${cadProjects[n].slug}/model.glb`).catch(() => {})
   }
 
-  // on a narrow screen the tabs scroll: keep the open project's in view
+  // the index scrolls (sideways on a phone, down on a desk): keep the open project's in view
   useEffect(() => {
     const ul = tabsRef.current
     const tab = ul?.children[index] as HTMLElement | undefined
     if (!ul || !tab) return
-    const left = tab.offsetLeft - ul.offsetLeft
-    if (left < ul.scrollLeft || left + tab.offsetWidth > ul.scrollLeft + ul.clientWidth) ul.scrollTo({ left: left - 16, behavior: reduce ? 'auto' : 'smooth' })
+    const behavior = reduce ? 'auto' : 'smooth'
+    if (ul.scrollWidth > ul.clientWidth) {
+      if (tab.offsetLeft < ul.scrollLeft || tab.offsetLeft + tab.offsetWidth > ul.scrollLeft + ul.clientWidth) ul.scrollTo({ left: tab.offsetLeft - 16, behavior })
+    } else if (ul.scrollHeight > ul.clientHeight) {
+      if (tab.offsetTop < ul.scrollTop || tab.offsetTop + tab.offsetHeight > ul.scrollTop + ul.clientHeight) ul.scrollTo({ top: tab.offsetTop - 8, behavior })
+    }
   }, [index, reduce])
 
   /* ── the rail: jump the story to a stage ────────────────────────────── */
@@ -304,264 +308,326 @@ export default function Workbench() {
   const hovered = project.parts.find((p) => p.key === hover)
   const prevProject = cadProjects[(index - 1 + cadProjects.length) % cadProjects.length]
   const nextProject = cadProjects[(index + 1) % cadProjects.length]
+  const num = (i: number) => String(i + 1).padStart(2, '0')
 
   return (
     <section ref={tintRef} id="workbench" aria-labelledby="workbench-title" className="relative isolate overflow-x-clip">
       <div className="mx-auto w-full max-w-[92.5rem] px-[clamp(16px,4vw,64px)] pt-16 sm:pt-24">
-        <SectionHeading index="05" label="Engineering Workbench" command="cd ~/workbench" subtitle="From sketch → constraint → CAD → something that actually exists." />
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-10">
+          <SectionHeading className="!mb-0" index="05" label="Engineering Workbench" command="cd ~/workbench" subtitle="From sketch → constraint → CAD → something that actually exists." />
+          <TitleBlock />
+        </div>
       </div>
 
-      <div className="relative">
-        <div ref={stageRef} className="relative flex h-svh min-h-[34rem] flex-col px-[clamp(16px,4vw,64px)] pb-5 pt-[4.75rem] sm:pb-7">
-          <div className="mx-auto flex w-full max-w-[92.5rem] min-h-0 flex-1 flex-col">
-            {/* ── the top edge: which project, which stage ─────────── */}
-            <div className="flex flex-col gap-2.5">
-              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
-                <p id="workbench-title" className="m-0 font-mono text-[0.6875rem] uppercase tracking-[0.04em] text-fg-muted th:tracking-normal">
-                  <span className="font-bold text-fg">{cadProjects.length} projects</span> on the bench · pick one
-                </p>
-              {/* the stages, as a rail */}
-                <ol className="m-0 flex list-none items-center gap-0 overflow-x-auto p-0 font-mono text-[0.6875rem] uppercase tracking-[0.04em] th:tracking-normal">
-                  {STAGES.slice(0, maxStage + 1).map((s, k) => (
-                    <li key={s} className="flex items-center">
-                      {k > 0 && <span aria-hidden className={`mx-1.5 h-px w-3 sm:w-5 ${k <= stage ? 'bg-fg' : 'bg-fg/20'}`} />}
-                      <button
-                        type="button"
-                        onClick={() => goStage(k)}
-                        aria-current={k === stage ? 'step' : undefined}
-                        className={`whitespace-nowrap py-1.5 transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg ${k === stage ? 'text-fg' : k < stage ? 'text-fg-muted' : 'text-fg-dim hover:text-fg-muted'}`}
-                      >
-                        {k === stage && <span aria-hidden className="mr-1 inline-block h-1.5 w-1.5 -translate-y-px rounded-full bg-accent-text" />}
-                        {s}
-                      </button>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+      <div
+        ref={stageRef}
+        className="mx-auto grid w-full max-w-[92.5rem] gap-x-8 gap-y-4 px-[clamp(16px,4vw,64px)] pb-10 pt-8 sm:pt-10 lg:h-svh lg:min-h-[40rem] lg:grid-cols-[16rem_minmax(0,1fr)] lg:pb-7 lg:pt-[4.75rem] xl:grid-cols-[18.5rem_minmax(0,1fr)]"
+      >
+        {/* ── the index of drawings: a column on a desk, a strip on a phone ── */}
+        <aside className="flex min-h-0 min-w-0 flex-col">
+          <p id="workbench-title" className="m-0 mb-2 flex items-baseline justify-between font-mono text-[0.6875rem] uppercase tracking-[0.04em] text-fg-muted th:tracking-normal">
+            <span>
+              <span className="font-bold text-fg">Drawings</span> · pick one
+            </span>
+            <span className="tabular-nums">{cadProjects.length}</span>
+          </p>
+          <ul
+            ref={tabsRef}
+            aria-label="CAD projects"
+            className="relative m-0 -mx-1 flex list-none gap-1.5 overflow-x-auto p-1 [scrollbar-width:none] lg:mx-0 lg:min-h-0 lg:flex-1 lg:flex-col lg:gap-0 lg:overflow-y-auto lg:overflow-x-visible lg:border-y lg:border-fg/15 lg:p-0 lg:[scrollbar-width:thin]"
+          >
+            {cadProjects.map((p, i) => {
+              const on = i === index
+              const thumb = `url(/cad/${p.slug}/thumb.svg)`
+              return (
+                <li key={p.slug} className="shrink-0 lg:border-b lg:border-fg/10 lg:last:border-b-0">
+                  <button
+                    type="button"
+                    onClick={() => go(i)}
+                    onPointerEnter={() => warm(i)}
+                    aria-current={on ? 'true' : undefined}
+                    className={`relative flex w-full items-center gap-2 rounded-[3px] border py-1 pl-1 pr-3 text-left transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-fg lg:gap-3 lg:rounded-none lg:border-0 lg:py-2 lg:pl-3 lg:pr-2 ${on ? 'border-fg bg-[#fbf9f3] text-fg' : 'border-fg/15 text-fg-muted hover:border-fg/45 hover:text-fg lg:hover:bg-fg/[0.04]'}`}
+                  >
+                    {on && <span aria-hidden className="absolute inset-x-1 -bottom-px h-[3px] bg-accent lg:inset-x-auto lg:inset-y-1 lg:bottom-auto lg:left-0 lg:h-auto lg:w-[3px]" />}
+                    <span className="hidden w-5 shrink-0 font-mono text-[0.625rem] tabular-nums text-fg-dim lg:block">{num(i)}</span>
+                    <span
+                      aria-hidden
+                      className="h-7 w-8 shrink-0 bg-current lg:h-8 lg:w-10"
+                      style={{ maskImage: thumb, WebkitMaskImage: thumb, maskSize: 'contain', WebkitMaskSize: 'contain', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}
+                    />
+                    <span className="min-w-0 flex-1 truncate whitespace-nowrap font-mono text-[0.6875rem] font-bold uppercase tracking-[0.03em] th:tracking-normal lg:text-[0.75rem]">{p.name}</span>
+                    {p.year && <span className="hidden shrink-0 font-mono text-[0.625rem] tabular-nums text-fg-dim lg:block">{p.year}</span>}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
 
-              {/* the projects, as tabs: each with its own drawing */}
-              <ul ref={tabsRef} aria-label="CAD projects" className="m-0 -mx-1 flex list-none gap-2 overflow-x-auto p-1 [scrollbar-width:none]">
-                {cadProjects.map((p, i) => {
-                  const on = i === index
-                  const thumb = `url(/cad/${p.slug}/thumb.svg)`
-                  return (
-                    <li key={p.slug} className="shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => go(i)}
-                        onPointerEnter={() => warm(i)}
-                        aria-current={on ? 'true' : undefined}
-                        className={`relative flex items-center gap-2.5 rounded-[3px] border py-1.5 pl-1.5 pr-3.5 text-left transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg ${on ? 'border-fg bg-[#fbf9f3] text-fg' : 'border-fg/15 text-fg-muted hover:border-fg/45 hover:text-fg'}`}
-                      >
-                        <span
-                          aria-hidden
-                          className="h-9 w-11 shrink-0 bg-current"
-                          style={{ maskImage: thumb, WebkitMaskImage: thumb, maskSize: 'contain', WebkitMaskSize: 'contain', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}
-                        />
-                        <span className="flex flex-col leading-tight">
-                          <span className="font-mono text-[0.625rem] tabular-nums tracking-[0.04em] text-fg-dim">{String(i + 1).padStart(2, '0')}</span>
-                          <span className="whitespace-nowrap font-mono text-[0.75rem] font-bold uppercase tracking-[0.04em] th:tracking-normal">{p.name}</span>
-                        </span>
-                        {on && <span aria-hidden className="absolute inset-x-1.5 -bottom-px h-[3px] bg-accent" />}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
+          {/* the duck, with a ruler, minding the drawings */}
+          <div aria-hidden className="pointer-events-none mt-4 hidden items-end gap-1 lg:flex">
+            {asleep ? <Duck pose="sleep" width={78} /> : <Duck pose="stand" width={46} />}
+            <svg viewBox="0 0 120 22" className="mb-1 w-[6.5rem]">
+              <rect x="1" y="4" width="118" height="14" fill="#fbf9f3" stroke="#111" strokeWidth="1.4" />
+              {Array.from({ length: 12 }, (_, i) => (
+                <path key={i} d={`M${6 + i * 10} 4V${i % 5 === 0 ? 12 : 8}`} stroke="#111" strokeWidth="1" />
+              ))}
+            </svg>
+          </div>
+        </aside>
 
-            {/* ── the model ─────────────────────────────────────────── */}
-            <div className="relative mt-2 min-h-0 flex-1">
-              <canvas
-                ref={canvasRef}
-                aria-label={`${project.name}: a 3D model you can turn by dragging`}
-                role="img"
-                className={`absolute inset-0 h-full w-full ${touch ? 'touch-pan-y' : ''} ${webgl === false ? 'hidden' : 'cursor-grab active:cursor-grabbing'}`}
-              />
-
-              {/* the next and the last project, at the bench's edges */}
+        <div className="flex min-h-0 min-w-0 flex-col">
+          {/* ── the top edge: which stage, and the way to the next drawing ── */}
+          <div className="flex items-center justify-between gap-4">
+            <ol className="m-0 flex min-w-0 list-none items-center gap-0 overflow-x-auto p-0 font-mono text-[0.6875rem] uppercase tracking-[0.03em] [scrollbar-width:none] th:tracking-normal">
+              {STAGES.slice(0, maxStage + 1).map((s, k) => (
+                <li key={s} className="flex shrink-0 items-center">
+                  {k > 0 && <span aria-hidden className={`mx-1 h-px w-2.5 sm:mx-1.5 sm:w-5 ${k <= stage ? 'bg-fg' : 'bg-fg/20'}`} />}
+                  <button
+                    type="button"
+                    onClick={() => goStage(k)}
+                    aria-current={k === stage ? 'step' : undefined}
+                    className={`whitespace-nowrap py-1.5 transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg ${k === stage ? 'text-fg' : k < stage ? 'text-fg-muted' : 'text-fg-dim hover:text-fg-muted'}`}
+                  >
+                    {k === stage && <span aria-hidden className="mr-1 inline-block h-1.5 w-1.5 -translate-y-px rounded-full bg-accent-text" />}
+                    {s}
+                  </button>
+                </li>
+              ))}
+            </ol>
+            <div className="hidden shrink-0 items-center gap-1.5 font-mono sm:flex">
               <button
                 type="button"
                 onClick={() => go(index - 1)}
                 onPointerEnter={() => warm(index - 1)}
                 aria-label={`Previous project: ${prevProject.name}`}
-                className="absolute left-0 top-1/2 z-[8] grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-fg/25 bg-bg font-mono text-[1.125rem] text-fg transition-colors hover:border-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg"
+                className="grid h-9 w-9 place-items-center rounded-full border border-fg/25 text-[1rem] text-fg transition-colors hover:border-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg"
               >
                 ←
               </button>
+              <span aria-hidden className="hidden w-14 text-center text-[0.6875rem] tabular-nums text-fg-muted sm:block">
+                {num(index)} / {cadProjects.length}
+              </span>
               <button
                 type="button"
                 onClick={() => go(index + 1)}
                 onPointerEnter={() => warm(index + 1)}
                 aria-label={`Next project: ${nextProject.name}`}
-                className="absolute right-0 top-1/2 z-[8] flex h-11 -translate-y-1/2 items-center gap-2 rounded-full border border-fg/25 bg-bg px-3.5 font-mono text-fg transition-colors hover:border-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg"
+                className="grid h-9 w-9 place-items-center rounded-full border border-fg/25 text-[1rem] text-fg transition-colors hover:border-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg"
               >
-                <span className="hidden text-[0.6875rem] uppercase tracking-[0.04em] text-fg-muted th:tracking-normal md:inline">next · {nextProject.name}</span>
-                <span className="text-[1.125rem]">→</span>
+                →
               </button>
-
-              {/* no WebGL: the drawing instead */}
-              {webgl === false && sketch && (
-                <svg viewBox={`0 0 ${sketch.w} ${sketch.h}`} role="img" aria-label={`${project.name}, drawn`} className="absolute inset-0 h-full w-full p-6">
-                  {sketch.paths.map((s) => (
-                    <path key={s.part} d={s.d} fill="none" stroke="#111" strokeWidth={Math.max(sketch.w, sketch.h) / 600} strokeLinecap="round" />
-                  ))}
-                </svg>
-              )}
-
-              {loading && webgl !== false && (
-                <p className="pointer-events-none absolute inset-0 grid place-items-center font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim">
-                  unpacking the model…
-                </p>
-              )}
-
-              {/* the exploded view's labels, placed by the engine every frame they move */}
-              {several &&
-                project.parts.map((part) => {
-                  const on = exploded || hover === part.key
-                  return (
-                    <div
-                      key={`${project.slug}-${part.key}`}
-                      ref={(el) => {
-                        if (el) labelRefs.current.set(part.key, el)
-                        else labelRefs.current.delete(part.key)
-                      }}
-                      aria-hidden
-                      className="pointer-events-none absolute left-0 top-0"
-                      // the label being read sits over its neighbours
-                      style={{ opacity: on && stage >= 3 ? 1 : 0, transition: 'opacity .25s', zIndex: hover === part.key ? 12 : 10 }}
-                    >
-                      {/* the dot on the part, and the leader out to the label */}
-                      <span className="absolute -left-[3px] -top-[3px] h-[6px] w-[6px] rounded-full bg-[#111]" />
-                      <span className="absolute left-0 top-0 h-px origin-left bg-[#111]" style={{ width: 'var(--len)', transform: 'rotate(var(--ang))' }} />
-                      <span
-                        className="absolute w-max max-w-[13rem] rounded-[2px] bg-[#fbf9f3]/90 px-1.5 py-0.5"
-                        style={{ transform: 'translate(calc(var(--ox) + var(--side)), calc(var(--oy) - 50%))' }}
-                      >
-                        <span className={`block font-mono text-[0.75rem] font-bold uppercase tracking-[0.04em] th:tracking-normal ${hover === part.key ? 'text-accent-text' : 'text-fg'}`}>{part.label}</span>
-                        {hover === part.key && (
-                          <span className="mt-1 block font-hand text-[0.9375rem] leading-snug text-fg">
-                            {part.notes.map((n) => (
-                              <span key={n} className="block">
-                                {n}
-                              </span>
-                            ))}
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  )
-                })}
-
-              {/* a tick where a part has just gone home */}
-              {ticks.map((t) => (
-                <svg key={t.id} aria-hidden viewBox="0 0 24 24" className="pointer-events-none absolute z-10 h-6 w-6 -translate-x-1/2 -translate-y-1/2" style={{ left: t.x, top: t.y }}>
-                  <motion.path
-                    d="M4 13 L10 18 L20 5"
-                    fill="none"
-                    stroke="rgb(var(--accent-text))"
-                    strokeWidth={2.6}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    initial={{ pathLength: 0, opacity: 1 }}
-                    animate={{ pathLength: 1, opacity: [1, 1, 0] }}
-                    transition={{ duration: 0.85, times: [0, 0.6, 1] }}
-                  />
-                </svg>
-              ))}
-
-              {/* reality: the photograph, wiped across along an ink line */}
-              {project.photo && (
-                <>
-                  <motion.div style={{ clipPath: reduce ? (stage >= 5 ? 'none' : 'inset(0 100% 0 0)') : wipe }} className="pointer-events-none absolute inset-0 z-[5]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={project.photo.src} alt={project.photo.alt} loading="lazy" className="h-full w-full object-contain" />
-                  </motion.div>
-                  {!reduce && <motion.span aria-hidden style={{ left: wipeAt, opacity: reveal }} className="pointer-events-none absolute inset-y-[8%] z-[6] w-[2px] bg-[#111]" />}
-                </>
-              )}
-
-              {/* the duck, with a ruler, minding the bench */}
-              <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-[4] hidden items-end gap-1 sm:flex">
-                {asleep ? <Duck pose="sleep" width={78} /> : <Duck pose="stand" width={46} />}
-                <svg viewBox="0 0 120 22" className="mb-1 w-[6.5rem]">
-                  <rect x="1" y="4" width="118" height="14" fill="#fbf9f3" stroke="#111" strokeWidth="1.4" />
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <path key={i} d={`M${6 + i * 10} 4V${i % 5 === 0 ? 12 : 8}`} stroke="#111" strokeWidth="1" />
-                  ))}
-                </svg>
-              </div>
-
-              {/* how to turn it, until it has been turned */}
-              {webgl && (
-                <p
-                  aria-hidden
-                  className="pointer-events-none absolute bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-fg-dim transition-opacity duration-500"
-                  style={{ opacity: turned || loading ? 0 : 1 }}
-                >
-                  {touch ? 'drag sideways to turn' : 'drag to rotate'}
-                </p>
-              )}
             </div>
+          </div>
 
-            {/* ── the bottom edge: what it is, and what you can do ──── */}
-            <div className="mt-3 grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
-              <div className="min-w-0">
-                <h3 className="font-sans text-[1.375rem] font-bold uppercase leading-tight tracking-[0.04em] text-fg sm:text-[1.75rem]">{project.name}</h3>
-                <p className="mt-1 font-mono text-[0.75rem] text-fg-muted">{meta.join('  ·  ')}</p>
-                <p className="mt-2 line-clamp-3 max-w-[38rem] font-sans text-[0.9375rem] leading-relaxed text-fg/85">{project.blurb}</p>
-                {/* the parts, readable without hovering anything */}
-                {several && (
-                  <ul className="m-0 mt-2 hidden list-none flex-wrap gap-x-4 gap-y-1 p-0 md:flex" aria-label="Parts">
-                    {project.parts.map((part) => (
-                      <li key={part.key}>
-                        <button
-                          type="button"
-                          onPointerEnter={() => setHover(part.key)}
-                          onPointerLeave={() => setHover(null)}
-                          onFocus={() => setHover(part.key)}
-                          onBlur={() => setHover(null)}
-                          aria-label={`${part.label}: ${part.notes.join('; ')}`}
-                          className={`font-mono text-[0.75rem] uppercase tracking-[0.04em] underline-offset-4 th:tracking-normal ${hover === part.key ? 'text-accent-text underline' : 'text-fg-dim hover:text-fg'}`}
-                        >
-                          {part.label}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {hovered && <p className="sr-only" aria-live="polite">{`${hovered.label}: ${hovered.notes.join('. ')}`}</p>}
-              </div>
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.75rem] uppercase tracking-[0.04em] th:tracking-normal">
-                <button type="button" onClick={() => (reduce ? goStage(0) : play(maxStage))} className="text-fg underline-offset-4 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg">
-                  View process
-                </button>
-                {several ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (stage < 4) goStage(4)
-                      setExploded((e) => !e)
+          {/* ── the model ─────────────────────────────────────────── */}
+          <div className="relative mt-2 h-[min(62svh,30rem)] min-h-0 sm:h-[60svh] lg:h-auto lg:flex-1">
+            <canvas
+              ref={canvasRef}
+              aria-label={`${project.name}: a 3D model you can turn by dragging`}
+              role="img"
+              className={`absolute inset-0 h-full w-full ${touch ? 'touch-pan-y' : ''} ${webgl === false ? 'hidden' : 'cursor-grab active:cursor-grabbing'}`}
+            />
+
+            {/* no WebGL: the drawing instead */}
+            {webgl === false && sketch && (
+              <svg viewBox={`0 0 ${sketch.w} ${sketch.h}`} role="img" aria-label={`${project.name}, drawn`} className="absolute inset-0 h-full w-full p-6">
+                {sketch.paths.map((s) => (
+                  <path key={s.part} d={s.d} fill="none" stroke="#111" strokeWidth={Math.max(sketch.w, sketch.h) / 600} strokeLinecap="round" />
+                ))}
+              </svg>
+            )}
+
+            {loading && webgl !== false && (
+              <p className="pointer-events-none absolute inset-0 grid place-items-center font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim">
+                unpacking the model…
+              </p>
+            )}
+
+            {/* the exploded view's labels, placed by the engine every frame they move */}
+            {several &&
+              project.parts.map((part) => {
+                const on = exploded || hover === part.key
+                return (
+                  <div
+                    key={`${project.slug}-${part.key}`}
+                    ref={(el) => {
+                      if (el) labelRefs.current.set(part.key, el)
+                      else labelRefs.current.delete(part.key)
                     }}
-                    aria-pressed={exploded}
-                    disabled={webgl === false}
-                    className={`rounded-[3px] px-3 py-1.5 transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg disabled:opacity-40 ${exploded ? 'bg-accent text-[#111]' : 'bg-[#111] text-[rgb(var(--bg))] hover:opacity-85'}`}
+                    aria-hidden
+                    className="pointer-events-none absolute left-0 top-0"
+                    // the label being read sits over its neighbours
+                    style={{ opacity: on && stage >= 3 ? 1 : 0, transition: 'opacity .25s', zIndex: hover === part.key ? 12 : 10 }}
                   >
-                    {exploded ? 'Put it together' : 'Explode model'}
-                  </button>
-                ) : (
-                  <span className="font-hand text-[0.9375rem] normal-case tracking-normal text-fg-muted">one piece. nothing to take apart.</span>
-                )}
-                {webgl && (
-                  <button type="button" onClick={() => bench.current?.resetView()} className="text-fg-muted underline-offset-4 hover:text-fg hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg">
-                    Reset view
-                  </button>
-                )}
-              </div>
+                    {/* the dot on the part, and the leader out to the label */}
+                    <span className="absolute -left-[3px] -top-[3px] h-[6px] w-[6px] rounded-full bg-[#111]" />
+                    <span className="absolute left-0 top-0 h-px origin-left bg-[#111]" style={{ width: 'var(--len)', transform: 'rotate(var(--ang))' }} />
+                    <span
+                      className="absolute w-max max-w-[13rem] rounded-[2px] bg-[#fbf9f3]/90 px-1.5 py-0.5"
+                      style={{ transform: 'translate(calc(var(--ox) + var(--side)), calc(var(--oy) - 50%))' }}
+                    >
+                      <span className={`block font-mono text-[0.75rem] font-bold uppercase tracking-[0.04em] th:tracking-normal ${hover === part.key ? 'text-accent-text' : 'text-fg'}`}>{part.label}</span>
+                      {hover === part.key && (
+                        <span className="mt-1 block font-hand text-[0.9375rem] leading-snug text-fg">
+                          {part.notes.map((n) => (
+                            <span key={n} className="block">
+                              {n}
+                            </span>
+                          ))}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                )
+              })}
+
+            {/* a tick where a part has just gone home */}
+            {ticks.map((t) => (
+              <svg key={t.id} aria-hidden viewBox="0 0 24 24" className="pointer-events-none absolute z-10 h-6 w-6 -translate-x-1/2 -translate-y-1/2" style={{ left: t.x, top: t.y }}>
+                <motion.path
+                  d="M4 13 L10 18 L20 5"
+                  fill="none"
+                  stroke="rgb(var(--accent-text))"
+                  strokeWidth={2.6}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  initial={{ pathLength: 0, opacity: 1 }}
+                  animate={{ pathLength: 1, opacity: [1, 1, 0] }}
+                  transition={{ duration: 0.85, times: [0, 0.6, 1] }}
+                />
+              </svg>
+            ))}
+
+            {/* reality: the photograph, wiped across along an ink line */}
+            {project.photo && (
+              <>
+                <motion.div style={{ clipPath: reduce ? (stage >= 5 ? 'none' : 'inset(0 100% 0 0)') : wipe }} className="pointer-events-none absolute inset-0 z-[5]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={project.photo.src} alt={project.photo.alt} loading="lazy" className="h-full w-full object-contain" />
+                </motion.div>
+                {!reduce && <motion.span aria-hidden style={{ left: wipeAt, opacity: reveal }} className="pointer-events-none absolute inset-y-[8%] z-[6] w-[2px] bg-[#111]" />}
+              </>
+            )}
+
+            {/* on a phone the arrows sit at the model's bottom corners */}
+            <button
+              type="button"
+              onClick={() => go(index - 1)}
+              aria-label={`Previous project: ${prevProject.name}`}
+              className="absolute bottom-0 left-0 z-[8] grid h-9 w-9 place-items-center rounded-full border border-fg/25 bg-bg font-mono text-[1rem] text-fg sm:hidden"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => go(index + 1)}
+              aria-label={`Next project: ${nextProject.name}`}
+              className="absolute bottom-0 right-0 z-[8] grid h-9 w-9 place-items-center rounded-full border border-fg/25 bg-bg font-mono text-[1rem] text-fg sm:hidden"
+            >
+              →
+            </button>
+
+            {/* how to turn it, until it has been turned */}
+            {webgl && (
+              <p
+                aria-hidden
+                className="pointer-events-none absolute bottom-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-fg-dim transition-opacity duration-500"
+                style={{ opacity: turned || loading ? 0 : 1 }}
+              >
+                {touch ? 'drag sideways to turn' : 'drag to rotate'}
+              </p>
+            )}
+          </div>
+
+          {/* ── the bottom edge: what it is, and what you can do ──── */}
+          <div className="mt-4 grid gap-4 border-t border-fg/15 pt-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+            <div className="min-w-0">
+              <h3 className="font-sans text-[1.375rem] font-bold uppercase leading-tight tracking-[0.02em] text-fg sm:text-[1.75rem]">
+                <span className="mr-2 font-mono text-[0.75rem] font-normal tabular-nums text-fg-dim sm:text-[0.875rem]">{num(index)}</span>
+                {project.name}
+              </h3>
+              <p className="mt-1 font-mono text-[0.75rem] text-fg-muted">{meta.join('  ·  ')}</p>
+              <p className="mt-2 max-w-[38rem] font-sans text-[0.9375rem] leading-relaxed text-fg/85 lg:line-clamp-3">{project.blurb}</p>
+              {/* the parts, readable without hovering anything */}
+              {several && (
+                <ul className="m-0 mt-2 flex list-none flex-wrap gap-x-4 gap-y-1 p-0" aria-label="Parts">
+                  {project.parts.map((part) => (
+                    <li key={part.key}>
+                      <button
+                        type="button"
+                        onPointerEnter={() => setHover(part.key)}
+                        onPointerLeave={() => setHover(null)}
+                        onFocus={() => setHover(part.key)}
+                        onBlur={() => setHover(null)}
+                        aria-label={`${part.label}: ${part.notes.join('; ')}`}
+                        className={`font-mono text-[0.6875rem] uppercase tracking-[0.03em] underline-offset-4 th:tracking-normal sm:text-[0.75rem] ${hover === part.key ? 'text-accent-text underline' : 'text-fg-dim hover:text-fg'}`}
+                      >
+                        {part.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {hovered && <p className="sr-only" aria-live="polite">{`${hovered.label}: ${hovered.notes.join('. ')}`}</p>}
+            </div>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.75rem] uppercase tracking-[0.03em] th:tracking-normal">
+              {several ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (stage < 4) goStage(4)
+                    setExploded((e) => !e)
+                  }}
+                  aria-pressed={exploded}
+                  disabled={webgl === false}
+                  className={`rounded-[3px] px-3 py-2 transition-colors focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg disabled:opacity-40 ${exploded ? 'bg-accent text-[#111]' : 'bg-[#111] text-[rgb(var(--bg))] hover:opacity-85'}`}
+                >
+                  {exploded ? 'Put it together' : 'Explode model'}
+                </button>
+              ) : (
+                <span className="font-hand text-[0.9375rem] normal-case tracking-normal text-fg-muted">one piece. nothing to take apart.</span>
+              )}
+              <button type="button" onClick={() => (reduce ? goStage(0) : play(maxStage))} className="py-2 text-fg underline-offset-4 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg">
+                View process
+              </button>
+              {webgl && (
+                <button type="button" onClick={() => bench.current?.resetView()} className="py-2 text-fg-muted underline-offset-4 hover:text-fg hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg">
+                  Reset view
+                </button>
+              )}
             </div>
           </div>
         </div>
       </div>
     </section>
+  )
+}
+
+/**
+ * The heading's other half: a drawing's title block, filled in from the
+ * bench itself (how many drawings, how many parts, which tools, which years).
+ */
+function TitleBlock() {
+  const parts = cadProjects.reduce((n, p) => n + p.parts.length, 0)
+  const tools = [...new Set(cadProjects.map((p) => p.tool).filter((t) => t !== 'CAD'))]
+  const years = cadProjects.map((p) => p.year).filter(Boolean).sort() as string[]
+  const span = years.length ? (years[0] === years[years.length - 1] ? years[0] : `${years[0]}–${years[years.length - 1]}`) : '—'
+  // [label, value, wide]
+  const cells: [string, string, boolean?][] = [
+    ['Drawings', String(cadProjects.length)],
+    ['Parts', String(parts)],
+    ['Dates', span],
+    ['Tools', tools.join(' · '), true],
+    ['Drawn by', 'N. Saechua'],
+  ]
+  return (
+    <dl className="m-0 grid w-full grid-cols-3 border-l border-t border-fg font-mono lg:w-[26rem]">
+      {cells.map(([k, v, wide]) => (
+        <div key={k} className={`min-w-0 ${wide ? 'col-span-2' : ''} border-b border-r border-fg px-2.5 py-1.5 sm:px-3 sm:py-2`}>
+          <dt className="text-[0.5625rem] uppercase tracking-[0.04em] text-fg-dim sm:text-[0.625rem]">{k}</dt>
+          <dd className="m-0 mt-0.5 truncate text-[0.75rem] font-bold text-fg sm:text-[0.8125rem]">{v}</dd>
+        </div>
+      ))}
+    </dl>
   )
 }

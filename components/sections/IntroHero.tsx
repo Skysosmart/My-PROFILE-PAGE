@@ -50,7 +50,7 @@ export default function IntroHero() {
           {/* the duck casts a floor shadow in the same ink */}
           <div className="relative">
             <div className="[filter:drop-shadow(0_26px_22px_rgb(var(--fg)/0.28))]">
-              <Duck pose="hero" width={250} parallax={12} priority className="sm:!w-[18rem] lg:!w-[22rem] xl:!w-[26rem]" />
+              <Duck pose="hero" width={190} parallax={12} priority className="sm:!w-[14rem] lg:!w-[17rem] xl:!w-[20rem]" />
             </div>
           </div>
           {/* sizes follow the room beside the duck: a row from sm, bigger from

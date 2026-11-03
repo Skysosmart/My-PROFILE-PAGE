@@ -109,7 +109,7 @@ export default function StackSheet() {
               aria-selected={on}
               onClick={() => setTab(x.key)}
               data-cursor-label="switch"
-              className={`relative shrink-0 rounded-t-[3px] border border-b-0 px-4 py-2 font-mono text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-[#111] transition-colors th:tracking-normal sm:min-w-[7rem] ${
+              className={`relative shrink-0 rounded-t-[3px] border border-b-0 px-4 py-2 font-mono text-[0.8125rem] font-bold uppercase tracking-[0.03em] text-[#111] transition-colors th:tracking-normal sm:min-w-[7rem] ${
                 on ? 'z-10 border-[#111] bg-accent' : 'border-[#111]/30 bg-[#ebe7dc] hover:bg-white'
               }`}
             >
@@ -146,7 +146,7 @@ export default function StackSheet() {
                     className={`grid gap-4 border-b border-[#111]/12 py-5 last:border-b-0 ${view === 'all' ? 'md:grid-cols-[9rem_minmax(0,1fr)]' : ''}`}
                   >
                     {view === 'all' && (
-                      <span className="pt-1 font-mono text-[0.8125rem] font-bold uppercase tracking-[0.08em] text-fg th:tracking-normal">
+                      <span className="pt-1 font-mono text-[0.8125rem] font-bold uppercase tracking-[0.03em] text-fg th:tracking-normal">
                         {t.tabs[g.key] ?? g.label}
                       </span>
                     )}
@@ -172,7 +172,7 @@ export default function StackSheet() {
                                 <Ticks level={s.level} label={t.level} />
                               </div>
                               <p className="mt-1 font-sans text-[0.875rem] leading-snug text-fg-muted th:leading-[1.7]">{s.note}</p>
-                              <p className="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-fg-dim th:tracking-normal">{usedLabel(s)}</p>
+                              <p className="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.03em] text-fg-dim th:tracking-normal">{usedLabel(s)}</p>
                             </div>
                           </li>
                         ))}

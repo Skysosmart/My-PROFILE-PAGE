@@ -107,7 +107,7 @@ export default function PrintCard({
             />
           </span>
           {/* the white lip under a photo print, where a hand writes the date */}
-          <span className="mt-2 block truncate font-mono text-[0.6875rem] uppercase tracking-[0.14em] th:tracking-[0.04em] text-[#111]/60">
+          <span className="mt-2 block truncate font-mono text-[0.6875rem] uppercase tracking-[0.04em] th:tracking-[0.04em] text-[#111]/60">
             {album.label}
           </span>
         </button>
@@ -117,7 +117,7 @@ export default function PrintCard({
           inert={!flipped}
           className={`${face} ${stock} [transform:rotateY(180deg)] flex flex-col gap-3 p-4`}
         >
-          <p className="font-mono text-[0.75rem] uppercase leading-[1.3] th:leading-[1.7] tracking-[0.16em] th:tracking-[0.04em] text-[#111]/70">
+          <p className="font-mono text-[0.75rem] uppercase leading-[1.3] th:leading-[1.7] tracking-[0.04em] th:tracking-[0.04em] text-[#111]/70">
             {album.label}
           </p>
 
@@ -152,7 +152,7 @@ export default function PrintCard({
                 than one certificate, and naming only the first would hide six
                 of MakeX's seven */}
             {cert && (
-              <p className="font-mono text-[0.6875rem] uppercase leading-[1.4] th:leading-[1.7] tracking-[0.12em] th:tracking-[0.03em] text-[#111]/55">
+              <p className="font-mono text-[0.6875rem] uppercase leading-[1.4] th:leading-[1.7] tracking-[0.04em] th:tracking-[0.03em] text-[#111]/55">
                 {t.earned} · {cert.title}
                 {certCount > 1 && <span className="text-[#111]/45"> · {fmt(t.more, { n: certCount - 1 })}</span>}
               </p>
@@ -162,14 +162,14 @@ export default function PrintCard({
                 type="button"
                 onClick={onOpen}
                 data-cursor-label="open album"
-                className="rounded-xs border border-[#111]/40 px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.12em] th:tracking-[0.03em] transition-colors hover:bg-[#111] hover:text-[#f3f0e8] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+                className="rounded-xs border border-[#111]/40 px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.04em] th:tracking-[0.03em] transition-colors hover:bg-[#111] hover:text-[#f3f0e8] focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
               >
                 {fmt(t.seeAll, { n: album.photos.length })}
               </button>
               <button
                 type="button"
                 onClick={onFlip}
-                className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] th:tracking-[0.03em] text-[#111]/55 underline-offset-4 transition-colors hover:text-[#111] hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+                className="font-mono text-[0.6875rem] uppercase tracking-[0.04em] th:tracking-[0.03em] text-[#111]/55 underline-offset-4 transition-colors hover:text-[#111] hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
               >
                 {t.turnBack}
               </button>

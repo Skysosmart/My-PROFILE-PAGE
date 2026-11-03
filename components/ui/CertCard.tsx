@@ -53,7 +53,7 @@ export default function CertCard({
           </span>
         )}
         {c.level && !c.medal && (c.level === 'National' || c.level === 'International') && (
-          <span className="absolute right-3 top-3 rounded-sm bg-neutral-900/85 px-1.5 py-0.5 font-mono text-[0.6875rem] font-semibold tracking-wider text-white">
+          <span className="absolute right-3 top-3 rounded-sm bg-neutral-900/85 px-1.5 py-0.5 font-mono text-[0.6875rem] font-semibold tracking-[0.04em] text-white">
             {LEVEL_TAG[c.level]}
           </span>
         )}
@@ -69,7 +69,7 @@ export default function CertCard({
         </h3>
         {c.issuer && <p className="mt-1 truncate font-sans text-xs text-fg-muted">{c.issuer}</p>}
         {(c.result || c.date) && (
-          <p className="mt-auto truncate pt-2 font-mono text-[0.75rem] uppercase tracking-wider text-fg-dim">
+          <p className="mt-auto truncate pt-2 font-mono text-[0.75rem] uppercase tracking-[0.04em] text-fg-dim">
             {[c.result, c.date].filter(Boolean).join(' · ')}
           </p>
         )}

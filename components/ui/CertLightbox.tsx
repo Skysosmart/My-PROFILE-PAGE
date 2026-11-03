@@ -135,7 +135,7 @@ export default function CertLightbox({
                 <dl className="mt-4 space-y-1.5 border-t border-fg/10 pt-4 font-mono text-[0.75rem]">
                   {rows(cert).map(([k, v]) => (
                     <div key={k} className="flex gap-3">
-                      <dt className="w-24 shrink-0 uppercase tracking-wider text-fg-dim">{k}</dt>
+                      <dt className="w-24 shrink-0 uppercase tracking-[0.04em] text-fg-dim">{k}</dt>
                       <dd className="min-w-0 text-fg/80">{v}</dd>
                     </div>
                   ))}
@@ -148,7 +148,7 @@ export default function CertLightbox({
               )}
               {shown && momentKey && shown.photos.length > 0 && (
                 <div className="mt-4 border-t border-fg/10 pt-4">
-                  <p className="mb-2 font-mono text-[0.75rem] uppercase tracking-wider text-fg-dim">
+                  <p className="mb-2 font-mono text-[0.75rem] uppercase tracking-[0.04em] text-fg-dim">
                     {shown.photos.length} photo{shown.photos.length > 1 ? 's' : ''} from {shown.label}
                   </p>
                   <div className="flex flex-wrap gap-2">

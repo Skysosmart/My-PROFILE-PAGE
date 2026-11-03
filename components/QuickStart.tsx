@@ -111,7 +111,7 @@ export default function QuickStart({ delay = 0 }: { delay?: number }) {
     >
       <motion.span
         variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }}
-        className="mb-4 block font-mono text-[0.75rem] uppercase tracking-[0.35em] text-fg-dim"
+        className="mb-4 block font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim"
       >
         {t.quickStart}
       </motion.span>

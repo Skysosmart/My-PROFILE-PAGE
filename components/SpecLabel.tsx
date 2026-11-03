@@ -117,14 +117,14 @@ export default function SpecLabel() {
             className="h-20 w-auto shrink-0 select-none sm:h-24"
           />
           <div className="flex min-w-0 flex-col">
-            <span className="font-pixel text-[0.5rem] tracking-[0.25em]">ZARUTECH</span>
-            <span className="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.3em] text-[#111]/50">{p.model}</span>
+            <span className="font-pixel text-[0.5rem] tracking-[0.06em]">ZARUTECH</span>
+            <span className="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-[#111]/50">{p.model}</span>
             <span className="font-crt text-3xl leading-none sm:text-4xl">
               <Typed text={codes.handle} on={on} delay={start.get('model')} speed={36} />
             </span>
           </div>
         </div>
-        <div className="shrink-0 text-right font-mono text-[0.75rem] uppercase tracking-[0.2em]">
+        <div className="shrink-0 text-right font-mono text-[0.75rem] uppercase tracking-[0.06em]">
           <span className="block text-[#111]/50">{p.rev}</span>
           <span className="block font-semibold">
             <Typed text={rev} on={on} delay={start.get('rev')} speed={24} />
@@ -136,7 +136,7 @@ export default function SpecLabel() {
       <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2.5 font-mono text-[0.75rem] leading-snug sm:gap-x-6 sm:text-[0.8125rem]">
         {rows.map((r, k) => (
           <Fragment key={r.key}>
-            <dt className="pt-0.5 text-[0.6875rem] uppercase tracking-[0.3em] text-[#111]/50 sm:text-[0.75rem]">{r.key}</dt>
+            <dt className="pt-0.5 text-[0.6875rem] uppercase tracking-[0.06em] text-[#111]/50 sm:text-[0.75rem]">{r.key}</dt>
             <dd className="m-0 min-w-0">
               {/* a row that carries a drawing puts it beside the text rather
                   than floating it: Typed is an inline-block at full width, so
@@ -170,14 +170,14 @@ export default function SpecLabel() {
       </dl>
 
       {/* the rating strip: the numbers, counted off the data */}
-      <span className="mt-5 block text-[0.6875rem] uppercase tracking-[0.3em] text-[#111]/50 sm:text-[0.75rem]">{p.rating}</span>
+      <span className="mt-5 block text-[0.6875rem] uppercase tracking-[0.06em] text-[#111]/50 sm:text-[0.75rem]">{p.rating}</span>
       <div className={`mt-1.5 grid border-y border-[#111]/20 py-3 ${rating.length > 4 ? 'grid-cols-5' : 'grid-cols-4'}`}>
         {rating.map((r, i) => (
           <div key={r.label} className={`flex flex-col items-center gap-1.5 px-1 ${i ? 'border-l border-[#111]/15' : ''}`}>
             <span className="font-crt text-3xl leading-none sm:text-4xl">
               <Typed text={String(r.n)} on={on} delay={ratingAt(i)} speed={90} caret={false} />
             </span>
-            <span className="max-w-full bg-duck px-1 py-0.5 text-center font-mono text-[0.4375rem] uppercase leading-[1.2] th:leading-[1.45] tracking-[0.1em] sm:px-1.5 sm:text-[0.5rem] sm:tracking-[0.15em]">
+            <span className="max-w-full bg-duck px-1 py-0.5 text-center font-mono text-[0.4375rem] uppercase leading-[1.2] th:leading-[1.45] tracking-[0.03em] sm:px-1.5 sm:text-[0.5rem] sm:tracking-[0.04em]">
               {r.label}
             </span>
           </div>
@@ -194,7 +194,7 @@ export default function SpecLabel() {
           >
             <Barcode className="block h-10 w-full sm:h-12" />
           </motion.div>
-          <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-x-4 font-mono text-[0.6875rem] tracking-[0.2em] text-[#111]/70 sm:text-[0.75rem]">
+          <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-x-4 font-mono text-[0.6875rem] tracking-[0.06em] text-[#111]/70 sm:text-[0.75rem]">
             <span>{codes.handle}</span>
             <span>
               <span className="text-[#111]/45">{p.serial} </span>
@@ -235,7 +235,7 @@ export default function SpecLabel() {
       </div>
 
       {/* the base line */}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-[#111]/20 pt-2 font-mono text-[0.5rem] uppercase tracking-[0.3em] text-[#111]/55 sm:text-[0.6875rem]">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-[#111]/20 pt-2 font-mono text-[0.5rem] uppercase tracking-[0.06em] text-[#111]/55 sm:text-[0.6875rem]">
         <span>{p.madeIn}</span>
         <span>ZaruTech © {rev.slice(0, 4)}</span>
       </div>

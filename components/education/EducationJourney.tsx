@@ -414,9 +414,9 @@ function Milestone({
         className="hidden pt-0.5 text-right md:block"
       >
         <p className="font-mono text-[0.9375rem] font-bold leading-tight text-fg">{years}</p>
-        <p className="mt-1 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-fg-muted th:tracking-normal">{ch.stage}</p>
+        <p className="mt-1 font-mono text-[0.6875rem] uppercase tracking-[0.04em] text-fg-muted th:tracking-normal">{ch.stage}</p>
         {current && (
-          <span className="mt-2 inline-block rounded-[2px] border border-accent-text px-1.5 py-px font-mono text-[0.625rem] font-bold uppercase tracking-[0.15em] text-accent-text th:tracking-normal">
+          <span className="mt-2 inline-block rounded-[2px] border border-accent-text px-1.5 py-px font-mono text-[0.625rem] font-bold uppercase tracking-[0.04em] text-accent-text th:tracking-normal">
             {t.current}
           </span>
         )}
@@ -458,7 +458,7 @@ function Milestone({
       <div className="min-w-0">
         {/* phone: the date above the card */}
         <p className="mb-2 font-mono text-[0.8125rem] font-bold text-fg md:hidden">
-          {years} <span className="font-normal uppercase tracking-[0.12em] text-fg-muted th:tracking-normal">· {ch.stage}</span>
+          {years} <span className="font-normal uppercase tracking-[0.04em] text-fg-muted th:tracking-normal">· {ch.stage}</span>
           {current && <span className="ml-2 rounded-[2px] border border-accent-text px-1 py-px text-[0.625rem] uppercase text-accent-text">{t.current}</span>}
         </p>
         <motion.article
@@ -486,7 +486,7 @@ function Milestone({
                 ) : (
                   <p className="font-mono text-[0.875rem] font-bold uppercase leading-snug th:normal-case">{ch.school}</p>
                 )}
-                <p className="mt-1 font-mono text-[0.75rem] uppercase tracking-[0.12em] text-[#111]/60 th:tracking-normal">{ch.stage}</p>
+                <p className="mt-1 font-mono text-[0.75rem] uppercase tracking-[0.04em] text-[#111]/60 th:tracking-normal">{ch.stage}</p>
               </div>
             </div>
 
@@ -510,7 +510,7 @@ function Milestone({
                     {f}
                   </span>
                 ))}
-                <span className="ml-auto font-mono text-[0.6875rem] uppercase tracking-[0.15em] text-[#111]/55 th:tracking-normal">
+                <span className="ml-auto font-mono text-[0.6875rem] uppercase tracking-[0.04em] text-[#111]/55 th:tracking-normal">
                   {count > 0 ? fmt(t.signals, { n: count }) : t.none}
                 </span>
               </div>

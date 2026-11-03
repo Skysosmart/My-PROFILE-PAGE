@@ -48,7 +48,7 @@ export default function CaseStudy({ slug }: { slug: string }) {
       <WriteupChrome path={`projects/${slug}`} />
 
       <header className="mt-12 sm:mt-16">
-        <p className="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-fg th:tracking-normal">
+        <p className="mb-4 font-mono text-sm uppercase tracking-[0.06em] text-fg th:tracking-normal">
           <span className="mr-2 rounded-[3px] bg-accent px-1.5 py-0.5 text-xs font-bold leading-none tracking-normal text-[#111]">
             {String(i + 1).padStart(2, '0')}
           </span>
@@ -110,12 +110,12 @@ export default function CaseStudy({ slug }: { slug: string }) {
             </h2>
             <dl className="mt-4 grid gap-2 font-mono text-[0.875rem]">
               <div className="flex gap-3">
-                <dt className="w-24 shrink-0 uppercase tracking-[0.15em] text-fg-dim th:tracking-normal">{t.status}</dt>
+                <dt className="w-24 shrink-0 uppercase tracking-[0.04em] text-fg-dim th:tracking-normal">{t.status}</dt>
                 <dd className="m-0 text-fg">{t.statuses[p.status]}</dd>
               </div>
               {p.contribution && (
                 <div className="flex gap-3">
-                  <dt className="w-24 shrink-0 uppercase tracking-[0.15em] text-fg-dim th:tracking-normal">{t.credit}</dt>
+                  <dt className="w-24 shrink-0 uppercase tracking-[0.04em] text-fg-dim th:tracking-normal">{t.credit}</dt>
                   <dd className="m-0 text-fg">{p.contribution}</dd>
                 </div>
               )}
@@ -128,7 +128,7 @@ export default function CaseStudy({ slug }: { slug: string }) {
                 href={p.demo}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-3 rounded-[3px] bg-[#111] px-5 py-3 font-mono text-[0.875rem] uppercase tracking-[0.12em] text-[rgb(var(--bg))] transition-opacity hover:opacity-90 th:tracking-normal"
+                className="inline-flex items-center gap-3 rounded-[3px] bg-[#111] px-5 py-3 font-mono text-[0.875rem] uppercase tracking-[0.04em] text-[rgb(var(--bg))] transition-opacity hover:opacity-90 th:tracking-normal"
               >
                 <span aria-hidden>→</span> {t.viewLive} ↗
               </a>
@@ -138,7 +138,7 @@ export default function CaseStudy({ slug }: { slug: string }) {
                 href={p.repo}
                 target="_blank"
                 rel="noreferrer"
-                className="font-mono text-[0.8125rem] uppercase tracking-[0.2em] text-fg-muted underline-offset-4 hover:text-fg hover:underline th:tracking-normal"
+                className="font-mono text-[0.8125rem] uppercase tracking-[0.06em] text-fg-muted underline-offset-4 hover:text-fg hover:underline th:tracking-normal"
               >
                 {t.source} ↗
               </a>
@@ -160,7 +160,7 @@ export default function CaseStudy({ slug }: { slug: string }) {
               ))}
             </dl>
             <div className="flex items-end justify-between gap-3 border-t border-dashed border-[#111]/40 pt-3">
-              <span className="font-bold tracking-[0.2em]">ZARUTECH</span>
+              <span className="font-bold tracking-[0.06em]">ZARUTECH</span>
               <Barcode className="block h-7 w-24" />
             </div>
           </div>

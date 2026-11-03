@@ -118,7 +118,7 @@ export default function AboutMe() {
               <dl className="mt-5 grid grid-cols-1 border-t border-fg/12 font-mono text-[0.75rem] sm:grid-cols-2">
                 {about.facts.map((f) => (
                   <div key={f.key} className="flex gap-3 border-b border-fg/12 py-2 sm:odd:pr-4">
-                    <dt className="w-20 shrink-0 uppercase tracking-[0.2em] text-fg-dim">{f.key}</dt>
+                    <dt className="w-20 shrink-0 uppercase tracking-[0.06em] text-fg-dim">{f.key}</dt>
                     <dd className="text-fg">{f.value}</dd>
                   </div>
                 ))}
@@ -144,7 +144,7 @@ export default function AboutMe() {
                   type="button"
                   onClick={() => setMore((m) => !m)}
                   aria-expanded={more}
-                  className="mt-4 inline-flex items-center gap-2 rounded-sm border border-fg/25 px-3 py-1.5 font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg transition-colors hover:border-fg hover:bg-fg hover:text-bg"
+                  className="mt-4 inline-flex items-center gap-2 rounded-sm border border-fg/25 px-3 py-1.5 font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg transition-colors hover:border-fg hover:bg-fg hover:text-bg"
                 >
                   {more ? t.readLess : t.readMore}
                   <span aria-hidden className={`transition-transform ${more ? 'rotate-180' : ''}`}>
@@ -195,7 +195,7 @@ export default function AboutMe() {
             sizes="(min-width: 1024px) 360px, (min-width: 768px) 320px, 100vw"
             className="h-80 w-full object-cover object-top transition-all duration-500 md:h-[34rem]"
           />
-          <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[0.75rem] uppercase tracking-widest text-fg-dim">
+          <figcaption className="border-t border-fg/10 px-4 py-2 font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim">
             {player.name} · {player.role}
           </figcaption>
         </figure>

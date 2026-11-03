@@ -229,7 +229,7 @@ export default function Projects() {
                   />
                 ) : (
                   <div className="flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-[3px] bg-[rgb(var(--bg))]">
-                    <span className="font-mono text-[0.8125rem] uppercase tracking-[0.25em] text-fg-dim">{p.tags.slice(0, 3).join(' / ')}</span>
+                    <span className="font-mono text-[0.8125rem] uppercase tracking-[0.06em] text-fg-dim">{p.tags.slice(0, 3).join(' / ')}</span>
                     <span className="font-mono text-[0.75rem] text-fg-dim">{t.noImage}</span>
                   </div>
                 )}
@@ -311,14 +311,14 @@ export default function Projects() {
                   {tab === 'outcome' && (
                     <dl className="m-0 grid gap-2 font-mono text-[0.8125rem] leading-relaxed">
                       <div className="flex items-center gap-3">
-                        <dt className="w-20 shrink-0 text-[0.8125rem] uppercase tracking-[0.2em] text-fg-dim">{t.status}</dt>
+                        <dt className="w-20 shrink-0 text-[0.8125rem] uppercase tracking-[0.06em] text-fg-dim">{t.status}</dt>
                         <dd className="m-0 flex items-center gap-2 text-fg">
                           <StatusDot status={p.status} /> {t.statuses[p.status]}
                         </dd>
                       </div>
                       {p.contribution && (
                         <div className="flex gap-3">
-                          <dt className="w-20 shrink-0 pt-0.5 text-[0.8125rem] uppercase tracking-[0.2em] text-fg-dim">{t.credit}</dt>
+                          <dt className="w-20 shrink-0 pt-0.5 text-[0.8125rem] uppercase tracking-[0.06em] text-fg-dim">{t.credit}</dt>
                           <dd className="m-0 text-fg">{p.contribution}</dd>
                         </div>
                       )}
@@ -342,7 +342,7 @@ export default function Projects() {
                   <Link
                     href={`/projects/${projectSlug(p)}`}
                     data-cursor-label="case study"
-                    className="inline-flex w-[65%] min-w-[14rem] items-center gap-4 rounded-[3px] border border-[#111] bg-[#111] px-5 py-3 font-mono text-[0.875rem] uppercase tracking-[0.12em] text-[rgb(var(--bg))] transition-[background-color,color,transform] duration-200 hover:translate-y-0.5 hover:bg-white hover:text-[#111] th:tracking-normal"
+                    className="inline-flex w-[65%] min-w-[14rem] items-center gap-4 rounded-[3px] border border-[#111] bg-[#111] px-5 py-3 font-mono text-[0.875rem] uppercase tracking-[0.04em] text-[rgb(var(--bg))] transition-[background-color,color,transform] duration-200 hover:translate-y-0.5 hover:bg-white hover:text-[#111] th:tracking-normal"
                   >
                     <span aria-hidden className="text-lg leading-none">→</span> {t.viewCase}
                   </Link>
@@ -352,7 +352,7 @@ export default function Projects() {
                       target="_blank"
                       rel="noreferrer"
                       data-cursor-label={`${t.viewLive} ↗`}
-                      className="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg underline-offset-4 hover:underline th:tracking-normal"
+                      className="font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg underline-offset-4 hover:underline th:tracking-normal"
                     >
                       {t.viewLive} ↗
                     </a>
@@ -363,7 +363,7 @@ export default function Projects() {
                       target="_blank"
                       rel="noreferrer"
                       data-cursor-label={`${t.source} ↗`}
-                      className="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg-muted underline-offset-4 hover:text-fg hover:underline th:tracking-normal"
+                      className="font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-muted underline-offset-4 hover:text-fg hover:underline th:tracking-normal"
                     >
                       {t.source} ↗
                     </a>

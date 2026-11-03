@@ -55,7 +55,7 @@ export default async function WriteupPage({ params }: Params) {
       <WriteupChrome path={`writeups/${meta.slug}`} />
       <article className="mt-10">
         <header className="flex flex-col gap-3">
-          <span className="font-mono text-[0.625rem] uppercase tracking-[0.25em] text-fg-dim">
+          <span className="font-mono text-[0.625rem] uppercase tracking-[0.06em] text-fg-dim">
             {[meta.event, meta.date, meta.category, meta.difficulty].filter(Boolean).join(' · ')}
             {meta.draft && ' · draft'}
           </span>

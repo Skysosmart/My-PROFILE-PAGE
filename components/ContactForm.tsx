@@ -58,7 +58,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-fg px-5 font-mono text-[0.8125rem] uppercase tracking-[0.15em] text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-fg px-5 font-mono text-[0.8125rem] uppercase tracking-[0.04em] text-bg transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {pending ? t.form.sending : t.form.send} →
         </button>

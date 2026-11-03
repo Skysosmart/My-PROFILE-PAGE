@@ -31,7 +31,7 @@ export function EducationSummary({ ch, location, t }: { ch: Chapter; location?: 
     <div className="relative rotate-[1.5deg] motion-reduce:rotate-0">
       <span aria-hidden className="absolute -top-2.5 left-1/2 z-10 h-5 w-20 -translate-x-1/2 -rotate-2 bg-[#e3d6b8]/85" />
       <div className="rounded-[3px] border border-[#111]/45 bg-white px-5 pb-4 pt-6 font-mono text-[0.8125rem] text-[#111] shadow-[6px_6px_0_#111]">
-        <p className="border-b border-dashed border-[#111]/50 pb-2 font-bold uppercase tracking-[0.08em]">{t.summary.title}</p>
+        <p className="border-b border-dashed border-[#111]/50 pb-2 font-bold uppercase tracking-[0.03em]">{t.summary.title}</p>
         <dl className="m-0 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 py-3">
           {rows.map(([k, v]) => (
             <Fragment key={k}>
@@ -41,7 +41,7 @@ export function EducationSummary({ ch, location, t }: { ch: Chapter; location?: 
           ))}
         </dl>
         <div className="flex items-end justify-between gap-3 border-t border-dashed border-[#111]/40 pt-3">
-          <span className="font-bold tracking-[0.2em]">ZARUTECH</span>
+          <span className="font-bold tracking-[0.06em]">ZARUTECH</span>
           <Barcode className="block h-6 w-20" />
         </div>
       </div>

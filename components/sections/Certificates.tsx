@@ -41,7 +41,7 @@ export default function Certificates() {
       <div className="mt-8 flex justify-center md:mt-4">
         <Link
           href="/certificates"
-          className="group inline-flex items-baseline gap-3 font-mono text-[0.8125rem] uppercase tracking-[0.16em] text-fg underline-offset-4 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg th:tracking-normal"
+          className="group inline-flex items-baseline gap-3 font-mono text-[0.8125rem] uppercase tracking-[0.04em] text-fg underline-offset-4 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg th:tracking-normal"
         >
           The rest of the pile
           <span className="text-fg-dim">

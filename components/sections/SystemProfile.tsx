@@ -142,7 +142,7 @@ function Neofetch() {
         <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
         <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
         <span className="ml-3 min-w-0 flex-1 truncate font-mono text-[0.8125rem] sm:text-[0.875rem]">nonthanaphong@exe:~$ neofetch</span>
-        <span className="shrink-0 font-mono text-[0.75rem] tabular-nums tracking-[0.1em]">
+        <span className="shrink-0 font-mono text-[0.75rem] tabular-nums tracking-[0.03em]">
           {/* Thailand time, whatever the reader's language */}
           {time} <span className="font-bold">TH</span>
         </span>
@@ -181,13 +181,13 @@ function Neofetch() {
         <div className="col-span-2 min-w-0 md:col-span-1">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <span className="block font-mono text-[0.75rem] font-bold tracking-[0.25em]">ZARUTECH</span>
-              <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.25em] text-[#111]/50">{p.model}</span>
+              <span className="block font-mono text-[0.75rem] font-bold tracking-[0.06em]">ZARUTECH</span>
+              <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-[#111]/50">{p.model}</span>
               <span className="block whitespace-nowrap font-crt text-[1.75rem] leading-none sm:text-[2.125rem] min-[90rem]:text-[1.875rem]">
                 <Typed text={codes.handle} on={on} delay={300} speed={36} />
               </span>
             </div>
-            <div className="shrink-0 text-right font-mono text-[0.75rem] uppercase tracking-[0.15em]">
+            <div className="shrink-0 text-right font-mono text-[0.75rem] uppercase tracking-[0.04em]">
               <span className="block text-[#111]/50">{p.rev}</span>
               <span className="block font-semibold">{rev}</span>
             </div>
@@ -220,7 +220,7 @@ function Neofetch() {
         {stats.map((s, i) => (
           <div key={s.label[0]} className={`flex flex-col items-center px-2 py-4 text-center ${i % 2 ? 'border-l' : ''} border-[#111]/15 sm:border-l sm:first:border-l-0 ${i > 1 ? 'border-t sm:border-t-0' : ''}`}>
             <span className="font-crt text-[2.25rem] leading-none">{s.n}</span>
-            <span className="mt-1.5 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.12em] th:tracking-normal">{s.label[0]}</span>
+            <span className="mt-1.5 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.04em] th:tracking-normal">{s.label[0]}</span>
             <span className="mt-0.5 font-mono text-[0.625rem] leading-tight text-[#111]/60 th:font-sans th:text-[0.6875rem]">
               {fmt(s.label[1], { n: skills.length })}
             </span>
@@ -229,7 +229,7 @@ function Neofetch() {
         <div className="col-span-2 flex items-center gap-3 border-t border-[#111]/15 px-4 py-3 sm:col-span-4 lg:col-span-1 lg:border-l lg:border-t-0">
           <div className="min-w-0 flex-1">
             <Barcode className="block h-9 w-full" />
-            <div className="mt-1 flex flex-col font-mono text-[0.5625rem] uppercase leading-[1.5] tracking-[0.12em] text-[#111]/70">
+            <div className="mt-1 flex flex-col font-mono text-[0.5625rem] uppercase leading-[1.5] tracking-[0.04em] text-[#111]/70">
               <span>{codes.handle}</span>
               <span>
                 {p.serial} {serial}
@@ -367,7 +367,7 @@ function Leaflet() {
         </span>
         <span aria-hidden className="absolute left-1/2 top-2 z-20 h-5 w-24 -translate-x-1/2 -rotate-2 bg-[#e3d6b8]/85" />
         <div className="relative z-10 rounded-[3px] border border-[#111]/45 bg-white px-5 pb-6 pt-8 text-[#111] shadow-[6px_6px_0_#111]">
-          <h3 className="mb-4 font-mono text-[0.9375rem] font-bold uppercase tracking-[0.2em] th:tracking-normal">{p.quickStart}</h3>
+          <h3 className="mb-4 font-mono text-[0.9375rem] font-bold uppercase tracking-[0.06em] th:tracking-normal">{p.quickStart}</h3>
           <ol className="space-y-3 font-mono text-[0.8125rem] leading-[1.6] th:font-sans th:text-[0.875rem] th:leading-[1.75]">
             {p.steps.map((s, i) => step(s, i + 1))}
           </ol>
@@ -387,7 +387,7 @@ function Leaflet() {
       >
         <span aria-hidden className="absolute -top-2.5 left-1/2 z-10 h-5 w-20 -translate-x-1/2 rotate-2 bg-[#e3d6b8]/85" />
         <div className="rounded-[3px] border border-[#111]/45 bg-white px-5 pb-4 pt-6 text-[#111] shadow-[6px_6px_0_#111]">
-          <h3 className="font-mono text-[0.9375rem] font-bold uppercase tracking-[0.2em]">{t.spec.title}</h3>
+          <h3 className="font-mono text-[0.9375rem] font-bold uppercase tracking-[0.06em]">{t.spec.title}</h3>
           <div className="my-3 border-t border-dashed border-[#111]/35" />
           <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 font-mono text-[0.75rem] uppercase">
             {t.spec.rows.map(([k, v]) => (
@@ -398,7 +398,7 @@ function Leaflet() {
             ))}
           </dl>
           <div className="mt-3 flex items-end justify-between gap-3 border-t border-dashed border-[#111]/35 pt-3">
-            <span className="font-mono text-[0.75rem] font-bold tracking-[0.2em]">ZARUTECH</span>
+            <span className="font-mono text-[0.75rem] font-bold tracking-[0.06em]">ZARUTECH</span>
             <Barcode className="block h-7 w-24" />
           </div>
         </div>

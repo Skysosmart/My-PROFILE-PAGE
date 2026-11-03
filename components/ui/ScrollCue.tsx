@@ -40,7 +40,7 @@ export default function ScrollCue() {
     >
       {/* the Thai line is longer and stacks its marks, so it gives back the
           tracking and takes the leading it needs */}
-      <span className="uppercase leading-none tracking-[0.2em] th:leading-[1.6] th:tracking-[0.04em]">{t.scroll}</span>
+      <span className="uppercase leading-none tracking-[0.06em] th:leading-[1.6] th:tracking-[0.04em]">{t.scroll}</span>
       <InkArrow delay={1.35} className="w-5 text-fg lg:w-7" />
     </motion.div>
   )

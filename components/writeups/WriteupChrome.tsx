@@ -40,7 +40,7 @@ export default function WriteupChrome({ path }: { path: string }) {
         >
           ← {t.writeups.back}
         </Link>
-        <span className="hidden tabular-nums tracking-widest text-fg-dim sm:inline">
+        <span className="hidden tabular-nums tracking-[0.06em] text-fg-dim sm:inline">
           {time || '--:--:--'}
         </span>
         <LangToggle />

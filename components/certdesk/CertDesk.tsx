@@ -530,7 +530,7 @@ function PhoneStack({ certs, onScan }: { certs: Certificate[]; onScan: (c: Certi
           >
             <div onPointerDown={(e) => drag.start(e)} className="touch-none">
             <div aria-hidden className="mx-auto mb-3 h-1 w-10 rounded-full bg-fg/25" />
-            <p className="text-center font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-fg-dim th:tracking-normal">swipe down to put it back</p>
+            <p className="text-center font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-fg-dim th:tracking-normal">swipe down to put it back</p>
             <motion.div
               initial={false}
               animate={{ rotate: up ? 0 : PHONE_TURN[(focus ?? 0) % PHONE_TURN.length], scale: up ? 1 : 0.94 }}
@@ -545,17 +545,17 @@ function PhoneStack({ certs, onScan }: { certs: Certificate[]; onScan: (c: Certi
             {c.blurb && <p className="mt-1 font-sans text-[0.9375rem] leading-snug text-fg-muted">{c.blurb}</p>}
             <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-5">
               <div>
-                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-fg-dim th:tracking-normal">{c.medal ? 'Award' : 'Result'}</p>
+                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-fg-dim th:tracking-normal">{c.medal ? 'Award' : 'Result'}</p>
                 <p className="mt-1 font-hand text-[1.25rem] leading-tight text-fg">{c.result ?? 'Completed'}</p>
                 <p className="mt-1 font-mono text-[0.75rem] text-fg-muted">{[c.level, c.date].filter(Boolean).join(' · ')}</p>
               </div>
               <div>
-                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-fg-dim th:tracking-normal">Issued by</p>
+                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-fg-dim th:tracking-normal">Issued by</p>
                 <p className="mt-1 font-hand text-[1.0625rem] leading-snug text-fg">{c.issuer}</p>
               </div>
               {c.learned?.length ? (
                 <div className="col-span-2">
-                  <p className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-fg-dim th:tracking-normal">What I learned</p>
+                  <p className="font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-fg-dim th:tracking-normal">What I learned</p>
                   <ul className="m-0 mt-1 list-none space-y-0.5 p-0 font-hand text-[1.0625rem] leading-snug text-fg">
                     {c.learned.map((l) => (
                       <li key={l}>{l}</li>
@@ -565,7 +565,7 @@ function PhoneStack({ certs, onScan }: { certs: Certificate[]; onScan: (c: Certi
                 </div>
               ) : null}
             </div>
-            <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[0.75rem] uppercase tracking-[0.14em] th:tracking-normal">
+            <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[0.75rem] uppercase tracking-[0.04em] th:tracking-normal">
               <button type="button" onClick={() => onScan(c)} className="rounded-[3px] bg-[#111] px-3 py-2 text-[rgb(var(--bg))]">
                 {c.moment ? 'The scan + photos' : 'The full scan'} ↗
               </button>

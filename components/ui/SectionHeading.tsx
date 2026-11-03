@@ -41,7 +41,7 @@ export default function SectionHeading({
   })
   return (
     <header className={`relative mb-10 lg:mb-14 ${className}`}>
-      <motion.p {...rise(0)} className="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-fg th:tracking-normal sm:text-[0.9375rem]">
+      <motion.p {...rise(0)} className="mb-4 font-mono text-sm uppercase tracking-[0.06em] text-fg th:tracking-normal sm:text-[0.9375rem]">
         <span className="mr-2 rounded-[3px] bg-accent px-1.5 py-0.5 text-xs font-bold leading-none tracking-normal text-[#111]">{index}</span>
         {label}
       </motion.p>

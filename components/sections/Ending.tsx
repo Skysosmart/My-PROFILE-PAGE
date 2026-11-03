@@ -46,7 +46,7 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
 
           <dl className="grid gap-6 sm:grid-cols-3">
             <div className="flex flex-col gap-1.5">
-              <dt className="font-mono text-[0.75rem] uppercase tracking-[0.3em] text-fg-dim">{t.mail}</dt>
+              <dt className="font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim">{t.mail}</dt>
               <dd className="m-0">
                 <a href={email?.href} className="font-sans text-base font-bold text-fg underline-offset-4 hover:underline sm:text-lg">
                   {email?.value}
@@ -54,11 +54,11 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
               </dd>
             </div>
             <div className="flex flex-col gap-1.5">
-              <dt className="font-mono text-[0.75rem] uppercase tracking-[0.3em] text-fg-dim">{t.meet}</dt>
+              <dt className="font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim">{t.meet}</dt>
               <dd className="m-0 font-sans text-base font-bold text-fg sm:text-lg">{profile.location}</dd>
             </div>
             <div className="flex flex-col gap-1.5">
-              <dt className="font-mono text-[0.75rem] uppercase tracking-[0.3em] text-fg-dim">{t.find}</dt>
+              <dt className="font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim">{t.find}</dt>
               <dd className="m-0 mt-1 flex flex-wrap gap-3">
                 {socials.map((c) => {
                   const icon = socialIcons[c.key]
@@ -97,7 +97,7 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
               <a
                 href={email?.href}
                 data-cursor-label="mail"
-                className="inline-flex min-h-[2.75rem] w-fit items-center gap-2 rounded-[3px] bg-[#111] px-5 font-mono text-[0.8125rem] uppercase tracking-[0.15em] text-bg transition-opacity hover:opacity-90"
+                className="inline-flex min-h-[2.75rem] w-fit items-center gap-2 rounded-[3px] bg-[#111] px-5 font-mono text-[0.8125rem] uppercase tracking-[0.04em] text-bg transition-opacity hover:opacity-90"
               >
                 {t.mail} →
               </a>
@@ -110,7 +110,7 @@ export default function Ending({ formEnabled = false }: { formEnabled?: boolean 
                 target="_blank"
                 rel="noreferrer"
                 data-cursor-label="pdf ↗"
-                className="inline-flex min-h-[2.75rem] w-fit items-center gap-2 rounded-[3px] border border-fg/30 px-5 font-mono text-[0.8125rem] uppercase tracking-[0.15em] text-fg transition-colors hover:border-fg/70"
+                className="inline-flex min-h-[2.75rem] w-fit items-center gap-2 rounded-[3px] border border-fg/30 px-5 font-mono text-[0.8125rem] uppercase tracking-[0.04em] text-fg transition-colors hover:border-fg/70"
               >
                 <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 4v11" />

@@ -85,7 +85,7 @@ export default function CertArchive() {
           >
             &#8592; back
           </Link>
-          <span className="hidden shrink-0 select-none tabular-nums tracking-widest text-fg/25 sm:inline">
+          <span className="hidden shrink-0 select-none tabular-nums tracking-[0.06em] text-fg/25 sm:inline">
             {time || '--:--:--'}
           </span>
         </div>

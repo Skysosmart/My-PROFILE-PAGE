@@ -49,7 +49,7 @@ export default function DeskNotes({
     transition: { duration: reduce ? 0 : shown ? 0.35 : 0.1, delay: reduce || !shown ? 0 : delay, ease: 'easeInOut' as const },
   })
   const midY = rect.y + rect.h * 0.38
-  const label = 'font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-fg-dim th:tracking-normal'
+  const label = 'font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-fg-dim th:tracking-normal'
 
   return (
     <div className="pointer-events-none absolute inset-0 z-[70]" aria-live="polite">
@@ -103,7 +103,7 @@ export default function DeskNotes({
       >
         <p className={label}>{cert.medal ? 'Award' : 'Result'}</p>
         <p className="mt-2 font-hand text-[1.375rem] leading-tight text-fg">{cert.result ?? 'Completed'}</p>
-        <p className="mt-2 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-fg-muted th:tracking-normal">
+        <p className="mt-2 font-mono text-[0.75rem] uppercase tracking-[0.04em] text-fg-muted th:tracking-normal">
           {[cert.level, cert.date].filter(Boolean).join(' · ')}
         </p>
         {cert.credential && <p className="mt-3 font-mono text-[0.75rem] text-fg-muted">credential {cert.credential}</p>}
@@ -122,7 +122,7 @@ export default function DeskNotes({
       >
         <p className={label}>Issued by</p>
         <p className="mt-1 font-hand text-[1.0625rem] leading-snug text-fg">{cert.issuer}</p>
-        <div className="pointer-events-auto mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[0.75rem] uppercase tracking-[0.14em] th:tracking-normal">
+        <div className="pointer-events-auto mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[0.75rem] uppercase tracking-[0.04em] th:tracking-normal">
           <button
             type="button"
             onClick={onScan}

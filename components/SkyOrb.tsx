@@ -338,7 +338,7 @@ export default function SkyOrb({ children }: { children?: ReactNode }) {
         {/* glass highlight over the water */}
         <div className="orb-gloss pointer-events-none absolute inset-0" />
 
-        <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[0.5rem] uppercase tracking-[0.4em] text-fg-muted">
+        <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[0.5rem] uppercase tracking-[0.06em] text-fg-muted">
           ◇ sky
         </span>
       </motion.div>

@@ -149,7 +149,7 @@ export default function GlassSection({
         ) : (
           <>
         {label && (
-            <span className="mb-2 block font-mono text-[0.8125rem] uppercase tracking-[0.35em] text-fg-dim">
+            <span className="mb-2 block font-mono text-[0.8125rem] uppercase tracking-[0.06em] text-fg-dim">
               [ {label} ]
             </span>
           )}
@@ -171,7 +171,7 @@ export default function GlassSection({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: revealAmount }}
               transition={{ duration: 0.5, delay: 0.22 }}
-              className="font-mono text-lg font-bold uppercase tracking-[0.2em] text-fg txt-glow sm:text-xl"
+              className="font-mono text-lg font-bold uppercase tracking-[0.06em] text-fg txt-glow sm:text-xl"
             >
               {title}
             </motion.h2>

@@ -86,7 +86,7 @@ export default function ProjectTimeline({
               {/* the year sits centred on the line; its count hangs off to the side */}
               <span className="relative rounded-[3px] border border-[#111] bg-accent px-2.5 py-0.5 font-crt text-[1.75rem] leading-none text-[#111] shadow-[3px_3px_0_#111]">
                 {chapterLabel(ch.period)}
-                <span className="absolute left-full top-1/2 ml-4 -translate-y-1/2 whitespace-nowrap font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg-dim th:tracking-normal">
+                <span className="absolute left-full top-1/2 ml-4 -translate-y-1/2 whitespace-nowrap font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim th:tracking-normal">
                   {ch.items.length} {t.storyCount}
                 </span>
               </span>
@@ -164,12 +164,12 @@ function Stop({
             <Image src={p.image} alt={`${name} screenshot`} width={800} height={500} sizes="(min-width: 1024px) 40vw, 90vw" className="aspect-[16/10] w-full object-cover object-top" />
           ) : (
             <div className="flex aspect-[16/10] w-full flex-col items-center justify-center gap-1.5 px-4 text-center">
-              <span className="font-mono text-[0.8125rem] uppercase tracking-[0.2em] text-fg-dim th:tracking-normal">{p.tags.slice(0, 3).join(' / ')}</span>
+              <span className="font-mono text-[0.8125rem] uppercase tracking-[0.06em] text-fg-dim th:tracking-normal">{p.tags.slice(0, 3).join(' / ')}</span>
               <span className="font-mono text-[0.75rem] text-fg-dim">{t.noImage}</span>
             </div>
           )}
           {p.video && (
-            <span className="absolute bottom-2 left-2 rounded-[2px] bg-[#111] px-1.5 py-0.5 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-white">
+            <span className="absolute bottom-2 left-2 rounded-[2px] bg-[#111] px-1.5 py-0.5 font-mono text-[0.6875rem] uppercase tracking-[0.04em] text-white">
               ▶ {t.storyVideo}
             </span>
           )}
@@ -177,14 +177,14 @@ function Stop({
 
         {/* the record */}
         <div className="px-1 pb-1 pt-4">
-          <p className="font-mono text-[0.75rem] uppercase tracking-[0.14em] text-fg-dim th:tracking-normal">
+          <p className="font-mono text-[0.75rem] uppercase tracking-[0.04em] text-fg-dim th:tracking-normal">
             {String(i + 1).padStart(2, '0')} · {p.category ?? ''} · {t.statuses[p.status]}
           </p>
           <h4 className={`mt-1.5 font-mono text-[1.25rem] font-bold leading-tight ${on ? 'text-accent-text' : 'text-fg'}`}>{name}</h4>
           {line && <p className="mt-1 font-sans text-[0.9375rem] font-semibold text-fg">{line}</p>}
           <p className="mt-2 font-sans text-[0.9375rem] leading-relaxed text-fg/85 th:leading-[1.8]">{first}</p>
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.75rem] uppercase tracking-[0.14em] th:tracking-normal">
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.75rem] uppercase tracking-[0.04em] th:tracking-normal">
             <Link href={`/projects/${projectSlug(p)}`} className="rounded-[3px] bg-[#111] px-3 py-1.5 text-[rgb(var(--bg))] transition-opacity hover:opacity-85">
               → {t.viewCase}
             </Link>

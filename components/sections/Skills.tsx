@@ -29,11 +29,11 @@ export default function Skills() {
       </div>
       <div className="mx-auto w-full max-w-[92.5rem]">
         <header className="mb-8 border-l-4 border-accent pl-4 sm:mb-10">
-          <p className="mb-2 font-mono text-[0.75rem] uppercase tracking-[0.3em] text-fg-dim">
+          <p className="mb-2 font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim">
             <span className="mr-2 rounded-[3px] bg-accent px-1.5 py-0.5 text-[0.6875rem] font-bold leading-none tracking-normal text-[#111]">03</span>
             {t.label}
           </p>
-          <h2 className="font-mono text-[1.75rem] font-bold uppercase leading-tight tracking-[0.14em] text-fg th:tracking-normal sm:text-[2.25rem]">{t.title}</h2>
+          <h2 className="font-mono text-[1.75rem] font-bold uppercase leading-tight tracking-[0.04em] text-fg th:tracking-normal sm:text-[2.25rem]">{t.title}</h2>
           <p className="mt-1 font-sans text-base text-fg-muted th:leading-[1.7]">{t.sub}</p>
         </header>
         <StackSheet />

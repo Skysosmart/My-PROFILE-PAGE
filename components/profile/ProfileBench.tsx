@@ -52,7 +52,7 @@ export default function ProfileBench() {
 function Head({ title, sub }: { title: string; sub: string }) {
   return (
     <div className="mb-5 border-l-[3px] border-accent pl-3">
-      <h3 className="font-mono text-[0.9375rem] font-bold uppercase tracking-[0.14em] text-fg th:tracking-normal">{title}</h3>
+      <h3 className="font-mono text-[0.9375rem] font-bold uppercase tracking-[0.04em] text-fg th:tracking-normal">{title}</h3>
       <p className="mt-0.5 font-sans text-[0.875rem] text-fg-muted th:leading-[1.7]">{sub}</p>
     </div>
   )
@@ -76,7 +76,7 @@ function WorkEnvironment({ t }: { t: (typeof ui)['en']['profile']['bench']['env'
           ) : (
             // the slot, until the real photograph arrives (data/portfolio.ts `setup.desk`)
             <div className="grid aspect-4/3 w-full place-items-center bg-[repeating-linear-gradient(135deg,rgba(17,17,17,0.06)_0_1px,transparent_1px_10px)] outline outline-1 -outline-offset-1 outline-[#111]/15">
-              <span className="font-mono text-[0.75rem] uppercase tracking-[0.14em] text-fg-muted th:tracking-normal">{t.deskSoon}</span>
+              <span className="font-mono text-[0.75rem] uppercase tracking-[0.04em] text-fg-muted th:tracking-normal">{t.deskSoon}</span>
             </div>
           )}
         </figure>
@@ -170,7 +170,7 @@ function Focus({ t }: { t: (typeof ui)['en']['profile']['bench']['focus'] }) {
                 className={`absolute inset-y-0 left-0 origin-left ${r.rank === 0 ? 'bg-accent outline outline-1 outline-[#111]' : 'bg-[#111]'}`}
               />
             </span>
-            <span className="text-right font-mono text-[0.625rem] uppercase tracking-[0.08em] text-fg-muted th:tracking-normal">
+            <span className="text-right font-mono text-[0.625rem] uppercase tracking-[0.03em] text-fg-muted th:tracking-normal">
               {t.ranks[Math.min(r.rank, t.ranks.length - 1)]}
             </span>
           </li>

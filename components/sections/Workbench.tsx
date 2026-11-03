@@ -317,11 +317,11 @@ export default function Workbench() {
             {/* ── the top edge: which project, which stage ─────────── */}
             <div className="flex flex-col gap-2.5">
               <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
-                <p id="workbench-title" className="m-0 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-fg-muted th:tracking-normal">
+                <p id="workbench-title" className="m-0 font-mono text-[0.6875rem] uppercase tracking-[0.04em] text-fg-muted th:tracking-normal">
                   <span className="font-bold text-fg">{cadProjects.length} projects</span> on the bench · pick one
                 </p>
               {/* the stages, as a rail */}
-                <ol className="m-0 flex list-none items-center gap-0 overflow-x-auto p-0 font-mono text-[0.6875rem] uppercase tracking-[0.16em] th:tracking-normal">
+                <ol className="m-0 flex list-none items-center gap-0 overflow-x-auto p-0 font-mono text-[0.6875rem] uppercase tracking-[0.04em] th:tracking-normal">
                   {STAGES.slice(0, maxStage + 1).map((s, k) => (
                     <li key={s} className="flex items-center">
                       {k > 0 && <span aria-hidden className={`mx-1.5 h-px w-3 sm:w-5 ${k <= stage ? 'bg-fg' : 'bg-fg/20'}`} />}
@@ -359,8 +359,8 @@ export default function Workbench() {
                           style={{ maskImage: thumb, WebkitMaskImage: thumb, maskSize: 'contain', WebkitMaskSize: 'contain', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskPosition: 'center' }}
                         />
                         <span className="flex flex-col leading-tight">
-                          <span className="font-mono text-[0.625rem] tabular-nums tracking-[0.14em] text-fg-dim">{String(i + 1).padStart(2, '0')}</span>
-                          <span className="whitespace-nowrap font-mono text-[0.75rem] font-bold uppercase tracking-[0.12em] th:tracking-normal">{p.name}</span>
+                          <span className="font-mono text-[0.625rem] tabular-nums tracking-[0.04em] text-fg-dim">{String(i + 1).padStart(2, '0')}</span>
+                          <span className="whitespace-nowrap font-mono text-[0.75rem] font-bold uppercase tracking-[0.04em] th:tracking-normal">{p.name}</span>
                         </span>
                         {on && <span aria-hidden className="absolute inset-x-1.5 -bottom-px h-[3px] bg-accent" />}
                       </button>
@@ -396,7 +396,7 @@ export default function Workbench() {
                 aria-label={`Next project: ${nextProject.name}`}
                 className="absolute right-0 top-1/2 z-[8] flex h-11 -translate-y-1/2 items-center gap-2 rounded-full border border-fg/25 bg-bg px-3.5 font-mono text-fg transition-colors hover:border-fg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg"
               >
-                <span className="hidden text-[0.6875rem] uppercase tracking-[0.14em] text-fg-muted th:tracking-normal md:inline">next · {nextProject.name}</span>
+                <span className="hidden text-[0.6875rem] uppercase tracking-[0.04em] text-fg-muted th:tracking-normal md:inline">next · {nextProject.name}</span>
                 <span className="text-[1.125rem]">→</span>
               </button>
 
@@ -410,7 +410,7 @@ export default function Workbench() {
               )}
 
               {loading && webgl !== false && (
-                <p className="pointer-events-none absolute inset-0 grid place-items-center font-mono text-[0.75rem] uppercase tracking-[0.2em] text-fg-dim">
+                <p className="pointer-events-none absolute inset-0 grid place-items-center font-mono text-[0.75rem] uppercase tracking-[0.06em] text-fg-dim">
                   unpacking the model…
                 </p>
               )}
@@ -438,7 +438,7 @@ export default function Workbench() {
                         className="absolute w-max max-w-[13rem] rounded-[2px] bg-[#fbf9f3]/90 px-1.5 py-0.5"
                         style={{ transform: 'translate(calc(var(--ox) + var(--side)), calc(var(--oy) - 50%))' }}
                       >
-                        <span className={`block font-mono text-[0.75rem] font-bold uppercase tracking-[0.14em] th:tracking-normal ${hover === part.key ? 'text-accent-text' : 'text-fg'}`}>{part.label}</span>
+                        <span className={`block font-mono text-[0.75rem] font-bold uppercase tracking-[0.04em] th:tracking-normal ${hover === part.key ? 'text-accent-text' : 'text-fg'}`}>{part.label}</span>
                         {hover === part.key && (
                           <span className="mt-1 block font-hand text-[0.9375rem] leading-snug text-fg">
                             {part.notes.map((n) => (
@@ -496,7 +496,7 @@ export default function Workbench() {
               {webgl && (
                 <p
                   aria-hidden
-                  className="pointer-events-none absolute bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-fg-dim transition-opacity duration-500"
+                  className="pointer-events-none absolute bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[0.6875rem] uppercase tracking-[0.06em] text-fg-dim transition-opacity duration-500"
                   style={{ opacity: turned || loading ? 0 : 1 }}
                 >
                   {touch ? 'drag sideways to turn' : 'drag to rotate'}
@@ -522,7 +522,7 @@ export default function Workbench() {
                           onFocus={() => setHover(part.key)}
                           onBlur={() => setHover(null)}
                           aria-label={`${part.label}: ${part.notes.join('; ')}`}
-                          className={`font-mono text-[0.75rem] uppercase tracking-[0.12em] underline-offset-4 th:tracking-normal ${hover === part.key ? 'text-accent-text underline' : 'text-fg-dim hover:text-fg'}`}
+                          className={`font-mono text-[0.75rem] uppercase tracking-[0.04em] underline-offset-4 th:tracking-normal ${hover === part.key ? 'text-accent-text underline' : 'text-fg-dim hover:text-fg'}`}
                         >
                           {part.label}
                         </button>
@@ -532,7 +532,7 @@ export default function Workbench() {
                 )}
                 {hovered && <p className="sr-only" aria-live="polite">{`${hovered.label}: ${hovered.notes.join('. ')}`}</p>}
               </div>
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.75rem] uppercase tracking-[0.14em] th:tracking-normal">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.75rem] uppercase tracking-[0.04em] th:tracking-normal">
                 <button type="button" onClick={() => (reduce ? goStage(0) : play(maxStage))} className="text-fg underline-offset-4 hover:underline focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-fg">
                   View process
                 </button>

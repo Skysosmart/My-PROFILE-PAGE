@@ -48,9 +48,9 @@ export default function IntroHero() {
             className="pointer-events-none absolute -inset-x-12 -bottom-8 -top-20 -z-10 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_40%,rgb(var(--fg)/0.14),transparent_64%)] blur-2xl"
           />
           {/* the duck casts a floor shadow in the same ink */}
-          <div className="relative">
+          <div className="relative sm:translate-x-10 lg:translate-x-20 xl:translate-x-28">
             <div className="[filter:drop-shadow(0_26px_22px_rgb(var(--fg)/0.28))]">
-              <Duck pose="hero" width={190} parallax={12} priority className="sm:!w-[14rem] lg:!w-[17rem] xl:!w-[20rem]" />
+              <Duck pose="hero" width={210} parallax={12} priority className="sm:!w-[15.5rem] lg:!w-[19rem] xl:!w-[22rem]" />
             </div>
           </div>
           {/* sizes follow the room beside the duck: a row from sm, bigger from

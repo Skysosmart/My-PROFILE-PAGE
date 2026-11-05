@@ -117,9 +117,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body>
         {/* easter egg: never drawn, only found by opening the inspector.
-            Hex bytes XOR'd with a repeating key; the key is the hero's mascot */}
-        <div hidden aria-hidden="true" data-cipher="xor" data-key-hint="quack">
-          371e1a275403503b544550
+            The flag, base64-encoded, then written out as 8-bit binary */}
+        <div hidden aria-hidden="true" data-encoding="binary > base64 > text">
+          {'01010110 01000111 01000110 01110010 01011010 01010110 01001010 01101100 01100100 00110010 01000110 01111001 01011010 01001000 01001110 01101101 01100011 01101101 00111001 01110100 01011000 00110010 00110001 01110000 01100011 00110011 01001110 01100110 01100010 00110010 01101100 01110011 01011000 00110010 01000110 01110101 01011010 01000110 00111001 01110100 01100001 01011000 01001110 01111010 01011000 00110010 01000110 00110001'}
         </div>
         {/* runs before first paint: stamps <html lang> for the language */}
         <script dangerouslySetInnerHTML={{ __html: LANG_BOOT }} />

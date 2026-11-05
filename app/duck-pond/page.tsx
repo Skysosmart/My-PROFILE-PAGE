@@ -30,13 +30,13 @@ export default function DuckPond() {
         robots.txt told the crawlers to stay out. You read it anyway. The secret:
       </p>
       <p
-        className="mt-6 font-mono text-2xl text-green-400"
+        className="mt-6 break-all font-mono text-xl text-green-400 sm:text-2xl"
         style={{ textShadow: '0 0 14px rgb(74 222 128 / 0.35)' }}
       >
-        SkyL0v3P003
+        TakeRewardsfrom_miss_oil_and_miss_au
       </p>
       <p className="mt-6 font-mono text-[0.75rem] text-fg-dim">
-        # one more is hidden in the page source. XOR, and the key quacks.
+        # one more is hidden in the page source. binary first, then base64.
       </p>
 
       <div className="mt-auto pt-16">

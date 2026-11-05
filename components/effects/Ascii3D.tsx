@@ -58,6 +58,10 @@ const EASE = 0.04 // lerp factor toward the cursor target
 // those is on screen the loop parks and the last frame stays
 const EDGE = 0.08
 const MAX_DPR = 2 // the picture is glyphs a few px tall: 2x is already crisp
+// a phone's About is ~3000 css px tall: at 2x that is a 780x5900 canvas
+// (18 MB) that stays alive while Education mounts below it, and iOS Safari
+// kills the tab at that point and reloads it. 1x is 4.6 MB, behind text.
+const MAX_DPR_PHONE = 1
 // -----------------------------------------------------------------------------
 
 export default function Ascii3D() {
@@ -240,7 +244,7 @@ export default function Ascii3D() {
         cols = Math.max(20, Math.min(MAX_COLS, Math.floor(w / (minFont * GLYPH_W))))
         const font = w / cols / GLYPH_W
         rows = Math.max(10, Math.floor(h / font))
-        const dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1)
+        const dpr = Math.min(w < 768 ? MAX_DPR_PHONE : MAX_DPR, window.devicePixelRatio || 1)
         cv.width = Math.round(w * dpr)
         cv.height = Math.round(h * dpr)
         ch = cv.height / rows

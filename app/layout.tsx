@@ -116,6 +116,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${mono.variable} ${crt.variable} ${pixel.variable} ${sans.variable} ${thai.variable} ${hand.variable}`}
     >
       <body>
+        {/* easter egg: never drawn, only found by opening the inspector.
+            Hex bytes XOR'd with a repeating key; the key is the hero's mascot */}
+        <div hidden aria-hidden="true" data-cipher="xor" data-key-hint="quack">
+          371e1a275403503b544550
+        </div>
         {/* runs before first paint: stamps <html lang> for the language */}
         <script dangerouslySetInnerHTML={{ __html: LANG_BOOT }} />
         {/* and for tablets: pins the viewport to a desktop width, so an iPad
